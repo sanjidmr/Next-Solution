@@ -57,7 +57,6 @@ export default function TestimonialsPage({ currentLang, setTab }: TestimonialsPa
   const [roleEn, setRoleEn] = useState('');
   const [rating, setRating] = useState(5);
   const [feedbackEn, setFeedbackEn] = useState('');
-  const [feedbackBn, setFeedbackBn] = useState('');
   const [avatarUrl, setAvatarUrl] = useState('');
   const [industry, setIndustry] = useState('');
 
@@ -122,7 +121,7 @@ export default function TestimonialsPage({ currentLang, setTab }: TestimonialsPa
       company: company || 'Self-Employed',
       avatar: avatarUrl || `https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=150`,
       feedbackEn,
-      feedbackBn: feedbackBn || feedbackEn,
+      feedbackBn: feedbackEn,
       rating,
       category: selectedCategory !== 'all' ? selectedCategory : 'web-development',
       isVerified: true,
@@ -140,7 +139,6 @@ export default function TestimonialsPage({ currentLang, setTab }: TestimonialsPa
     setCompany('');
     setRoleEn('');
     setFeedbackEn('');
-    setFeedbackBn('');
     setAvatarUrl('');
     setIndustry('');
     
@@ -164,7 +162,7 @@ export default function TestimonialsPage({ currentLang, setTab }: TestimonialsPa
   };
 
   return (
-    <div id="testimonials-page-root" className="bg-white min-h-screen text-slate-900 overflow-x-hidden font-sans">
+    <div id="testimonials-page-root" className="bg-white dark:bg-[#141414] min-h-screen text-slate-900 overflow-x-hidden font-sans">
       
       {/* Floating Admin Entry Button */}
       <div className="fixed bottom-6 right-6 z-40">
@@ -183,21 +181,21 @@ export default function TestimonialsPage({ currentLang, setTab }: TestimonialsPa
         <section id="reviews-hero" className="relative border-b border-slate-100 bg-gradient-to-b from-slate-50/50 to-white pt-24 pb-20 overflow-hidden">
           {/* Ambient Glows */}
           <div className="absolute top-0 right-0 h-96 w-96 rounded-full bg-cyan-100/30 blur-3xl -z-10"></div>
-          <div className="absolute bottom-0 left-0 h-96 w-96 rounded-full bg-violet-100/30 blur-3xl -z-10"></div>
+          <div className="absolute bottom-0 left-0 h-96 w-96 rounded-full bg-violet-100/30 dark:bg-orange-500/5 blur-3xl -z-10"></div>
 
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
               
               {/* Left Side Content */}
               <div className="lg:col-span-7 space-y-6 text-left">
-                <div className="inline-flex items-center space-x-2 rounded-full border border-blue-100 bg-blue-50/75 px-3 py-1 text-xs font-extrabold tracking-wider text-blue-700 uppercase">
-                  <Sparkles className="h-3.5 w-3.5 text-blue-600" />
+                <div className="inline-flex items-center space-x-2 rounded-full border border-blue-100 dark:border-orange-500/20 bg-blue-50/75 px-3 py-1 text-xs font-extrabold tracking-wider text-blue-700 uppercase">
+                  <Sparkles className="h-3.5 w-3.5 text-blue-600 dark:text-orange-400" />
                   <span>⭐ {currentLang === 'en' ? 'CLIENT SUCCESS STORIES' : 'গ্রাহক সফলতা কথা'}</span>
                 </div>
 
                 <h1 className="font-display text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight text-slate-900 leading-tight">
                   {currentLang === 'en' ? 'Trusted By Businesses' : 'বিশ্বজুড়ে ব্যবসায়ীদের দ্বারা'}{' '}
-                  <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+                  <span className="bg-gradient-to-r from-blue-600 dark:from-orange-500 to-indigo-600 dark:to-orange-400 bg-clip-text text-transparent">
                     {currentLang === 'en' ? 'Worldwide.' : 'বিশ্বস্ত।'}
                   </span>
                 </h1>
@@ -241,7 +239,7 @@ export default function TestimonialsPage({ currentLang, setTab }: TestimonialsPa
                     onClick={() => {
                       document.getElementById('success-stories-section')?.scrollIntoView({ behavior: 'smooth' });
                     }}
-                    className="rounded-xl border border-slate-200 bg-white hover:bg-slate-50 px-5 py-3.5 text-xs font-bold text-slate-700 tracking-wider uppercase transition flex items-center space-x-1.5"
+                    className="rounded-xl border border-slate-200 bg-white dark:bg-[#141414] hover:bg-slate-50 px-5 py-3.5 text-xs font-bold text-slate-700 tracking-wider uppercase transition flex items-center space-x-1.5"
                   >
                     <span>{currentLang === 'en' ? '💬 Success Case Studies' : '💬 সফল কেস স্টাডিজ'}</span>
                     <ArrowRight className="h-3.5 w-3.5 text-slate-400" />
@@ -254,7 +252,7 @@ export default function TestimonialsPage({ currentLang, setTab }: TestimonialsPa
                 
                 {/* Central Overall Rating Card */}
                 <div className="bg-white/90 backdrop-blur-md rounded-3xl border border-slate-150 p-6 shadow-2xl z-20 text-center space-y-2 max-w-[200px] border-slate-200/80">
-                  <div className="h-12 w-12 rounded-full bg-amber-500/10 text-amber-500 flex items-center justify-center mx-auto text-xl font-bold border border-amber-500/20">⭐</div>
+                  <div className="h-12 w-12 rounded-full bg-amber-500/10 text-amber-500 dark:text-amber-400 flex items-center justify-center mx-auto text-xl font-bold border border-amber-500/20">⭐</div>
                   <span className="block text-3xl font-black text-slate-900">4.9 / 5.0</span>
                   <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block">Overall Rating</span>
                   <div className="flex justify-center space-x-0.5">
@@ -266,9 +264,9 @@ export default function TestimonialsPage({ currentLang, setTab }: TestimonialsPa
                 <motion.div 
                   animate={{ y: [0, -12, 0] }}
                   transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
-                  className="absolute top-4 left-2 bg-white/95 backdrop-blur-sm border border-slate-100 p-3 rounded-2xl shadow-xl max-w-[170px] z-10"
+                  className="absolute top-4 left-2 bg-white/95 dark:bg-[#0D0D0D]/95 backdrop-blur-sm border border-slate-100 p-3 rounded-2xl shadow-xl max-w-[170px] z-10"
                 >
-                  <span className="text-[10px] font-black text-amber-500">★★★★★</span>
+                  <span className="text-[10px] font-black text-amber-500 dark:text-amber-400">★★★★★</span>
                   <p className="text-[10px] text-slate-600 font-medium italic">"Delivered beyond expectations!"</p>
                   <span className="text-[9px] text-slate-400 font-bold block mt-1">— Fintech Founder</span>
                 </motion.div>
@@ -276,9 +274,9 @@ export default function TestimonialsPage({ currentLang, setTab }: TestimonialsPa
                 <motion.div 
                   animate={{ y: [0, 10, 0] }}
                   transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut', delay: 1 }}
-                  className="absolute bottom-2 right-4 bg-white/95 backdrop-blur-sm border border-slate-100 p-3 rounded-2xl shadow-xl max-w-[170px] z-10"
+                  className="absolute bottom-2 right-4 bg-white/95 dark:bg-[#0D0D0D]/95 backdrop-blur-sm border border-slate-100 p-3 rounded-2xl shadow-xl max-w-[170px] z-10"
                 >
-                  <span className="text-[10px] font-black text-amber-500">★★★★★</span>
+                  <span className="text-[10px] font-black text-amber-500 dark:text-amber-400">★★★★★</span>
                   <p className="text-[10px] text-slate-600 font-medium italic">"Amazing experience with this team."</p>
                   <span className="text-[9px] text-slate-400 font-bold block mt-1">— SaaS Product lead</span>
                 </motion.div>
@@ -286,9 +284,9 @@ export default function TestimonialsPage({ currentLang, setTab }: TestimonialsPa
                 <motion.div 
                   animate={{ x: [0, -8, 0] }}
                   transition={{ duration: 4.5, repeat: Infinity, ease: 'easeInOut', delay: 0.5 }}
-                  className="absolute top-8 right-6 bg-white/95 backdrop-blur-sm border border-slate-100 p-3 rounded-2xl shadow-xl max-w-[160px] z-10"
+                  className="absolute top-8 right-6 bg-white/95 dark:bg-[#0D0D0D]/95 backdrop-blur-sm border border-slate-100 p-3 rounded-2xl shadow-xl max-w-[160px] z-10"
                 >
-                  <span className="text-[10px] font-black text-amber-500">★★★★★</span>
+                  <span className="text-[10px] font-black text-amber-500 dark:text-amber-400">★★★★★</span>
                   <p className="text-[10px] text-slate-600 font-medium italic">"Excellent communication!"</p>
                   <span className="text-[9px] text-slate-400 font-bold block mt-1">— David Chen, CEO</span>
                 </motion.div>
@@ -296,9 +294,9 @@ export default function TestimonialsPage({ currentLang, setTab }: TestimonialsPa
                 <motion.div 
                   animate={{ x: [0, 8, 0] }}
                   transition={{ duration: 5.5, repeat: Infinity, ease: 'easeInOut', delay: 1.2 }}
-                  className="absolute bottom-6 left-6 bg-white/95 backdrop-blur-sm border border-slate-100 p-3 rounded-2xl shadow-xl max-w-[160px] z-10"
+                  className="absolute bottom-6 left-6 bg-white/95 dark:bg-[#0D0D0D]/95 backdrop-blur-sm border border-slate-100 p-3 rounded-2xl shadow-xl max-w-[160px] z-10"
                 >
-                  <span className="text-[10px] font-black text-amber-500">★★★★★</span>
+                  <span className="text-[10px] font-black text-amber-500 dark:text-amber-400">★★★★★</span>
                   <p className="text-[10px] text-slate-600 font-medium italic">"Professional team."</p>
                   <span className="text-[9px] text-slate-400 font-bold block mt-1">— BDT Retail Group</span>
                 </motion.div>
@@ -339,10 +337,10 @@ export default function TestimonialsPage({ currentLang, setTab }: TestimonialsPa
 
       {/* 02. CLIENT SUCCESS OVERVIEW (BENTO GRID) */}
       {sectionVisibility.overview && statistics && (
-        <section id="reviews-overview" className="py-20 bg-white">
+        <section id="reviews-overview" className="py-20 bg-white dark:bg-[#141414]">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-10">
             <div className="text-center max-w-xl mx-auto space-y-2">
-              <span className="text-xs font-bold text-blue-600 uppercase tracking-widest">02. CLIENT RETENTION ENGINE</span>
+              <span className="text-xs font-bold text-blue-600 dark:text-orange-400 uppercase tracking-widest">02. CLIENT RETENTION ENGINE</span>
               <h2 className="font-display text-3xl sm:text-4xl font-black text-slate-900 tracking-tight leading-tight">
                 {currentLang === 'en' ? 'The Scale of Trust in Numbers' : 'পরিসংখ্যানে আমাদের বিশ্বস্ততার প্রমাণ'}
               </h2>
@@ -353,19 +351,19 @@ export default function TestimonialsPage({ currentLang, setTab }: TestimonialsPa
               
               <div className="md:col-span-4 bg-slate-50 rounded-2xl border border-slate-150 p-6 hover:shadow-md transition flex flex-col justify-between">
                 <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block">Completed Projects</span>
-                <h3 className="text-4xl font-black text-blue-600 mt-3">{statistics.projectsCompleted}+</h3>
+                <h3 className="text-4xl font-black text-blue-600 dark:text-orange-400 mt-3">{statistics.projectsCompleted}+</h3>
                 <p className="text-xs text-slate-500 mt-2">Delivered custom codebases, design assets, and scalable cloud systems on time.</p>
               </div>
 
               <div className="md:col-span-4 bg-slate-50 rounded-2xl border border-slate-150 p-6 hover:shadow-md transition flex flex-col justify-between">
                 <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block">Client Retention Ratio</span>
-                <h3 className="text-4xl font-black text-indigo-600 mt-3">{statistics.clientSatisfaction}%</h3>
+                <h3 className="text-4xl font-black text-indigo-600 dark:text-orange-400 mt-3">{statistics.clientSatisfaction}%</h3>
                 <p className="text-xs text-slate-500 mt-2">Satisfied corporate businesses who trust us for multi-year ongoing scaling projects.</p>
               </div>
 
               <div className="md:col-span-4 bg-slate-50 rounded-2xl border border-slate-150 p-6 hover:shadow-md transition flex flex-col justify-between">
                 <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block">Countries Served</span>
-                <h3 className="text-4xl font-black text-cyan-600 mt-3">{statistics.industriesServed}+</h3>
+                <h3 className="text-4xl font-black text-cyan-600 dark:text-cyan-400 mt-3">{statistics.industriesServed}+</h3>
                 <p className="text-xs text-slate-500 mt-2">Serving enterprises globally from USA, Europe, Southeast Asia, and Australia.</p>
               </div>
 
@@ -385,7 +383,7 @@ export default function TestimonialsPage({ currentLang, setTab }: TestimonialsPa
               {/* Small bento card */}
               <div className="md:col-span-4 bg-slate-50 rounded-2xl border border-slate-150 p-6 hover:shadow-md transition flex flex-col justify-between">
                 <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block">SLA Response Time</span>
-                <h3 className="text-2xl font-black text-emerald-600 mt-3">&lt; 15 Minutes</h3>
+                <h3 className="text-2xl font-black text-emerald-600 dark:text-emerald-400 mt-3">&lt; 15 Minutes</h3>
                 <p className="text-xs text-slate-500 mt-1">Surgical response times across Slack, WhatsApp and direct developer channels.</p>
               </div>
 
@@ -399,7 +397,7 @@ export default function TestimonialsPage({ currentLang, setTab }: TestimonialsPa
         <section id="success-stories-section" className="py-20 bg-slate-50 border-y border-slate-100">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-12">
             <div className="text-center max-w-xl mx-auto space-y-2">
-              <span className="text-xs font-bold text-blue-600 uppercase tracking-widest">03. PROVEN CASE STORIES</span>
+              <span className="text-xs font-bold text-blue-600 dark:text-orange-400 uppercase tracking-widest">03. PROVEN CASE STORIES</span>
               <h2 className="font-display text-3xl sm:text-4xl font-black text-slate-900 tracking-tight leading-tight">
                 {currentLang === 'en' ? 'Our Architectural Impact' : 'আমাদের প্রজেক্ট কেস স্টাডি সমূহ'}
               </h2>
@@ -415,11 +413,11 @@ export default function TestimonialsPage({ currentLang, setTab }: TestimonialsPa
                     onClick={() => { setActiveStoryIdx(idx); setStoryTab('challenge'); }}
                     className={`w-full text-left p-4 rounded-xl border transition-all duration-300 flex flex-col space-y-1 ${
                       activeStoryIdx === idx 
-                        ? 'border-blue-500 bg-white shadow-md' 
+                        ? 'border-blue-500 bg-white dark:bg-[#141414] shadow-md' 
                         : 'border-slate-200 bg-slate-100/50 hover:border-slate-300 text-slate-500 hover:text-slate-800'
                     }`}
                   >
-                    <span className="text-[10px] uppercase font-bold text-blue-600">{story.industryEn}</span>
+                    <span className="text-[10px] uppercase font-bold text-blue-600 dark:text-orange-400">{story.industryEn}</span>
                     <span className="font-bold text-slate-950 text-sm">{story.companyName}</span>
                     <span className="text-[11px] leading-relaxed">{story.serviceEn}</span>
                   </button>
@@ -427,7 +425,7 @@ export default function TestimonialsPage({ currentLang, setTab }: TestimonialsPa
               </div>
 
               {/* Active Story Details */}
-              <div className="lg:col-span-8 bg-white rounded-2xl border border-slate-150 p-6 sm:p-8 shadow-sm space-y-6">
+              <div className="lg:col-span-8 bg-white dark:bg-[#141414] rounded-2xl border border-slate-150 p-6 sm:p-8 shadow-sm space-y-6">
                 {(() => {
                   const s = stories[activeStoryIdx];
                   if (!s) return null;
@@ -436,7 +434,7 @@ export default function TestimonialsPage({ currentLang, setTab }: TestimonialsPa
                       <div className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-100 pb-4">
                         <div>
                           <h3 className="text-lg font-bold text-slate-900">{s.companyName}</h3>
-                          <span className="text-xs text-blue-600 font-semibold">{s.serviceEn}</span>
+                          <span className="text-xs text-blue-600 dark:text-orange-400 font-semibold">{s.serviceEn}</span>
                         </div>
                         <span className="rounded-lg bg-slate-50 border border-slate-100 px-3 py-1 text-xs text-slate-500 font-medium">
                           <strong>Timeline:</strong> {s.timelineEn}
@@ -446,13 +444,13 @@ export default function TestimonialsPage({ currentLang, setTab }: TestimonialsPa
                       {/* Before / After toggle comparison */}
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div className="space-y-1.5">
-                          <span className="text-[10px] font-bold text-rose-500 uppercase">Legacy Interface (Before)</span>
+                          <span className="text-[10px] font-bold text-rose-500 dark:text-rose-400 uppercase">Legacy Interface (Before)</span>
                           <div className="relative rounded-xl overflow-hidden border border-slate-200 aspect-video group">
                             <img src={s.beforeImage} alt="" className="w-full h-full object-cover grayscale opacity-80" />
                           </div>
                         </div>
                         <div className="space-y-1.5">
-                          <span className="text-[10px] font-bold text-emerald-500 uppercase">Next Solution (After Launch)</span>
+                          <span className="text-[10px] font-bold text-emerald-500 dark:text-emerald-400 uppercase">Next Solution (After Launch)</span>
                           <div className="relative rounded-xl overflow-hidden border border-blue-400 aspect-video group">
                             <img src={s.afterImage} alt="" className="w-full h-full object-cover" />
                           </div>
@@ -468,7 +466,7 @@ export default function TestimonialsPage({ currentLang, setTab }: TestimonialsPa
                               onClick={() => setStoryTab(tab as any)}
                               className={`px-4 py-2 text-xs font-bold border-b-2 capitalize transition ${
                                 storyTab === tab 
-                                  ? 'border-blue-600 text-blue-600 font-extrabold' 
+                                  ? 'border-blue-600 text-blue-600 dark:text-orange-400 font-extrabold' 
                                   : 'border-transparent text-slate-400 hover:text-slate-600'
                               }`}
                             >
@@ -521,10 +519,10 @@ export default function TestimonialsPage({ currentLang, setTab }: TestimonialsPa
 
       {/* 04. VIDEO TESTIMONIALS */}
       {sectionVisibility.videos && videos.length > 0 && (
-        <section id="reviews-videos" className="py-20 bg-white">
+        <section id="reviews-videos" className="py-20 bg-white dark:bg-[#141414]">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-12">
             <div className="text-center max-w-xl mx-auto space-y-2">
-              <span className="text-xs font-bold text-blue-600 uppercase tracking-widest">04. VIDEO DELIVERABLES</span>
+              <span className="text-xs font-bold text-blue-600 dark:text-orange-400 uppercase tracking-widest">04. VIDEO DELIVERABLES</span>
               <h2 className="font-display text-3xl sm:text-4xl font-black text-slate-900 tracking-tight leading-tight">
                 {currentLang === 'en' ? 'Client Experiences on Video' : 'ভিডিও জবানবন্দিতে গ্রাহক প্রতিক্রিয়া'}
               </h2>
@@ -592,14 +590,14 @@ export default function TestimonialsPage({ currentLang, setTab }: TestimonialsPa
         <section id="reviews-feed-section" className="py-20 bg-slate-50/75 border-y border-slate-100">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-10">
             <div className="text-center max-w-xl mx-auto space-y-2">
-              <span className="text-xs font-bold text-blue-600 uppercase tracking-widest">05 & 06. VERIFIED LOGS FEED</span>
+              <span className="text-xs font-bold text-blue-600 dark:text-orange-400 uppercase tracking-widest">05 & 06. VERIFIED LOGS FEED</span>
               <h2 className="font-display text-3xl sm:text-4xl font-black text-slate-900 tracking-tight leading-tight">
                 {currentLang === 'en' ? 'Unfiltered Client Feedback Wall' : 'সকল যাচাইকৃত গ্রাহকদের মতামত প্রাচীর'}
               </h2>
             </div>
 
             {/* Premium Interactive Filters Box */}
-            <div className="rounded-2xl border border-slate-150 p-4 bg-white shadow-sm max-w-5xl mx-auto flex flex-col md:flex-row gap-4 justify-between items-center">
+            <div className="rounded-2xl border border-slate-150 p-4 bg-white dark:bg-[#141414] shadow-sm max-w-5xl mx-auto flex flex-col md:flex-row gap-4 justify-between items-center">
               
               {/* Searching */}
               <div className="relative w-full md:w-72">
@@ -611,7 +609,7 @@ export default function TestimonialsPage({ currentLang, setTab }: TestimonialsPa
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder={currentLang === 'en' ? 'Search client reviews...' : 'রিভিউ খুঁজুন...'}
-                  className="w-full rounded-lg border border-slate-200 pl-9 pr-3 py-1.5 text-xs focus:border-blue-500 focus:outline-none bg-white"
+                  className="w-full rounded-lg border border-slate-200 pl-9 pr-3 py-1.5 text-xs focus:border-blue-500 focus:outline-none bg-white dark:bg-[#141414]"
                 />
               </div>
 
@@ -620,7 +618,7 @@ export default function TestimonialsPage({ currentLang, setTab }: TestimonialsPa
                 <select
                   value={selectedCategory}
                   onChange={(e) => setSelectedCategory(e.target.value)}
-                  className="rounded-lg border border-slate-200 px-3 py-1.5 text-xs bg-white focus:outline-none font-semibold text-slate-600"
+                  className="rounded-lg border border-slate-200 px-3 py-1.5 text-xs bg-white dark:bg-[#141414] focus:outline-none font-semibold text-slate-600"
                 >
                   <option value="all">{currentLang === 'en' ? 'All Services' : 'সকল সার্ভিস'}</option>
                   {categories.map((c) => (
@@ -633,7 +631,7 @@ export default function TestimonialsPage({ currentLang, setTab }: TestimonialsPa
                 <select
                   value={selectedRating}
                   onChange={(e) => setSelectedRating(e.target.value === 'all' ? 'all' : Number(e.target.value))}
-                  className="rounded-lg border border-slate-200 px-3 py-1.5 text-xs bg-white focus:outline-none font-semibold text-slate-600"
+                  className="rounded-lg border border-slate-200 px-3 py-1.5 text-xs bg-white dark:bg-[#141414] focus:outline-none font-semibold text-slate-600"
                 >
                   <option value="all">{currentLang === 'en' ? 'All Ratings' : 'সকল রেটিং'}</option>
                   <option value="5">⭐⭐⭐⭐⭐ (5 Stars)</option>
@@ -662,7 +660,7 @@ export default function TestimonialsPage({ currentLang, setTab }: TestimonialsPa
                 {filteredTestimonials.map((t) => (
                   <div 
                     key={t.id}
-                    className="rounded-2xl border border-slate-150 bg-white p-5 flex flex-col justify-between space-y-4 hover:border-blue-400 hover:shadow-md transition duration-300"
+                    className="rounded-2xl border border-slate-150 bg-white dark:bg-[#141414] p-5 flex flex-col justify-between space-y-4 hover:border-blue-400 hover:shadow-md transition duration-300"
                   >
                     <div className="space-y-3">
                       
@@ -674,8 +672,8 @@ export default function TestimonialsPage({ currentLang, setTab }: TestimonialsPa
                           ))}
                         </div>
                         {t.isVerified && (
-                          <span className="inline-flex items-center space-x-1 text-[10px] bg-emerald-50 text-emerald-700 border border-emerald-100 px-2 py-0.5 rounded-full font-bold">
-                            <ShieldCheck className="h-3.5 w-3.5 text-emerald-600" />
+                          <span className="inline-flex items-center space-x-1 text-[10px] bg-emerald-50 dark:bg-emerald-500/10 text-emerald-700 border border-emerald-100 dark:border-emerald-500/20 px-2 py-0.5 rounded-full font-bold">
+                            <ShieldCheck className="h-3.5 w-3.5 text-emerald-600 dark:text-emerald-400" />
                             <span>Verified</span>
                           </span>
                         )}
@@ -705,7 +703,7 @@ export default function TestimonialsPage({ currentLang, setTab }: TestimonialsPa
                 ))}
               </div>
             ) : (
-              <div className="bg-white rounded-2xl border border-slate-200 p-8 text-center max-w-md mx-auto space-y-2">
+              <div className="bg-white dark:bg-[#141414] rounded-2xl border border-slate-200 p-8 text-center max-w-md mx-auto space-y-2">
                 <span className="text-3xl">🔍</span>
                 <h4 className="font-bold text-slate-900">No matching reviews found</h4>
                 <p className="text-xs text-slate-500">Try adjusting your filters, selecting "All Services", or resetting the search string query.</p>
@@ -718,10 +716,10 @@ export default function TestimonialsPage({ currentLang, setTab }: TestimonialsPa
 
       {/* 07. REVIEW STATISTICS (ANALYTICS) */}
       {sectionVisibility.wall && (
-        <section id="review-statistics-section" className="py-20 bg-white border-b border-slate-100">
+        <section id="review-statistics-section" className="py-20 bg-white dark:bg-[#141414] border-b border-slate-100">
           <div className="mx-auto max-w-4xl px-4 sm:px-6 space-y-8">
             <div className="text-center space-y-2">
-              <span className="text-xs font-bold text-blue-600 uppercase tracking-widest">07. RATING DENSITY ANALYSIS</span>
+              <span className="text-xs font-bold text-blue-600 dark:text-orange-400 uppercase tracking-widest">07. RATING DENSITY ANALYSIS</span>
               <h3 className="font-display text-2xl sm:text-3xl font-bold tracking-tight text-slate-900">Verified Rating Distribution</h3>
               <p className="text-xs text-slate-500">Independent rating percentages calculated directly across all verified digital project handovers.</p>
             </div>
@@ -764,12 +762,12 @@ export default function TestimonialsPage({ currentLang, setTab }: TestimonialsPa
       {sectionVisibility.clientMoments && moments.length > 0 && (
         <section id="client-moments-section" className="py-24 bg-slate-50 border-t border-b border-slate-150 relative overflow-hidden">
           {/* Decorative ambient gradients */}
-          <div className="absolute top-0 left-1/4 w-96 h-96 bg-blue-100/30 rounded-full blur-3xl -z-10" />
-          <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-purple-100/20 rounded-full blur-3xl -z-10" />
+          <div className="absolute top-0 left-1/4 w-96 h-96 bg-blue-100/30 dark:bg-orange-500/5 rounded-full blur-3xl -z-10" />
+          <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-purple-100/20 dark:bg-orange-500/5 rounded-full blur-3xl -z-10" />
 
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-16">
             <div className="text-center max-w-3xl mx-auto space-y-3">
-              <span className="text-xs font-bold text-blue-600 uppercase tracking-widest bg-blue-50 px-3 py-1 rounded-full inline-block">
+              <span className="text-xs font-bold text-blue-600 dark:text-orange-400 uppercase tracking-widest bg-blue-50 dark:bg-orange-500/10 px-3 py-1 rounded-full inline-block">
                 07. CLIENT MOMENTS
               </span>
               <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl font-black text-slate-900 tracking-tight leading-tight">
@@ -791,7 +789,7 @@ export default function TestimonialsPage({ currentLang, setTab }: TestimonialsPa
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true, margin: "-100px" }}
                   transition={{ duration: 0.6, delay: idx * 0.1 }}
-                  className="group bg-white rounded-3xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-xl transition duration-500 flex flex-col justify-between"
+                  className="group bg-white dark:bg-[#141414] rounded-3xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-xl transition duration-500 flex flex-col justify-between"
                 >
                   {/* Photo container */}
                   <div className="relative aspect-[4/3] overflow-hidden bg-slate-100">
@@ -806,7 +804,7 @@ export default function TestimonialsPage({ currentLang, setTab }: TestimonialsPa
                     
                     {/* Client badge */}
                     {moment.company && (
-                      <span className="absolute top-4 left-4 text-[10px] font-bold uppercase tracking-wider bg-white/95 text-slate-900 px-2.5 py-1 rounded-full shadow-sm backdrop-blur">
+                      <span className="absolute top-4 left-4 text-[10px] font-bold uppercase tracking-wider bg-white/95 dark:bg-[#0D0D0D]/95 text-slate-900 px-2.5 py-1 rounded-full shadow-sm backdrop-blur">
                         {moment.company}
                       </span>
                     )}
@@ -815,7 +813,7 @@ export default function TestimonialsPage({ currentLang, setTab }: TestimonialsPa
                   {/* Text details */}
                   <div className="p-6 space-y-4 flex-1 flex flex-col justify-between">
                     <div className="space-y-2">
-                      <h3 className="font-display font-bold text-lg text-slate-900 group-hover:text-blue-600 transition duration-300 line-clamp-1">
+                      <h3 className="font-display font-bold text-lg text-slate-900 group-hover:text-blue-600 dark:text-orange-400 transition duration-300 line-clamp-1">
                         {currentLang === 'en' ? moment.titleEn : (moment.titleBn || moment.titleEn)}
                       </h3>
                       {moment.descriptionEn && (
@@ -827,7 +825,7 @@ export default function TestimonialsPage({ currentLang, setTab }: TestimonialsPa
 
                     <div className="flex items-center justify-between pt-4 border-t border-slate-100 mt-2">
                       <div className="flex items-center space-x-2">
-                        <div className="h-6 w-6 rounded-full bg-blue-100 flex items-center justify-center text-xs font-bold text-blue-700">
+                        <div className="h-6 w-6 rounded-full bg-blue-100 dark:bg-orange-500/15 flex items-center justify-center text-xs font-bold text-blue-700">
                           {moment.clientName.charAt(0)}
                         </div>
                         <span className="text-xs font-bold text-slate-700 truncate max-w-[150px]">
@@ -850,10 +848,10 @@ export default function TestimonialsPage({ currentLang, setTab }: TestimonialsPa
 
       {/* 09. WHY CLIENTS LOVE US (INTERACTIVE BENTO GRID) */}
       {sectionVisibility.whyUs && (
-        <section id="why-clients-love-us" className="py-20 bg-white">
+        <section id="why-clients-love-us" className="py-20 bg-white dark:bg-[#141414]">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-12">
             <div className="text-center max-w-xl mx-auto space-y-2">
-              <span className="text-xs font-bold text-blue-600 uppercase tracking-widest">09. SURGICAL WORKSTANDARDS</span>
+              <span className="text-xs font-bold text-blue-600 dark:text-orange-400 uppercase tracking-widest">09. SURGICAL WORKSTANDARDS</span>
               <h2 className="font-display text-3xl sm:text-4xl font-black text-slate-900 tracking-tight leading-tight">
                 {currentLang === 'en' ? 'Why Progressive Teams Choose Us' : 'কেন প্রগ্রেসিভ টিমগুলো আমাদের বেছে নেয়'}
               </h2>
@@ -863,7 +861,7 @@ export default function TestimonialsPage({ currentLang, setTab }: TestimonialsPa
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
               
               <div className="bg-slate-50 rounded-2xl border border-slate-150 p-6 space-y-3 hover:shadow-md transition">
-                <div className="h-10 w-10 bg-blue-100 rounded-xl text-blue-700 flex items-center justify-center text-lg font-bold">💬</div>
+                <div className="h-10 w-10 bg-blue-100 dark:bg-orange-500/15 rounded-xl text-blue-700 flex items-center justify-center text-lg font-bold">💬</div>
                 <h4 className="font-bold text-slate-900 text-sm">Honest Communication</h4>
                 <p className="text-xs text-slate-500 leading-relaxed">Daily async updates, direct Slack channel access, and transparent weekly design milestone sign-offs.</p>
               </div>
@@ -900,10 +898,10 @@ export default function TestimonialsPage({ currentLang, setTab }: TestimonialsPa
 
       {/* 11. GOOGLE REVIEW STYLE SECTION */}
       {sectionVisibility.googleReviews && (
-        <section id="google-reviews-section" className="py-20 bg-white">
+        <section id="google-reviews-section" className="py-20 bg-white dark:bg-[#141414]">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-12">
             <div className="text-center max-w-xl mx-auto space-y-2">
-              <span className="text-xs font-bold text-blue-600 uppercase tracking-widest">11. GOOGLE MAPS STYLE REVIEWS</span>
+              <span className="text-xs font-bold text-blue-600 dark:text-orange-400 uppercase tracking-widest">11. GOOGLE MAPS STYLE REVIEWS</span>
               <h2 className="font-display text-3xl sm:text-4xl font-black text-slate-900 tracking-tight leading-tight">
                 {currentLang === 'en' ? 'Verified Google Mapping Reviews' : 'গুগল ম্যাপ স্টাইল ভেরিফাইড রিভিউ'}
               </h2>
@@ -920,7 +918,7 @@ export default function TestimonialsPage({ currentLang, setTab }: TestimonialsPa
                       <span className="text-[10px] text-slate-400">Verified Google User • 2 months ago</span>
                     </div>
                   </div>
-                  <span className="text-[10px] uppercase font-mono font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-100">Highly Recommended</span>
+                  <span className="text-[10px] uppercase font-mono font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-100 dark:border-emerald-500/20">Highly Recommended</span>
                 </div>
                 <p className="text-xs sm:text-sm text-slate-600 leading-relaxed italic">
                   "Next Solution redesigned our entire fintech dashboard. They completed everything 3 weeks ahead of schedule and our site load speed metrics blew past competitors."
@@ -930,7 +928,7 @@ export default function TestimonialsPage({ currentLang, setTab }: TestimonialsPa
                 <div className="flex items-center justify-between text-[11px] text-slate-400 border-t border-slate-150 pt-3">
                   <button 
                     onClick={() => handleHelpfulIncrement('google-1')}
-                    className={`flex items-center space-x-1 font-bold ${helpfulClicked['google-1'] ? 'text-blue-600' : 'text-slate-500 hover:text-slate-800'}`}
+                    className={`flex items-center space-x-1 font-bold ${helpfulClicked['google-1'] ? 'text-blue-600 dark:text-orange-400' : 'text-slate-500 hover:text-slate-800'}`}
                   >
                     <ThumbsUp className="h-3.5 w-3.5" />
                     <span>Helpful ({helpfulRatings['google-1'] || 12})</span>
@@ -938,7 +936,7 @@ export default function TestimonialsPage({ currentLang, setTab }: TestimonialsPa
                   <span>Like count: 42</span>
                 </div>
 
-                <div className="bg-white rounded-xl border border-slate-150 p-3 text-[11px] text-slate-600 space-y-1">
+                <div className="bg-white dark:bg-[#141414] rounded-xl border border-slate-150 p-3 text-[11px] text-slate-600 space-y-1">
                   <strong className="block text-slate-900">Response from Next Solution (Owner):</strong>
                   <p className="leading-relaxed">"Thank you so much Sarah! Our senior solutions engineers loved collaborating on Fintech Spark's flat-compiled design framework. Excited for our long-term SLA support!"</p>
                 </div>
@@ -953,7 +951,7 @@ export default function TestimonialsPage({ currentLang, setTab }: TestimonialsPa
                       <span className="text-[10px] text-slate-400">Verified Google User • 3 months ago</span>
                     </div>
                   </div>
-                  <span className="text-[10px] uppercase font-mono font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-100">Highly Recommended</span>
+                  <span className="text-[10px] uppercase font-mono font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-100 dark:border-emerald-500/20">Highly Recommended</span>
                 </div>
                 <p className="text-xs sm:text-sm text-slate-600 leading-relaxed italic">
                   "Sora Web3 Labs conversion metrics surged by 42% on the first week following Next Solution re-branding launch. Their Figma design system audit is unmatched."
@@ -963,7 +961,7 @@ export default function TestimonialsPage({ currentLang, setTab }: TestimonialsPa
                 <div className="flex items-center justify-between text-[11px] text-slate-400 border-t border-slate-150 pt-3">
                   <button 
                     onClick={() => handleHelpfulIncrement('google-2')}
-                    className={`flex items-center space-x-1 font-bold ${helpfulClicked['google-2'] ? 'text-blue-600' : 'text-slate-500 hover:text-slate-800'}`}
+                    className={`flex items-center space-x-1 font-bold ${helpfulClicked['google-2'] ? 'text-blue-600 dark:text-orange-400' : 'text-slate-500 hover:text-slate-800'}`}
                   >
                     <ThumbsUp className="h-3.5 w-3.5" />
                     <span>Helpful ({helpfulRatings['google-2'] || 8})</span>
@@ -971,7 +969,7 @@ export default function TestimonialsPage({ currentLang, setTab }: TestimonialsPa
                   <span>Like count: 28</span>
                 </div>
 
-                <div className="bg-white rounded-xl border border-slate-150 p-3 text-[11px] text-slate-600 space-y-1">
+                <div className="bg-white dark:bg-[#141414] rounded-xl border border-slate-150 p-3 text-[11px] text-slate-600 space-y-1">
                   <strong className="block text-slate-900">Response from Next Solution (Owner):</strong>
                   <p className="leading-relaxed">"Awesome David! Simplifying decentralized structures into elegant onboarding screens is exactly what our design sprint framework aims to achieve."</p>
                 </div>
@@ -1022,20 +1020,20 @@ export default function TestimonialsPage({ currentLang, setTab }: TestimonialsPa
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.95 }}
                   transition={{ duration: 0.3 }}
-                  className="bg-white text-slate-900 rounded-3xl border border-slate-200 p-8 sm:p-10 text-left shadow-2xl max-w-4xl mx-auto mt-10 relative overflow-hidden"
+                  className="bg-white dark:bg-[#141414] text-slate-900 rounded-3xl border border-slate-200 p-8 sm:p-10 text-left shadow-2xl max-w-4xl mx-auto mt-10 relative overflow-hidden"
                 >
                   {/* Anchor for smooth scroll target */}
                   <div id="review-form-anchor" className="absolute -top-12" />
 
                   {/* Decorative background gradients for the form */}
                   <div className="absolute top-0 right-0 w-64 h-64 bg-amber-50/40 rounded-full blur-2xl -z-10" />
-                  <div className="absolute bottom-0 left-0 w-64 h-64 bg-blue-50/40 rounded-full blur-2xl -z-10" />
+                  <div className="absolute bottom-0 left-0 w-64 h-64 bg-blue-50/40 dark:bg-orange-500/5 rounded-full blur-2xl -z-10" />
 
                   <div className="flex items-center justify-between border-b border-slate-100 pb-5 mb-6">
                     <div className="space-y-1">
                       <h3 className="font-display font-black text-xl sm:text-2xl text-slate-900 flex items-center space-x-2">
                         <span className="p-2 bg-amber-100 rounded-xl inline-flex">
-                          <Sparkles className="h-5 w-5 text-amber-600" />
+                          <Sparkles className="h-5 w-5 text-amber-600 dark:text-amber-400" />
                         </span>
                         <span>{currentLang === 'en' ? 'Submit Your Verified Client Feedback' : 'প্রজেক্টের তথ্য ও রিভিউ জমা দিন'}</span>
                       </h3>
@@ -1052,9 +1050,9 @@ export default function TestimonialsPage({ currentLang, setTab }: TestimonialsPa
                   </div>
 
                   {formSuccess ? (
-                    <div className="bg-emerald-50 border border-emerald-200 rounded-3xl p-10 text-center space-y-4 max-w-xl mx-auto">
-                      <div className="h-16 w-16 bg-emerald-100 rounded-full flex items-center justify-center text-emerald-600 mx-auto text-3xl font-bold animate-bounce">
-                        <CheckCircle className="h-10 w-10 text-emerald-600" />
+                    <div className="bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-200 rounded-3xl p-10 text-center space-y-4 max-w-xl mx-auto">
+                      <div className="h-16 w-16 bg-emerald-100 rounded-full flex items-center justify-center text-emerald-600 dark:text-emerald-400 mx-auto text-3xl font-bold animate-bounce">
+                        <CheckCircle className="h-10 w-10 text-emerald-600 dark:text-emerald-400" />
                       </div>
                       <h4 className="font-display font-black text-xl text-emerald-950">
                         {currentLang === 'en' ? 'Review Received Successfully!' : 'রিভিউটি সফলভাবে জমা হয়েছে!'}
@@ -1070,7 +1068,7 @@ export default function TestimonialsPage({ currentLang, setTab }: TestimonialsPa
                       
                       {/* Section 1: Professional Profile */}
                       <div className="space-y-4">
-                        <span className="text-[11px] font-black text-blue-600 uppercase tracking-widest block border-b border-blue-50 pb-1">
+                        <span className="text-[11px] font-black text-blue-600 dark:text-orange-400 uppercase tracking-widest block border-b border-blue-50 pb-1">
                           01. {currentLang === 'en' ? 'Your Professional Profile' : 'আপনার পেশাগত প্রোফাইল'}
                         </span>
                         
@@ -1146,7 +1144,7 @@ export default function TestimonialsPage({ currentLang, setTab }: TestimonialsPa
                                 />
                               </button>
                             ))}
-                            <span className="text-xs font-extrabold text-slate-700 ml-3 bg-white px-2.5 py-1 rounded-md border border-slate-200 shadow-sm">
+                            <span className="text-xs font-extrabold text-slate-700 ml-3 bg-white dark:bg-[#141414] px-2.5 py-1 rounded-md border border-slate-200 shadow-sm">
                               {rating} / 5.0
                             </span>
                           </div>
@@ -1185,7 +1183,7 @@ export default function TestimonialsPage({ currentLang, setTab }: TestimonialsPa
                               value={avatarUrl} 
                               onChange={e => setAvatarUrl(e.target.value)}
                               placeholder="Or paste image URL link..."
-                              className="flex-1 rounded-xl border border-slate-200 px-3 py-1.5 text-xs bg-white focus:border-blue-500 focus:outline-none"
+                              className="flex-1 rounded-xl border border-slate-200 px-3 py-1.5 text-xs bg-white dark:bg-[#141414] focus:border-blue-500 focus:outline-none"
                             />
                           </div>
                         </div>
@@ -1194,25 +1192,17 @@ export default function TestimonialsPage({ currentLang, setTab }: TestimonialsPa
 
                       {/* Section 3: Detailed Feedback */}
                       <div className="space-y-4 pt-2">
-                        <span className="text-[11px] font-black text-blue-600 uppercase tracking-widest block border-b border-blue-50 pb-1">
+                        <span className="text-[11px] font-black text-blue-600 dark:text-orange-400 uppercase tracking-widest block border-b border-blue-50 pb-1">
                           02. {currentLang === 'en' ? 'Detailed Partnership Feedback' : 'ডিটেইলড প্রজেক্ট ফিডব্যাক'}
                         </span>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                        <div className="grid grid-cols-1 md:grid-cols-1 gap-5">
                           <div>
                             <label className="block text-[11px] font-bold text-slate-600 uppercase tracking-wider mb-1.5">Feedback Content (English) *</label>
                             <textarea 
                               required rows={4} value={feedbackEn} onChange={e => setFeedbackEn(e.target.value)}
                               className="w-full rounded-xl border border-slate-200 px-4 py-2.5 text-xs focus:border-blue-500 focus:ring-4 focus:ring-blue-100 focus:outline-none transition leading-relaxed"
                               placeholder="Express project speed, design quality, specific frameworks used, communication efficiency, and core outcomes..."
-                            />
-                          </div>
-                          <div>
-                            <label className="block text-[11px] font-bold text-slate-600 uppercase tracking-wider mb-1.5">Feedback Content (Bangla - Optional)</label>
-                            <textarea 
-                              rows={4} value={feedbackBn} onChange={e => setFeedbackBn(e.target.value)}
-                              className="w-full rounded-xl border border-slate-200 px-4 py-2.5 text-xs focus:border-blue-500 focus:ring-4 focus:ring-blue-100 focus:outline-none transition leading-relaxed"
-                              placeholder="প্রজেক্ট ডেলিভারি টাইম, আমাদের ব্যবহারকারীর চমৎকার অভিজ্ঞতা, সলিউশন মেকানিক্স এবং ব্র্যান্ড ডেভেলপমেন্ট নিয়ে বাংলায় লিখুন..."
                             />
                           </div>
                         </div>
@@ -1256,10 +1246,10 @@ export default function TestimonialsPage({ currentLang, setTab }: TestimonialsPa
 
       {/* 14. FAQ ACCORDIONS */}
       {sectionVisibility.faq && faqs.length > 0 && (
-        <section id="faq-section" className="py-20 bg-white">
+        <section id="faq-section" className="py-20 bg-white dark:bg-[#141414]">
           <div className="mx-auto max-w-4xl px-4 sm:px-6 space-y-10">
             <div className="text-center space-y-2">
-              <span className="text-xs font-bold text-blue-600 uppercase tracking-widest">14. FAQ ASSURANCE</span>
+              <span className="text-xs font-bold text-blue-600 dark:text-orange-400 uppercase tracking-widest">14. FAQ ASSURANCE</span>
               <h2 className="font-display text-3xl sm:text-4xl font-black text-slate-900 tracking-tight leading-tight">
                 {currentLang === 'en' ? 'Frequently Asked Questions' : 'সাধারণ জিজ্ঞাসা সমূহ'}
               </h2>
@@ -1269,13 +1259,13 @@ export default function TestimonialsPage({ currentLang, setTab }: TestimonialsPa
               {faqs.map((faq) => {
                 const isOpen = expandedFaq === faq.id;
                 return (
-                  <div key={faq.id} className="rounded-xl border border-slate-150 overflow-hidden bg-slate-50/50 hover:bg-white transition">
+                  <div key={faq.id} className="rounded-xl border border-slate-150 overflow-hidden bg-slate-50/50 hover:bg-white dark:bg-[#141414] transition">
                     <button
                       onClick={() => setExpandedFaq(isOpen ? null : faq.id)}
                       className="w-full text-left p-4 flex items-center justify-between text-xs sm:text-sm font-bold text-slate-900 focus:outline-none"
                     >
                       <span>{currentLang === 'en' ? faq.questionEn : faq.questionBn}</span>
-                      <ChevronDown className={`h-4 w-4 text-slate-400 transition-transform duration-300 ${isOpen ? 'rotate-180 text-blue-600' : ''}`} />
+                      <ChevronDown className={`h-4 w-4 text-slate-400 transition-transform duration-300 ${isOpen ? 'rotate-180 text-blue-600 dark:text-orange-400' : ''}`} />
                     </button>
                     
                     <AnimatePresence initial={false}>
@@ -1286,7 +1276,7 @@ export default function TestimonialsPage({ currentLang, setTab }: TestimonialsPa
                           exit={{ height: 0 }}
                           className="overflow-hidden border-t border-slate-100"
                         >
-                          <p className="p-4 text-xs text-slate-500 leading-relaxed bg-white">
+                          <p className="p-4 text-xs text-slate-500 leading-relaxed bg-white dark:bg-[#141414]">
                             {currentLang === 'en' ? faq.answerEn : faq.answerBn}
                           </p>
                         </motion.div>

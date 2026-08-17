@@ -90,18 +90,18 @@ export default function ContactSection({ currentLang, isFullPage = false }: Cont
   };
 
   return (
-    <section id="contact-section" className={`bg-gray-50 py-20 ${isFullPage ? 'min-h-screen py-24' : ''}`}>
+    <section id="contact-section" className={`bg-gray-50 dark:bg-neutral-900 py-20 ${isFullPage ? 'min-h-screen py-24' : ''}`}>
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         
         {/* Section Header */}
         <div className="text-center space-y-4 max-w-3xl mx-auto mb-16">
-          <span className="text-xs font-bold uppercase tracking-wider text-blue-600 px-3 py-1 bg-blue-50 rounded-full inline-block">
+          <span className="text-xs font-bold uppercase tracking-wider text-blue-600 dark:text-orange-400 px-3 py-1 bg-blue-50 dark:bg-orange-500/10 rounded-full inline-block">
             {currentLang === 'en' ? 'Get In Touch' : 'যোগাযোগ করুন'}
           </span>
-          <h2 className="font-sans text-3xl font-extrabold tracking-tight text-gray-900 sm:text-4xl">
+          <h2 className="font-sans text-3xl font-extrabold tracking-tight text-gray-900 dark:text-white sm:text-4xl">
             {t.sectionContactTitle}
           </h2>
-          <p className="text-sm text-gray-500 max-w-xl mx-auto">
+          <p className="text-sm text-gray-500 dark:text-neutral-400 dark:text-neutral-500 max-w-xl mx-auto">
             {t.sectionContactSub}
           </p>
         </div>
@@ -109,17 +109,17 @@ export default function ContactSection({ currentLang, isFullPage = false }: Cont
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-stretch">
           
           {/* Contact Form Container (Left Column) */}
-          <div className="lg:col-span-7 bg-white rounded-2xl border border-gray-100 p-8 sm:p-10 shadow-sm flex flex-col justify-between">
+          <div className="lg:col-span-7 bg-white dark:bg-[#141414] rounded-2xl border border-gray-100 dark:border-neutral-800 p-8 sm:p-10 shadow-sm flex flex-col justify-between">
             {isSuccess ? (
               <div id="contact-success" className="text-center py-12 space-y-6 max-w-md mx-auto my-auto">
                 <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-green-50 text-green-600 border border-green-100">
                   <CheckCircle className="h-8 w-8" />
                 </div>
                 <div className="space-y-2">
-                  <h3 className="text-xl font-bold text-gray-900">
+                  <h3 className="text-xl font-bold text-gray-900 dark:text-white">
                     {currentLang === 'en' ? 'Message Sent Successfully!' : 'বার্তা সফলভাবে পাঠানো হয়েছে!'}
                   </h3>
-                  <p className="text-sm text-gray-500 leading-relaxed">
+                  <p className="text-sm text-gray-500 dark:text-neutral-400 dark:text-neutral-500 leading-relaxed">
                     {t.contactSuccessMessage}
                   </p>
                 </div>
@@ -137,7 +137,7 @@ export default function ContactSection({ currentLang, isFullPage = false }: Cont
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                   {/* Name field */}
                   <div className="space-y-1.5">
-                    <label htmlFor="contact-name" className="block text-xs font-bold text-gray-700 uppercase tracking-wider">
+                    <label htmlFor="contact-name" className="block text-xs font-bold text-gray-700 dark:text-neutral-200 uppercase tracking-wider">
                       {t.contactNameLabel} *
                     </label>
                     <input
@@ -147,13 +147,13 @@ export default function ContactSection({ currentLang, isFullPage = false }: Cont
                       value={name}
                       onChange={(e) => setName(e.target.value)}
                       placeholder={currentLang === 'en' ? 'e.g. John Doe' : 'যেমন: জন ডো'}
-                      className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm text-gray-800 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-500/10 transition"
+                      className="w-full rounded-xl border border-gray-200 dark:border-neutral-700 bg-gray-50 dark:bg-neutral-900 px-4 py-3 text-sm text-gray-800 dark:text-neutral-100 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:bg-white dark:bg-[#141414] focus:ring-2 focus:ring-blue-500/10 transition"
                     />
                   </div>
 
                   {/* Email field */}
                   <div className="space-y-1.5">
-                    <label htmlFor="contact-email" className="block text-xs font-bold text-gray-700 uppercase tracking-wider">
+                    <label htmlFor="contact-email" className="block text-xs font-bold text-gray-700 dark:text-neutral-200 uppercase tracking-wider">
                       {t.contactEmailLabel} *
                     </label>
                     <input
@@ -163,7 +163,7 @@ export default function ContactSection({ currentLang, isFullPage = false }: Cont
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       placeholder={currentLang === 'en' ? 'e.g. john@example.com' : 'যেমন: john@example.com'}
-                      className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm text-gray-800 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-500/10 transition"
+                      className="w-full rounded-xl border border-gray-200 dark:border-neutral-700 bg-gray-50 dark:bg-neutral-900 px-4 py-3 text-sm text-gray-800 dark:text-neutral-100 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:bg-white dark:bg-[#141414] focus:ring-2 focus:ring-blue-500/10 transition"
                     />
                   </div>
                 </div>
@@ -171,7 +171,7 @@ export default function ContactSection({ currentLang, isFullPage = false }: Cont
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                   {/* Phone field */}
                   <div className="space-y-1.5">
-                    <label htmlFor="contact-phone" className="block text-xs font-bold text-gray-700 uppercase tracking-wider">
+                    <label htmlFor="contact-phone" className="block text-xs font-bold text-gray-700 dark:text-neutral-200 uppercase tracking-wider">
                       {t.contactPhoneLabel} *
                     </label>
                     <input
@@ -181,20 +181,20 @@ export default function ContactSection({ currentLang, isFullPage = false }: Cont
                       value={phone}
                       onChange={(e) => setPhone(e.target.value)}
                       placeholder={currentLang === 'en' ? 'e.g. +880 1700-000000' : 'যেমন: +৮৮০ ১৭০০-০০০০০০'}
-                      className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm text-gray-800 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-500/10 transition"
+                      className="w-full rounded-xl border border-gray-200 dark:border-neutral-700 bg-gray-50 dark:bg-neutral-900 px-4 py-3 text-sm text-gray-800 dark:text-neutral-100 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:bg-white dark:bg-[#141414] focus:ring-2 focus:ring-blue-500/10 transition"
                     />
                   </div>
 
                   {/* Budget Selector */}
                   <div className="space-y-1.5">
-                    <label htmlFor="contact-budget" className="block text-xs font-bold text-gray-700 uppercase tracking-wider">
+                    <label htmlFor="contact-budget" className="block text-xs font-bold text-gray-700 dark:text-neutral-200 uppercase tracking-wider">
                       {t.contactBudgetLabel}
                     </label>
                     <select
                       id="contact-budget"
                       value={budget}
                       onChange={(e) => setBudget(e.target.value)}
-                      className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm text-gray-800 focus:outline-none focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-500/10 transition"
+                      className="w-full rounded-xl border border-gray-200 dark:border-neutral-700 bg-gray-50 dark:bg-neutral-900 px-4 py-3 text-sm text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 focus:bg-white dark:bg-[#141414] focus:ring-2 focus:ring-blue-500/10 transition"
                     >
                       <option value="">{currentLang === 'en' ? 'Select estimated budget' : 'আনুমানিক বাজেট নির্বাচন করুন'}</option>
                       <option value="Under $5,000">Under $5,000</option>
@@ -207,14 +207,14 @@ export default function ContactSection({ currentLang, isFullPage = false }: Cont
 
                 {/* Service Dropdown */}
                 <div className="space-y-1.5">
-                  <label htmlFor="contact-service" className="block text-xs font-bold text-gray-700 uppercase tracking-wider">
+                  <label htmlFor="contact-service" className="block text-xs font-bold text-gray-700 dark:text-neutral-200 uppercase tracking-wider">
                     {t.contactServiceLabel}
                   </label>
                   <select
                     id="contact-service"
                     value={service}
                     onChange={(e) => setService(e.target.value)}
-                    className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm text-gray-800 focus:outline-none focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-500/10 transition"
+                    className="w-full rounded-xl border border-gray-200 dark:border-neutral-700 bg-gray-50 dark:bg-neutral-900 px-4 py-3 text-sm text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 focus:bg-white dark:bg-[#141414] focus:ring-2 focus:ring-blue-500/10 transition"
                   >
                     <option value="">{currentLang === 'en' ? 'Select a capability' : 'সার্ভিস নির্বাচন করুন'}</option>
                     {services.map((srv) => (
@@ -228,7 +228,7 @@ export default function ContactSection({ currentLang, isFullPage = false }: Cont
 
                 {/* Message field */}
                 <div className="space-y-1.5">
-                  <label htmlFor="contact-message" className="block text-xs font-bold text-gray-700 uppercase tracking-wider">
+                  <label htmlFor="contact-message" className="block text-xs font-bold text-gray-700 dark:text-neutral-200 uppercase tracking-wider">
                     {t.contactMessageLabel} *
                   </label>
                   <textarea
@@ -238,22 +238,22 @@ export default function ContactSection({ currentLang, isFullPage = false }: Cont
                     value={message}
                     onChange={(e) => setMessage(e.target.value)}
                     placeholder={currentLang === 'en' ? 'Describe your project goals, milestones, and design requirements...' : 'আপনার প্রজেক্টের লক্ষ্য এবং প্রয়োজনীয়তা উল্লেখ করুন...'}
-                    className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm text-gray-800 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-500/10 transition resize-none"
+                    className="w-full rounded-xl border border-gray-200 dark:border-neutral-700 bg-gray-50 dark:bg-neutral-900 px-4 py-3 text-sm text-gray-800 dark:text-neutral-100 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:bg-white dark:bg-[#141414] focus:ring-2 focus:ring-blue-500/10 transition resize-none"
                   />
                 </div>
 
                 {/* Error Box */}
                 {errorMsg && (
-                  <div className="rounded-xl bg-red-50 border border-red-100 p-4 text-xs font-bold text-red-600 flex items-center space-x-2">
+                  <div className="rounded-xl bg-red-50 dark:bg-red-500/10 border border-red-100 dark:border-red-500/20 p-4 text-xs font-bold text-red-600 dark:text-red-400 flex items-center space-x-2">
                     <AlertCircle className="h-4.5 w-4.5 shrink-0" />
                     <span>{errorMsg}</span>
                   </div>
                 )}
 
                 {/* Submit Action */}
-                <div className="pt-2 border-t border-gray-100 flex flex-col sm:flex-row items-center justify-between gap-4">
-                  <div className="flex items-center space-x-2 text-xs text-gray-400">
-                    <Shield className="h-4 w-4 text-gray-300" />
+                <div className="pt-2 border-t border-gray-100 dark:border-neutral-800 flex flex-col sm:flex-row items-center justify-between gap-4">
+                  <div className="flex items-center space-x-2 text-xs text-gray-400 dark:text-neutral-500">
+                    <Shield className="h-4 w-4 text-gray-300 dark:text-neutral-500" />
                     <span>{currentLang === 'en' ? 'Your info is secure and never shared.' : 'আপনার তথ্য আমাদের কাছে সম্পূর্ণ নিরাপদ।'}</span>
                   </div>
                   <button
@@ -274,37 +274,37 @@ export default function ContactSection({ currentLang, isFullPage = false }: Cont
           <div className="lg:col-span-5 flex flex-col justify-between space-y-8">
             
             {/* Headquarters details card */}
-            <div className="bg-white rounded-2xl border border-gray-100 p-8 shadow-sm space-y-6">
-              <h3 className="text-sm font-bold text-gray-900 uppercase tracking-wider border-b border-gray-100 pb-3">
+            <div className="bg-white dark:bg-[#141414] rounded-2xl border border-gray-100 dark:border-neutral-800 p-8 shadow-sm space-y-6">
+              <h3 className="text-sm font-bold text-gray-900 dark:text-white uppercase tracking-wider border-b border-gray-100 dark:border-neutral-800 pb-3">
                 {t.contactOfficeHeader}
               </h3>
               
-              <ul className="space-y-4 text-sm text-gray-600">
+              <ul className="space-y-4 text-sm text-gray-600 dark:text-neutral-300 dark:text-neutral-600">
                 <li className="flex items-start space-x-3">
-                  <MapPin className="h-5 w-5 text-blue-600 shrink-0 mt-0.5" />
+                  <MapPin className="h-5 w-5 text-blue-600 dark:text-orange-400 shrink-0 mt-0.5" />
                   <span className="leading-relaxed">Suite 404, Silicon High-Street, Dhaka, Bangladesh</span>
                 </li>
                 <li className="flex items-center space-x-3">
-                  <Smartphone className="h-5 w-5 text-blue-600 shrink-0" />
-                  <a href="tel:+8801711000000" className="hover:text-blue-600 transition font-mono">+880 1711 000000</a>
+                  <Smartphone className="h-5 w-5 text-blue-600 dark:text-orange-400 shrink-0" />
+                  <a href="tel:+8801711000000" className="hover:text-blue-600 dark:text-orange-400 transition font-mono">+880 1711 000000</a>
                 </li>
                 <li className="flex items-center space-x-3">
-                  <Mail className="h-5 w-5 text-blue-600 shrink-0" />
-                  <a href="mailto:hello@nextsolution.co" className="hover:text-blue-600 transition font-mono">hello@nextsolution.co</a>
+                  <Mail className="h-5 w-5 text-blue-600 dark:text-orange-400 shrink-0" />
+                  <a href="mailto:hello@nextsolution.co" className="hover:text-blue-600 dark:text-orange-400 transition font-mono">hello@nextsolution.co</a>
                 </li>
                 <li className="flex items-start space-x-3 pt-2 border-t border-gray-50">
-                  <Clock className="h-5 w-5 text-blue-600 shrink-0 mt-0.5" />
+                  <Clock className="h-5 w-5 text-blue-600 dark:text-orange-400 shrink-0 mt-0.5" />
                   <div className="space-y-1">
-                    <span className="block font-bold text-gray-800 text-xs uppercase tracking-wider">{t.footerWorkingHours}</span>
-                    <span className="text-xs text-gray-500">Mon - Fri: 9:00 AM - 6:00 PM (GMT+6)</span>
+                    <span className="block font-bold text-gray-800 dark:text-neutral-100 text-xs uppercase tracking-wider">{t.footerWorkingHours}</span>
+                    <span className="text-xs text-gray-500 dark:text-neutral-400 dark:text-neutral-500">Mon - Fri: 9:00 AM - 6:00 PM (GMT+6)</span>
                   </div>
                 </li>
               </ul>
             </div>
 
             {/* Quick social links or ways to connect */}
-            <div className="bg-white rounded-2xl border border-gray-100 p-8 shadow-sm space-y-6">
-              <h3 className="text-sm font-bold text-gray-900 uppercase tracking-wider border-b border-gray-100 pb-3">
+            <div className="bg-white dark:bg-[#141414] rounded-2xl border border-gray-100 dark:border-neutral-800 p-8 shadow-sm space-y-6">
+              <h3 className="text-sm font-bold text-gray-900 dark:text-white uppercase tracking-wider border-b border-gray-100 dark:border-neutral-800 pb-3">
                 {t.contactSocialsHeader}
               </h3>
               
@@ -313,7 +313,7 @@ export default function ContactSection({ currentLang, isFullPage = false }: Cont
                   href="https://wa.me/8801711000000"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center justify-between p-4 rounded-xl border border-emerald-100 bg-emerald-50 hover:bg-emerald-100/80 text-xs font-bold text-emerald-700 transition shadow-sm hover:shadow-md"
+                  className="flex items-center justify-between p-4 rounded-xl border border-emerald-100 dark:border-emerald-500/20 bg-emerald-50 dark:bg-emerald-500/10 hover:bg-emerald-100/80 text-xs font-bold text-emerald-700 transition shadow-sm hover:shadow-md"
                 >
                   <div className="flex items-center space-x-2">
                     <svg className="h-4.5 w-4.5 fill-current shrink-0" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -321,13 +321,13 @@ export default function ContactSection({ currentLang, isFullPage = false }: Cont
                     </svg>
                     <span>WhatsApp</span>
                   </div>
-                  <ExternalLink className="h-3.5 w-3.5 text-emerald-500" />
+                  <ExternalLink className="h-3.5 w-3.5 text-emerald-500 dark:text-emerald-400" />
                 </a>
                 <a
                   href="https://m.me/nextsolution"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center justify-between p-4 rounded-xl border border-blue-100 bg-blue-50 hover:bg-blue-100/80 text-xs font-bold text-blue-700 transition shadow-sm hover:shadow-md"
+                  className="flex items-center justify-between p-4 rounded-xl border border-blue-100 dark:border-orange-500/20 bg-blue-50 dark:bg-orange-500/10 hover:bg-blue-100/80 text-xs font-bold text-blue-700 transition shadow-sm hover:shadow-md"
                 >
                   <div className="flex items-center space-x-2">
                     <svg className="h-4.5 w-4.5 fill-current shrink-0" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -335,18 +335,18 @@ export default function ContactSection({ currentLang, isFullPage = false }: Cont
                     </svg>
                     <span>Messenger</span>
                   </div>
-                  <ExternalLink className="h-3.5 w-3.5 text-blue-500" />
+                  <ExternalLink className="h-3.5 w-3.5 text-blue-500 dark:text-orange-400" />
                 </a>
               </div>
             </div>
 
             {/* Micro FAQ or Consultation assurance */}
-            <div className="rounded-2xl border border-blue-100 bg-blue-50/50 p-6 space-y-2.5">
+            <div className="rounded-2xl border border-blue-100 dark:border-orange-500/20 bg-blue-50/5 dark:bg-orange-500/50 p-6 space-y-2.5">
               <div className="flex items-center space-x-2 text-blue-700">
                 <MessageSquare className="h-4.5 w-4.5" />
                 <span className="text-xs font-bold uppercase tracking-wider">{currentLang === 'en' ? 'Free Consultation' : 'ফ্রি কনসালটেশন'}</span>
               </div>
-              <p className="text-xs text-gray-500 leading-relaxed">
+              <p className="text-xs text-gray-500 dark:text-neutral-400 dark:text-neutral-500 leading-relaxed">
                 {currentLang === 'en'
                   ? 'All inquiries receive a complimentary initial review and project strategy brief within 1 business day.'
                   : 'প্রতিটি বার্তার জন্য আমরা আমাদের সিনিয়র টিমের পক্ষ থেকে ১ কর্মদিবসের মধ্যে একটি ফ্রি কনসালটেশন রিপোর্ট প্রদান করি।'}

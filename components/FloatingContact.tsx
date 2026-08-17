@@ -102,7 +102,7 @@ export default function FloatingContact({ currentLang }: FloatingContactProps) {
                   className="flex items-center space-x-3 group"
                 >
                   {/* Tooltip Label */}
-                  <span className="bg-white text-slate-800 text-xs font-black px-3.5 py-1.5 rounded-xl border border-slate-100 shadow-xl opacity-0 group-hover:opacity-100 transform translate-x-2 group-hover:translate-x-0 transition-all duration-200 select-none pointer-events-none block whitespace-nowrap">
+                  <span className="bg-white dark:bg-[#141414] text-slate-800 text-xs font-black px-3.5 py-1.5 rounded-xl border border-slate-100 shadow-xl opacity-0 group-hover:opacity-100 transform translate-x-2 group-hover:translate-x-0 transition-all duration-200 select-none pointer-events-none block whitespace-nowrap">
                     {currentLang === 'en' ? opt.nameEn : opt.nameBn}
                   </span>
 
@@ -124,7 +124,7 @@ export default function FloatingContact({ currentLang }: FloatingContactProps) {
         className={`h-14 w-14 rounded-full flex items-center justify-center shadow-2xl relative transition duration-300 transform active:scale-90 select-none cursor-pointer ${
           isOpen 
             ? 'bg-slate-900 text-amber-400 rotate-180 border border-slate-800' 
-            : 'bg-gradient-to-r from-blue-600 via-indigo-600 to-indigo-700 text-white hover:shadow-indigo-500/25'
+            : 'bg-gradient-to-r from-blue-600 dark:from-orange-500 via-indigo-600 to-indigo-700 text-white hover:shadow-indigo-500/25'
         }`}
         aria-label="Contact Channels Toggle"
       >

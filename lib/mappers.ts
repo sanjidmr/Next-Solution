@@ -8,7 +8,8 @@ import {
   SiteSettings, PricingPackage, PricingAddon, PricingComparison, PricingQuoteRequest, Currency, CurrencySettings,
   TestimonialCategory, TestimonialVideo, TestimonialStatistics, ClientLogo, SuccessStory, ReviewSettings,
   LegalPolicy, LegalRevision, CookieCategory, CookieSettings, WhyChooseUsCard, WhyChooseUsStat,
-  WhyChooseUsBadge, WhyChooseUsTech, WhyChooseUsCTA, ProcessStep, ProcessCTA, TechServiceCard, ClientMoment
+  WhyChooseUsBadge, WhyChooseUsTech, WhyChooseUsCTA, ProcessStep, ProcessCTA, TechServiceCard, ClientMoment,
+  Product, ProductImage
 } from "@/types";
 
 // Helper to convert arrays of strings, objects to JSON strings/parsed JSON or keep arrays as JSONB arrays.
@@ -1267,3 +1268,88 @@ export const mapTechServiceCard = {
     };
   }
 };
+
+export const mapProductImage = {
+  toDb(item: Partial<ProductImage> & { url?: string; imageUrl?: string; image_url?: string }, productId?: string) {
+    const validUrl = (item.url || item.imageUrl || item.image_url || '').trim();
+    if (!validUrl) {
+      throw new Error("Product image URL cannot be null or empty.");
+    }
+    const pid = productId || item.productId;
+    if (!pid) {
+      throw new Error("Product ID is required for product_images relation.");
+    }
+    return {
+      ...(item.id ? { id: item.id } : {}),
+      product_id: pid,
+      url: validUrl,
+      image_url: validUrl,
+      display_order: item.displayOrder ?? 0,
+      is_main: item.isMain ?? false,
+    };
+  },
+  fromDb(row: any): ProductImage {
+    const urlVal = row.url || row.image_url || '';
+    return {
+      id: row.id,
+      productId: row.product_id,
+      url: urlVal,
+      imageUrl: urlVal,
+      displayOrder: row.display_order ?? 0,
+      isMain: row.is_main ?? false,
+      createdAt: row.created_at,
+    };
+  }
+};
+
+export const mapProduct = {
+  toDb(item: Partial<Product>) {
+    return {
+      ...(item.id ? { id: item.id } : {}),
+      title_en: item.titleEn,
+      title_bn: item.titleBn || null,
+      slug: item.slug,
+      description_en: item.descriptionEn || null,
+      description_bn: item.descriptionBn || null,
+      price: item.price ?? 0,
+      cost: item.cost ?? 0,
+      category: item.category || null,
+      subcategory: item.subcategory || null,
+      stock: item.stock ?? 0,
+      sold: item.sold ?? 0,
+      image: item.image || (item.images && item.images.length > 0 ? item.images[0] : null),
+      images: item.images || [],
+      status: item.status || 'published',
+      sort_order: item.sortOrder ?? 0,
+    };
+  },
+  fromDb(row: any, productImages?: ProductImage[]): Product {
+    const mainImg = row.image || (row.images && row.images.length > 0 ? row.images[0] : undefined);
+    const imageList: string[] = row.images && row.images.length > 0
+      ? row.images
+      : (productImages ? productImages.map(img => img.url) : []);
+
+    return {
+      id: row.id,
+      titleEn: row.title_en,
+      titleBn: row.title_bn || undefined,
+      slug: row.slug,
+      descriptionEn: row.description_en || undefined,
+      descriptionBn: row.description_bn || undefined,
+      price: typeof row.price === 'string' ? parseFloat(row.price) : (row.price ?? 0),
+      cost: typeof row.cost === 'string' ? parseFloat(row.cost) : (row.cost ?? 0),
+      category: row.category || undefined,
+      subcategory: row.subcategory || undefined,
+      stock: typeof row.stock === 'string' ? parseInt(row.stock, 10) : (row.stock ?? 0),
+      sold: typeof row.sold === 'string' ? parseInt(row.sold, 10) : (row.sold ?? 0),
+      image: mainImg,
+      images: imageList,
+      productImages: productImages || [],
+      status: row.status || 'published',
+      sortOrder: row.sort_order ?? 0,
+      createdAt: row.created_at,
+      updatedAt: row.updated_at,
+    };
+  }
+};
+

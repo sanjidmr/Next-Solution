@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Service, PortfolioItem, BlogPost, Testimonial, FAQ, ContactMessage, Subscriber, SiteSettings, PricingPackage, PricingAddon, PricingComparison, PricingQuoteRequest, Currency, CurrencySettings, TestimonialCategory, TestimonialVideo, TestimonialStatistics, ClientLogo, SuccessStory, ReviewSettings, LegalPolicy, LegalRevision, CookieCategory, CookieSettings, WhyChooseUsCard, WhyChooseUsStat, WhyChooseUsBadge, WhyChooseUsTech, WhyChooseUsCTA, ProcessStep, ProcessCTA, TechServiceCard, ClientMoment } from '@/types';
+import { Service, PortfolioItem, BlogPost, Testimonial, FAQ, ContactMessage, Subscriber, SiteSettings, PricingPackage, PricingAddon, PricingComparison, PricingQuoteRequest, Currency, CurrencySettings, TestimonialCategory, TestimonialVideo, TestimonialStatistics, ClientLogo, SuccessStory, ReviewSettings, LegalPolicy, LegalRevision, CookieCategory, CookieSettings, WhyChooseUsCard, WhyChooseUsStat, WhyChooseUsBadge, WhyChooseUsTech, WhyChooseUsCTA, ProcessStep, ProcessCTA, TechServiceCard, ClientMoment, Product, ProductImage } from '@/types';
 import { initialServices, initialPortfolio, initialBlogs, initialFAQs, initialTestimonials, defaultSiteSettings, initialPricingPackages, initialPricingAddons, initialPricingComparisons, initialTechServiceCards } from '@/data/initialData';
 import { initialCookieCategories, defaultCookieSettings, initialLegalPolicies, initialLegalRevisions } from '@/data/legalInitialData';
 
@@ -41,6 +41,8 @@ const KEYS = {
   PROCESS_CTA: 'next_solution_process_cta',
   TECH_SERVICE_CARDS: 'next_solution_tech_service_cards',
   CLIENT_MOMENTS: 'next_solution_client_moments',
+  PRODUCTS: 'next_solution_products',
+  PRODUCT_IMAGES: 'next_solution_product_images',
 };
 
 // Initial seed data for Process Steps and CTA

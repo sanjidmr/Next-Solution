@@ -39,7 +39,7 @@ function TechIcon({ logo }: { logo: string }) {
       );
     case 'nextjs':
       return (
-        <svg className="h-5 w-5 text-neutral-900" viewBox="0 0 180 180" fill="none">
+        <svg className="h-5 w-5 text-neutral-900 dark:text-white" viewBox="0 0 180 180" fill="none">
           <circle cx="90" cy="90" r="90" fill="currentColor"/>
           <path d="M149.508 157.52L69.142 54H54v72h14.4V69.752l65.842 85.344c4.686-5.184 8.784-10.944 12.184-17.184l-11.918 19.608z" fill="white"/>
           <rect x="115" y="54" width="14" height="72" fill="white"/>
@@ -53,7 +53,7 @@ function TechIcon({ logo }: { logo: string }) {
       );
     case 'typescript':
       return (
-        <svg className="h-5 w-5 rounded text-blue-600" fill="currentColor" viewBox="0 0 24 24">
+        <svg className="h-5 w-5 rounded text-blue-600 dark:text-orange-400" fill="currentColor" viewBox="0 0 24 24">
           <path d="M2.39 2.39h19.22v19.22H2.39V2.39z" fill="#3178c6" />
           <path d="M11.57 14.12c-.17-.38-.45-.69-.85-.92-.4-.23-.92-.35-1.54-.35-.34 0-.67.04-.97.11-.3.07-.56.19-.78.35-.22.16-.39.36-.5.6-.11.24-.17.52-.17.84 0 .34.07.61.2.82.13.21.32.39.55.53.23.14.5.25.81.33.31.08.62.16.94.23.51.11.98.24 1.41.39.43.15.8.36 1.11.63.31.27.55.61.72 1.01.17.4.25.9.25 1.51 0 .61-.1 1.14-.31 1.6-.21.46-.51.84-.91 1.14-.4.3-.87.52-1.42.66s-1.15.21-1.81.21c-.74 0-1.42-.09-2.03-.27-.61-.18-1.14-.46-1.59-.83-.45-.37-.79-.84-1.01-1.41-.22-.57-.33-1.25-.33-2.03h2.39c0 .48.09.87.28 1.17.19.3.45.53.79.69.34.16.73.24 1.17.24.36 0 .69-.04.99-.12.3-.08.55-.21.75-.39.2-.18.35-.41.45-.69.1-.28.15-.62.15-1.02 0-.34-.06-.62-.18-.84s-.3-.4-.54-.54c-.24-.14-.52-.25-.84-.33-.32-.08-.66-.16-1.02-.24-.48-.1-.94-.22-1.37-.36-.43-.14-.8-.33-1.11-.57-.31-.24-.55-.54-.72-.9-.17-.36-.26-.81-.26-1.35 0-.53.11-.99.33-1.39.22-.4.53-.73.93-.99.4-.26.87-.45 1.41-.57.54-.12 1.11-.18 1.71-.18.66 0 1.27.08 1.83.24s1.04.4 1.45.72c.41.32.73.73.95 1.23s.34 1.09.35 1.77h-2.39c-.01-.43-.11-.79-.29-1.08zM21.61 4.54H14v2.16h2.52v12.42h2.57V6.7h2.52V4.54z" fill="#fff"/>
         </svg>
@@ -81,37 +81,37 @@ function TechIcon({ logo }: { logo: string }) {
       );
     case 'css3':
       return (
-        <svg className="h-5 w-5 text-blue-500" fill="currentColor" viewBox="0 0 24 24">
+        <svg className="h-5 w-5 text-blue-500 dark:text-orange-400" fill="currentColor" viewBox="0 0 24 24">
           <path d="M1.5 0h21l-1.9 21.2L12 24l-8.6-2.8L1.5 0zm15.4 17l.5-5.3H8.3l-.2-2.3h8.8l.2-2.4H5.8l.6 7h8.1l-.4 3.8-2.1.7-2.1-.7-.1-1.3H7.6l.2 2.9 4.2 1.3 4.2-1.3.7-3.8z" fill="#1572B6" />
         </svg>
       );
     case 'nodejs':
       return (
-        <svg className="h-5 w-5 text-emerald-500" fill="currentColor" viewBox="0 0 24 24">
+        <svg className="h-5 w-5 text-emerald-500 dark:text-emerald-400" fill="currentColor" viewBox="0 0 24 24">
           <path d="M12 2a10 10 0 100 20 10 10 0 000-20zm3.5 13.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zm-.1-3.6c-.1.3-.4.5-.7.5h-1.4c-.3 0-.6-.2-.7-.5l-.7-3.2c-.1-.5.3-1 .8-1h1.9c.5 0 .9.5.8 1l-.7 3.2z" />
         </svg>
       );
     case 'express':
       return (
-        <div className="text-xs font-black text-neutral-800 tracking-tighter">ex</div>
+        <div className="text-xs font-black text-neutral-800 dark:text-neutral-100 tracking-tighter">ex</div>
       );
     case 'postgresql':
       return (
-        <svg className="h-5 w-5 text-blue-500" fill="currentColor" viewBox="0 0 24 24">
+        <svg className="h-5 w-5 text-blue-500 dark:text-orange-400" fill="currentColor" viewBox="0 0 24 24">
           <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9v-2h2v2zm0-4H9V7h2v5z" opacity=".1" />
           <path d="M15.4 6.6c-.6-.6-1.5-.9-2.4-.9-1.9 0-3.5 1.3-4 3.1h2.2c.4-.8 1.1-1.3 1.8-1.3.9 0 1.6.6 1.8 1.5h2.1c-.2-1-.7-1.8-1.5-2.4z" />
         </svg>
       );
     case 'mongodb':
       return (
-        <svg className="h-5 w-5 text-emerald-500" fill="currentColor" viewBox="0 0 24 24">
+        <svg className="h-5 w-5 text-emerald-500 dark:text-emerald-400" fill="currentColor" viewBox="0 0 24 24">
           <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z" opacity=".1" />
           <path d="M12 3s-3 4-3 7.5c0 3 1.5 4.5 3 6 1.5-1.5 3-3 3-6C15 7 12 3 12 3z" fill="none" stroke="currentColor" strokeWidth="2" />
         </svg>
       );
     case 'redis':
       return (
-        <svg className="h-5 w-5 text-red-500" fill="currentColor" viewBox="0 0 24 24">
+        <svg className="h-5 w-5 text-red-500 dark:text-red-400" fill="currentColor" viewBox="0 0 24 24">
           <path d="M2 13h20v4H2v-4zm0-6h20v4H2V7z" fill="none" stroke="currentColor" strokeWidth="2" />
           <circle cx="5" cy="9" r="1.5" />
           <circle cx="5" cy="15" r="1.5" />
@@ -125,7 +125,7 @@ function TechIcon({ logo }: { logo: string }) {
       );
     case 'docker':
       return (
-        <svg className="h-5 w-5 text-cyan-500" fill="currentColor" viewBox="0 0 24 24">
+        <svg className="h-5 w-5 text-cyan-500 dark:text-cyan-400" fill="currentColor" viewBox="0 0 24 24">
           <path d="M3.6 11h16.8a1 1 0 001-1V5a1 1 0 00-1-1H3.6a1 1 0 00-1 1v5a1 1 0 001 1z" opacity=".2" />
           <path d="M22.3 12.83c-.48-.6-1.34-.84-2-.6a5.1 5.1 0 00-4.4-.1" stroke="currentColor" strokeWidth="2" fill="none" />
         </svg>
@@ -159,7 +159,7 @@ function TechIcon({ logo }: { logo: string }) {
       );
     case 'framer':
       return (
-        <svg className="h-5 w-5 text-neutral-900" viewBox="0 0 24 24" fill="currentColor">
+        <svg className="h-5 w-5 text-neutral-900 dark:text-white" viewBox="0 0 24 24" fill="currentColor">
           <path d="M12 0L24 12H12V24L0 12H12V0z" />
         </svg>
       );
@@ -178,7 +178,7 @@ function TechIcon({ logo }: { logo: string }) {
       );
     case 'openai':
       return (
-        <svg className="h-5 w-5 text-emerald-600 animate-[spin_20s_linear_infinite]" fill="currentColor" viewBox="0 0 24 24">
+        <svg className="h-5 w-5 text-emerald-600 dark:text-emerald-400 animate-[spin_20s_linear_infinite]" fill="currentColor" viewBox="0 0 24 24">
           <path d="M21.2 11.2a4.4 4.4 0 00-2.4-3.2 4.4 4.4 0 00.3-4 4.4 4.4 0 00-3.3-1.6 4.4 4.4 0 00-3.8-1.1 4.4 4.4 0 00-4 .3 4.4 4.4 0 00-3.2 2.4 4.4 4.4 0 00-4-.3A4.4 4.4 0 001.3 7c-.6 1.2-.7 2.6-.3 3.8a4.4 4.4 0 00-2.4 3.2 4.4 4.4 0 00-.3 4c.6 1.2 1.7 2.2 3 2.7a4.4 4.4 0 003.8 1.1 4.4 4.4 0 004-.3 4.4 4.4 0 003.2-2.4 4.4 4.4 0 004 .3 4.4 4.4 0 002.5-3.2c1.2-.6 2.2-1.7 2.7-3 .6-1.2.7-2.6.3-3.8zm-11.8 8l-3.2-1.8.1-1.3 3.1 1.8V19.2zm-.9-5.4L5.3 11.9l1.1-.6 3.2 1.9v3.6l-1.1-.6zm4-.2l-3.2-1.8.1-3.6 3.1 1.8V13.6zm.9-5.4L11.1 6.3l1.1-.6 3.2 1.9v3.6l-1.1-.6z" />
         </svg>
       );
@@ -190,7 +190,7 @@ function TechIcon({ logo }: { logo: string }) {
       );
     default:
       return (
-        <div className="h-5 w-5 flex items-center justify-center font-extrabold text-[9px] text-blue-600 bg-blue-50 rounded-lg font-mono">
+        <div className="h-5 w-5 flex items-center justify-center font-extrabold text-[9px] text-blue-600 dark:text-orange-400 bg-blue-50 dark:bg-orange-500/10 rounded-lg font-mono">
           {logo.substring(0, 2).toUpperCase()}
         </div>
       );
@@ -506,7 +506,7 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
     descEn: 'In 2022, Next Solution began as a vision driven by a simple belief: every business deserves a modern digital presence built with quality, transparency, and long-term value. We invested our time in learning advanced technologies, studying global design standards, and building a strong foundation before offering services professionally.',
     descBn: '২০২২ সালে একটি স্পষ্ট লক্ষ্য নিয়ে নেক্সট সলিউশনের যাত্রা শুরু হয়—প্রতিটি ব্যবসার জন্য মানসম্মত, আধুনিক এবং দীর্ঘমেয়াদী মূল্য প্রদানকারী ডিজিটাল সমাধান তৈরি করা। আমরা প্রথম বছরটি উন্নত প্রযুক্তি শেখা, আন্তর্জাতিক মানের ডিজাইন বিশ্লেষণ এবং শক্ত ভিত্তি তৈরিতে ব্যয় করি।',
     metric: 'Vision & Foundation',
-    color: 'from-blue-600 to-indigo-600'
+    color: 'from-blue-600 dark:from-orange-500 to-indigo-600 dark:to-orange-400'
   },
   {
     year: '2023',
@@ -515,7 +515,7 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
     descEn: 'Throughout 2023, we focused on mastering modern web technologies, UI/UX principles, and scalable development practices. We completed numerous practice projects, refined our workflow, and established quality standards that would shape every future client project.',
     descBn: '২০২৩ সালে আমরা আধুনিক ওয়েব প্রযুক্তি, UI/UX ডিজাইন এবং স্কেলেবল ডেভেলপমেন্ট পদ্ধতিতে নিজেদের দক্ষ করে তুলি। অসংখ্য প্র্যাকটিস প্রজেক্ট সম্পন্ন করে এমন একটি মানসম্মত ওয়ার্কফ্লো তৈরি করি যা ভবিষ্যতের প্রতিটি ক্লায়েন্ট প্রজেক্টের ভিত্তি হয়ে ওঠে।',
     metric: 'Continuous Learning',
-    color: 'from-indigo-600 to-violet-600'
+    color: 'from-indigo-600 dark:from-orange-500 to-violet-600'
   },
   {
     year: '2024',
@@ -554,7 +554,7 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
       descEn: 'We do not just adopt new frameworks; we push their limits. We build private libraries, test pre-releases, and integrate advanced AI capabilities to keep you years ahead.',
       descBn: 'আমরা কেবল নতুন ফ্রেমওয়ার্ক গ্রহণই করি না, বরং সেগুলোর সীমানা ছাড়িয়ে যাই। আমরা নিজস্ব লাইব্রেরি তৈরি করি এবং উন্নত এআই ক্ষমতা যুক্ত করি যাতে আপনি সবার চেয়ে এগিয়ে থাকেন।',
       icon: Lightbulb,
-      color: 'from-amber-500/10 to-orange-500/10 text-amber-600 border-amber-100/50'
+      color: 'from-amber-500/10 to-orange-500/10 text-amber-600 dark:text-amber-400 border-amber-100/50'
     },
     {
       titleEn: 'Absolute Transparency',
@@ -562,7 +562,7 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
       descEn: 'No black boxes. No hidden fees. Every line of code, every developer sprint, and every database latency profile is entirely visible to you on shared dashboards.',
       descBn: 'কোনো অস্বচ্ছতা নেই, কোনো গোপন চার্জ নেই। কোডের প্রতিটি লাইন, ডেভেলপমেন্ট স্প্রিন্ট এবং ডাটাবেসের কার্যক্ষমতা আপনি সরাসরি শেয়ার্ড ড্যাশবোর্ডে দেখতে পাবেন।',
       icon: Eye,
-      color: 'from-blue-500/10 to-indigo-500/10 text-blue-600 border-blue-100/50'
+      color: 'from-blue-500/10 to-indigo-500/10 text-blue-600 dark:text-orange-400 border-blue-100/50'
     },
     {
       titleEn: 'Triple-Device Quality Check',
@@ -570,7 +570,7 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
       descEn: 'Every digital artifact undergoes strict triple-device verification (Desktop, Tablet, Mobile) and extensive Lighthouse audits to achieve near-perfect speed scores.',
       descBn: 'আমাদের প্রতিটি ডিজিটাল প্রোডাক্ট ডেক্সটপ, ট্যাবলেট ও মোবাইলে নিবিড় পরীক্ষার মধ্য দিয়ে যায় এবং অত্যন্ত দ্রুত লোড স্পিড নিশ্চিত করতে কঠোর অডিট করা হয়।',
       icon: ShieldCheck,
-      color: 'from-emerald-500/10 to-teal-500/10 text-emerald-600 border-emerald-100/50'
+      color: 'from-emerald-500/10 to-teal-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-100/50'
     },
     {
       titleEn: 'Aesthetic Craftsmanship',
@@ -578,7 +578,7 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
       descEn: 'We pairing gorgeous geometric grids, precise micro-animations, and balanced negative space to design emotional digital products that captivate users instantly.',
       descBn: 'আমরা চমৎকার জ্যামিতিক গ্রিড, নিখুঁত মাইক্রো-অ্যানিমেশন এবং মার্জিত নেগেটিভ স্পেস ব্যবহার করে এমন ডিজাইন করি যা ব্যবহারকারীদের প্রথম দেখাতেই আকৃষ্ট করে।',
       icon: Palette,
-      color: 'from-rose-500/10 to-pink-500/10 text-rose-600 border-rose-100/50'
+      color: 'from-rose-500/10 to-pink-500/10 text-rose-600 dark:text-rose-400 border-rose-100/50'
     },
     {
       titleEn: 'Hyper-Care Client Success',
@@ -586,7 +586,7 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
       descEn: 'Your investment ROI is our highest engineering benchmark. We actively check post-launch user dropoffs, funnel conversion rates, and server performance.',
       descBn: 'আপনার বিনিয়োগের সর্বোচ্চ রিটার্ন নিশ্চিত করাই আমাদের মূল লক্ষ্য। আমরা লঞ্চ-পরবর্তী ব্যবহারকারীর আচরণ এবং সার্ভারের কার্যক্ষমতা নিবিড়ভাবে পর্যবেক্ষণ করি।',
       icon: Heart,
-      color: 'from-red-500/10 to-rose-500/10 text-red-600 border-red-100/50'
+      color: 'from-red-500/10 to-rose-500/10 text-red-600 dark:text-red-400 border-red-100/50'
     },
     {
       titleEn: 'Long-Term Partnership',
@@ -594,7 +594,7 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
       descEn: 'We do not build and disappear. We continuously consult on tech-stack pivots, scale strategies, database replication, and digital expansion roadmap.',
       descBn: 'আমরা প্রজেক্ট শেষ করে হারিয়ে যাই না। টেক-স্ট্যাক পরিবর্তন, স্কেলিং কৌশল এবং ডাটাবেস সিকিউরিটি নিয়ে আমরা ক্রমাগত ব্যবসায়িক পরামর্শ প্রদান করি।',
       icon: Users,
-      color: 'from-purple-500/10 to-violet-500/10 text-purple-600 border-purple-100/50'
+      color: 'from-purple-500/10 to-violet-500/10 text-purple-600 dark:text-purple-400 dark:text-purple-300 border-purple-100/50'
     },
     {
       titleEn: 'Growth & Scale Mindset',
@@ -602,7 +602,7 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
       descEn: 'Our databases and serverless architectures are built with horizontal scaling in mind. We prepare your software to handle 10x traffic spikes seamlessly.',
       descBn: 'আমাদের ডাটাবেস এবং সার্ভারলেস আর্কিটেকচার সহজেই ট্রাফিক সামলাতে পারে। আপনার সফটওয়্যারকে ১০ গুণ বেশি ট্রাফিক পরিচালনা করার জন্য প্রস্তুত করা হয়।',
       icon: TrendingUp,
-      color: 'from-cyan-500/10 to-blue-500/10 text-cyan-600 border-cyan-100/50'
+      color: 'from-cyan-500/10 to-blue-500/10 text-cyan-600 dark:text-cyan-400 border-cyan-100/50'
     },
     {
       titleEn: 'AI-Driven Future',
@@ -1119,10 +1119,10 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
   ], []);
 
   return (
-    <section id="about-page" className="bg-white text-neutral-900 overflow-hidden relative selection:bg-blue-500 selection:text-white">
+    <section id="about-page" className="bg-white dark:bg-[#141414] text-neutral-900 dark:text-white overflow-hidden relative selection:bg-blue-500 dark:bg-orange-500 selection:text-white">
       
       {/* Scroll Progress Bar */}
-      <div className="fixed top-0 left-0 right-0 h-1 bg-neutral-100 z-50">
+      <div className="fixed top-0 left-0 right-0 h-1 bg-neutral-100 dark:bg-neutral-800 z-50">
         <motion.div 
           className="h-full bg-blue-600 origin-left"
           initial={{ scaleX: 0 }}
@@ -1147,12 +1147,12 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
         <div className="absolute top-1/3 right-1/4 w-72 h-72 bg-gradient-to-bl from-teal-400/10 via-emerald-400/10 to-blue-400/10 rounded-full blur-[90px] pointer-events-none animate-pulse duration-7000" />
 
         {/* Breadcrumb row */}
-        <nav className="flex items-center space-x-2 text-[10px] font-black text-neutral-400 uppercase tracking-widest mb-6">
-          <span className="hover:text-blue-600 transition cursor-pointer" onClick={() => navigateToTab('home')}>
+        <nav className="flex items-center space-x-2 text-[10px] font-black text-neutral-400 dark:text-neutral-500 uppercase tracking-widest mb-6">
+          <span className="hover:text-blue-600 dark:text-orange-400 transition cursor-pointer" onClick={() => navigateToTab('home')}>
             {currentLang === 'en' ? 'Home' : 'হোম'}
           </span>
-          <span className="text-neutral-300">/</span>
-          <span className="text-neutral-900">
+          <span className="text-neutral-300 dark:text-neutral-600">/</span>
+          <span className="text-neutral-900 dark:text-white">
             {currentLang === 'en' ? 'About Us' : 'আমাদের সম্পর্কে'}
           </span>
         </nav>
@@ -1163,7 +1163,7 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
           <div className="lg:col-span-5 space-y-8 text-center sm:text-left relative">
             
             {/* Small live-ping badge */}
-            <div className="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-emerald-50/80 border border-emerald-100 text-emerald-700 text-[10px] sm:text-xs font-black uppercase tracking-widest justify-center sm:justify-start shadow-sm">
+            <div className="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-emerald-50/80 border border-emerald-100 dark:border-emerald-500/20 text-emerald-700 text-[10px] sm:text-xs font-black uppercase tracking-widest justify-center sm:justify-start shadow-sm">
               <span className="relative flex h-2 w-2">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
@@ -1178,8 +1178,8 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
                   More Than A<br className="hidden sm:inline" /> Digital Agency.<br />
                   We Are Your <br />
                   <span className="relative inline-block mt-1">
-                    <span className="absolute -inset-1 rounded-lg bg-gradient-to-r from-blue-600 via-violet-600 to-pink-600 opacity-10 blur-md"></span>
-                    <span className="relative bg-gradient-to-r from-blue-600 via-violet-600 to-pink-600 bg-clip-text text-transparent">
+                    <span className="absolute -inset-1 rounded-lg bg-gradient-to-r from-blue-600 dark:from-orange-500 via-violet-600 to-pink-600 opacity-10 blur-md"></span>
+                    <span className="relative bg-gradient-to-r from-blue-600 dark:from-orange-500 via-violet-600 to-pink-600 bg-clip-text text-transparent">
                       Digital Growth Partner.
                     </span>
                   </span>
@@ -1189,8 +1189,8 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
                   একটি ডিজিটাল এজেন্সির<br /> চেয়েও অনেক বেশি।<br />
                   আমরা আপনার <br />
                   <span className="relative inline-block mt-1">
-                    <span className="absolute -inset-1 rounded-lg bg-gradient-to-r from-blue-600 via-violet-600 to-pink-600 opacity-10 blur-md"></span>
-                    <span className="relative bg-gradient-to-r from-blue-600 via-violet-600 to-pink-600 bg-clip-text text-transparent">
+                    <span className="absolute -inset-1 rounded-lg bg-gradient-to-r from-blue-600 dark:from-orange-500 via-violet-600 to-pink-600 opacity-10 blur-md"></span>
+                    <span className="relative bg-gradient-to-r from-blue-600 dark:from-orange-500 via-violet-600 to-pink-600 bg-clip-text text-transparent">
                       ডিজিটাল গ্রোথ পার্টনার।
                     </span>
                   </span>
@@ -1199,7 +1199,7 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
             </h1>
 
             {/* Description */}
-            <p className="text-sm sm:text-base lg:text-[1.05rem] leading-relaxed text-neutral-500 font-normal max-w-2xl">
+            <p className="text-sm sm:text-base lg:text-[1.05rem] leading-relaxed text-neutral-500 dark:text-neutral-400 dark:text-neutral-500 font-normal max-w-2xl">
               {currentLang === 'en' 
                 ? 'Next Solution helps modern businesses scale dynamically by handling every dimension of digital growth. We build high-performance mobile apps, visually captivating brand identities, high-conversion SEO setups, and intelligent AI automation, acts as your reliable long-term digital headquarters.'
                 : 'নেক্সট সলিউশন আপনার ব্যবসাকে বড় করতে ডিজিটাল খাতের প্রতিটি দিকে কাজ করে। হাই-পারফরম্যান্স ওয়েব অ্যাপস, চমৎকার ব্র্যান্ড আইডেন্টিটি, হাই-কনভার্সন এসইও এবং কাস্টম এআই অটোমেশন নিয়ে আমরা আপনার বিশ্বস্ত ও দীর্ঘমেয়াদী ডিজিটাল পার্টনার হিসেবে কাজ করি।'}
@@ -1212,10 +1212,10 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
                 onClick={() => navigateToTab('contact')}
                 whileHover={{ scale: 1.03, y: -2 }}
                 whileTap={{ scale: 0.97 }}
-                className="group relative w-full sm:w-auto inline-flex items-center justify-center space-x-3 rounded-xl bg-neutral-950 text-white text-xs sm:text-sm font-black px-8 py-4.5 shadow-[0_20px_40px_rgba(0,0,0,0.1)] hover:shadow-[0_20px_40px_rgba(37,99,235,0.25)] hover:bg-blue-600 transition-all duration-300 cursor-pointer overflow-hidden"
+                className="group relative w-full sm:w-auto inline-flex items-center justify-center space-x-3 rounded-xl bg-neutral-950 text-white text-xs sm:text-sm font-black px-8 py-4.5 shadow-[0_20px_40px_rgba(0,0,0,0.1)] hover:shadow-[0_20px_40px_rgba(255,77,0,0.35)] hover:bg-orange-600 transition-all duration-300 cursor-pointer overflow-hidden"
               >
                 {/* Button glow backdrop */}
-                <span className="absolute inset-0 bg-gradient-to-r from-blue-500 to-indigo-600 opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10" />
+                <span className="absolute inset-0 bg-gradient-to-r from-blue-500 dark:from-orange-500 to-indigo-600 dark:to-orange-400 opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10" />
                 <span>🚀 {currentLang === 'en' ? 'Start Your Project' : 'প্রজেক্ট শুরু করুন'}</span>
                 <ArrowRight className="h-4 w-4 group-hover:translate-x-1.5 transition-transform duration-300" />
               </motion.button>
@@ -1225,30 +1225,30 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
                 onClick={() => navigateToTab('contact')}
                 whileHover={{ scale: 1.03, y: -2 }}
                 whileTap={{ scale: 0.97 }}
-                className="group relative w-full sm:w-auto inline-flex items-center justify-center space-x-2 rounded-xl border border-neutral-200/80 bg-white hover:bg-neutral-50 hover:border-neutral-900 text-neutral-800 text-xs sm:text-sm font-black px-8 py-4.5 shadow-sm hover:shadow-md transition-all duration-300 cursor-pointer"
+                className="group relative w-full sm:w-auto inline-flex items-center justify-center space-x-2 rounded-xl border border-neutral-200/80 bg-white dark:bg-[#141414] hover:bg-neutral-50 dark:bg-neutral-900 hover:border-neutral-900 text-neutral-800 dark:text-neutral-100 text-xs sm:text-sm font-black px-8 py-4.5 shadow-sm hover:shadow-md transition-all duration-300 cursor-pointer"
               >
                 <span>📅 {currentLang === 'en' ? 'Book Free Consultation' : 'ফ্রি পরামর্শ বুক করুন'}</span>
               </motion.button>
             </div>
 
             {/* Core Values Pills below buttons */}
-            <div className="pt-6 border-t border-neutral-100 text-left">
-              <span className="block text-[9px] font-black uppercase tracking-widest text-neutral-400 mb-3 text-center sm:text-left">
+            <div className="pt-6 border-t border-neutral-100 dark:border-neutral-800 text-left">
+              <span className="block text-[9px] font-black uppercase tracking-widest text-neutral-400 dark:text-neutral-500 mb-3 text-center sm:text-left">
                 {currentLang === 'en' ? 'OUR GUIDING CORES' : 'আমাদের মূল আদর্শ সমূহ'}
               </span>
               <div className="flex flex-wrap justify-center sm:justify-start gap-2.5">
                 {[
                   { icon: '💡', labelEn: 'Innovation', labelBn: 'উদ্ভাবন', border: 'hover:border-amber-200 hover:bg-amber-50/50 hover:text-amber-700 shadow-amber-100' },
-                  { icon: '🤝', labelEn: 'Transparency', labelBn: 'স্বচ্ছতা', border: 'hover:border-blue-200 hover:bg-blue-50/50 hover:text-blue-700 shadow-blue-100' },
+                  { icon: '🤝', labelEn: 'Transparency', labelBn: 'স্বচ্ছতা', border: 'hover:border-blue-200 dark:border-orange-500/25 hover:bg-blue-50/5 dark:bg-orange-500/50 hover:text-blue-700 shadow-blue-100' },
                   { icon: '🏆', labelEn: 'Quality', labelBn: 'গুণমান', border: 'hover:border-emerald-200 hover:bg-emerald-50/50 hover:text-emerald-700 shadow-emerald-100' },
                   { icon: '⚡', labelEn: 'Fast Delivery', labelBn: 'দ্রুত ডেলিভারি', border: 'hover:border-rose-200 hover:bg-rose-50/50 hover:text-rose-700 shadow-rose-100' },
                   { icon: '🚀', labelEn: 'Growth Focus', labelBn: 'গ্রোথ ফোকাস', border: 'hover:border-cyan-200 hover:bg-cyan-50/50 hover:text-cyan-700 shadow-cyan-100' },
-                  { icon: '❤️', labelEn: 'Long-Term Partnership', labelBn: 'দীর্ঘমেয়াদী পার্টনারশিপ', border: 'hover:border-purple-200 hover:bg-purple-50/50 hover:text-purple-700 shadow-purple-100' }
+                  { icon: '❤️', labelEn: 'Long-Term Partnership', labelBn: 'দীর্ঘমেয়াদী পার্টনারশিপ', border: 'hover:border-purple-200 hover:bg-purple-50/5 dark:bg-orange-500/50 hover:text-purple-700 shadow-purple-100' }
                 ].map((item, idx) => (
                   <motion.div
                     key={idx}
                     whileHover={{ y: -3, scale: 1.03 }}
-                    className={`inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-full border border-neutral-200/60 bg-white text-[11px] font-black text-neutral-600 transition-all duration-300 shadow-sm cursor-default hover:shadow-[0_4px_20px_rgba(0,0,0,0.06)] ${item.border}`}
+                    className={`inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-full border border-neutral-200/60 bg-white dark:bg-[#141414] text-[11px] font-black text-neutral-600 dark:text-neutral-300 dark:text-neutral-600 transition-all duration-300 shadow-sm cursor-default hover:shadow-[0_4px_20px_rgba(0,0,0,0.06)] ${item.border}`}
                   >
                     <span>{item.icon}</span>
                     <span>{currentLang === 'en' ? item.labelEn : item.labelBn}</span>
@@ -1279,11 +1279,11 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
                     }}
                     className={`flex-1 flex items-center justify-center space-x-2 py-3 px-3 rounded-xl text-xs font-black tracking-wide transition-all duration-300 relative cursor-pointer ${
                       isActive 
-                        ? 'text-neutral-950 bg-white shadow-sm border border-neutral-200/20' 
-                        : 'text-neutral-500 hover:text-neutral-800 hover:bg-neutral-50/50'
+                        ? 'text-neutral-950 bg-white dark:bg-[#141414] shadow-sm border border-neutral-200/20' 
+                        : 'text-neutral-500 dark:text-neutral-400 dark:text-neutral-500 hover:text-neutral-800 dark:text-neutral-100 hover:bg-neutral-50/50 dark:bg-neutral-900/50'
                     }`}
                   >
-                    <IconComponent className={`h-4 w-4 ${isActive ? 'text-blue-600' : 'text-neutral-400'}`} />
+                    <IconComponent className={`h-4 w-4 ${isActive ? 'text-blue-600 dark:text-orange-400' : 'text-neutral-400 dark:text-neutral-500'}`} />
                     <span className="hidden sm:inline">{currentLang === 'en' ? tab.labelEn : tab.labelBn}</span>
                     <span className="inline sm:hidden">{currentLang === 'en' ? tab.labelEn.split(' ')[0] : tab.labelBn.split(' ')[0]}</span>
                   </button>
@@ -1297,10 +1297,10 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
               {/* Outer decorative neon glow backdrop responsive to selected tab */}
               <div className={`absolute -inset-2 rounded-[2rem] opacity-30 blur-2xl transition-all duration-700 pointer-events-none -z-10 ${
                 activeShowcaseTab === 'code' 
-                  ? 'bg-gradient-to-tr from-blue-500 via-indigo-500 to-violet-500' 
+                  ? 'bg-gradient-to-tr from-blue-500 dark:from-orange-500 via-indigo-500 to-violet-500' 
                   : activeShowcaseTab === 'canvas'
                     ? 'bg-gradient-to-tr from-pink-500 via-rose-500 to-amber-500'
-                    : 'bg-gradient-to-tr from-emerald-500 via-teal-500 to-blue-500'
+                    : 'bg-gradient-to-tr from-emerald-500 via-teal-500 to-blue-500 dark:to-orange-400'
               }`} />
 
               <AnimatePresence mode="wait">
@@ -1315,18 +1315,18 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
                   {/* TAB 1: CODE SCALABILITY ENGINE */}
                   {activeShowcaseTab === 'code' && (
                     <div className="space-y-6">
-                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-neutral-100 pb-4">
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-neutral-100 dark:border-neutral-800 pb-4">
                         <div>
-                          <span className="text-[9px] font-black uppercase tracking-widest text-blue-600 bg-blue-50 px-2 py-0.5 rounded-md">
+                          <span className="text-[9px] font-black uppercase tracking-widest text-blue-600 dark:text-orange-400 bg-blue-50 dark:bg-orange-500/10 px-2 py-0.5 rounded-md">
                             {currentLang === 'en' ? 'SPEED ENGINE' : 'স্পিড ইঞ্জিন'}
                           </span>
-                          <h3 className="text-base font-black text-neutral-900 mt-1">
+                          <h3 className="text-base font-black text-neutral-900 dark:text-white mt-1">
                             {currentLang === 'en' ? 'Clean TypeScript Architecture' : 'পরিচ্ছন্ন টাইপস্ক্রিপ্ট আর্কিটেকচার'}
                           </h3>
                         </div>
                         <div className="flex items-center space-x-1.5 self-start sm:self-center">
                           <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
-                          <span className="text-[10px] font-mono text-neutral-400">SSR Active</span>
+                          <span className="text-[10px] font-mono text-neutral-400 dark:text-neutral-500">SSR Active</span>
                         </div>
                       </div>
 
@@ -1342,27 +1342,27 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
                               <span className="h-2.5 w-2.5 rounded-full bg-amber-500/80" />
                               <span className="h-2.5 w-2.5 rounded-full bg-emerald-500/80" />
                             </div>
-                            <span className="text-[10px] text-neutral-400 font-mono">api/growth/optimize.ts</span>
+                            <span className="text-[10px] text-neutral-400 dark:text-neutral-500 font-mono">api/growth/optimize.ts</span>
                             <div className="w-4" />
                           </div>
 
                           {/* Code Body */}
-                          <div className="p-4 space-y-1 select-none overflow-x-auto text-neutral-300">
+                          <div className="p-4 space-y-1 select-none overflow-x-auto text-neutral-300 dark:text-neutral-600">
                             <div><span className="text-pink-400">import</span> &#123; <span className="text-cyan-300">NextSolution</span> &#125; <span className="text-pink-400">from</span> <span className="text-amber-200">"next-sol"</span>;</div>
-                            <div className="text-neutral-500">{currentLang === 'en' ? '// Initialize instant assets payload optimization' : '// অ্যাসেট পেলোড অপ্টিমাইজেশন'}</div>
-                            <div><span className="text-pink-400">export async function</span> <span className="text-blue-400">POST</span>(req: <span className="text-emerald-400">Request</span>) &#123;</div>
+                            <div className="text-neutral-500 dark:text-neutral-400 dark:text-neutral-500">{currentLang === 'en' ? '// Initialize instant assets payload optimization' : '// অ্যাসেট পেলোড অপ্টিমাইজেশন'}</div>
+                            <div><span className="text-pink-400">export async function</span> <span className="text-blue-400 dark:text-orange-300">POST</span>(req: <span className="text-emerald-400">Request</span>) &#123;</div>
                             <div>&nbsp;&nbsp;<span className="text-pink-400">const</span> client = <span className="text-pink-400">new</span> <span className="text-cyan-300">NextSolution</span>(&#123; <span className="text-purple-300">engine</span>: <span className="text-amber-200">'core'</span> &#125;);</div>
-                            <div>&nbsp;&nbsp;<span className="text-pink-400">const</span> res = <span className="text-pink-400">await</span> client.<span className="text-blue-400">optimize</span>(&#123;</div>
+                            <div>&nbsp;&nbsp;<span className="text-pink-400">const</span> res = <span className="text-pink-400">await</span> client.<span className="text-blue-400 dark:text-orange-300">optimize</span>(&#123;</div>
                             <div>&nbsp;&nbsp;&nbsp;&nbsp;minify: <span className="text-amber-400">true</span>,</div>
                             <div>&nbsp;&nbsp;&nbsp;&nbsp;seoPriority: <span className="text-amber-400">"Google-Rank-1"</span>,</div>
                             <div>&nbsp;&nbsp;&nbsp;&nbsp;hydratedTrees: <span className="text-amber-400">true</span></div>
                             <div>&nbsp;&nbsp;&#125;);</div>
-                            <div>&nbsp;&nbsp;<span className="text-pink-400">return</span> <span className="text-cyan-300">Response</span>.<span className="text-blue-400">json</span>(&#123; res &#125;);</div>
+                            <div>&nbsp;&nbsp;<span className="text-pink-400">return</span> <span className="text-cyan-300">Response</span>.<span className="text-blue-400 dark:text-orange-300">json</span>(&#123; res &#125;);</div>
                             <div>&#125;</div>
                           </div>
 
                           {/* Code Window Footer */}
-                          <div className="px-4 py-2 bg-neutral-900/40 border-t border-neutral-900/80 flex justify-between items-center text-[9px] text-neutral-500">
+                          <div className="px-4 py-2 bg-neutral-900/40 border-t border-neutral-900/80 flex justify-between items-center text-[9px] text-neutral-500 dark:text-neutral-400 dark:text-neutral-500">
                             <span>UTF-8</span>
                             <span>TypeScript / React</span>
                           </div>
@@ -1375,7 +1375,7 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
                               className="absolute inset-0 bg-neutral-950/85 backdrop-blur-sm flex flex-col items-center justify-center space-y-3 z-10"
                             >
                               <div className="h-7 w-7 rounded-full border-2 border-blue-500 border-t-transparent animate-spin" />
-                              <span className="text-xs text-neutral-300 font-mono">
+                              <span className="text-xs text-neutral-300 dark:text-neutral-600 font-mono">
                                 {currentLang === 'en' ? 'Reindexing virtual DOM trees...' : 'ভার্চুয়াল ডম ইনডেক্স করা হচ্ছে...'}
                               </span>
                             </motion.div>
@@ -1383,9 +1383,9 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
                         </div>
 
                         {/* Lighthouse Gauge and Stats Panel */}
-                        <div className="md:col-span-5 flex flex-col justify-between p-4.5 bg-neutral-50/70 rounded-2xl border border-neutral-150/40 space-y-4">
+                        <div className="md:col-span-5 flex flex-col justify-between p-4.5 bg-neutral-50/70 dark:bg-neutral-900/70 rounded-2xl border border-neutral-150/40 space-y-4">
                           <div className="text-center md:text-left">
-                            <span className="block text-[9px] font-black uppercase tracking-widest text-neutral-400">
+                            <span className="block text-[9px] font-black uppercase tracking-widest text-neutral-400 dark:text-neutral-500">
                               {currentLang === 'en' ? 'Lighthouse Score' : 'লাইটহাউস স্কোর'}
                             </span>
                             
@@ -1422,15 +1422,15 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
                                   animate={{ scale: 1, opacity: 1 }}
                                   className={`text-2xl font-black font-sans ${
                                     optimizationStage === 'optimized' 
-                                      ? 'text-emerald-600' 
+                                      ? 'text-emerald-600 dark:text-emerald-400' 
                                       : optimizationStage === 'optimizing'
-                                        ? 'text-amber-500'
-                                        : 'text-rose-600'
+                                        ? 'text-amber-500 dark:text-amber-400'
+                                        : 'text-rose-600 dark:text-rose-400'
                                   }`}
                                 >
                                   {optimizationStage === 'optimized' ? '99' : optimizationStage === 'optimizing' ? '72' : '42'}
                                 </motion.span>
-                                <span className="text-[8px] font-black uppercase tracking-widest text-neutral-400 -mt-1">
+                                <span className="text-[8px] font-black uppercase tracking-widest text-neutral-400 dark:text-neutral-500 -mt-1">
                                   {optimizationStage === 'optimized' ? 'PERFECT' : optimizationStage === 'optimizing' ? 'TUNING' : 'BLOATED'}
                                 </span>
                               </div>
@@ -1438,22 +1438,22 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
                           </div>
 
                           {/* Quick Specs */}
-                          <div className="space-y-2 border-t border-b border-neutral-100 py-3 text-xs">
+                          <div className="space-y-2 border-t border-b border-neutral-100 dark:border-neutral-800 py-3 text-xs">
                             <div className="flex justify-between font-mono">
-                              <span className="text-neutral-400">{currentLang === 'en' ? 'TTFB:' : 'প্রথম বাইট টাইম:'}</span>
-                              <span className={`font-black ${optimizationStage === 'optimized' ? 'text-emerald-600' : 'text-rose-500'}`}>
+                              <span className="text-neutral-400 dark:text-neutral-500">{currentLang === 'en' ? 'TTFB:' : 'প্রথম বাইট টাইম:'}</span>
+                              <span className={`font-black ${optimizationStage === 'optimized' ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-500 dark:text-rose-400'}`}>
                                 {optimizationStage === 'optimized' ? '12ms' : '240ms'}
                               </span>
                             </div>
                             <div className="flex justify-between font-mono">
-                              <span className="text-neutral-400">{currentLang === 'en' ? 'Bundle Weight:' : 'বান্ডেল সাইজ:'}</span>
-                              <span className={`font-black ${optimizationStage === 'optimized' ? 'text-emerald-600' : 'text-neutral-700'}`}>
+                              <span className="text-neutral-400 dark:text-neutral-500">{currentLang === 'en' ? 'Bundle Weight:' : 'বান্ডেল সাইজ:'}</span>
+                              <span className={`font-black ${optimizationStage === 'optimized' ? 'text-emerald-600 dark:text-emerald-400' : 'text-neutral-700 dark:text-neutral-200'}`}>
                                 {optimizationStage === 'optimized' ? '14.2 KB' : '3.4 MB'}
                               </span>
                             </div>
                             <div className="flex justify-between font-mono">
-                              <span className="text-neutral-400">{currentLang === 'en' ? 'Interactive:' : 'ইন্টারেক্টিভ টাইম:'}</span>
-                              <span className={`font-black ${optimizationStage === 'optimized' ? 'text-emerald-600' : 'text-rose-500'}`}>
+                              <span className="text-neutral-400 dark:text-neutral-500">{currentLang === 'en' ? 'Interactive:' : 'ইন্টারেক্টিভ টাইম:'}</span>
+                              <span className={`font-black ${optimizationStage === 'optimized' ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-500 dark:text-rose-400'}`}>
                                 {optimizationStage === 'optimized' ? '0.12s' : '2.1s'}
                               </span>
                             </div>
@@ -1466,7 +1466,7 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
                             whileTap={{ scale: 0.98 }}
                             className={`w-full py-2.5 rounded-xl text-[11px] font-black uppercase tracking-widest transition-all duration-300 cursor-pointer shadow-sm text-center ${
                               optimizationStage === 'optimized'
-                                ? 'bg-neutral-100 hover:bg-neutral-200 text-neutral-800'
+                                ? 'bg-neutral-100 dark:bg-neutral-800 hover:bg-neutral-200 dark:bg-neutral-700 text-neutral-800 dark:text-neutral-100'
                                 : 'bg-neutral-900 hover:bg-blue-600 text-white'
                             }`}
                           >
@@ -1486,25 +1486,25 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
                   {/* TAB 2: CANVAS DESIGN TOKENS SYSTEM */}
                   {activeShowcaseTab === 'canvas' && (
                     <div className="space-y-6">
-                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-neutral-100 pb-4">
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-neutral-100 dark:border-neutral-800 pb-4">
                         <div>
-                          <span className="text-[9px] font-black uppercase tracking-widest text-pink-600 bg-pink-50 px-2 py-0.5 rounded-md">
+                          <span className="text-[9px] font-black uppercase tracking-widest text-pink-600 dark:text-pink-400 bg-pink-50 dark:bg-pink-500/10 px-2 py-0.5 rounded-md">
                             {currentLang === 'en' ? 'DESIGN LAB' : 'ডিজাইন ল্যাব'}
                           </span>
-                          <h3 className="text-base font-black text-neutral-900 mt-1">
+                          <h3 className="text-base font-black text-neutral-900 dark:text-white mt-1">
                             {currentLang === 'en' ? 'Interactive Figma-Like Sandbox' : 'ইন্টারেক্টিভ ফিগমা ডিজাইন স্যান্ডবক্স'}
                           </h3>
                         </div>
                         <div className="flex items-center space-x-1.5 self-start sm:self-center">
                           <span className="h-2 w-2 rounded-full bg-pink-500 animate-pulse" />
-                          <span className="text-[10px] font-mono text-neutral-400">Tokens Engaged</span>
+                          <span className="text-[10px] font-mono text-neutral-400 dark:text-neutral-500">Tokens Engaged</span>
                         </div>
                       </div>
 
                       <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
                         
                         {/* Interactive Client Card Preview */}
-                        <div className="md:col-span-6 flex items-center justify-center p-4 bg-neutral-50/50 rounded-2xl border border-neutral-100/50 h-[260px] relative overflow-hidden">
+                        <div className="md:col-span-6 flex items-center justify-center p-4 bg-neutral-50/50 dark:bg-neutral-900/50 rounded-2xl border border-neutral-100/50 h-[260px] relative overflow-hidden">
                           
                           {/* Beautiful background grids */}
                           <div className="absolute inset-0 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:12px_12px] opacity-40 pointer-events-none" />
@@ -1515,23 +1515,23 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
                             style={{ 
                               borderRadius: `${cornerRadius}px`,
                               boxShadow: vibeTheme === 'cyber' 
-                                ? `0 15px ${glowIntensity}px -5px rgba(59, 130, 246, 0.45)` 
+                                ? `0 15px ${glowIntensity}px -5px rgba(255, 77, 0, 0.45)` 
                                 : vibeTheme === 'peak' 
                                   ? `0 15px ${glowIntensity}px -5px rgba(16, 185, 129, 0.45)` 
-                                  : `0 15px ${glowIntensity}px -5px rgba(244, 63, 94, 0.45)`
+                                  : `0 15px ${glowIntensity}px -5px rgba(255, 77, 0, 0.45)`
                             }}
-                            className={`w-[250px] p-5 border relative overflow-hidden transition-all duration-300 bg-white ${
+                            className={`w-[250px] p-5 border relative overflow-hidden transition-all duration-300 bg-white dark:bg-[#141414] ${
                               vibeTheme === 'cyber' 
-                                ? 'border-blue-100' 
+                                ? 'border-blue-100 dark:border-orange-500/20' 
                                 : vibeTheme === 'peak' 
-                                  ? 'border-emerald-100' 
-                                  : 'border-rose-100'
+                                  ? 'border-emerald-100 dark:border-emerald-500/20' 
+                                  : 'border-rose-100 dark:border-rose-500/20'
                             }`}
                           >
                             {/* Card Glow Mesh */}
                             <div className={`absolute -top-10 -right-10 w-28 h-28 rounded-full blur-[30px] opacity-20 pointer-events-none ${
                               vibeTheme === 'cyber' 
-                                ? 'bg-blue-500' 
+                                ? 'bg-blue-500 dark:bg-orange-500' 
                                 : vibeTheme === 'peak' 
                                   ? 'bg-emerald-500' 
                                   : 'bg-rose-500'
@@ -1540,15 +1540,15 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
                             <div className="flex items-center justify-between mb-4">
                               <span className={`text-[8px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full ${
                                 vibeTheme === 'cyber' 
-                                  ? 'bg-blue-50 text-blue-600' 
+                                  ? 'bg-blue-50 dark:bg-orange-500/10 text-blue-600 dark:text-orange-400' 
                                   : vibeTheme === 'peak' 
-                                    ? 'bg-emerald-50 text-emerald-600' 
-                                    : 'bg-rose-50 text-rose-600'
+                                    ? 'bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400' 
+                                    : 'bg-rose-50 dark:bg-rose-500/10 text-rose-600 dark:text-rose-400'
                               }`}>
                                 {vibeTheme === 'cyber' ? 'CYBER FINTECH' : vibeTheme === 'peak' ? 'GREEN ECO' : 'SOLAR AGENCY'}
                               </span>
                               <Sparkles className={`h-4 w-4 ${
-                                vibeTheme === 'cyber' ? 'text-blue-500' : vibeTheme === 'peak' ? 'text-emerald-500' : 'text-rose-500'
+                                vibeTheme === 'cyber' ? 'text-blue-500 dark:text-orange-400' : vibeTheme === 'peak' ? 'text-emerald-500 dark:text-emerald-400' : 'text-rose-500 dark:text-rose-400'
                               }`} />
                             </div>
 
@@ -1558,22 +1558,22 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
                               {vibeTheme === 'cyber' ? 'Infinite Transactions' : vibeTheme === 'peak' ? 'Forest Green Core' : 'Symphony Agency'}
                             </h4>
 
-                            <p className="text-[10px] leading-relaxed text-neutral-400 mb-4">
+                            <p className="text-[10px] leading-relaxed text-neutral-400 dark:text-neutral-500 mb-4">
                               {currentLang === 'en' 
                                 ? 'Crafting stunning immersive digital systems that perform under heavy traffic.'
                                 : 'পণ্য বা সার্ভিসের সাথে কাস্টমারের চমৎকার ডিজিটাল অভিজ্ঞতার মেলবন্ধন।'
                               }
                             </p>
 
-                            <div className="flex items-center justify-between pt-3 border-t border-neutral-100">
+                            <div className="flex items-center justify-between pt-3 border-t border-neutral-100 dark:border-neutral-800">
                               <div className="flex -space-x-1.5">
                                 <span className={`h-4.5 w-4.5 rounded-full border border-white flex items-center justify-center text-[8px] font-black text-white ${
                                   vibeTheme === 'cyber' ? 'bg-blue-600' : vibeTheme === 'peak' ? 'bg-emerald-600' : 'bg-rose-600'
                                 }`}>A</span>
-                                <span className="h-4.5 w-4.5 rounded-full border border-white bg-neutral-200 flex items-center justify-center text-[8px] font-black text-neutral-600">B</span>
+                                <span className="h-4.5 w-4.5 rounded-full border border-white bg-neutral-200 dark:bg-neutral-700 flex items-center justify-center text-[8px] font-black text-neutral-600 dark:text-neutral-300 dark:text-neutral-600">B</span>
                               </div>
                               <span className={`text-[10px] font-black ${
-                                vibeTheme === 'cyber' ? 'text-blue-600' : vibeTheme === 'peak' ? 'text-emerald-600' : 'text-rose-600'
+                                vibeTheme === 'cyber' ? 'text-blue-600 dark:text-orange-400' : vibeTheme === 'peak' ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'
                               }`}>{currentLang === 'en' ? 'Learn More →' : 'জানুন →'}</span>
                             </div>
                           </motion.div>
@@ -1588,12 +1588,12 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
                         {/* Sliders and Preset Controls */}
                         <div className="md:col-span-6 space-y-5">
                           <div className="space-y-2">
-                            <span className="block text-[10px] font-black uppercase tracking-widest text-neutral-400">
+                            <span className="block text-[10px] font-black uppercase tracking-widest text-neutral-400 dark:text-neutral-500">
                               {currentLang === 'en' ? '1. Select Visual Vibe' : '১. ব্র্যান্ড ভাইব নির্বাচন করুন'}
                             </span>
                             <div className="grid grid-cols-3 gap-2">
                               {[
-                                { id: 'cyber', label: currentLang === 'en' ? 'Cyber Blue' : 'সাইবার ব্লু', color: 'bg-blue-500' },
+                                { id: 'cyber', label: currentLang === 'en' ? 'Cyber Blue' : 'সাইবার ব্লু', color: 'bg-blue-500 dark:bg-orange-500' },
                                 { id: 'peak', label: currentLang === 'en' ? 'Eco Green' : 'ইকো গ্রিন', color: 'bg-emerald-500' },
                                 { id: 'rose', label: currentLang === 'en' ? 'Solar Rose' : 'সোলার রোজ', color: 'bg-rose-500' }
                               ].map((v) => (
@@ -1602,8 +1602,8 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
                                   onClick={() => setVibeTheme(v.id as 'cyber' | 'peak' | 'rose')}
                                   className={`flex items-center space-x-1.5 py-2 px-2.5 border rounded-xl text-[10px] font-black transition-all cursor-pointer ${
                                     vibeTheme === v.id 
-                                      ? 'border-neutral-900 bg-neutral-50/50 text-neutral-950 shadow-sm' 
-                                      : 'border-neutral-200 hover:border-neutral-400 bg-white text-neutral-500'
+                                      ? 'border-neutral-900 bg-neutral-50/50 dark:bg-neutral-900/50 text-neutral-950 shadow-sm' 
+                                      : 'border-neutral-200 dark:border-neutral-700 hover:border-neutral-400 bg-white dark:bg-[#141414] text-neutral-500 dark:text-neutral-400 dark:text-neutral-500'
                                   }`}
                                 >
                                   <span className={`h-2.5 w-2.5 rounded-full ${v.color}`} />
@@ -1613,15 +1613,15 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
                             </div>
                           </div>
 
-                          <div className="space-y-4 pt-3 border-t border-neutral-100">
+                          <div className="space-y-4 pt-3 border-t border-neutral-100 dark:border-neutral-800">
                             
                             {/* Border Radius control */}
                             <div className="space-y-1.5">
                               <div className="flex justify-between items-center">
-                                <span className="text-[10px] font-black uppercase tracking-widest text-neutral-400">
+                                <span className="text-[10px] font-black uppercase tracking-widest text-neutral-400 dark:text-neutral-500">
                                   {currentLang === 'en' ? '2. Border Radius' : '২. বর্ডার রেডিয়াস'}
                                 </span>
-                                <span className="text-[10px] font-mono font-bold text-neutral-700">{cornerRadius}px</span>
+                                <span className="text-[10px] font-mono font-bold text-neutral-700 dark:text-neutral-200">{cornerRadius}px</span>
                               </div>
                               <input 
                                 type="range" 
@@ -1629,17 +1629,17 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
                                 max="28" 
                                 value={cornerRadius}
                                 onChange={(e) => setCornerRadius(Number(e.target.value))}
-                                className="w-full h-1 bg-neutral-200 rounded-lg appearance-none cursor-pointer accent-neutral-900" 
+                                className="w-full h-1 bg-neutral-200 dark:bg-neutral-700 rounded-lg appearance-none cursor-pointer accent-neutral-900" 
                               />
                             </div>
 
                             {/* Glow Intensity control */}
                             <div className="space-y-1.5">
                               <div className="flex justify-between items-center">
-                                <span className="text-[10px] font-black uppercase tracking-widest text-neutral-400">
+                                <span className="text-[10px] font-black uppercase tracking-widest text-neutral-400 dark:text-neutral-500">
                                   {currentLang === 'en' ? '3. Glow Intensity' : '৩. গ্লো ইনটেনসিটি'}
                                 </span>
-                                <span className="text-[10px] font-mono font-bold text-neutral-700">{glowIntensity}px</span>
+                                <span className="text-[10px] font-mono font-bold text-neutral-700 dark:text-neutral-200">{glowIntensity}px</span>
                               </div>
                               <input 
                                 type="range" 
@@ -1647,7 +1647,7 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
                                 max="80" 
                                 value={glowIntensity}
                                 onChange={(e) => setGlowIntensity(Number(e.target.value))}
-                                className="w-full h-1 bg-neutral-200 rounded-lg appearance-none cursor-pointer accent-neutral-900" 
+                                className="w-full h-1 bg-neutral-200 dark:bg-neutral-700 rounded-lg appearance-none cursor-pointer accent-neutral-900" 
                               />
                             </div>
 
@@ -1660,18 +1660,18 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
                   {/* TAB 3: AUTONOMOUS AI GROWTH PIPELINE */}
                   {activeShowcaseTab === 'ai' && (
                     <div className="space-y-6">
-                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-neutral-100 pb-4">
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-neutral-100 dark:border-neutral-800 pb-4">
                         <div>
-                          <span className="text-[9px] font-black uppercase tracking-widest text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-md">
+                          <span className="text-[9px] font-black uppercase tracking-widest text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-500/10 px-2 py-0.5 rounded-md">
                             {currentLang === 'en' ? 'INTELLIGENCE CORE' : 'এআই ইন্টেলিজেন্স কোর'}
                           </span>
-                          <h3 className="text-base font-black text-neutral-900 mt-1">
+                          <h3 className="text-base font-black text-neutral-900 dark:text-white mt-1">
                             {currentLang === 'en' ? 'Gemini-Powered Neural Growth' : 'জেমিনি-চালিত নিউরাল গ্রোথ পাইপলাইন'}
                           </h3>
                         </div>
                         <div className="flex items-center space-x-1.5 self-start sm:self-center">
                           <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
-                          <span className="text-[10px] font-mono text-neutral-400">Model 2.5 Flash</span>
+                          <span className="text-[10px] font-mono text-neutral-400 dark:text-neutral-500">Model 2.5 Flash</span>
                         </div>
                       </div>
 
@@ -1683,8 +1683,8 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
                           {/* Top Visual Diagram */}
                           <div className="flex justify-between items-center bg-neutral-900/50 p-2.5 rounded-xl border border-neutral-850 mb-3 relative overflow-hidden">
                             <div className="flex items-center space-x-1.5 relative z-10">
-                              <Users className="h-3.5 w-3.5 text-blue-400" />
-                              <span className="text-[9px] text-neutral-300 font-bold">{currentLang === 'en' ? 'Traffic' : 'কাস্টমার'}</span>
+                              <Users className="h-3.5 w-3.5 text-blue-400 dark:text-orange-300" />
+                              <span className="text-[9px] text-neutral-300 dark:text-neutral-600 font-bold">{currentLang === 'en' ? 'Traffic' : 'কাস্টমার'}</span>
                             </div>
                             
                             {/* Animated connection beam */}
@@ -1697,8 +1697,8 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
                             </div>
 
                             <div className="flex items-center space-x-1.5 relative z-10">
-                              <BrainCircuit className="h-3.5 w-3.5 text-purple-400 animate-spin" />
-                              <span className="text-[9px] text-neutral-300 font-bold">Gemini AI</span>
+                              <BrainCircuit className="h-3.5 w-3.5 text-purple-400 dark:text-purple-300 animate-spin" />
+                              <span className="text-[9px] text-neutral-300 dark:text-neutral-600 font-bold">Gemini AI</span>
                             </div>
 
                             {/* Animated connection beam */}
@@ -1712,14 +1712,14 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
 
                             <div className="flex items-center space-x-1.5 relative z-10">
                               <TrendingUp className="h-3.5 w-3.5 text-emerald-400" />
-                              <span className="text-[9px] text-neutral-300 font-bold">{currentLang === 'en' ? 'Revenue' : 'প্রবৃদ্ধি'}</span>
+                              <span className="text-[9px] text-neutral-300 dark:text-neutral-600 font-bold">{currentLang === 'en' ? 'Revenue' : 'প্রবৃদ্ধি'}</span>
                             </div>
                           </div>
 
                           {/* Terminal Output */}
                           <div className="flex-1 overflow-y-auto space-y-1.5 max-h-[130px] pr-2 scrollbar-thin scrollbar-thumb-neutral-800">
                             {aiLogs.length === 0 ? (
-                              <div className="text-neutral-500 italic h-full flex items-center justify-center text-center p-3">
+                              <div className="text-neutral-500 dark:text-neutral-400 dark:text-neutral-500 italic h-full flex items-center justify-center text-center p-3">
                                 {currentLang === 'en' 
                                   ? 'Click "Trigger Growth Agent" below to run simulated crawl & database auto-optimizations...'
                                   : 'নিচের "গ্রোথ এজেন্ট চালু করুন" বাটনে ক্লিক করে ডেমো সিমুলেশন রান করুন...'
@@ -1731,7 +1731,7 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
                                   key={index}
                                   initial={{ opacity: 0, x: -10 }}
                                   animate={{ opacity: 1, x: 0 }}
-                                  className="text-neutral-300 font-mono text-[9px] sm:text-[10px]"
+                                  className="text-neutral-300 dark:text-neutral-600 font-mono text-[9px] sm:text-[10px]"
                                 >
                                   {log}
                                 </motion.div>
@@ -1740,16 +1740,16 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
                           </div>
 
                           {/* Console indicator */}
-                          <div className="mt-3 pt-2 border-t border-neutral-900 flex items-center justify-between text-[9px] text-neutral-500">
+                          <div className="mt-3 pt-2 border-t border-neutral-900 flex items-center justify-between text-[9px] text-neutral-500 dark:text-neutral-400 dark:text-neutral-500">
                             <span>Sys: SECURE_AGENTS_ON</span>
                             <span>{aiStep === 'running' ? '● RUNNING' : aiStep === 'completed' ? '● COMPLETED' : '● IDLE'}</span>
                           </div>
                         </div>
 
                         {/* Interactive Growth hockey stick chart */}
-                        <div className="md:col-span-5 flex flex-col justify-between p-4.5 bg-neutral-50/70 rounded-2xl border border-neutral-150/40 space-y-4">
+                        <div className="md:col-span-5 flex flex-col justify-between p-4.5 bg-neutral-50/70 dark:bg-neutral-900/70 rounded-2xl border border-neutral-150/40 space-y-4">
                           <div>
-                            <span className="block text-[9px] font-black uppercase tracking-widest text-neutral-400">
+                            <span className="block text-[9px] font-black uppercase tracking-widest text-neutral-400 dark:text-neutral-500">
                               {currentLang === 'en' ? 'Funnel Conversion Rate' : 'ফানেল কনভার্সন রেট'}
                             </span>
                             
@@ -1781,7 +1781,7 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
                                   animate={{ opacity: 1, scale: 1 }}
                                   className="absolute top-2 right-2 bg-emerald-500/10 border border-emerald-500/20 rounded-lg px-2 py-1 flex items-center space-x-1 shadow-sm"
                                 >
-                                  <span className="text-[9px] font-mono font-black text-emerald-600">+240% CTR</span>
+                                  <span className="text-[9px] font-mono font-black text-emerald-600 dark:text-emerald-400">+240% CTR</span>
                                   <span className="relative flex h-1.5 w-1.5">
                                     <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
                                     <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-500"></span>
@@ -1789,7 +1789,7 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
                                 </motion.div>
                               )}
 
-                              <div className="absolute bottom-2 left-3 text-[8px] font-mono text-neutral-500">
+                              <div className="absolute bottom-2 left-3 text-[8px] font-mono text-neutral-500 dark:text-neutral-400 dark:text-neutral-500">
                                 {currentLang === 'en' ? 'Organic Traffic Trend' : 'অর্গানিক ট্রাফিক ট্রেন্ড'}
                               </div>
                             </div>
@@ -1797,13 +1797,13 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
 
                           {/* Stat rows */}
                           <div className="space-y-1.5">
-                            <div className="flex justify-between items-center text-[11px] font-mono border-b border-neutral-100 pb-1.5">
-                              <span className="text-neutral-400">{currentLang === 'en' ? 'Model latency:' : 'এআই ল্যাটেন্সি:'}</span>
-                              <span className="font-bold text-neutral-800">120ms</span>
+                            <div className="flex justify-between items-center text-[11px] font-mono border-b border-neutral-100 dark:border-neutral-800 pb-1.5">
+                              <span className="text-neutral-400 dark:text-neutral-500">{currentLang === 'en' ? 'Model latency:' : 'এআই ল্যাটেন্সি:'}</span>
+                              <span className="font-bold text-neutral-800 dark:text-neutral-100">120ms</span>
                             </div>
                             <div className="flex justify-between items-center text-[11px] font-mono">
-                              <span className="text-neutral-400">{currentLang === 'en' ? 'Database sync:' : 'ডাটাবেস সিঙ্ক:'}</span>
-                              <span className="font-bold text-emerald-600">Active (Uptime 100%)</span>
+                              <span className="text-neutral-400 dark:text-neutral-500">{currentLang === 'en' ? 'Database sync:' : 'ডাটাবেস সিঙ্ক:'}</span>
+                              <span className="font-bold text-emerald-600 dark:text-emerald-400">Active (Uptime 100%)</span>
                             </div>
                           </div>
 
@@ -1814,7 +1814,7 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
                             whileTap={{ scale: 0.98 }}
                             className={`w-full py-2.5 rounded-xl text-[11px] font-black uppercase tracking-widest transition-all duration-300 cursor-pointer shadow-sm text-center ${
                               aiStep === 'completed'
-                                ? 'bg-neutral-100 hover:bg-neutral-200 text-neutral-800'
+                                ? 'bg-neutral-100 dark:bg-neutral-800 hover:bg-neutral-200 dark:bg-neutral-700 text-neutral-800 dark:text-neutral-100'
                                 : 'bg-neutral-900 hover:bg-emerald-600 text-white'
                             }`}
                           >
@@ -1835,9 +1835,9 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
               </AnimatePresence>
 
               {/* Floating micro indicators decoration (No photos, completely abstract design) */}
-              <div className="absolute -bottom-8 -left-4 hidden md:flex items-center space-x-2 bg-white px-3.5 py-2 rounded-2xl border border-neutral-200/60 shadow-md">
+              <div className="absolute -bottom-8 -left-4 hidden md:flex items-center space-x-2 bg-white dark:bg-[#141414] px-3.5 py-2 rounded-2xl border border-neutral-200/60 shadow-md">
                 <div className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
-                <span className="text-[10px] font-black tracking-wide text-neutral-600 uppercase">
+                <span className="text-[10px] font-black tracking-wide text-neutral-600 dark:text-neutral-300 dark:text-neutral-600 uppercase">
                   {currentLang === 'en' ? '🌐 ZERO DOWNTIME CORE' : '🌐 জিরো ডাউনটাইম কোর'}
                 </span>
               </div>
@@ -1854,18 +1854,18 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
       {/* ========================================================
           02. OUR STORY (Storytelling Timeline)
          ======================================================== */}
-      <section id="our-story" className="border-t border-neutral-100 bg-neutral-50/30 py-24 relative z-10">
+      <section id="our-story" className="border-t border-neutral-100 dark:border-neutral-800 bg-neutral-50/30 py-24 relative z-10">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-start">
             
             <div className="lg:col-span-5 space-y-6 lg:sticky lg:top-24">
-              <span className="text-xs font-bold uppercase tracking-widest text-blue-600">
+              <span className="text-xs font-bold uppercase tracking-widest text-blue-600 dark:text-orange-400">
                 {currentLang === 'en' ? 'OUR BRAND CHRONICLES' : 'আমাদের ব্র্যান্ডের গল্প'}
               </span>
-              <h2 className="font-sans text-3xl sm:text-4xl font-black text-neutral-900 leading-tight">
+              <h2 className="font-sans text-3xl sm:text-4xl font-black text-neutral-900 dark:text-white leading-tight">
                 {currentLang === 'en' ? 'The History & Philosophy of Next Solution' : 'নেক্সট সলিউশনের জন্ম ও আমাদের দীর্ঘ ইতিহাস'}
               </h2>
-              <p className="text-xs sm:text-sm text-neutral-500 leading-relaxed max-w-md">
+              <p className="text-xs sm:text-sm text-neutral-500 dark:text-neutral-400 dark:text-neutral-500 leading-relaxed max-w-md">
                 {currentLang === 'en' 
                   ? 'We founded this agency with one simple rule: never deploy lazy templates, and never compromise on relational performance. Click through our milestones to see how we expanded our digital footprint.' 
                   : 'আমরা কেবল একটি সরল নিয়মে বিশ্বাস করি: কখনো রেডিমেড টেমপ্লেট ব্যবহার করব না এবং গতির সাথে আপস করব না। মাইলস্টোনগুলোতে ক্লিক করে দেখে নিন কীভাবে আমরা প্রযুক্তির উৎকর্ষে নিজেদের নিয়োজিত করেছি।'}
@@ -1879,15 +1879,15 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
                     onClick={() => setSelectedMilestone(idx)}
                     className={`w-full text-left p-3.5 rounded-xl border transition-all duration-300 flex items-center justify-between cursor-pointer ${
                       selectedMilestone === idx 
-                        ? 'bg-white border-neutral-200 shadow-md text-blue-600 pl-6' 
-                        : 'bg-transparent border-transparent text-neutral-400 hover:text-neutral-950'
+                        ? 'bg-white dark:bg-[#141414] border-neutral-200 dark:border-neutral-700 shadow-md text-blue-600 dark:text-orange-400 pl-6' 
+                        : 'bg-transparent border-transparent text-neutral-400 dark:text-neutral-500 hover:text-neutral-950'
                     }`}
                   >
                     <div className="flex items-center space-x-3">
                       <span className="font-mono text-xs font-bold">{m.year}</span>
                       <span className="text-xs font-bold">{currentLang === 'en' ? m.titleEn : m.titleBn}</span>
                     </div>
-                    {selectedMilestone === idx && <ArrowRight className="h-4 w-4 text-blue-600" />}
+                    {selectedMilestone === idx && <ArrowRight className="h-4 w-4 text-blue-600 dark:text-orange-400" />}
                   </button>
                 ))}
               </div>
@@ -1902,7 +1902,7 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -20 }}
                   transition={{ duration: 0.4 }}
-                  className="bg-white border border-neutral-100 rounded-3xl p-8 md:p-12 shadow-xl relative overflow-hidden flex flex-col justify-between min-h-[420px]"
+                  className="bg-white dark:bg-[#141414] border border-neutral-100 dark:border-neutral-800 rounded-3xl p-8 md:p-12 shadow-xl relative overflow-hidden flex flex-col justify-between min-h-[420px]"
                 >
                   <div className={`absolute top-0 left-0 right-0 h-2.5 bg-gradient-to-r ${storyMilestones[selectedMilestone].color}`} />
                   
@@ -1911,30 +1911,30 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
                       <span className="text-5xl font-black text-neutral-100 font-mono tracking-tighter">
                         {storyMilestones[selectedMilestone].year}
                       </span>
-                      <span className="text-[10px] font-bold uppercase tracking-wider text-blue-600 bg-blue-50 px-3 py-1 rounded-full border border-blue-100/50">
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-blue-600 dark:text-orange-400 bg-blue-50 dark:bg-orange-500/10 px-3 py-1 rounded-full border border-blue-100/50">
                         {storyMilestones[selectedMilestone].metric}
                       </span>
                     </div>
 
-                    <h3 className="font-sans text-2xl md:text-3xl font-black text-neutral-900 leading-tight">
+                    <h3 className="font-sans text-2xl md:text-3xl font-black text-neutral-900 dark:text-white leading-tight">
                       {currentLang === 'en' ? storyMilestones[selectedMilestone].titleEn : storyMilestones[selectedMilestone].titleBn}
                     </h3>
 
-                    <p className="text-xs sm:text-sm md:text-base text-neutral-500 leading-relaxed font-normal">
+                    <p className="text-xs sm:text-sm md:text-base text-neutral-500 dark:text-neutral-400 dark:text-neutral-500 leading-relaxed font-normal">
                       {currentLang === 'en' ? storyMilestones[selectedMilestone].descEn : storyMilestones[selectedMilestone].descBn}
                     </p>
                   </div>
 
-                  <div className="pt-8 border-t border-neutral-100 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                  <div className="pt-8 border-t border-neutral-100 dark:border-neutral-800 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                     <div className="flex items-center space-x-3">
                       <div className="h-2 w-2 rounded-full bg-blue-600 animate-ping"></div>
-                      <span className="text-[10px] font-extrabold text-neutral-400 uppercase tracking-widest">
+                      <span className="text-[10px] font-extrabold text-neutral-400 dark:text-neutral-500 uppercase tracking-widest">
                         {currentLang === 'en' ? 'Verified Milestone Record' : 'যাচাইকৃত ইতিহাস রেকর্ড'}
                       </span>
                     </div>
                     <button
                       onClick={() => navigateToTab('contact')}
-                      className="inline-flex items-center space-x-1.5 text-xs font-extrabold text-blue-600 hover:underline cursor-pointer"
+                      className="inline-flex items-center space-x-1.5 text-xs font-extrabold text-blue-600 dark:text-orange-400 hover:underline cursor-pointer"
                     >
                       <span>{currentLang === 'en' ? 'Start project with us' : 'আমাদের সাথে কাজ শুরু করুন'}</span>
                       <ArrowUpRight className="h-4 w-4" />
@@ -1953,28 +1953,28 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
          ======================================================== */}
       <section id="mission-vision" className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-24 relative z-10">
         <div className="text-center space-y-4 max-w-2xl mx-auto mb-16">
-          <span className="text-xs font-bold uppercase tracking-widest text-blue-600">
+          <span className="text-xs font-bold uppercase tracking-widest text-blue-600 dark:text-orange-400">
             {currentLang === 'en' ? 'OUR GUIDING STARS' : 'আমাদের পথপ্রদর্শক দর্শন'}
           </span>
-          <h2 className="font-sans text-2xl sm:text-3xl lg:text-4xl font-black text-neutral-900 leading-tight">
+          <h2 className="font-sans text-2xl sm:text-3xl lg:text-4xl font-black text-neutral-900 dark:text-white leading-tight">
             {currentLang === 'en' ? 'Aligning Complex Technical Logic With Clear Brand Direction' : 'পরিষ্কার ও নিখুঁত পরিকল্পনার সাথে সফল ডিজিটাল বাস্তবায়ন'}
           </h2>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
           {/* Mission card */}
-          <div className="group relative rounded-3xl border border-neutral-100 bg-white p-8 md:p-10 space-y-6 shadow-sm hover:shadow-xl hover:border-blue-500/20 transition-all duration-300 overflow-hidden">
-            <div className="absolute top-0 left-0 w-2.5 h-full bg-gradient-to-b from-blue-600 to-indigo-600" />
-            <div className="h-12 w-12 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center group-hover:scale-110 transition duration-300">
+          <div className="group relative rounded-3xl border border-neutral-100 dark:border-neutral-800 bg-white dark:bg-[#141414] p-8 md:p-10 space-y-6 shadow-sm hover:shadow-xl hover:border-blue-500/20 transition-all duration-300 overflow-hidden">
+            <div className="absolute top-0 left-0 w-2.5 h-full bg-gradient-to-b from-blue-600 dark:from-orange-500 to-indigo-600 dark:to-orange-400" />
+            <div className="h-12 w-12 rounded-2xl bg-blue-50 dark:bg-orange-500/10 text-blue-600 dark:text-orange-400 flex items-center justify-center group-hover:scale-110 transition duration-300">
               <Target className="h-6 w-6" />
             </div>
 
             <div className="space-y-3">
-              <span className="text-[10px] font-black uppercase tracking-widest text-blue-600">01. Our core duty</span>
-              <h3 className="text-xl md:text-2xl font-black text-neutral-900">
+              <span className="text-[10px] font-black uppercase tracking-widest text-blue-600 dark:text-orange-400">01. Our core duty</span>
+              <h3 className="text-xl md:text-2xl font-black text-neutral-900 dark:text-white">
                 {currentLang === 'en' ? 'Our Core Mission' : 'আমাদের মূল মিশন'}
               </h3>
-              <p className="text-xs sm:text-sm text-neutral-500 leading-relaxed font-normal">
+              <p className="text-xs sm:text-sm text-neutral-500 dark:text-neutral-400 dark:text-neutral-500 leading-relaxed font-normal">
                 {currentLang === 'en'
                   ? (settings.aboutMissionEn || 'To orchestrate incredibly fast, reliable, and secure mobile app platforms coupled with gorgeous brand design systems that reliably scale businesses, eliminate technical debt, and maximize operational ROI.')
                   : (settings.aboutMissionBn || 'আমাদের মূল মিশন হলো অতি-দ্রুত, বিশ্বস্ত ও সুরক্ষিত অ্যাপ্লিকেশন প্ল্যাটফর্ম তৈরি করা যা এআই অটোমেশনের মাধ্যমে ব্যবসায়িক জটিলতা ও অপচয় দূর করে প্রবৃদ্ধি এবং বিনিয়োগের নিশ্চিত রিটার্ন প্রদান করে।')}
@@ -1983,24 +1983,24 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
 
             {/* Decorative Vector simulation */}
             <div className="pt-4 border-t border-neutral-100/70 flex items-center justify-between">
-              <span className="text-[10px] font-bold text-neutral-400 uppercase tracking-widest italic">"Performance First, Always."</span>
-              <Check className="h-4 w-4 text-blue-600" />
+              <span className="text-[10px] font-bold text-neutral-400 dark:text-neutral-500 uppercase tracking-widest italic">"Performance First, Always."</span>
+              <Check className="h-4 w-4 text-blue-600 dark:text-orange-400" />
             </div>
           </div>
 
           {/* Vision card */}
-          <div className="group relative rounded-3xl border border-neutral-100 bg-white p-8 md:p-10 space-y-6 shadow-sm hover:shadow-xl hover:border-purple-500/20 transition-all duration-300 overflow-hidden">
+          <div className="group relative rounded-3xl border border-neutral-100 dark:border-neutral-800 bg-white dark:bg-[#141414] p-8 md:p-10 space-y-6 shadow-sm hover:shadow-xl hover:border-purple-500/20 transition-all duration-300 overflow-hidden">
             <div className="absolute top-0 left-0 w-2.5 h-full bg-gradient-to-b from-purple-600 to-pink-600" />
-            <div className="h-12 w-12 rounded-2xl bg-purple-50 text-purple-600 flex items-center justify-center group-hover:scale-110 transition duration-300">
+            <div className="h-12 w-12 rounded-2xl bg-purple-50 dark:bg-purple-500/10 text-purple-600 dark:text-purple-400 dark:text-purple-300 flex items-center justify-center group-hover:scale-110 transition duration-300">
               <Eye className="h-6 w-6" />
             </div>
 
             <div className="space-y-3">
-              <span className="text-[10px] font-black uppercase tracking-widest text-purple-600">02. Our futuristic vision</span>
-              <h3 className="text-xl md:text-2xl font-black text-neutral-900">
+              <span className="text-[10px] font-black uppercase tracking-widest text-purple-600 dark:text-purple-400 dark:text-purple-300">02. Our futuristic vision</span>
+              <h3 className="text-xl md:text-2xl font-black text-neutral-900 dark:text-white">
                 {currentLang === 'en' ? 'Our Longterm Vision' : 'আমাদের দীর্ঘমেয়াদী ভিশন'}
               </h3>
-              <p className="text-xs sm:text-sm text-neutral-500 leading-relaxed font-normal">
+              <p className="text-xs sm:text-sm text-neutral-500 dark:text-neutral-400 dark:text-neutral-500 leading-relaxed font-normal">
                 {currentLang === 'en'
                   ? (settings.aboutVisionEn || 'To define the absolute gold standard for full-stack digital craftsmanship and secure AI integrations, establishing ourselves as the ultimate digital headquarters for leading organizations worldwide.')
                   : (settings.aboutVisionBn || 'প্রযুক্তির বৈশ্বিক মানদণ্ড বা পরম গোল্ড স্ট্যান্ডার্ড হিসেবে নিজেদের প্রতিষ্ঠিত করা, যাতে সারাবিশ্বের সফল প্রতিষ্ঠানসমূহ নির্দ্বিধায় নেক্সট সリューションকে তাদের প্রধান ডিজিটাল সহযোগী মনে করে।')}
@@ -2009,8 +2009,8 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
 
             {/* Decorative Vector simulation */}
             <div className="pt-4 border-t border-neutral-100/70 flex items-center justify-between">
-              <span className="text-[10px] font-bold text-neutral-400 uppercase tracking-widest italic">"Uncompromised Integrity."</span>
-              <Check className="h-4 w-4 text-purple-600" />
+              <span className="text-[10px] font-bold text-neutral-400 dark:text-neutral-500 uppercase tracking-widest italic">"Uncompromised Integrity."</span>
+              <Check className="h-4 w-4 text-purple-600 dark:text-purple-400 dark:text-purple-300" />
             </div>
           </div>
         </div>
@@ -2019,7 +2019,7 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
       {/* ========================================================
           03.5. MEET THE MINDS BEHIND NEXT SOLUTION (Leadership Showcase)
          ======================================================== */}
-      <section id="about-leadership" className="border-t border-neutral-100 bg-white py-24 relative z-10 overflow-hidden">
+      <section id="about-leadership" className="border-t border-neutral-100 dark:border-neutral-800 bg-white dark:bg-[#141414] py-24 relative z-10 overflow-hidden">
         
         {/* Abstract Background Design Elements */}
         <div className="absolute inset-0 bg-[radial-gradient(#f1f5f9_1.2px,transparent_1.2px)] [background-size:20px_20px] opacity-60 pointer-events-none" />
@@ -2031,11 +2031,11 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
           
           {/* Section Header */}
           <div className="text-center space-y-4 max-w-3xl mx-auto mb-20">
-            <span className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full bg-blue-50 text-blue-600 text-[10px] font-black uppercase tracking-widest border border-blue-150/40">
+            <span className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full bg-blue-50 dark:bg-orange-500/10 text-blue-600 dark:text-orange-400 text-[10px] font-black uppercase tracking-widest border border-blue-150/40">
               <span>👥 {currentLang === 'en' ? 'OUR LEADERSHIP TEAM' : 'আমাদের নেতৃত্ব টিম'}</span>
             </span>
             
-            <h2 className="font-sans text-3xl sm:text-4xl lg:text-5xl font-black text-neutral-900 tracking-tight leading-tight">
+            <h2 className="font-sans text-3xl sm:text-4xl lg:text-5xl font-black text-neutral-900 dark:text-white tracking-tight leading-tight">
               {currentLang === 'en' ? 'Meet The Minds Behind Next Solution' : 'নেক্সট সলিউশনের পেছনের চিন্তাশীল মন'}
             </h2> 
           </div>
@@ -2046,44 +2046,44 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
               return (
                 <div 
                   key={leader.id}
-                  className="flex flex-col sm:flex-row bg-white rounded-3xl border border-neutral-100 shadow-[0_4px_20px_rgba(0,0,0,0.02)] overflow-hidden hover:shadow-[0_20px_50px_rgba(0,0,0,0.08)] hover:border-blue-500/10 transition-all duration-500 group relative"
+                  className="flex flex-col sm:flex-row bg-white dark:bg-[#141414] rounded-3xl border border-neutral-100 dark:border-neutral-800 shadow-[0_4px_20px_rgba(0,0,0,0.02)] overflow-hidden hover:shadow-[0_20px_50px_rgba(0,0,0,0.08)] hover:border-blue-500/10 transition-all duration-500 group relative"
                 >
                   {/* Left Side: Introduction */}
                   <div className="p-6 md:p-8 flex flex-col justify-between flex-1 space-y-4">
                     <div className="space-y-2">
                       <div className="flex items-center space-x-2">
                         <span className="h-1.5 w-1.5 rounded-full bg-blue-600 animate-pulse" />
-                        <span className="text-[9px] font-black uppercase tracking-widest text-blue-600 font-mono">
+                        <span className="text-[9px] font-black uppercase tracking-widest text-blue-600 dark:text-orange-400 font-mono">
                           {currentLang === 'en' ? leader.experienceEn : leader.experienceBn}
                         </span>
                       </div>
                       
-                      <h3 className="text-xl md:text-2xl font-black text-neutral-900 group-hover:text-blue-600 transition-colors duration-300">
+                      <h3 className="text-xl md:text-2xl font-black text-neutral-900 dark:text-white group-hover:text-blue-600 dark:text-orange-400 transition-colors duration-300">
                         {currentLang === 'en' ? leader.nameEn : leader.nameBn}
                       </h3>
                       
-                      <p className="text-[11px] font-bold text-neutral-400 font-mono uppercase tracking-wider">
+                      <p className="text-[11px] font-bold text-neutral-400 dark:text-neutral-500 font-mono uppercase tracking-wider">
                         {currentLang === 'en' ? leader.roleEn : leader.roleBn}
                       </p>
                     </div>
 
-                    <p className="text-xs text-neutral-500 leading-relaxed font-normal">
+                    <p className="text-xs text-neutral-500 dark:text-neutral-400 dark:text-neutral-500 leading-relaxed font-normal">
                       {currentLang === 'en' ? leader.bioEn : leader.bioBn}
                     </p>
 
                     {/* Motto/Quote */}
-                    <div className="border-l-2 border-neutral-200 pl-3 py-0.5">
-                      <p className="text-[11px] italic text-neutral-400 font-normal leading-relaxed">
+                    <div className="border-l-2 border-neutral-200 dark:border-neutral-700 pl-3 py-0.5">
+                      <p className="text-[11px] italic text-neutral-400 dark:text-neutral-500 font-normal leading-relaxed">
                         "{currentLang === 'en' ? leader.mottoEn : leader.mottoBn}"
                       </p>
                     </div>
 
                     {/* Socials & Meta */}
-                    <div className="flex items-center justify-between pt-3 border-t border-neutral-100">
+                    <div className="flex items-center justify-between pt-3 border-t border-neutral-100 dark:border-neutral-800">
                       <div className="flex items-center space-x-3">
                         <a 
                           href={`mailto:${leader.email}`} 
-                          className="p-1.5 rounded-lg bg-neutral-50 hover:bg-neutral-100 hover:text-blue-600 text-neutral-400 transition-all"
+                          className="p-1.5 rounded-lg bg-neutral-50 dark:bg-neutral-900 hover:bg-neutral-100 dark:bg-neutral-800 hover:text-blue-600 dark:text-orange-400 text-neutral-400 dark:text-neutral-500 transition-all"
                           title={leader.email}
                         >
                           <Mail className="h-3.5 w-3.5" />
@@ -2092,15 +2092,15 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
                           href={leader.linkedin} 
                           target="_blank" 
                           rel="noreferrer" 
-                          className="p-1.5 rounded-lg bg-neutral-50 hover:bg-neutral-100 hover:text-blue-600 text-neutral-400 transition-all"
+                          className="p-1.5 rounded-lg bg-neutral-50 dark:bg-neutral-900 hover:bg-neutral-100 dark:bg-neutral-800 hover:text-blue-600 dark:text-orange-400 text-neutral-400 dark:text-neutral-500 transition-all"
                         >
                           <Linkedin className="h-3.5 w-3.5" />
                         </a>
                       </div>
 
-                      <div className="flex items-center space-x-1.5 bg-neutral-50 px-2 py-1 rounded-lg">
+                      <div className="flex items-center space-x-1.5 bg-neutral-50 dark:bg-neutral-900 px-2 py-1 rounded-lg">
                         <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                        <span className="text-[9px] font-bold font-mono text-neutral-500">
+                        <span className="text-[9px] font-bold font-mono text-neutral-500 dark:text-neutral-400 dark:text-neutral-500">
                           {currentLang === 'en' ? leader.statusEn : leader.statusBn}
                         </span>
                       </div>
@@ -2108,7 +2108,7 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
                   </div>
 
                   {/* Right Side: Image */}
-                  <div className="w-full sm:w-2/5 min-h-[220px] sm:min-h-full relative overflow-hidden shrink-0 bg-neutral-50">
+                  <div className="w-full sm:w-2/5 min-h-[220px] sm:min-h-full relative overflow-hidden shrink-0 bg-neutral-50 dark:bg-neutral-900">
                     <img 
                       src={typeof leader.portrait === 'string' ? leader.portrait : leader.portrait.src} 
                       alt={leader.nameEn}
@@ -2129,17 +2129,17 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
       {/* ========================================================
           03.6. THE ENTIRE CREW (Our Team Gallery Section)
          ======================================================== */}
-      <section id="about-squad" className="border-t border-neutral-100 bg-neutral-50/25 py-20 relative z-10">
+      <section id="about-squad" className="border-t border-neutral-100 dark:border-neutral-800 bg-neutral-50/25 py-20 relative z-10">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           
           <div className="text-center space-y-3 max-w-2xl mx-auto mb-10">
-            <span className="inline-flex items-center space-x-1 px-2.5 py-0.5 rounded-full bg-indigo-50 text-indigo-600 text-[9px] font-bold uppercase tracking-wider">
+            <span className="inline-flex items-center space-x-1 px-2.5 py-0.5 rounded-full bg-indigo-50 dark:bg-orange-500/10 text-indigo-600 dark:text-orange-400 text-[9px] font-bold uppercase tracking-wider">
               <span>👥 {currentLang === 'en' ? 'OUR TEAM EXPERTS' : 'আমাদের টিম বিশেষজ্ঞরা'}</span>
             </span>
-            <h3 className="font-sans text-xl sm:text-2xl lg:text-3xl font-black text-neutral-900 leading-tight">
+            <h3 className="font-sans text-xl sm:text-2xl lg:text-3xl font-black text-neutral-900 dark:text-white leading-tight">
               {currentLang === 'en' ? 'Meet our team' : 'আমাদের টিম'}
             </h3>
-            <p className="text-xs text-neutral-400 max-w-md mx-auto">
+            <p className="text-xs text-neutral-400 dark:text-neutral-500 max-w-md mx-auto">
               {currentLang === 'en'
                 ? 'The highly specialized builders, pixel craftsman, and growth strategists transforming code into business success.'
                 : 'অভিজ্ঞ বিল্ডার্স, পিক্সেল ক্রাফটসম্যান এবং গ্রোথ স্ট্র্যাটেজিস্টরা যারা কোডকে নিশ্চিত ব্যবসায়িক সফলতায় রূপান্তর করে।'}
@@ -2173,12 +2173,12 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
                   className={`text-[10px] font-extrabold uppercase tracking-wider px-3.5 py-2 rounded-xl border transition-all duration-300 flex items-center space-x-1.5 cursor-pointer hover:scale-[1.02] ${
                     isActive 
                       ? 'bg-neutral-950 border-neutral-950 text-white shadow-md' 
-                      : 'bg-white border-neutral-100 text-neutral-500 hover:text-neutral-900 hover:border-neutral-200'
+                      : 'bg-white dark:bg-[#141414] border-neutral-100 dark:border-neutral-800 text-neutral-500 dark:text-neutral-400 dark:text-neutral-500 hover:text-neutral-900 dark:text-white hover:border-neutral-200 dark:border-neutral-700'
                   }`}
                 >
                   <span>{currentLang === 'en' ? cat.labelEn : cat.labelBn}</span>
                   <span className={`inline-flex items-center justify-center h-4 px-1.5 rounded-full text-[8px] font-bold ${
-                    isActive ? 'bg-white/20 text-white' : 'bg-neutral-100 text-neutral-500'
+                    isActive ? 'bg-white/20 text-white' : 'bg-neutral-100 dark:bg-neutral-800 text-neutral-500 dark:text-neutral-400 dark:text-neutral-500'
                   }`}>
                     {count}
                   </span>
@@ -2202,10 +2202,10 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
                       exit={{ opacity: 0, scale: 0.9 }}
                       transition={{ duration: 0.25 }}
                       whileHover={{ y: -6 }}
-                      className="bg-white border border-neutral-150/60 rounded-2xl overflow-hidden shadow-sm hover:shadow-xl hover:border-blue-500/15 transition-all duration-300 flex flex-col group h-full"
+                      className="bg-white dark:bg-[#141414] border border-neutral-150/60 rounded-2xl overflow-hidden shadow-sm hover:shadow-xl hover:border-blue-500/15 transition-all duration-300 flex flex-col group h-full"
                     >
                       {/* Image on top */}
-                      <div className="relative aspect-[4/3] w-full overflow-hidden bg-neutral-100 shrink-0">
+                      <div className="relative aspect-[4/3] w-full overflow-hidden bg-neutral-100 dark:bg-neutral-800 shrink-0">
                         <img 
                           src={member.image} 
                           alt={member.nameEn}
@@ -2223,18 +2223,18 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
                       <div className="p-4 flex flex-col flex-1 justify-between space-y-3">
                         <div className="space-y-1">
                           <div className="flex items-center justify-between">
-                            <h4 className="text-sm font-black text-neutral-900 group-hover:text-blue-600 transition-colors">
+                            <h4 className="text-sm font-black text-neutral-900 dark:text-white group-hover:text-blue-600 dark:text-orange-400 transition-colors">
                               {currentLang === 'en' ? member.nameEn : member.nameBn}
                             </h4>
                             <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 shrink-0" title="Active" />
                           </div>
                           
-                          <p className="text-[10px] font-bold text-neutral-400 font-mono uppercase tracking-wider">
+                          <p className="text-[10px] font-bold text-neutral-400 dark:text-neutral-500 font-mono uppercase tracking-wider">
                             {currentLang === 'en' ? member.roleEn : member.roleBn}
                           </p>
                         </div>
 
-                        <p className="text-[11px] text-neutral-500 leading-relaxed font-normal">
+                        <p className="text-[11px] text-neutral-500 dark:text-neutral-400 dark:text-neutral-500 leading-relaxed font-normal">
                           {currentLang === 'en' ? member.descEn : member.descBn}
                         </p>
                       </div>
@@ -2250,12 +2250,12 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
 
          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-7 gap-4 max-w-6xl mx-auto mb-14">
             {[
-              { value: '5+', label: currentLang === 'en' ? 'Years Technical' : 'বছর টেকনিক্যাল', color: 'from-blue-500 to-indigo-500', bg: 'bg-blue-50/60', border: 'border-blue-100/60', textColor: 'text-blue-600' },
-              { value: '4+', label: currentLang === 'en' ? 'Years Agency' : 'বছর এজেন্সি', color: 'from-violet-500 to-purple-500', bg: 'bg-violet-50/60', border: 'border-violet-100/60', textColor: 'text-violet-600' },
-              { value: '100+', label: currentLang === 'en' ? 'Projects' : 'প্রজেক্ট', color: 'from-emerald-500 to-teal-500', bg: 'bg-emerald-50/60', border: 'border-emerald-100/60', textColor: 'text-emerald-600' },
-              { value: '50+', label: currentLang === 'en' ? 'Clients' : 'ক্লায়েন্ট', color: 'from-rose-500 to-pink-500', bg: 'bg-rose-50/60', border: 'border-rose-100/60', textColor: 'text-rose-600' },
-              { value: '15+', label: currentLang === 'en' ? 'Team Members' : 'টিম মেম্বার', color: 'from-amber-500 to-orange-500', bg: 'bg-amber-50/60', border: 'border-amber-100/60', textColor: 'text-amber-600' },
-              { value: '8+', label: currentLang === 'en' ? 'Digital Services' : 'ডিজিটাল সেবা', color: 'from-cyan-500 to-sky-500', bg: 'bg-cyan-50/60', border: 'border-cyan-100/60', textColor: 'text-cyan-600' },
+              { value: '5+', label: currentLang === 'en' ? 'Years Technical' : 'বছর টেকনিক্যাল', color: 'from-blue-500 dark:from-orange-500 to-indigo-500', bg: 'bg-blue-50/60', border: 'border-blue-100/60', textColor: 'text-blue-600 dark:text-orange-400' },
+              { value: '4+', label: currentLang === 'en' ? 'Years Agency' : 'বছর এজেন্সি', color: 'from-violet-500 to-purple-500', bg: 'bg-violet-50/60', border: 'border-violet-100/60', textColor: 'text-violet-600 dark:text-orange-400' },
+              { value: '100+', label: currentLang === 'en' ? 'Projects' : 'প্রজেক্ট', color: 'from-emerald-500 to-teal-500', bg: 'bg-emerald-50/60', border: 'border-emerald-100/60', textColor: 'text-emerald-600 dark:text-emerald-400' },
+              { value: '50+', label: currentLang === 'en' ? 'Clients' : 'ক্লায়েন্ট', color: 'from-rose-500 to-pink-500', bg: 'bg-rose-50/60', border: 'border-rose-100/60', textColor: 'text-rose-600 dark:text-rose-400' },
+              { value: '15+', label: currentLang === 'en' ? 'Team Members' : 'টিম মেম্বার', color: 'from-amber-500 to-orange-500', bg: 'bg-amber-50/60', border: 'border-amber-100/60', textColor: 'text-amber-600 dark:text-amber-400' },
+              { value: '8+', label: currentLang === 'en' ? 'Digital Services' : 'ডিজিটাল সেবা', color: 'from-cyan-500 to-sky-500', bg: 'bg-cyan-50/60', border: 'border-cyan-100/60', textColor: 'text-cyan-600 dark:text-cyan-400' },
               { value: '20+', label: currentLang === 'en' ? 'Industries Served' : 'ইন্ডাস্ট্রি', color: 'from-slate-600 to-gray-500', bg: 'bg-slate-50/60', border: 'border-slate-100/60', textColor: 'text-slate-600' },
             ].map((stat, i) => (
               <motion.div
@@ -2289,16 +2289,16 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
       {/* ========================================================
           04. CORE VALUES (Bento Grid)
          ======================================================== */}
-      <section id="core-values" className="border-y border-neutral-100 bg-neutral-50/20 py-24 relative z-10">
+      <section id="core-values" className="border-y border-neutral-100 dark:border-neutral-800 bg-neutral-50/20 py-24 relative z-10">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-16">
           <div className="text-center space-y-4 max-w-2xl mx-auto">
-            <span className="text-xs font-bold uppercase tracking-widest text-blue-600">
+            <span className="text-xs font-bold uppercase tracking-widest text-blue-600 dark:text-orange-400">
               {currentLang === 'en' ? 'FOUNDATIONAL PILLARS' : 'আমাদের মূল ভিত্তিপ্রস্তর'}
             </span>
-            <h2 className="font-sans text-3xl font-black text-neutral-900 leading-tight">
+            <h2 className="font-sans text-3xl font-black text-neutral-900 dark:text-white leading-tight">
               {currentLang === 'en' ? 'Eight Core Values We Practice Every Day' : 'আটটি মূল আদর্শ যা আমরা প্রতিনিয়ত মেনে চলি'}
             </h2>
-            <p className="text-xs sm:text-sm text-neutral-400 max-w-md mx-auto">
+            <p className="text-xs sm:text-sm text-neutral-400 dark:text-neutral-500 max-w-md mx-auto">
               {currentLang === 'en' 
                 ? 'These values direct every pixel we render, every database query we optimize, and every campaign we run.' 
                 : 'এই মূল্যবোধগুলো আমাদের প্রতিটি পিক্সেল রেন্ডারিং, প্রতিটি ডাটাবেস অপ্টিমাইজেশন এবং আমাদের কাজের ধারা পরিচালনা করে।'}
@@ -2309,16 +2309,16 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
             {coreValues.map((v, idx) => (
               <div
                 key={idx}
-                className="group relative rounded-2xl border border-neutral-100/80 bg-white p-6 space-y-4 hover:border-blue-500/20 hover:shadow-xl transition-all duration-300"
+                className="group relative rounded-2xl border border-neutral-100/80 bg-white dark:bg-[#141414] p-6 space-y-4 hover:border-blue-500/20 hover:shadow-xl transition-all duration-300"
               >
                 <div className={`flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-tr ${v.color}`}>
                   <v.icon className="h-5 w-5" />
                 </div>
                 <div className="space-y-1">
-                  <h4 className="text-sm font-extrabold text-neutral-900 group-hover:text-blue-600 transition-colors">
+                  <h4 className="text-sm font-extrabold text-neutral-900 dark:text-white group-hover:text-blue-600 dark:text-orange-400 transition-colors">
                     {currentLang === 'en' ? v.titleEn : v.titleBn}
                   </h4>
-                  <p className="text-[11px] leading-relaxed text-neutral-500 font-normal">
+                  <p className="text-[11px] leading-relaxed text-neutral-500 dark:text-neutral-400 dark:text-neutral-500 font-normal">
                     {currentLang === 'en' ? v.descEn : v.descBn}
                   </p>
                 </div>
@@ -2333,10 +2333,10 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
          ======================================================== */}
       <section id="why-choose-us" className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-24 relative z-10">
         <div className="text-center space-y-4 max-w-2xl mx-auto mb-16">
-          <span className="text-xs font-bold uppercase tracking-widest text-blue-600">
+          <span className="text-xs font-bold uppercase tracking-widest text-blue-600 dark:text-orange-400">
             {currentLang === 'en' ? 'THE AGENCY ADVANTAGE' : 'কেন আমরা সেরা'}
           </span>
-          <h2 className="font-sans text-2xl sm:text-3xl lg:text-4xl font-black text-neutral-900 leading-tight">
+          <h2 className="font-sans text-2xl sm:text-3xl lg:text-4xl font-black text-neutral-900 dark:text-white leading-tight">
             {currentLang === 'en' ? 'Our Digital Ecosystem Yields Stronger Performance' : 'আমাদের সমন্বিত কাজের পদ্ধতি শতভাগ প্রবৃদ্ধি নিশ্চিত করে'}
           </h2>
         </div>
@@ -2350,19 +2350,19 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
               { titleEn: 'Dedicated In-house Squad', titleBn: '১০০% ইন-হাউস স্কোয়াড', descEn: 'We do not hire temporary gig freelancers. Every single developer belongs to our core permanent staff.', descBn: 'আমরা সাময়িক কোনো ফ্রিল্যান্সার নিয়োগ করি না। আমাদের প্রতিটি সদস্য আমাদের স্থায়ী ও নিবেদিতপ্রাণ ইন-হাউস কর্মী।' },
               { titleEn: 'Extreme Load Tuning', titleBn: 'চরম লোড অপ্টিমাইজেশন', descEn: 'We implement advanced Redis caching, index pooling, and optimized static asset compression.', descBn: 'আমরা উন্নত রেডিস ক্যাশিং এবং সর্বোচ্চ ইমেজ কম্প্রেশন ব্যবহারের মাধ্যমে ট্রানজেকশন লোড সামলানো নিশ্চিত করি।' }
             ].map((f, i) => (
-              <div key={i} className="border border-neutral-100/70 rounded-2xl p-6 bg-white shadow-sm hover:shadow-md transition-shadow">
-                <div className="h-8 w-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center mb-3">
+              <div key={i} className="border border-neutral-100/70 rounded-2xl p-6 bg-white dark:bg-[#141414] shadow-sm hover:shadow-md transition-shadow">
+                <div className="h-8 w-8 rounded-lg bg-blue-50 dark:bg-orange-500/10 text-blue-600 dark:text-orange-400 flex items-center justify-center mb-3">
                   <Check className="h-4 w-4" />
                 </div>
-                <h4 className="text-xs font-black text-neutral-900 uppercase tracking-wider">{currentLang === 'en' ? f.titleEn : f.titleBn}</h4>
-                <p className="text-[11px] text-neutral-500 leading-relaxed mt-1">{currentLang === 'en' ? f.descEn : f.descBn}</p>
+                <h4 className="text-xs font-black text-neutral-900 dark:text-white uppercase tracking-wider">{currentLang === 'en' ? f.titleEn : f.titleBn}</h4>
+                <p className="text-[11px] text-neutral-500 dark:text-neutral-400 dark:text-neutral-500 leading-relaxed mt-1">{currentLang === 'en' ? f.descEn : f.descBn}</p>
               </div>
             ))}
           </div>
 
           {/* Central Logo Panel */}
           <div className="lg:col-span-4 flex justify-center relative">
-            <div className="h-64 w-64 rounded-full bg-gradient-to-tr from-blue-600 to-indigo-600 text-white p-8 flex flex-col items-center justify-center text-center shadow-2xl relative">
+            <div className="h-64 w-64 rounded-full bg-gradient-to-tr from-blue-600 dark:from-orange-500 to-indigo-600 dark:to-orange-400 text-white p-8 flex flex-col items-center justify-center text-center shadow-2xl relative">
               <div className="absolute inset-2 border-2 border-white/20 rounded-full border-dashed animate-spin [animation-duration:12s]"></div>
               
               <Network className="h-10 w-10 text-white mb-3" />
@@ -2377,12 +2377,12 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
               { titleEn: 'AI & Automation Driven', titleBn: 'এআই ও অটোমেশন চালিত', descEn: 'By coding proprietary LLM triggers and custom cognitive workflows, we eliminate manual paperwork.', descBn: 'আমাদের তৈরি কাস্টম এলএলএম কোডিং ও ইন্টেলিজেন্ট এপিআই আপনার ব্যবসার পুনরাবৃত্তিমূলক জটিলতা দূর করে দেয়।' },
               { titleEn: 'Direct Developer SLA Hotline', titleBn: 'ডেভেলপার এসএলএ হটলাইন', descEn: 'Direct access to engineering channels on Slack without wading through slow ticket boards.', descBn: 'ঝামেলাহীন সরাসরি সাপোর্ট চ্যানেল। ধীরগতির টিকিট ব্যবস্থার অবসান ঘটিয়ে সরাসরি স্ল্যাকে ডেভেলপারদের অ্যাক্সেস।' }
             ].map((f, i) => (
-              <div key={i} className="border border-neutral-100/70 rounded-2xl p-6 bg-white shadow-sm hover:shadow-md transition-shadow">
-                <div className="h-8 w-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center mb-3">
+              <div key={i} className="border border-neutral-100/70 rounded-2xl p-6 bg-white dark:bg-[#141414] shadow-sm hover:shadow-md transition-shadow">
+                <div className="h-8 w-8 rounded-lg bg-blue-50 dark:bg-orange-500/10 text-blue-600 dark:text-orange-400 flex items-center justify-center mb-3">
                   <Check className="h-4 w-4" />
                 </div>
-                <h4 className="text-xs font-black text-neutral-900 uppercase tracking-wider">{currentLang === 'en' ? f.titleEn : f.titleBn}</h4>
-                <p className="text-[11px] text-neutral-500 leading-relaxed mt-1">{currentLang === 'en' ? f.descEn : f.descBn}</p>
+                <h4 className="text-xs font-black text-neutral-900 dark:text-white uppercase tracking-wider">{currentLang === 'en' ? f.titleEn : f.titleBn}</h4>
+                <p className="text-[11px] text-neutral-500 dark:text-neutral-400 dark:text-neutral-500 leading-relaxed mt-1">{currentLang === 'en' ? f.descEn : f.descBn}</p>
               </div>
             ))}
           </div>
@@ -2400,10 +2400,10 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
          ======================================================== */}
       <section id="services-ecosystem" className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-24 relative z-10">
         <div className="text-center space-y-4 max-w-2xl mx-auto mb-12">
-          <span className="text-xs font-bold uppercase tracking-widest text-blue-600">
+          <span className="text-xs font-bold uppercase tracking-widest text-blue-600 dark:text-orange-400">
             {currentLang === 'en' ? 'OUR CAPABILITIES' : 'আমাদের সার্ভিস সমূহ'}
           </span>
-          <h2 className="font-sans text-3xl font-black text-neutral-900 leading-tight">
+          <h2 className="font-sans text-3xl font-black text-neutral-900 dark:text-white leading-tight">
             {currentLang === 'en' ? 'Comprehensive Digital Services Portfolio' : 'সম্পূর্ণ ওয়ান-স্টপ ডিজিটাল সার্ভিস পোর্টফোলিও'}
           </h2>
 
@@ -2422,7 +2422,7 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
                 className={`text-[10px] font-extrabold uppercase tracking-wider px-4 py-2 rounded-lg border transition-all duration-200 cursor-pointer ${
                   selectedEcosystemCategory === cat.id 
                     ? 'bg-neutral-900 border-neutral-900 text-white shadow-sm' 
-                    : 'bg-white border-neutral-100 text-neutral-500 hover:text-neutral-900 hover:border-neutral-200'
+                    : 'bg-white dark:bg-[#141414] border-neutral-100 dark:border-neutral-800 text-neutral-500 dark:text-neutral-400 dark:text-neutral-500 hover:text-neutral-900 dark:text-white hover:border-neutral-200 dark:border-neutral-700'
                 }`}
               >
                 {currentLang === 'en' ? cat.labelEn : cat.labelBn}
@@ -2441,36 +2441,36 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.95 }}
                 transition={{ duration: 0.3 }}
-                className="group relative rounded-2xl border border-neutral-100 bg-white p-6 space-y-5 hover:border-blue-500/20 hover:shadow-xl transition-all duration-300 flex flex-col justify-between"
+                className="group relative rounded-2xl border border-neutral-100 dark:border-neutral-800 bg-white dark:bg-[#141414] p-6 space-y-5 hover:border-blue-500/20 hover:shadow-xl transition-all duration-300 flex flex-col justify-between"
               >
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
-                    <div className="h-10 w-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center">
+                    <div className="h-10 w-10 rounded-xl bg-blue-50 dark:bg-orange-500/10 text-blue-600 dark:text-orange-400 flex items-center justify-center">
                       <service.icon className="h-5 w-5" />
                     </div>
-                    <span className="text-[9px] font-bold uppercase tracking-wider bg-neutral-50 text-neutral-400 px-2 py-0.5 rounded">
+                    <span className="text-[9px] font-bold uppercase tracking-wider bg-neutral-50 dark:bg-neutral-900 text-neutral-400 dark:text-neutral-500 px-2 py-0.5 rounded">
                       {service.category}
                     </span>
                   </div>
 
-                  <h3 className="text-sm font-extrabold text-neutral-900 group-hover:text-blue-600 transition-colors">
+                  <h3 className="text-sm font-extrabold text-neutral-900 dark:text-white group-hover:text-blue-600 dark:text-orange-400 transition-colors">
                     {currentLang === 'en' ? service.nameEn : service.nameBn}
                   </h3>
 
-                  <p className="text-xs text-neutral-500 leading-relaxed font-normal">
+                  <p className="text-xs text-neutral-500 dark:text-neutral-400 dark:text-neutral-500 leading-relaxed font-normal">
                     {currentLang === 'en' ? service.descEn : service.descBn}
                   </p>
                 </div>
 
-                <div className="space-y-3 pt-4 border-t border-neutral-50">
+                <div className="space-y-3 pt-4 border-t border-neutral-50 dark:border-neutral-800">
                   <div className="flex flex-wrap gap-1">
                     {service.techs.map((tech) => (
-                      <span key={tech} className="text-[9px] bg-neutral-50 border border-neutral-100 text-neutral-500 px-2 py-0.5 rounded">
+                      <span key={tech} className="text-[9px] bg-neutral-50 dark:bg-neutral-900 border border-neutral-100 dark:border-neutral-800 text-neutral-500 dark:text-neutral-400 dark:text-neutral-500 px-2 py-0.5 rounded">
                         {tech}
                       </span>
                     ))}
                   </div>
-                  <div className="flex items-center justify-between text-[10px] font-bold text-blue-600">
+                  <div className="flex items-center justify-between text-[10px] font-bold text-blue-600 dark:text-orange-400">
                     <span>{currentLang === 'en' ? service.benefitEn : service.benefitBn}</span>
                     <ArrowRight className="h-3.5 w-3.5 group-hover:translate-x-1 transition-transform" />
                   </div>
@@ -2484,16 +2484,16 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
       {/* ========================================================
           08. INDUSTRIES WE SERVE
          ======================================================== */}
-      <section id="industries-serve" className="border-t border-neutral-100 bg-neutral-50/20 py-24 relative z-10">
+      <section id="industries-serve" className="border-t border-neutral-100 dark:border-neutral-800 bg-neutral-50/20 py-24 relative z-10">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-16">
           <div className="text-center space-y-4 max-w-2xl mx-auto">
-            <span className="text-xs font-bold uppercase tracking-widest text-blue-600">
+            <span className="text-xs font-bold uppercase tracking-widest text-blue-600 dark:text-orange-400">
               {currentLang === 'en' ? 'SECTOR FOCUS' : 'শিল্পক্ষেত্র সমূহ'}
             </span>
-            <h2 className="font-sans text-3xl font-black text-neutral-900 leading-tight">
+            <h2 className="font-sans text-3xl font-black text-neutral-900 dark:text-white leading-tight">
               {currentLang === 'en' ? 'Industries Powering Global Businesses' : 'শিল্পক্ষেত্রসমূহ যেখানে আমরা সফলভাবে সেবা দিচ্ছি'}
             </h2>
-            <p className="text-xs sm:text-sm text-neutral-400 max-w-md mx-auto">
+            <p className="text-xs sm:text-sm text-neutral-400 dark:text-neutral-500 max-w-md mx-auto">
               {currentLang === 'en' 
                 ? 'We configure custom, compliant operational architectures tailored to specific industry demands.' 
                 : 'প্রতিটি শিল্পের নির্দিষ্ট চাহিদা অনুযায়ী আমরা সুরক্ষিত ও কাস্টমাইজড ডিজিটাল সিস্টেম সরবরাহ করি।'}
@@ -2504,16 +2504,16 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
             {industriesList.map((ind, i) => (
               <div
                 key={i}
-                className="group relative rounded-2xl border border-neutral-100 bg-white p-5 space-y-4 hover:border-blue-500/15 hover:shadow-xl transition-all duration-300"
+                className="group relative rounded-2xl border border-neutral-100 dark:border-neutral-800 bg-white dark:bg-[#141414] p-5 space-y-4 hover:border-blue-500/15 hover:shadow-xl transition-all duration-300"
               >
-                <div className="h-10 w-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center group-hover:scale-105 transition-transform duration-300">
+                <div className="h-10 w-10 rounded-xl bg-blue-50 dark:bg-orange-500/10 text-blue-600 dark:text-orange-400 flex items-center justify-center group-hover:scale-105 transition-transform duration-300">
                   <ind.icon className="h-5 w-5" />
                 </div>
                 <div className="space-y-1">
-                  <h4 className="text-xs font-black text-neutral-900 uppercase tracking-wide">
+                  <h4 className="text-xs font-black text-neutral-900 dark:text-white uppercase tracking-wide">
                     {currentLang === 'en' ? ind.nameEn : ind.nameBn}
                   </h4>
-                  <p className="text-[10px] text-neutral-400 leading-relaxed font-normal">
+                  <p className="text-[10px] text-neutral-400 dark:text-neutral-500 leading-relaxed font-normal">
                     {currentLang === 'en' ? ind.descEn : ind.descBn}
                   </p>
                 </div>
@@ -2530,27 +2530,27 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-start">
           
           <div className="lg:col-span-4 space-y-6 lg:sticky lg:top-24">
-            <span className="text-xs font-bold uppercase tracking-widest text-blue-600">
+            <span className="text-xs font-bold uppercase tracking-widest text-blue-600 dark:text-orange-400">
               {currentLang === 'en' ? 'OUR IMPLEMENTATION WORKFLOW' : 'আমাদের কাজের ধাপসমূহ'}
             </span>
-            <h2 className="font-sans text-3xl font-black text-neutral-900 leading-tight">
+            <h2 className="font-sans text-3xl font-black text-neutral-900 dark:text-white leading-tight">
               {currentLang === 'en' ? 'How We Power Your Growth Cycle' : 'কীভাবে আমরা প্রজেক্ট বাস্তবায়ন করি'}
             </h2>
-            <p className="text-xs sm:text-sm text-neutral-500 leading-relaxed">
+            <p className="text-xs sm:text-sm text-neutral-500 dark:text-neutral-400 dark:text-neutral-500 leading-relaxed">
               {currentLang === 'en' 
                 ? 'From raw discovery grids to high-care SLA database backup maintenance. Scroll through our transparent process steps.' 
                 : 'পরিকল্পনা থেকে শুরু করে কোডিং ও লঞ্চ পরবর্তী সার্বক্ষণিক ব্যাকআপ এবং সাপোর্ট। দেখে নিন আমাদের কাজের চমৎকার ধাপসমূহ।'}
             </p>
 
-            <div className="space-y-1 bg-neutral-50 p-2 rounded-2xl border border-neutral-100/50">
+            <div className="space-y-1 bg-neutral-50 dark:bg-neutral-900 p-2 rounded-2xl border border-neutral-100/50">
               {processSteps.map((p, idx) => (
                 <button
                   key={idx}
                   onClick={() => setActiveProcessStep(idx)}
                   className={`w-full text-left px-4 py-2.5 rounded-lg text-xs font-bold transition-all duration-200 cursor-pointer ${
                     activeProcessStep === idx 
-                      ? 'bg-white text-blue-600 shadow-sm border border-neutral-100' 
-                      : 'text-neutral-400 hover:text-neutral-900'
+                      ? 'bg-white dark:bg-[#141414] text-blue-600 dark:text-orange-400 shadow-sm border border-neutral-100 dark:border-neutral-800' 
+                      : 'text-neutral-400 dark:text-neutral-500 hover:text-neutral-900 dark:text-white'
                   }`}
                 >
                   Step {p.step}: {currentLang === 'en' ? p.titleEn.split(' ')[0] : p.titleBn.split(' ')[0]}
@@ -2567,29 +2567,29 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -20 }}
                 transition={{ duration: 0.3 }}
-                className="bg-white border border-neutral-100 rounded-3xl p-8 md:p-10 shadow-xl relative overflow-hidden"
+                className="bg-white dark:bg-[#141414] border border-neutral-100 dark:border-neutral-800 rounded-3xl p-8 md:p-10 shadow-xl relative overflow-hidden"
               >
-                <div className="absolute top-0 right-0 h-24 w-24 bg-blue-50/50 rounded-bl-full flex items-center justify-end pr-6 pt-2 text-4xl font-black text-blue-100">
+                <div className="absolute top-0 right-0 h-24 w-24 bg-blue-50/5 dark:bg-orange-500/50 rounded-bl-full flex items-center justify-end pr-6 pt-2 text-4xl font-black text-blue-100">
                   {processSteps[activeProcessStep].step}
                 </div>
 
                 <div className="space-y-6">
-                  <span className="text-[10px] font-black uppercase tracking-widest text-blue-600 bg-blue-50 px-3 py-1 rounded-full border border-blue-100/50">
+                  <span className="text-[10px] font-black uppercase tracking-widest text-blue-600 dark:text-orange-400 bg-blue-50 dark:bg-orange-500/10 px-3 py-1 rounded-full border border-blue-100/50">
                     Phase {processSteps[activeProcessStep].step}
                   </span>
 
-                  <h3 className="font-sans text-xl md:text-2xl font-black text-neutral-900">
+                  <h3 className="font-sans text-xl md:text-2xl font-black text-neutral-900 dark:text-white">
                     {currentLang === 'en' ? processSteps[activeProcessStep].titleEn : processSteps[activeProcessStep].titleBn}
                   </h3>
 
-                  <p className="text-xs sm:text-sm md:text-base text-neutral-500 leading-relaxed font-normal">
+                  <p className="text-xs sm:text-sm md:text-base text-neutral-500 dark:text-neutral-400 dark:text-neutral-500 leading-relaxed font-normal">
                     {currentLang === 'en' ? processSteps[activeProcessStep].descEn : processSteps[activeProcessStep].descBn}
                   </p>
                 </div>
 
-                <div className="pt-8 mt-8 border-t border-neutral-100 flex items-center justify-between text-xs text-neutral-400">
+                <div className="pt-8 mt-8 border-t border-neutral-100 dark:border-neutral-800 flex items-center justify-between text-xs text-neutral-400 dark:text-neutral-500">
                   <span className="flex items-center space-x-1.5 font-bold">
-                    <CheckCircle2 className="h-4 w-4 text-emerald-500" />
+                    <CheckCircle2 className="h-4 w-4 text-emerald-500 dark:text-emerald-400" />
                     <span>Quality Audited Milestone</span>
                   </span>
                   <span>Direct Team Collaboration</span>
@@ -2604,7 +2604,7 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
       {/* ========================================================
           10. TECHNOLOGIES POWERING NEXT SOLUTION
          ======================================================== */}
-      <section id="tech-powering" className="border-t border-neutral-100 bg-neutral-50/20 py-24 relative z-10">
+      <section id="tech-powering" className="border-t border-neutral-100 dark:border-neutral-800 bg-neutral-50/20 py-24 relative z-10">
         {/* Continuous Train Animation Keyframes */}
         <style dangerouslySetInnerHTML={{ __html: `
           @keyframes marquee-left {
@@ -2633,13 +2633,13 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
 
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-16">
           <div className="text-center space-y-4 max-w-2xl mx-auto">
-            <span className="text-xs font-bold uppercase tracking-widest text-blue-600">
+            <span className="text-xs font-bold uppercase tracking-widest text-blue-600 dark:text-orange-400">
               {currentLang === 'en' ? 'OUR TECH STACK' : 'আমাদের আধুনিক প্রযুক্তি'}
             </span>
-            <h2 className="font-sans text-3xl font-black text-neutral-900 leading-tight">
+            <h2 className="font-sans text-3xl font-black text-neutral-900 dark:text-white leading-tight">
               {currentLang === 'en' ? 'State-Of-The-Art Technologies We Depend On' : 'সর্বোচ্চ সাইট স্পিডের জন্য বিশ্বমানের আধুনিক প্রযুক্তি'}
             </h2>
-            <p className="text-xs sm:text-sm text-neutral-400 max-w-md mx-auto">
+            <p className="text-xs sm:text-sm text-neutral-400 dark:text-neutral-500 max-w-md mx-auto">
               {currentLang === 'en' 
                 ? 'We write clean, well-tested code in strict frontend, backend, design, and AI automation stacks.' 
                 : 'আমরা নিখুঁত কোড লিখি এবং সর্বোত্তম গতি নিশ্চিত করতে বিশ্বমানের ফ্রেমওয়ার্ক ব্যবহার করি।'}
@@ -2651,19 +2651,19 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
               // Duplicate techs array to create infinite scroll effect
               const duplicatedTechs = [...cat.techs, ...cat.techs];
               return (
-                <div key={i} className="bg-white border border-neutral-100/80 rounded-3xl p-6 md:p-8 shadow-sm space-y-6 overflow-hidden relative">
+                <div key={i} className="bg-white dark:bg-[#141414] border border-neutral-100/80 rounded-3xl p-6 md:p-8 shadow-sm space-y-6 overflow-hidden relative">
                   {/* Category Title & Subtitle */}
-                  <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-neutral-50 pb-4">
+                  <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-neutral-50 dark:border-neutral-800 pb-4">
                     <div className="space-y-1">
-                      <h3 className="text-sm font-black text-neutral-900 flex items-center gap-2 uppercase tracking-wide">
+                      <h3 className="text-sm font-black text-neutral-900 dark:text-white flex items-center gap-2 uppercase tracking-wide">
                         <span className="inline-block h-2.5 w-2.5 rounded-full bg-blue-600 animate-pulse" />
                         {currentLang === 'en' ? cat.titleEn : cat.titleBn}
                       </h3>
-                      <p className="text-xs text-neutral-400 font-normal leading-relaxed">
+                      <p className="text-xs text-neutral-400 dark:text-neutral-500 font-normal leading-relaxed">
                         {currentLang === 'en' ? cat.descEn : cat.descBn}
                       </p>
                     </div>
-                    <span className="self-start md:self-auto text-[9px] font-mono font-bold uppercase tracking-wider bg-blue-50 text-blue-600 px-3 py-1 rounded-full border border-blue-100/30">
+                    <span className="self-start md:self-auto text-[9px] font-mono font-bold uppercase tracking-wider bg-blue-50 dark:bg-orange-500/10 text-blue-600 dark:text-orange-400 px-3 py-1 rounded-full border border-blue-100/30">
                       {currentLang === 'en' ? 'Live Tech Train' : 'টেকনোলজি ট্রেন'}
                     </span>
                   </div>
@@ -2679,16 +2679,16 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
                       {duplicatedTechs.map((tech, tIdx) => (
                         <div 
                           key={tIdx} 
-                          className="w-48 sm:w-52 shrink-0 bg-neutral-50/50 hover:bg-white border border-neutral-100/60 rounded-2xl p-3 flex items-center gap-3 transition-all duration-300 hover:scale-[1.03] hover:shadow-[0_4px_15px_rgba(0,0,0,0.03)] hover:border-blue-500/20 group cursor-pointer"
+                          className="w-48 sm:w-52 shrink-0 bg-neutral-50/50 dark:bg-neutral-900/50 hover:bg-white dark:bg-[#141414] border border-neutral-100/60 rounded-2xl p-3 flex items-center gap-3 transition-all duration-300 hover:scale-[1.03] hover:shadow-[0_4px_15px_rgba(0,0,0,0.03)] hover:border-blue-500/20 group cursor-pointer"
                         >
-                          <div className="h-9 w-9 rounded-xl border border-neutral-100 bg-white shadow-sm flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+                          <div className="h-9 w-9 rounded-xl border border-neutral-100 dark:border-neutral-800 bg-white dark:bg-[#141414] shadow-sm flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
                             <TechIcon logo={tech.logo} />
                           </div>
                           <div className="overflow-hidden min-w-0">
-                            <span className="block text-xs font-black text-neutral-800 truncate group-hover:text-blue-600 transition-colors">
+                            <span className="block text-xs font-black text-neutral-800 dark:text-neutral-100 truncate group-hover:text-blue-600 dark:text-orange-400 transition-colors">
                               {tech.name}
                             </span>
-                            <span className="block text-[8.5px] text-neutral-400 font-mono font-bold uppercase tracking-widest truncate">
+                            <span className="block text-[8.5px] text-neutral-400 dark:text-neutral-500 font-mono font-bold uppercase tracking-widest truncate">
                               {currentLang === 'en' ? tech.tagEn : tech.tagBn}
                             </span>
                           </div>
@@ -2711,45 +2711,45 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
          ======================================================== */}
       <section id="success-stories" className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-24 relative z-10">
         <div className="text-center space-y-4 max-w-2xl mx-auto mb-16">
-          <span className="text-xs font-bold uppercase tracking-widest text-blue-600">
+          <span className="text-xs font-bold uppercase tracking-widest text-blue-600 dark:text-orange-400">
             {currentLang === 'en' ? 'MEASURABLE BUSINESS OUTCOMES' : 'সাফল্যের বিবরণী'}
           </span>
-          <h2 className="font-sans text-3xl font-black text-neutral-900 leading-tight">
+          <h2 className="font-sans text-3xl font-black text-neutral-900 dark:text-white leading-tight">
             {currentLang === 'en' ? 'Our Digital Success Stories With Clear Numbers' : 'বাস্তব সংখ্যার মাধ্যমে আমাদের সফলতার প্রমাণ'}
           </h2>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-5xl mx-auto">
           {successStories.map((story, i) => (
-            <div key={i} className="border border-neutral-100 bg-white p-8 md:p-10 rounded-3xl shadow-sm hover:shadow-xl transition-shadow space-y-6 relative overflow-hidden">
+            <div key={i} className="border border-neutral-100 dark:border-neutral-800 bg-white dark:bg-[#141414] p-8 md:p-10 rounded-3xl shadow-sm hover:shadow-xl transition-shadow space-y-6 relative overflow-hidden">
               <div className="absolute top-0 left-0 w-2 h-full bg-blue-600"></div>
               
               <div className="space-y-2">
-                <span className="text-[10px] font-black uppercase tracking-widest text-neutral-400">{story.company}</span>
+                <span className="text-[10px] font-black uppercase tracking-widest text-neutral-400 dark:text-neutral-500">{story.company}</span>
                 <div className="flex items-baseline space-x-2">
-                  <span className="text-3xl font-black text-blue-600">{story.metric}</span>
+                  <span className="text-3xl font-black text-blue-600 dark:text-orange-400">{story.metric}</span>
                 </div>
-                <p className="text-[11px] text-neutral-400 leading-relaxed font-normal">
+                <p className="text-[11px] text-neutral-400 dark:text-neutral-500 leading-relaxed font-normal">
                   {currentLang === 'en' ? story.metricDescEn : story.metricDescBn}
                 </p>
               </div>
 
-              <div className="space-y-4 pt-4 border-t border-neutral-50">
+              <div className="space-y-4 pt-4 border-t border-neutral-50 dark:border-neutral-800">
                 <div className="space-y-1">
-                  <span className="text-[9px] font-bold uppercase tracking-widest text-red-500">The Challenge</span>
-                  <p className="text-xs text-neutral-500 leading-relaxed font-normal">
+                  <span className="text-[9px] font-bold uppercase tracking-widest text-red-500 dark:text-red-400">The Challenge</span>
+                  <p className="text-xs text-neutral-500 dark:text-neutral-400 dark:text-neutral-500 leading-relaxed font-normal">
                     {currentLang === 'en' ? story.challengeEn : story.challengeBn}
                   </p>
                 </div>
                 <div className="space-y-1">
-                  <span className="text-[9px] font-bold uppercase tracking-widest text-emerald-500">Our Solution</span>
-                  <p className="text-xs text-neutral-500 leading-relaxed font-normal">
+                  <span className="text-[9px] font-bold uppercase tracking-widest text-emerald-500 dark:text-emerald-400">Our Solution</span>
+                  <p className="text-xs text-neutral-500 dark:text-neutral-400 dark:text-neutral-500 leading-relaxed font-normal">
                     {currentLang === 'en' ? story.solutionEn : story.solutionBn}
                   </p>
                 </div>
                 <div className="space-y-1">
-                  <span className="text-[9px] font-bold uppercase tracking-widest text-blue-500">The Result</span>
-                  <p className="text-xs text-neutral-500 leading-relaxed font-normal">
+                  <span className="text-[9px] font-bold uppercase tracking-widest text-blue-500 dark:text-orange-400">The Result</span>
+                  <p className="text-xs text-neutral-500 dark:text-neutral-400 dark:text-neutral-500 leading-relaxed font-normal">
                     {currentLang === 'en' ? story.resultsEn : story.resultsBn}
                   </p>
                 </div>
@@ -2762,26 +2762,26 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
       {/* ========================================================
           14. AWARDS & CERTIFICATIONS (Future-ready Certificates Wall)
          ======================================================== */}
-      <section id="awards-certifications" className="border-t border-neutral-100 bg-neutral-50/20 py-24 relative z-10">
+      <section id="awards-certifications" className="border-t border-neutral-100 dark:border-neutral-800 bg-neutral-50/20 py-24 relative z-10">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-16">
           <div className="text-center space-y-4 max-w-2xl mx-auto">
-            <span className="text-xs font-bold uppercase tracking-widest text-blue-600">
+            <span className="text-xs font-bold uppercase tracking-widest text-blue-600 dark:text-orange-400">
               {currentLang === 'en' ? 'VERIFIED EXPERTISE' : 'যাচাইকৃত সনদপত্র'}
             </span>
-            <h2 className="font-sans text-3xl font-black text-neutral-900 leading-tight">
+            <h2 className="font-sans text-3xl font-black text-neutral-900 dark:text-white leading-tight">
               {currentLang === 'en' ? 'Awards & Professional Certifications' : 'আমাদের অর্জন ও পেশাদার সার্টিফিকেটসমূহ'}
             </h2>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
             {awardsList.map((aw, i) => (
-              <div key={i} className="group border border-neutral-100/70 bg-white p-6 rounded-2xl shadow-sm hover:shadow-md transition-shadow flex items-start space-x-4">
-                <div className="h-10 w-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center shrink-0">
+              <div key={i} className="group border border-neutral-100/70 bg-white dark:bg-[#141414] p-6 rounded-2xl shadow-sm hover:shadow-md transition-shadow flex items-start space-x-4">
+                <div className="h-10 w-10 rounded-xl bg-blue-50 dark:bg-orange-500/10 text-blue-600 dark:text-orange-400 flex items-center justify-center shrink-0">
                   <Award className="h-5 w-5" />
                 </div>
                 <div>
-                  <span className="block text-xs font-black text-neutral-900 group-hover:text-blue-600 transition-colors">{aw.title}</span>
-                  <span className="block text-[10px] text-neutral-400 mt-1">{aw.issuer}</span>
+                  <span className="block text-xs font-black text-neutral-900 dark:text-white group-hover:text-blue-600 dark:text-orange-400 transition-colors">{aw.title}</span>
+                  <span className="block text-[10px] text-neutral-400 dark:text-neutral-500 mt-1">{aw.issuer}</span>
                 </div>
               </div>
             ))}
@@ -2796,13 +2796,13 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
           
           <div className="lg:col-span-6 space-y-6">
-            <span className="text-xs font-bold uppercase tracking-widest text-blue-600">
+            <span className="text-xs font-bold uppercase tracking-widest text-blue-600 dark:text-orange-400">
               {currentLang === 'en' ? 'GLOBAL NETWORK' : 'বিশ্বব্যাপী কার্যক্রম'}
             </span>
-            <h2 className="font-sans text-3xl font-black text-neutral-900 leading-tight">
+            <h2 className="font-sans text-3xl font-black text-neutral-900 dark:text-white leading-tight">
               {currentLang === 'en' ? 'Serving Clients Globally via Remote Systems' : 'রিমোট কার্যক্রমের মাধ্যমে বিশ্বজুড়ে সফল সেবা'}
             </h2>
-            <p className="text-xs sm:text-sm text-neutral-500 leading-relaxed font-normal">
+            <p className="text-xs sm:text-sm text-neutral-500 dark:text-neutral-400 dark:text-neutral-500 leading-relaxed font-normal">
               {currentLang === 'en' 
                 ? 'We deploy server architectures and coordinate localized development teams from North America to Southeast Asia. Our virtual staging frameworks enable you to check progress seamlessly from any time zone.' 
                 : 'আমরা উত্তর আমেরিকা থেকে দক্ষিণ-পূর্ব এশিয়া পর্যন্ত বিস্তৃত টিম পরিচালনা করছি। আমাদের স্বয়ংক্রিয় প্রজেক্ট প্রিভিউ আপনাকে যেকোনো টাইম জোন থেকে সরাসরি কাজের অগ্রগতি দেখার সুবিধা দেয়।'}
@@ -2810,43 +2810,43 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
 
             <div className="grid grid-cols-2 gap-4">
               <div className="border border-neutral-100/75 p-4 rounded-xl">
-                <span className="block text-xl font-black text-blue-600">12+</span>
-                <span className="block text-[10px] text-neutral-400 uppercase tracking-widest">{currentLang === 'en' ? 'Countries Served' : 'সেবাপ্রাপ্ত দেশ'}</span>
+                <span className="block text-xl font-black text-blue-600 dark:text-orange-400">12+</span>
+                <span className="block text-[10px] text-neutral-400 dark:text-neutral-500 uppercase tracking-widest">{currentLang === 'en' ? 'Countries Served' : 'সেবাপ্রাপ্ত দেশ'}</span>
               </div>
               <div className="border border-neutral-100/75 p-4 rounded-xl">
-                <span className="block text-xl font-black text-blue-600">100%</span>
-                <span className="block text-[10px] text-neutral-400 uppercase tracking-widest">{currentLang === 'en' ? 'Remote Delivery' : 'রিমোট কোলাবরেশন'}</span>
+                <span className="block text-xl font-black text-blue-600 dark:text-orange-400">100%</span>
+                <span className="block text-[10px] text-neutral-400 dark:text-neutral-500 uppercase tracking-widest">{currentLang === 'en' ? 'Remote Delivery' : 'রিমোট কোলাবরেশন'}</span>
               </div>
             </div>
           </div>
 
           <div className="lg:col-span-6 flex justify-center">
             {/* Elegant luxury minimalist map grid */}
-            <div className="relative w-full max-w-md aspect-video bg-neutral-50 border border-neutral-100 rounded-2xl p-6 flex flex-col justify-between shadow-inner">
-              <div className="absolute inset-0 bg-[radial-gradient(#2563eb_1.5px,transparent_1.5px)] [background-size:24px_24px] opacity-10"></div>
+            <div className="relative w-full max-w-md aspect-video bg-neutral-50 dark:bg-neutral-900 border border-neutral-100 dark:border-neutral-800 rounded-2xl p-6 flex flex-col justify-between shadow-inner">
+              <div className="absolute inset-0 bg-[radial-gradient(#FF4D00_1.5px,transparent_1.5px)] [background-size:24px_24px] opacity-10"></div>
               
               <div className="flex justify-between items-start relative z-10">
-                <span className="text-[9px] font-mono font-bold text-neutral-400">NEXT_SOLUTION_CORE_NODES</span>
-                <Globe className="h-4 w-4 text-blue-600 animate-spin [animation-duration:20s]" />
+                <span className="text-[9px] font-mono font-bold text-neutral-400 dark:text-neutral-500">NEXT_SOLUTION_CORE_NODES</span>
+                <Globe className="h-4 w-4 text-blue-600 dark:text-orange-400 animate-spin [animation-duration:20s]" />
               </div>
 
               {/* Simulated Cities pins */}
               <div className="relative h-24 w-full">
                 <div className="absolute top-4 left-[20%] flex items-center space-x-1.5 animate-pulse">
                   <div className="h-2 w-2 rounded-full bg-blue-600"></div>
-                  <span className="text-[9px] font-bold text-neutral-800">New York</span>
+                  <span className="text-[9px] font-bold text-neutral-800 dark:text-neutral-100">New York</span>
                 </div>
                 <div className="absolute bottom-6 left-[45%] flex items-center space-x-1.5 animate-pulse [animation-delay:0.5s]">
                   <div className="h-2 w-2 rounded-full bg-indigo-600"></div>
-                  <span className="text-[9px] font-bold text-neutral-800">London</span>
+                  <span className="text-[9px] font-bold text-neutral-800 dark:text-neutral-100">London</span>
                 </div>
                 <div className="absolute top-10 right-[15%] flex items-center space-x-1.5 animate-pulse [animation-delay:1s]">
                   <div className="h-2 w-2 rounded-full bg-blue-600"></div>
-                  <span className="text-[9px] font-bold text-neutral-800">Dhaka HQ</span>
+                  <span className="text-[9px] font-bold text-neutral-800 dark:text-neutral-100">Dhaka HQ</span>
                 </div>
               </div>
 
-              <div className="flex justify-between items-end relative z-10 text-[9px] text-neutral-400 font-mono">
+              <div className="flex justify-between items-end relative z-10 text-[9px] text-neutral-400 dark:text-neutral-500 font-mono">
                 <span>LAT: 23.8103° N</span>
                 <span>LON: 90.4125° E</span>
               </div>
@@ -2859,35 +2859,35 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
       {/* ========================================================
           16. COMMUNITY & INNOVATION (Contributions)
          ======================================================== */}
-      <section id="community-contributions" className="border-t border-neutral-100 bg-neutral-50/20 py-24 relative z-10">
+      <section id="community-contributions" className="border-t border-neutral-100 dark:border-neutral-800 bg-neutral-50/20 py-24 relative z-10">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-16">
           <div className="text-center space-y-4 max-w-2xl mx-auto">
-            <span className="text-xs font-bold uppercase tracking-widest text-blue-600">
+            <span className="text-xs font-bold uppercase tracking-widest text-blue-600 dark:text-orange-400">
               {currentLang === 'en' ? 'COMMUNITY & IMPACT' : 'সামাজিক অবদান ও উদ্ভাবন'}
             </span>
-            <h2 className="font-sans text-3xl font-black text-neutral-900 leading-tight">
+            <h2 className="font-sans text-3xl font-black text-neutral-900 dark:text-white leading-tight">
               {currentLang === 'en' ? 'Our Contributions To Open Source & Technology' : 'প্রযুক্তি এবং তরুণদের দক্ষ করার জন্য আমাদের প্রয়াস'}
             </h2>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
             {communityContributions.map((c, i) => (
-              <div key={i} className="border border-neutral-100 bg-white p-6 md:p-8 rounded-3xl shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between space-y-6">
+              <div key={i} className="border border-neutral-100 dark:border-neutral-800 bg-white dark:bg-[#141414] p-6 md:p-8 rounded-3xl shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between space-y-6">
                 <div className="space-y-3">
-                  <span className="text-[10px] font-black uppercase tracking-widest text-blue-600 bg-blue-50 px-2.5 py-1 rounded border border-blue-100/50">
+                  <span className="text-[10px] font-black uppercase tracking-widest text-blue-600 dark:text-orange-400 bg-blue-50 dark:bg-orange-500/10 px-2.5 py-1 rounded border border-blue-100/50">
                     {c.metric}
                   </span>
-                  <h4 className="text-sm font-extrabold text-neutral-900 pt-1">
+                  <h4 className="text-sm font-extrabold text-neutral-900 dark:text-white pt-1">
                     {currentLang === 'en' ? c.titleEn : c.titleBn}
                   </h4>
-                  <p className="text-xs text-neutral-500 leading-relaxed font-normal">
+                  <p className="text-xs text-neutral-500 dark:text-neutral-400 dark:text-neutral-500 leading-relaxed font-normal">
                     {currentLang === 'en' ? c.descEn : c.descBn}
                   </p>
                 </div>
 
-                <div className="pt-4 border-t border-neutral-50 text-[10px] font-bold text-neutral-400 uppercase tracking-widest flex items-center justify-between">
+                <div className="pt-4 border-t border-neutral-50 dark:border-neutral-800 text-[10px] font-bold text-neutral-400 dark:text-neutral-500 uppercase tracking-widest flex items-center justify-between">
                   <span>Next Solution Impact</span>
-                  <CheckCircle2 className="h-4 w-4 text-emerald-500" />
+                  <CheckCircle2 className="h-4 w-4 text-emerald-500 dark:text-emerald-400" />
                 </div>
               </div>
             ))}
@@ -2900,7 +2900,7 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
          ======================================================== */}
       <section id="about-final-cta" className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-24 relative z-10">
         <div className="rounded-3xl bg-neutral-950 text-white p-8 md:p-16 text-center space-y-8 relative overflow-hidden shadow-2xl">
-          <div className="absolute inset-0 bg-[radial-gradient(#2563eb_1.5px,transparent_1.5px)] [background-size:24px_24px] opacity-10"></div>
+          <div className="absolute inset-0 bg-[radial-gradient(#FF4D00_1.5px,transparent_1.5px)] [background-size:24px_24px] opacity-10"></div>
           
           <div className="space-y-4 max-w-2xl mx-auto relative z-10">
             <span className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full bg-white/10 text-white text-[9px] font-bold uppercase tracking-wider">
@@ -2912,7 +2912,7 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
               {currentLang === 'en' ? "Let's Build Your Next Big Success Story" : 'আসুন একসাথে আপনার পরবর্তী বড় সফলতাটি তৈরি করি'}
             </h2>
 
-            <p className="text-xs sm:text-sm text-neutral-400 max-w-md mx-auto leading-relaxed font-normal">
+            <p className="text-xs sm:text-sm text-neutral-400 dark:text-neutral-500 max-w-md mx-auto leading-relaxed font-normal">
               {currentLang === 'en' 
                 ? 'Whether you need a single custom web app or complete end-to-end digital transformation, Next Solution is ready to become your ultimate growth ally.' 
                 : 'আপনার একটি কাস্টম ওয়েব অ্যাপ্লিকেশন বা সম্পূর্ণ ডিজিটাল ট্রান্সফরমেশন যাই প্রয়োজন হোক না কেন, নেক্সট সলিউশন আপনাকে সাহায্য করতে প্রস্তুত।'}
@@ -2930,7 +2930,7 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
             <button
               id="about-final-btn-consultation"
               onClick={() => navigateToTab('contact')}
-              className="rounded-xl bg-white hover:bg-neutral-100 text-neutral-950 text-xs sm:text-sm font-bold px-8 py-4 transition shadow-md hover:scale-[1.02] cursor-pointer"
+              className="rounded-xl bg-white dark:bg-[#141414] hover:bg-neutral-100 dark:bg-neutral-800 text-neutral-950 text-xs sm:text-sm font-bold px-8 py-4 transition shadow-md hover:scale-[1.02] cursor-pointer"
             >
               {currentLang === 'en' ? 'Book a Free Consultation' : 'ফ্রি পরামর্শ নিন'}
             </button>

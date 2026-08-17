@@ -45,7 +45,7 @@ export default function TestimonialsVisuals({ currentLang }: VisualsProps) {
       percentage: '2,636%',
       beforeVal: 15,
       afterVal: 95,
-      color: 'from-blue-500 to-cyan-400'
+      color: 'from-blue-500 dark:from-orange-500 to-cyan-400'
     },
     speed: {
       titleEn: 'Framer / Page Load Speed',
@@ -225,7 +225,7 @@ export default function TestimonialsVisuals({ currentLang }: VisualsProps) {
       </div>
 
       {/* 12. CLIENT ACHIEVEMENTS BEFORE VS AFTER COMPARISON */}
-      <div className="bg-white rounded-3xl border border-slate-100 p-6 md:p-10 shadow-sm relative overflow-hidden">
+      <div className="bg-white dark:bg-[#141414] rounded-3xl border border-slate-100 p-6 md:p-10 shadow-sm relative overflow-hidden">
         
         {/* Decorative Grid Backing */}
         <div className="absolute inset-0 bg-[radial-gradient(#e2e8f0_1px,transparent_1px)] [background-size:16px_16px] opacity-40 pointer-events-none"></div>
@@ -234,8 +234,8 @@ export default function TestimonialsVisuals({ currentLang }: VisualsProps) {
           
           <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
             <div className="space-y-2">
-              <div className="inline-flex items-center space-x-1.5 rounded-full bg-blue-50 px-3 py-1 text-[10px] font-extrabold tracking-wider text-blue-700 uppercase">
-                <Sparkles className="h-3.5 w-3.5 text-blue-600" />
+              <div className="inline-flex items-center space-x-1.5 rounded-full bg-blue-50 dark:bg-orange-500/10 px-3 py-1 text-[10px] font-extrabold tracking-wider text-blue-700 uppercase">
+                <Sparkles className="h-3.5 w-3.5 text-blue-600 dark:text-orange-400" />
                 <span>{currentLang === 'en' ? 'Measurable Impact Analytics' : 'পরিমাপযোগ্য কাজের প্রভাব'}</span>
               </div>
               <h3 className="font-display text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
@@ -256,7 +256,7 @@ export default function TestimonialsVisuals({ currentLang }: VisualsProps) {
                   onClick={() => setActiveMetricTab(tab as any)}
                   className={`px-3 py-1.5 rounded-lg text-xs font-bold transition capitalize ${
                     activeMetricTab === tab
-                      ? 'bg-white text-blue-600 shadow-sm font-extrabold'
+                      ? 'bg-white dark:bg-[#141414] text-blue-600 dark:text-orange-400 shadow-sm font-extrabold'
                       : 'text-slate-500 hover:text-slate-800'
                   }`}
                 >
@@ -273,14 +273,14 @@ export default function TestimonialsVisuals({ currentLang }: VisualsProps) {
             <div className="lg:col-span-5 space-y-4">
               <h4 className="font-display font-bold text-lg text-slate-900 flex items-center">
                 <span>{activeMetric.titleEn}</span>
-                <ArrowUpRight className="h-4 w-4 ml-1.5 text-blue-500" />
+                <ArrowUpRight className="h-4 w-4 ml-1.5 text-blue-500 dark:text-orange-400" />
               </h4>
               <p className="text-xs text-slate-500 leading-relaxed">
                 {currentLang === 'en' ? activeMetric.descEn : activeMetric.descBn}
               </p>
               
-              <div className="flex items-center space-x-2 text-xs text-slate-400 font-semibold bg-white px-3 py-2 rounded-xl border border-slate-100 max-w-xs">
-                <ShieldAlert className="h-4 w-4 text-emerald-500" />
+              <div className="flex items-center space-x-2 text-xs text-slate-400 font-semibold bg-white dark:bg-[#141414] px-3 py-2 rounded-xl border border-slate-100 max-w-xs">
+                <ShieldAlert className="h-4 w-4 text-emerald-500 dark:text-emerald-400" />
                 <span>Independently verified client audits</span>
               </div>
             </div>
@@ -291,7 +291,7 @@ export default function TestimonialsVisuals({ currentLang }: VisualsProps) {
               {/* Before Next Solution Bar */}
               <div className="space-y-1.5">
                 <div className="flex justify-between items-center text-xs">
-                  <span className="font-bold text-rose-600 uppercase tracking-wide">BEFORE Next Solution</span>
+                  <span className="font-bold text-rose-600 dark:text-rose-400 uppercase tracking-wide">BEFORE Next Solution</span>
                   <span className="font-bold text-slate-700">{activeMetric.before}</span>
                 </div>
                 <div className="h-4 w-full bg-slate-200 rounded-full overflow-hidden">
@@ -307,9 +307,9 @@ export default function TestimonialsVisuals({ currentLang }: VisualsProps) {
               {/* After Next Solution Bar */}
               <div className="space-y-1.5">
                 <div className="flex justify-between items-center text-xs">
-                  <span className="font-bold text-emerald-600 uppercase tracking-wide flex items-center">
+                  <span className="font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-wide flex items-center">
                     AFTER NEXT SOLUTION
-                    <span className="ml-1.5 inline-block text-[9px] bg-emerald-50 text-emerald-700 px-1.5 py-0.2 rounded font-extrabold uppercase animate-pulse">
+                    <span className="ml-1.5 inline-block text-[9px] bg-emerald-50 dark:bg-emerald-500/10 text-emerald-700 px-1.5 py-0.2 rounded font-extrabold uppercase animate-pulse">
                       {activeMetric.percentage}
                     </span>
                   </span>

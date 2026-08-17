@@ -8,6 +8,7 @@ import CookieConsent from '@/components/CookieConsent';
 import FloatingContact from '@/components/FloatingContact';
 import ErrorBoundary from '@/components/ErrorBoundary';
 import { useLang } from '@/providers/LangProvider';
+import { useTheme } from '@/providers/ThemeProvider';
 import { getPathForTab, NavTabId } from '@/config/navigation';
 
 interface ShellLayoutProps {
@@ -17,10 +18,7 @@ interface ShellLayoutProps {
 export default function ShellLayout({ children }: ShellLayoutProps) {
   const router = useRouter();
   const { currentLang, setCurrentLang } = useLang();
-
-  // no-op shims kept for component API compatibility
-  const isDark = false;
-  const toggleTheme = () => {};
+  const { isDark, toggleTheme } = useTheme();
 
   const setTab = (tab: string) => {
     const path = getPathForTab(tab as NavTabId);

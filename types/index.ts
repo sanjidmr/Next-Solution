@@ -609,7 +609,34 @@ export interface TechServiceCard {
   animationType: string; // e.g. "fade", "slide-up"
 }
 
+export interface ProductImage {
+  id: string;
+  productId: string;
+  url: string;
+  imageUrl?: string;
+  displayOrder?: number;
+  isMain?: boolean;
+  createdAt?: string;
+}
 
-
-
-
+export interface Product {
+  id: string;
+  titleEn: string;
+  titleBn?: string;
+  slug: string;
+  descriptionEn?: string;
+  descriptionBn?: string;
+  price: number;
+  cost?: number;
+  category?: string;
+  subcategory?: string;
+  stock?: number;
+  sold?: number;
+  image?: string; // main featured image URL
+  images?: string[]; // array of image URLs kept in sync with product_images
+  productImages?: ProductImage[];
+  status?: 'draft' | 'published' | 'archived';
+  sortOrder?: number;
+  createdAt?: string;
+  updatedAt?: string;
+}

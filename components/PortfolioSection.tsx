@@ -47,7 +47,7 @@ function BeforeAfterSlider({ beforeUrl, afterUrl, currentLang }: { beforeUrl: st
 
   return (
     <div 
-      className="relative aspect-video rounded-2xl overflow-hidden border border-gray-100 bg-gray-50 select-none cursor-ew-resize group"
+      className="relative aspect-video rounded-2xl overflow-hidden border border-gray-100 dark:border-neutral-800 bg-gray-50 dark:bg-neutral-900 select-none cursor-ew-resize group"
       onTouchMove={handleTouchMove}
       onMouseMove={handleMouseMove}
       onMouseDown={() => setIsDragging(true)}
@@ -83,11 +83,11 @@ function BeforeAfterSlider({ beforeUrl, afterUrl, currentLang }: { beforeUrl: st
 
       {/* Slide Handle Line */}
       <div 
-        className="absolute top-0 bottom-0 w-1 bg-white cursor-ew-resize z-10 flex items-center justify-center shadow-lg"
+        className="absolute top-0 bottom-0 w-1 bg-white dark:bg-[#141414] cursor-ew-resize z-10 flex items-center justify-center shadow-lg"
         style={{ left: `${sliderPosition}%` }}
       >
-        <div className="h-10 w-10 rounded-full bg-white text-gray-800 flex items-center justify-center border border-gray-100 shadow-2xl hover:scale-110 active:scale-95 transition-transform duration-150">
-          <Code className="h-4 w-4 rotate-90 text-blue-600" />
+        <div className="h-10 w-10 rounded-full bg-white dark:bg-[#141414] text-gray-800 dark:text-neutral-100 flex items-center justify-center border border-gray-100 dark:border-neutral-800 shadow-2xl hover:scale-110 active:scale-95 transition-transform duration-150">
+          <Code className="h-4 w-4 rotate-90 text-blue-600 dark:text-orange-400" />
         </div>
       </div>
       
@@ -214,76 +214,76 @@ export default function PortfolioSection({ currentLang, setTab, isFullPage = fal
       .slice(0, 2);
 
     return (
-      <article className="bg-white min-h-screen pt-24 pb-20 font-sans text-gray-800">
+      <article className="bg-white dark:bg-[#141414] min-h-screen pt-24 pb-20 font-sans text-gray-800 dark:text-neutral-100">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           
           {/* Back Navigation Bar */}
-          <div className="mb-10 flex items-center justify-between border-b border-gray-100 pb-5">
+          <div className="mb-10 flex items-center justify-between border-b border-gray-100 dark:border-neutral-800 pb-5">
             <button
               onClick={() => {
                 setSelectedProject(null);
                 window.scrollTo({ top: 0, behavior: 'smooth' });
               }}
-              className="flex items-center space-x-2 text-xs font-bold text-gray-500 hover:text-gray-900 transition group"
+              className="flex items-center space-x-2 text-xs font-bold text-gray-500 dark:text-neutral-400 dark:text-neutral-500 hover:text-gray-900 dark:text-white transition group"
             >
               <ArrowLeft className="h-4 w-4 transition-transform group-hover:-translate-x-1" />
               <span>{currentLang === 'en' ? 'Back to Portfolio' : 'পোর্টফোলিওতে ফিরে যান'}</span>
             </button>
-            <div className="flex items-center space-x-2 text-[10px] font-mono text-gray-400">
+            <div className="flex items-center space-x-2 text-[10px] font-mono text-gray-400 dark:text-neutral-500">
               <span>{currentLang === 'en' ? 'CASE STUDY' : 'কেস স্টাডি'}</span>
               <ChevronRight className="h-3 w-3" />
-              <span className="text-blue-600 font-bold uppercase tracking-wider">{selectedProject.category}</span>
+              <span className="text-blue-600 dark:text-orange-400 font-bold uppercase tracking-wider">{selectedProject.category}</span>
             </div>
           </div>
 
           {/* 1. HERO SECTION */}
           <header className="space-y-6 max-w-4xl mb-12">
             <div className="flex flex-wrap gap-2">
-              <span className="rounded-full bg-blue-50 border border-blue-100 text-blue-600 font-bold px-3 py-1 text-[10px] uppercase tracking-wider">
+              <span className="rounded-full bg-blue-50 dark:bg-orange-500/10 border border-blue-100 dark:border-orange-500/20 text-blue-600 dark:text-orange-400 font-bold px-3 py-1 text-[10px] uppercase tracking-wider">
                 {selectedProject.category}
               </span>
               {selectedProject.industryEn && (
-                <span className="rounded-full bg-gray-50 border border-gray-100 text-gray-600 font-mono px-3 py-1 text-[10px]">
+                <span className="rounded-full bg-gray-50 dark:bg-neutral-900 border border-gray-100 dark:border-neutral-800 text-gray-600 dark:text-neutral-300 dark:text-neutral-600 font-mono px-3 py-1 text-[10px]">
                   {currentLang === 'en' ? selectedProject.industryEn : selectedProject.industryBn}
                 </span>
               )}
             </div>
-            <h1 className="font-sans text-3xl sm:text-5xl font-black tracking-tight text-gray-900 leading-tight">
+            <h1 className="font-sans text-3xl sm:text-5xl font-black tracking-tight text-gray-900 dark:text-white leading-tight">
               {currentLang === 'en' ? selectedProject.titleEn : selectedProject.titleBn}
             </h1>
-            <p className="text-base sm:text-lg text-gray-500 leading-relaxed max-w-3xl">
+            <p className="text-base sm:text-lg text-gray-500 dark:text-neutral-400 dark:text-neutral-500 leading-relaxed max-w-3xl">
               {currentLang === 'en' ? selectedProject.descriptionEn : selectedProject.descriptionBn}
             </p>
           </header>
 
           {/* 2. OVERVIEW METRICS PANEL */}
-          <section className="grid grid-cols-2 md:grid-cols-4 gap-4 bg-gray-50/50 p-6 rounded-2xl border border-gray-100 mb-12 shadow-sm text-center">
+          <section className="grid grid-cols-2 md:grid-cols-4 gap-4 bg-gray-50/50 p-6 rounded-2xl border border-gray-100 dark:border-neutral-800 mb-12 shadow-sm text-center">
             <div className="space-y-1">
-              <span className="block text-[9px] font-extrabold text-gray-400 uppercase tracking-widest flex justify-center items-center gap-1">
-                <Users className="h-3.5 w-3.5 text-blue-500" />
+              <span className="block text-[9px] font-extrabold text-gray-400 dark:text-neutral-500 uppercase tracking-widest flex justify-center items-center gap-1">
+                <Users className="h-3.5 w-3.5 text-blue-500 dark:text-orange-400" />
                 <span>{currentLang === 'en' ? 'Client Partner' : 'ক্লায়েন্ট অংশীদার'}</span>
               </span>
-              <span className="text-xs sm:text-sm font-bold text-gray-900 mt-1 block">{selectedProject.client}</span>
+              <span className="text-xs sm:text-sm font-bold text-gray-900 dark:text-white mt-1 block">{selectedProject.client}</span>
             </div>
-            <div className="space-y-1 border-l border-gray-100">
-              <span className="block text-[9px] font-extrabold text-gray-400 uppercase tracking-widest flex justify-center items-center gap-1">
-                <Calendar className="h-3.5 w-3.5 text-blue-500" />
+            <div className="space-y-1 border-l border-gray-100 dark:border-neutral-800">
+              <span className="block text-[9px] font-extrabold text-gray-400 dark:text-neutral-500 uppercase tracking-widest flex justify-center items-center gap-1">
+                <Calendar className="h-3.5 w-3.5 text-blue-500 dark:text-orange-400" />
                 <span>{currentLang === 'en' ? 'Timeline' : 'সময়কাল'}</span>
               </span>
-              <span className="text-xs sm:text-sm font-bold text-gray-900 mt-1 block">
+              <span className="text-xs sm:text-sm font-bold text-gray-900 dark:text-white mt-1 block">
                 {selectedProject.duration} {selectedProject.completionYear && `(${selectedProject.completionYear})`}
               </span>
             </div>
-            <div className="space-y-1 border-l border-gray-100">
-              <span className="block text-[9px] font-extrabold text-gray-400 uppercase tracking-widest flex justify-center items-center gap-1">
-                <DollarSign className="h-3.5 w-3.5 text-blue-500" />
+            <div className="space-y-1 border-l border-gray-100 dark:border-neutral-800">
+              <span className="block text-[9px] font-extrabold text-gray-400 dark:text-neutral-500 uppercase tracking-widest flex justify-center items-center gap-1">
+                <DollarSign className="h-3.5 w-3.5 text-blue-500 dark:text-orange-400" />
                 <span>{currentLang === 'en' ? 'Budget Spec' : 'বাজেট স্পেক'}</span>
               </span>
-              <span className="text-xs sm:text-sm font-bold text-gray-900 mt-1 block">{selectedProject.budget}</span>
+              <span className="text-xs sm:text-sm font-bold text-gray-900 dark:text-white mt-1 block">{selectedProject.budget}</span>
             </div>
-            <div className="space-y-1 border-l border-gray-100">
-              <span className="block text-[9px] font-extrabold text-gray-400 uppercase tracking-widest flex justify-center items-center gap-1">
-                <Award className="h-3.5 w-3.5 text-blue-500" />
+            <div className="space-y-1 border-l border-gray-100 dark:border-neutral-800">
+              <span className="block text-[9px] font-extrabold text-gray-400 dark:text-neutral-500 uppercase tracking-widest flex justify-center items-center gap-1">
+                <Award className="h-3.5 w-3.5 text-blue-500 dark:text-orange-400" />
                 <span>{currentLang === 'en' ? 'Impact Status' : 'ইমপ্যাক্ট স্ট্যাটাস'}</span>
               </span>
               <span className="text-xs sm:text-sm font-bold text-green-600 mt-1 block flex items-center justify-center gap-1">
@@ -300,7 +300,7 @@ export default function PortfolioSection({ currentLang, setTab, isFullPage = fal
             <div className="lg:col-span-8 space-y-12">
               
               {/* Cover Screenshot */}
-              <div className="relative rounded-2xl overflow-hidden aspect-video border border-gray-100 bg-gray-50 shadow-md">
+              <div className="relative rounded-2xl overflow-hidden aspect-video border border-gray-100 dark:border-neutral-800 bg-gray-50 dark:bg-neutral-900 shadow-md">
                 <img 
                   src={selectedProject.image} 
                   alt={selectedProject.titleEn} 
@@ -316,17 +316,17 @@ export default function PortfolioSection({ currentLang, setTab, isFullPage = fal
                     <Info className="h-4 w-4" />
                     <span>01. {currentLang === 'en' ? 'The Core Challenge' : 'মূল চ্যালেঞ্জ'}</span>
                   </h3>
-                  <p className="text-xs text-gray-600 leading-relaxed">
+                  <p className="text-xs text-gray-600 dark:text-neutral-300 dark:text-neutral-600 leading-relaxed">
                     {currentLang === 'en' ? selectedProject.challengeEn : selectedProject.challengeBn}
                   </p>
                 </div>
 
-                <div className="space-y-3 bg-blue-50/20 border border-blue-100/50 p-6 rounded-2xl">
+                <div className="space-y-3 bg-blue-50/20 dark:bg-orange-500/5 border border-blue-100/50 p-6 rounded-2xl">
                   <h3 className="text-sm font-black text-blue-700 flex items-center space-x-1.5 uppercase tracking-wider">
                     <Sparkles className="h-4 w-4" />
                     <span>02. {currentLang === 'en' ? 'Our Engineering Solution' : 'আমাদের প্রকৌশল সমাধান'}</span>
                   </h3>
-                  <p className="text-xs text-gray-600 leading-relaxed">
+                  <p className="text-xs text-gray-600 dark:text-neutral-300 dark:text-neutral-600 leading-relaxed">
                     {currentLang === 'en' ? selectedProject.solutionEn : selectedProject.solutionBn}
                   </p>
                 </div>
@@ -336,10 +336,10 @@ export default function PortfolioSection({ currentLang, setTab, isFullPage = fal
               {selectedProject.beforeImage && selectedProject.afterImage && (
                 <div className="space-y-4 pt-4">
                   <div className="space-y-1">
-                    <h3 className="text-sm font-bold text-gray-900 uppercase tracking-wide">
+                    <h3 className="text-sm font-bold text-gray-900 dark:text-white uppercase tracking-wide">
                       {currentLang === 'en' ? 'Before & After Design Transformation' : 'ডিজাইন রূপান্তরের আগে ও পরে'}
                     </h3>
-                    <p className="text-xs text-gray-500">
+                    <p className="text-xs text-gray-500 dark:text-neutral-400 dark:text-neutral-500">
                       {currentLang === 'en' ? 'Drag slider handle to see code rendering improvements.' : 'কোড ডিজাইনের চমৎকার পরিবর্তন দেখতে হ্যান্ডেলটি ডানে-বামে সরান।'}
                     </p>
                   </div>
@@ -353,15 +353,15 @@ export default function PortfolioSection({ currentLang, setTab, isFullPage = fal
 
               {/* Delivered Features List */}
               {((currentLang === 'en' ? selectedProject.featuresEn : selectedProject.featuresBn) || []).length > 0 && (
-                <div className="space-y-4 bg-gray-50/30 p-6 rounded-2xl border border-gray-100">
-                  <h3 className="text-sm font-black text-gray-900 uppercase tracking-wide flex items-center space-x-1.5">
-                    <Activity className="h-4 w-4 text-blue-600" />
+                <div className="space-y-4 bg-gray-50/30 p-6 rounded-2xl border border-gray-100 dark:border-neutral-800">
+                  <h3 className="text-sm font-black text-gray-900 dark:text-white uppercase tracking-wide flex items-center space-x-1.5">
+                    <Activity className="h-4 w-4 text-blue-600 dark:text-orange-400" />
                     <span>{currentLang === 'en' ? 'Delivered Product Modules' : 'প্রদত্ত প্রোডাক্ট মডিউলসমূহ'}</span>
                   </h3>
                   <ul className="grid grid-cols-1 md:grid-cols-2 gap-3">
                     {((currentLang === 'en' ? selectedProject.featuresEn : selectedProject.featuresBn) || []).map((feature, idx) => (
-                      <li key={idx} className="flex items-start space-x-2 text-xs text-gray-600">
-                        <span className="rounded-full bg-blue-100 text-blue-700 p-0.5 mt-0.5">
+                      <li key={idx} className="flex items-start space-x-2 text-xs text-gray-600 dark:text-neutral-300 dark:text-neutral-600">
+                        <span className="rounded-full bg-blue-100 dark:bg-orange-500/15 text-blue-700 p-0.5 mt-0.5">
                           <ChevronRight className="h-3 w-3" />
                         </span>
                         <span className="font-medium">{feature}</span>
@@ -375,16 +375,16 @@ export default function PortfolioSection({ currentLang, setTab, isFullPage = fal
               {parsedGallery.length > 0 && (
                 <div className="space-y-4">
                   <div className="space-y-1">
-                    <h3 className="text-sm font-bold text-gray-900 uppercase tracking-wide">
+                    <h3 className="text-sm font-bold text-gray-900 dark:text-white uppercase tracking-wide">
                       {currentLang === 'en' ? 'Interface Design Gallery' : 'ইন্টারফেস ডিজাইন গ্যালারি'}
                     </h3>
-                    <p className="text-xs text-gray-500">
+                    <p className="text-xs text-gray-500 dark:text-neutral-400 dark:text-neutral-500">
                       {currentLang === 'en' ? 'A breakdown of layout fidelity and customized views created.' : 'তৈরিকৃত হাই-ফিডেলিটি লেআউট এবং কাস্টমাইজড ভিউর একটি বিশ্লেষণ।'}
                     </p>
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {parsedGallery.map((imgUrl, idx) => (
-                      <div key={idx} className="group overflow-hidden rounded-xl border border-gray-100 bg-gray-50 aspect-video relative">
+                      <div key={idx} className="group overflow-hidden rounded-xl border border-gray-100 dark:border-neutral-800 bg-gray-50 dark:bg-neutral-900 aspect-video relative">
                         <img 
                           src={imgUrl} 
                           alt={`Gallery screenshot ${idx + 1}`} 
@@ -404,19 +404,19 @@ export default function PortfolioSection({ currentLang, setTab, isFullPage = fal
               
               {/* UPTIME & RESULT METRICS */}
               <div className="bg-gray-900 text-white rounded-2xl p-6 border border-gray-800 space-y-4 shadow-xl">
-                <span className="text-[9px] font-bold tracking-widest text-blue-400 block uppercase font-mono">
+                <span className="text-[9px] font-bold tracking-widest text-blue-400 dark:text-orange-300 block uppercase font-mono">
                   {currentLang === 'en' ? 'Performance Metrics Achieved' : 'অর্জিত পারফরম্যান্স ম্যাট্রিক্স'}
                 </span>
                 <div className="space-y-1">
-                  <h3 className="text-3xl font-black text-blue-400">
+                  <h3 className="text-3xl font-black text-blue-400 dark:text-orange-300">
                     {selectedProject.id === '1' ? '0.4s' : selectedProject.id === '2' ? '3.8%' : '10x'}
                   </h3>
-                  <p className="text-xs text-gray-300 font-medium">
+                  <p className="text-xs text-gray-300 dark:text-neutral-500 font-medium">
                     {currentLang === 'en' ? 'Core Loading Speed Decreased' : 'কোর লোডিং স্পিড হ্রাস'}
                   </p>
                 </div>
                 <div className="border-t border-gray-800 pt-4 space-y-2">
-                  <span className="text-[10px] font-bold text-gray-400 uppercase font-mono block">
+                  <span className="text-[10px] font-bold text-gray-400 dark:text-neutral-500 uppercase font-mono block">
                     {currentLang === 'en' ? 'CONVERSION RESULT' : 'কনভার্সন ফলাফল'}
                   </span>
                   <p className="text-xs text-gray-200 leading-relaxed italic">
@@ -426,17 +426,17 @@ export default function PortfolioSection({ currentLang, setTab, isFullPage = fal
               </div>
 
               {/* TECHNICAL INTEGRATION BOX */}
-              <div className="bg-white border border-gray-100 rounded-2xl p-6 shadow-sm space-y-4">
-                <h4 className="text-xs font-black text-gray-900 uppercase tracking-wider font-mono">
+              <div className="bg-white dark:bg-[#141414] border border-gray-100 dark:border-neutral-800 rounded-2xl p-6 shadow-sm space-y-4">
+                <h4 className="text-xs font-black text-gray-900 dark:text-white uppercase tracking-wider font-mono">
                   {currentLang === 'en' ? 'Engineered Tech Stack' : 'ব্যবহৃত টেকনোলজি স্ট্যাক'}
                 </h4>
                 <div className="flex flex-wrap gap-1.5">
                   {selectedProject.technologies.map((tech, idx) => (
                     <span 
                       key={idx} 
-                      className="rounded-lg bg-gray-50 border border-gray-100 px-3 py-1.5 text-xs font-semibold text-gray-700 flex items-center space-x-1"
+                      className="rounded-lg bg-gray-50 dark:bg-neutral-900 border border-gray-100 dark:border-neutral-800 px-3 py-1.5 text-xs font-semibold text-gray-700 dark:text-neutral-200 flex items-center space-x-1"
                     >
-                      <Code className="h-3.5 w-3.5 text-blue-500" />
+                      <Code className="h-3.5 w-3.5 text-blue-500 dark:text-orange-400" />
                       <span>{tech}</span>
                     </span>
                   ))}
@@ -460,7 +460,7 @@ export default function PortfolioSection({ currentLang, setTab, isFullPage = fal
                       href={selectedProject.githubUrl} 
                       target="_blank" 
                       rel="noopener noreferrer"
-                      className="w-full inline-flex items-center justify-center space-x-2 rounded-lg border border-gray-200 hover:bg-gray-50 text-gray-700 font-bold text-xs py-2.5 transition"
+                      className="w-full inline-flex items-center justify-center space-x-2 rounded-lg border border-gray-200 dark:border-neutral-700 hover:bg-gray-50 dark:bg-neutral-900 text-gray-700 dark:text-neutral-200 font-bold text-xs py-2.5 transition"
                     >
                       <span>{currentLang === 'en' ? 'View Source Code' : 'সোর্স কোড দেখুন'}</span>
                     </a>
@@ -473,7 +473,7 @@ export default function PortfolioSection({ currentLang, setTab, isFullPage = fal
                 <div className="rounded-2xl border border-blue-50/50 bg-blue-50/15 p-6 space-y-4 shadow-sm">
                   <div className="flex items-center justify-between border-b border-blue-50/50 pb-3">
                     <span className="text-xs font-black text-blue-700 flex items-center space-x-1">
-                      <Quote className="h-4 w-4 text-blue-400" />
+                      <Quote className="h-4 w-4 text-blue-400 dark:text-orange-300" />
                       <span>{currentLang === 'en' ? 'Partner Review' : 'অংশীদারদের মন্তব্য'}</span>
                     </span>
                     <div className="flex items-center space-x-0.5">
@@ -482,7 +482,7 @@ export default function PortfolioSection({ currentLang, setTab, isFullPage = fal
                       ))}
                     </div>
                   </div>
-                  <blockquote className="text-xs italic text-gray-700 leading-relaxed">
+                  <blockquote className="text-xs italic text-gray-700 dark:text-neutral-200 leading-relaxed">
                     "{currentLang === 'en' ? selectedProject.reviewEn : selectedProject.reviewBn}"
                   </blockquote>
                   
@@ -492,18 +492,18 @@ export default function PortfolioSection({ currentLang, setTab, isFullPage = fal
                       <img 
                         src={selectedProject.clientPhoto} 
                         alt="" 
-                        className="h-10 w-10 rounded-full object-cover border border-blue-100 shadow-sm"
+                        className="h-10 w-10 rounded-full object-cover border border-blue-100 dark:border-orange-500/20 shadow-sm"
                         referrerPolicy="no-referrer"
                       />
                     ) : (
-                      <div className="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold font-mono text-sm">
+                      <div className="h-10 w-10 rounded-full bg-blue-100 dark:bg-orange-500/15 flex items-center justify-center text-blue-600 dark:text-orange-400 font-bold font-mono text-sm">
                         {selectedProject.client[0]}
                       </div>
                     )}
                     <div>
-                      <span className="block text-xs font-bold text-gray-900">{selectedProject.client}</span>
+                      <span className="block text-xs font-bold text-gray-900 dark:text-white">{selectedProject.client}</span>
                       {selectedProject.clientRoleEn && (
-                        <span className="block text-[10px] text-gray-400 mt-0.5 font-medium">
+                        <span className="block text-[10px] text-gray-400 dark:text-neutral-500 mt-0.5 font-medium">
                           {currentLang === 'en' ? selectedProject.clientRoleEn : selectedProject.clientRoleBn}
                         </span>
                       )}
@@ -516,12 +516,12 @@ export default function PortfolioSection({ currentLang, setTab, isFullPage = fal
           </div>
 
           {/* 3. CASE STUDY SPECIFIC FAQS */}
-          <section className="border-t border-gray-100 pt-16 mb-16 space-y-6">
+          <section className="border-t border-gray-100 dark:border-neutral-800 pt-16 mb-16 space-y-6">
             <div className="space-y-1">
-              <span className="text-[10px] font-bold text-blue-600 uppercase tracking-widest font-mono">
+              <span className="text-[10px] font-bold text-blue-600 dark:text-orange-400 uppercase tracking-widest font-mono">
                 {currentLang === 'en' ? 'PROJECT FAQS' : 'প্রজেক্ট সাধারণ জিজ্ঞাসা'}
               </span>
-              <h3 className="text-xl font-bold text-gray-900">
+              <h3 className="text-xl font-bold text-gray-900 dark:text-white">
                 {currentLang === 'en' ? 'Frequently Asked Execution Details' : 'প্রজেক্টের কিছু সাধারণ প্রশ্নোত্তর'}
               </h3>
             </div>
@@ -540,13 +540,13 @@ export default function PortfolioSection({ currentLang, setTab, isFullPage = fal
                   aBn: "আমরা জিরো-ট্রাস্ট আর্কিটেকচার গেটওয়ে, ফুল পে-লোড স্যানিটাইজেশন এবং স্টেট ক্যাশে সংযুক্ত করেছি যেন ব্যবহারকারীর ব্যক্তিগত ডেটা বাহ্যিক পেমেন্ট এ্যান্ডপয়েন্ট থেকে সম্পূর্ণ সুরক্ষিত থাকে।"
                 }
               ].map((faqItem, idx) => (
-                <div key={idx} className="rounded-xl border border-gray-100 bg-white shadow-sm overflow-hidden">
+                <div key={idx} className="rounded-xl border border-gray-100 dark:border-neutral-800 bg-white dark:bg-[#141414] shadow-sm overflow-hidden">
                   <button
                     onClick={() => setOpenFaq(openFaq === idx ? null : idx)}
-                    className="w-full text-left p-4 flex items-center justify-between font-bold text-xs text-gray-800 hover:bg-gray-50 transition"
+                    className="w-full text-left p-4 flex items-center justify-between font-bold text-xs text-gray-800 dark:text-neutral-100 hover:bg-gray-50 dark:bg-neutral-900 transition"
                   >
                     <span>{currentLang === 'en' ? faqItem.qEn : faqItem.qBn}</span>
-                    <ChevronRight className={`h-4 w-4 text-gray-400 transition-transform duration-200 ${openFaq === idx ? 'rotate-90 text-blue-600' : ''}`} />
+                    <ChevronRight className={`h-4 w-4 text-gray-400 dark:text-neutral-500 transition-transform duration-200 ${openFaq === idx ? 'rotate-90 text-blue-600 dark:text-orange-400' : ''}`} />
                   </button>
                   <AnimatePresence>
                     {openFaq === idx && (
@@ -556,7 +556,7 @@ export default function PortfolioSection({ currentLang, setTab, isFullPage = fal
                         exit={{ height: 0, opacity: 0 }}
                         className="overflow-hidden"
                       >
-                        <div className="p-4 pt-0 border-t border-gray-50/50 text-xs text-gray-500 leading-relaxed">
+                        <div className="p-4 pt-0 border-t border-gray-50/50 text-xs text-gray-500 dark:text-neutral-400 dark:text-neutral-500 leading-relaxed">
                           {currentLang === 'en' ? faqItem.aEn : faqItem.aBn}
                         </div>
                       </motion.div>
@@ -569,12 +569,12 @@ export default function PortfolioSection({ currentLang, setTab, isFullPage = fal
 
           {/* 4. RELATED CASE STUDIES RECOMMENDATIONS */}
           {relatedProjects.length > 0 && (
-            <section className="border-t border-gray-100 pt-16 mb-16 space-y-6">
+            <section className="border-t border-gray-100 dark:border-neutral-800 pt-16 mb-16 space-y-6">
               <div className="space-y-1">
-                <span className="text-[10px] font-bold text-blue-600 uppercase tracking-widest font-mono">
+                <span className="text-[10px] font-bold text-blue-600 dark:text-orange-400 uppercase tracking-widest font-mono">
                   {currentLang === 'en' ? 'CURATED HIGHLIGHTS' : 'নির্বাচিত অন্যান্য কাজ'}
                 </span>
-                <h3 className="text-xl font-bold text-gray-900">
+                <h3 className="text-xl font-bold text-gray-900 dark:text-white">
                   {currentLang === 'en' ? 'Explore Other Success Stories' : 'অন্যান্য সাফল্যের গল্পগুলো দেখুন'}
                 </h3>
               </div>
@@ -587,20 +587,20 @@ export default function PortfolioSection({ currentLang, setTab, isFullPage = fal
                       setSelectedProject(item);
                       window.scrollTo({ top: 0, behavior: 'smooth' });
                     }}
-                    className="group cursor-pointer rounded-2xl border border-gray-100 bg-white p-5 flex items-center space-x-4 hover:border-blue-500 transition hover:shadow-sm"
+                    className="group cursor-pointer rounded-2xl border border-gray-100 dark:border-neutral-800 bg-white dark:bg-[#141414] p-5 flex items-center space-x-4 hover:border-blue-500 transition hover:shadow-sm"
                   >
                     <img 
                       src={item.image} 
                       alt="" 
-                      className="h-16 w-24 object-cover rounded bg-gray-50 border border-gray-100 shrink-0" 
+                      className="h-16 w-24 object-cover rounded bg-gray-50 dark:bg-neutral-900 border border-gray-100 dark:border-neutral-800 shrink-0" 
                       referrerPolicy="no-referrer"
                     />
                     <div className="space-y-1">
-                      <span className="text-[9px] font-bold text-blue-600 uppercase tracking-wider">{item.category}</span>
-                      <h4 className="text-xs font-bold text-gray-900 group-hover:text-blue-600 transition-colors">
+                      <span className="text-[9px] font-bold text-blue-600 dark:text-orange-400 uppercase tracking-wider">{item.category}</span>
+                      <h4 className="text-xs font-bold text-gray-900 dark:text-white group-hover:text-blue-600 dark:text-orange-400 transition-colors">
                         {currentLang === 'en' ? item.titleEn : item.titleBn}
                       </h4>
-                      <p className="text-[10px] text-gray-400 font-mono mt-0.5">Client: {item.client}</p>
+                      <p className="text-[10px] text-gray-400 dark:text-neutral-500 font-mono mt-0.5">Client: {item.client}</p>
                     </div>
                   </div>
                 ))}
@@ -625,7 +625,7 @@ export default function PortfolioSection({ currentLang, setTab, isFullPage = fal
               <div className="pt-2 flex flex-wrap justify-center gap-3">
                 <button
                   onClick={() => handleStartConsultation(selectedProject.titleEn)}
-                  className="rounded-xl bg-white hover:bg-gray-50 text-blue-600 text-xs font-bold px-6 py-3 transition relative hover:scale-[1.02] shadow-md shadow-black/5"
+                  className="rounded-xl bg-white dark:bg-[#141414] hover:bg-gray-50 dark:bg-neutral-900 text-blue-600 dark:text-orange-400 text-xs font-bold px-6 py-3 transition relative hover:scale-[1.02] shadow-md shadow-black/5"
                 >
                   {currentLang === 'en' ? 'Get Free Consultation' : 'ফ্রি কনসালটেশন নিন'}
                 </button>
@@ -649,25 +649,25 @@ export default function PortfolioSection({ currentLang, setTab, isFullPage = fal
 
   // ELSE - SHOW MAIN PORTFOLIO CATALOG
   return (
-    <section id="portfolio-section" className={`bg-white py-20 ${isFullPage ? 'min-h-screen py-24' : ''}`}>
+    <section id="portfolio-section" className={`bg-white dark:bg-[#141414] py-20 ${isFullPage ? 'min-h-screen py-24' : ''}`}>
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         
         {/* 1. HERO SECTION */}
         <div className="text-center space-y-4 max-w-3xl mx-auto mb-12">
           {/* Breadcrumb block */}
-          <nav className="flex items-center justify-center space-x-1.5 text-[10px] font-mono text-gray-400 mb-2">
-            <span className="hover:text-gray-900 cursor-pointer" onClick={() => setTab('home')}>{currentLang === 'en' ? 'Home' : 'হোম'}</span>
+          <nav className="flex items-center justify-center space-x-1.5 text-[10px] font-mono text-gray-400 dark:text-neutral-500 mb-2">
+            <span className="hover:text-gray-900 dark:text-white cursor-pointer" onClick={() => setTab('home')}>{currentLang === 'en' ? 'Home' : 'হোম'}</span>
             <ChevronRight className="h-3 w-3" />
-            <span className="text-blue-600 font-bold">{currentLang === 'en' ? 'Portfolio' : 'পোর্টফোলিও'}</span>
+            <span className="text-blue-600 dark:text-orange-400 font-bold">{currentLang === 'en' ? 'Portfolio' : 'পোর্টফোলিও'}</span>
           </nav>
           
-          <span className="text-xs font-bold uppercase tracking-wider text-blue-600 bg-blue-50 border border-blue-100/50 px-3 py-1 rounded-full inline-block">
+          <span className="text-xs font-bold uppercase tracking-wider text-blue-600 dark:text-orange-400 bg-blue-50 dark:bg-orange-500/10 border border-blue-100/50 px-3 py-1 rounded-full inline-block">
             {currentLang === 'en' ? 'INTERNATIONAL PORTFOLIO' : 'আন্তর্জাতিক মানের পোর্টফোলিও'}
           </span>
-          <h2 className="font-sans text-3xl font-black tracking-tight text-gray-900 sm:text-5xl leading-tight">
+          <h2 className="font-sans text-3xl font-black tracking-tight text-gray-900 dark:text-white sm:text-5xl leading-tight">
             {t.sectionPortfolioTitle}
           </h2>
-          <p className="text-sm text-gray-500 leading-relaxed max-w-2xl mx-auto">
+          <p className="text-sm text-gray-500 dark:text-neutral-400 dark:text-neutral-500 leading-relaxed max-w-2xl mx-auto">
             {t.sectionPortfolioSub}
           </p>
           
@@ -680,7 +680,7 @@ export default function PortfolioSection({ currentLang, setTab, isFullPage = fal
             </button>
             <a
               href="#portfolio-grid"
-              className="rounded-xl bg-gray-50 border border-gray-200 hover:bg-gray-100 text-gray-700 text-xs font-bold px-5 py-2.5 transition"
+              className="rounded-xl bg-gray-50 dark:bg-neutral-900 border border-gray-200 dark:border-neutral-700 hover:bg-gray-100 dark:bg-neutral-800 text-gray-700 dark:text-neutral-200 text-xs font-bold px-5 py-2.5 transition"
             >
               {currentLang === 'en' ? 'View Our Work' : 'আমাদের কাজ দেখুন'}
             </a>
@@ -690,26 +690,26 @@ export default function PortfolioSection({ currentLang, setTab, isFullPage = fal
         {/* 2. STATS OVERVIEW PANEL */}
         <section className="grid grid-cols-2 lg:grid-cols-4 gap-6 bg-gray-50/50 p-6 sm:p-8 rounded-3xl border border-gray-100/80 mb-16 shadow-sm">
           <div className="text-center space-y-1">
-            <h4 className="text-3xl sm:text-4xl font-black text-gray-900 tracking-tight">150+</h4>
-            <p className="text-[10px] sm:text-xs font-semibold text-gray-400 uppercase tracking-wider">
+            <h4 className="text-3xl sm:text-4xl font-black text-gray-900 dark:text-white tracking-tight">150+</h4>
+            <p className="text-[10px] sm:text-xs font-semibold text-gray-400 dark:text-neutral-500 uppercase tracking-wider">
               {currentLang === 'en' ? 'Projects Completed' : 'প্রজেক্ট সমাপ্ত'}
             </p>
           </div>
-          <div className="text-center space-y-1 border-l border-gray-100">
-            <h4 className="text-3xl sm:text-4xl font-black text-gray-900 tracking-tight">99.8%</h4>
-            <p className="text-[10px] sm:text-xs font-semibold text-gray-400 uppercase tracking-wider">
+          <div className="text-center space-y-1 border-l border-gray-100 dark:border-neutral-800">
+            <h4 className="text-3xl sm:text-4xl font-black text-gray-900 dark:text-white tracking-tight">99.8%</h4>
+            <p className="text-[10px] sm:text-xs font-semibold text-gray-400 dark:text-neutral-500 uppercase tracking-wider">
               {currentLang === 'en' ? 'Client Satisfaction' : 'ক্লায়েন্ট সন্তুষ্টি'}
             </p>
           </div>
-          <div className="text-center space-y-1 border-l border-gray-100">
-            <h4 className="text-3xl sm:text-4xl font-black text-gray-900 tracking-tight">12+</h4>
-            <p className="text-[10px] sm:text-xs font-semibold text-gray-400 uppercase tracking-wider">
+          <div className="text-center space-y-1 border-l border-gray-100 dark:border-neutral-800">
+            <h4 className="text-3xl sm:text-4xl font-black text-gray-900 dark:text-white tracking-tight">12+</h4>
+            <p className="text-[10px] sm:text-xs font-semibold text-gray-400 dark:text-neutral-500 uppercase tracking-wider">
               {currentLang === 'en' ? 'Industries Served' : 'শিল্পক্ষেত্রসমূহ'}
             </p>
           </div>
-          <div className="text-center space-y-1 border-l border-gray-100">
-            <h4 className="text-3xl sm:text-4xl font-black text-gray-900 tracking-tight">25+</h4>
-            <p className="text-[10px] sm:text-xs font-semibold text-gray-400 uppercase tracking-wider">
+          <div className="text-center space-y-1 border-l border-gray-100 dark:border-neutral-800">
+            <h4 className="text-3xl sm:text-4xl font-black text-gray-900 dark:text-white tracking-tight">25+</h4>
+            <p className="text-[10px] sm:text-xs font-semibold text-gray-400 dark:text-neutral-500 uppercase tracking-wider">
               {currentLang === 'en' ? 'Technologies Mastered' : 'মাস্টার্ড টেকনোলজিস'}
             </p>
           </div>
@@ -717,8 +717,8 @@ export default function PortfolioSection({ currentLang, setTab, isFullPage = fal
 
         {/* 3. FEATURED PROJECTS SHOWCASE */}
         {featuredProject && (
-          <section className="mb-16 rounded-3xl border border-gray-100 bg-gray-50/30 p-6 md:p-8 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center shadow-sm">
-            <div className="lg:col-span-6 relative aspect-video overflow-hidden rounded-2xl border border-gray-100 bg-gray-100">
+          <section className="mb-16 rounded-3xl border border-gray-100 dark:border-neutral-800 bg-gray-50/30 p-6 md:p-8 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center shadow-sm">
+            <div className="lg:col-span-6 relative aspect-video overflow-hidden rounded-2xl border border-gray-100 dark:border-neutral-800 bg-gray-100 dark:bg-neutral-800">
               <img 
                 src={featuredProject.image} 
                 alt="" 
@@ -730,19 +730,19 @@ export default function PortfolioSection({ currentLang, setTab, isFullPage = fal
               </span>
             </div>
             <div className="lg:col-span-6 space-y-4">
-              <span className="text-[10px] font-mono text-blue-600 uppercase tracking-widest block font-bold">
+              <span className="text-[10px] font-mono text-blue-600 dark:text-orange-400 uppercase tracking-widest block font-bold">
                 {featuredProject.client} • {getCategoryLabel(featuredProject.category)}
               </span>
-              <h3 className="text-xl sm:text-3xl font-black text-gray-900 leading-tight">
+              <h3 className="text-xl sm:text-3xl font-black text-gray-900 dark:text-white leading-tight">
                 {currentLang === 'en' ? featuredProject.titleEn : featuredProject.titleBn}
               </h3>
-              <p className="text-xs sm:text-sm text-gray-500 leading-relaxed line-clamp-3">
+              <p className="text-xs sm:text-sm text-gray-500 dark:text-neutral-400 dark:text-neutral-500 leading-relaxed line-clamp-3">
                 {currentLang === 'en' ? featuredProject.descriptionEn : featuredProject.descriptionBn}
               </p>
               
               <div className="pt-2 flex flex-wrap gap-1">
                 {featuredProject.technologies.slice(0, 4).map((tech, idx) => (
-                  <span key={idx} className="rounded-lg bg-white border border-gray-100 px-2.5 py-1 text-[10px] font-semibold text-gray-600 shadow-sm">
+                  <span key={idx} className="rounded-lg bg-white dark:bg-[#141414] border border-gray-100 dark:border-neutral-800 px-2.5 py-1 text-[10px] font-semibold text-gray-600 dark:text-neutral-300 dark:text-neutral-600 shadow-sm">
                     {tech}
                   </span>
                 ))}
@@ -762,7 +762,7 @@ export default function PortfolioSection({ currentLang, setTab, isFullPage = fal
                 </button>
                 <button
                   onClick={() => handleStartConsultation(featuredProject.titleEn)}
-                  className="rounded-xl bg-white hover:bg-gray-50 border border-gray-200 text-gray-700 text-xs font-bold px-4 py-2.5 transition"
+                  className="rounded-xl bg-white dark:bg-[#141414] hover:bg-gray-50 dark:bg-neutral-900 border border-gray-200 dark:border-neutral-700 text-gray-700 dark:text-neutral-200 text-xs font-bold px-4 py-2.5 transition"
                 >
                   {currentLang === 'en' ? 'Partner with Us' : 'আমাদের সাথে অংশীদার হন'}
                 </button>
@@ -772,7 +772,7 @@ export default function PortfolioSection({ currentLang, setTab, isFullPage = fal
         )}
 
         {/* 4. INTERACTIVE CONTROL ROW (Filters + Search) */}
-        <div id="portfolio-controls" className="flex flex-col md:flex-row md:items-center justify-between gap-6 border-b border-gray-100 pb-8 mb-12">
+        <div id="portfolio-controls" className="flex flex-col md:flex-row md:items-center justify-between gap-6 border-b border-gray-100 dark:border-neutral-800 pb-8 mb-12">
           
           {/* Categories Tab list */}
           <div className="flex flex-wrap gap-1.5 overflow-x-auto pb-2 md:pb-0 scrollbar-none">
@@ -784,7 +784,7 @@ export default function PortfolioSection({ currentLang, setTab, isFullPage = fal
                 className={`px-4 py-2 text-xs font-bold rounded-lg transition border duration-150 ${
                   activeFilter === cat
                     ? 'bg-blue-600 text-white border-blue-600 shadow-sm shadow-blue-600/10'
-                    : 'bg-white border-gray-200 hover:bg-gray-50 text-gray-600'
+                    : 'bg-white dark:bg-[#141414] border-gray-200 dark:border-neutral-700 hover:bg-gray-50 dark:bg-neutral-900 text-gray-600 dark:text-neutral-300 dark:text-neutral-600'
                 }`}
               >
                 {getCategoryLabel(cat)}
@@ -794,14 +794,14 @@ export default function PortfolioSection({ currentLang, setTab, isFullPage = fal
 
           {/* Search bar */}
           <div className="relative w-full max-w-xs shrink-0">
-            <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+            <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400 dark:text-neutral-500" />
             <input
               id="portfolio-search-input"
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder={currentLang === 'en' ? 'Search work, tech, client...' : 'কাজ, প্রযুক্তি, ক্লায়েন্ট খুঁজুন...'}
-              className="w-full rounded-xl border border-gray-200 bg-white px-9 py-2.5 text-xs text-gray-800 placeholder-gray-400 focus:outline-none focus:border-blue-500 transition"
+              className="w-full rounded-xl border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-9 py-2.5 text-xs text-gray-800 dark:text-neutral-100 placeholder-gray-400 focus:outline-none focus:border-blue-500 transition"
             />
           </div>
         </div>
@@ -825,10 +825,10 @@ export default function PortfolioSection({ currentLang, setTab, isFullPage = fal
                   window.scrollTo({ top: 0, behavior: 'smooth' });
                 }}
                 variants={itemVariants}
-                className="group cursor-pointer overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm hover:shadow-md hover:border-blue-500 transition duration-300 flex flex-col h-full"
+                className="group cursor-pointer overflow-hidden rounded-2xl border border-gray-100 dark:border-neutral-800 bg-white dark:bg-[#141414] shadow-sm hover:shadow-md hover:border-blue-500 transition duration-300 flex flex-col h-full"
               >
                 {/* Image panel */}
-                <div className="relative aspect-video overflow-hidden bg-gray-50 shrink-0">
+                <div className="relative aspect-video overflow-hidden bg-gray-50 dark:bg-neutral-900 shrink-0">
                   <img
                     src={item.image}
                     alt={currentLang === 'en' ? item.titleEn : item.titleBn}
@@ -853,11 +853,11 @@ export default function PortfolioSection({ currentLang, setTab, isFullPage = fal
                 {/* Card Content */}
                 <div className="p-5 flex flex-col flex-grow justify-between space-y-4">
                   <div className="space-y-2">
-                    <span className="text-[10px] font-mono text-gray-400 uppercase tracking-widest block">{item.client}</span>
-                    <h3 className="text-sm font-black text-gray-900 group-hover:text-blue-600 transition-colors leading-snug line-clamp-2">
+                    <span className="text-[10px] font-mono text-gray-400 dark:text-neutral-500 uppercase tracking-widest block">{item.client}</span>
+                    <h3 className="text-sm font-black text-gray-900 dark:text-white group-hover:text-blue-600 dark:text-orange-400 transition-colors leading-snug line-clamp-2">
                       {currentLang === 'en' ? item.titleEn : item.titleBn}
                     </h3>
-                    <p className="text-[11px] text-gray-500 line-clamp-2 leading-relaxed">
+                    <p className="text-[11px] text-gray-500 dark:text-neutral-400 dark:text-neutral-500 line-clamp-2 leading-relaxed">
                       {currentLang === 'en' ? item.descriptionEn : item.descriptionBn}
                     </p>
                   </div>
@@ -865,17 +865,17 @@ export default function PortfolioSection({ currentLang, setTab, isFullPage = fal
                   <div className="pt-3 border-t border-gray-50 flex items-center justify-between gap-2">
                     <div className="flex flex-wrap gap-1 max-w-[70%]">
                       {item.technologies.slice(0, 2).map((tech, idx) => (
-                        <span key={idx} className="rounded bg-gray-50 border border-gray-100 px-2 py-0.5 text-[9px] font-semibold text-gray-500 font-mono">
+                        <span key={idx} className="rounded bg-gray-50 dark:bg-neutral-900 border border-gray-100 dark:border-neutral-800 px-2 py-0.5 text-[9px] font-semibold text-gray-500 dark:text-neutral-400 dark:text-neutral-500 font-mono">
                           {tech}
                         </span>
                       ))}
                       {item.technologies.length > 2 && (
-                        <span className="rounded bg-gray-50 border border-gray-100 px-1.5 py-0.5 text-[9px] font-semibold text-gray-400 font-mono">
+                        <span className="rounded bg-gray-50 dark:bg-neutral-900 border border-gray-100 dark:border-neutral-800 px-1.5 py-0.5 text-[9px] font-semibold text-gray-400 dark:text-neutral-500 font-mono">
                           +{item.technologies.length - 2}
                         </span>
                       )}
                     </div>
-                    <span className="text-[10px] font-extrabold text-blue-600 group-hover:translate-x-0.5 transition-transform flex items-center space-x-0.5 shrink-0">
+                    <span className="text-[10px] font-extrabold text-blue-600 dark:text-orange-400 group-hover:translate-x-0.5 transition-transform flex items-center space-x-0.5 shrink-0">
                       <span>{currentLang === 'en' ? 'Case Study' : 'কেস স্টাডি'}</span>
                       <ChevronRight className="h-3 w-3" />
                     </span>
@@ -885,8 +885,8 @@ export default function PortfolioSection({ currentLang, setTab, isFullPage = fal
             ))}
           </motion.div>
         ) : (
-          <div id="portfolio-empty-state" className="text-center py-20 border border-dashed border-gray-200 rounded-2xl max-w-md mx-auto">
-            <span className="block text-sm text-gray-500 font-medium">
+          <div id="portfolio-empty-state" className="text-center py-20 border border-dashed border-gray-200 dark:border-neutral-700 rounded-2xl max-w-md mx-auto">
+            <span className="block text-sm text-gray-500 dark:text-neutral-400 dark:text-neutral-500 font-medium">
               {currentLang === 'en' ? 'No work found matching search criteria.' : 'খোঁজা মানদণ্ডের সাথে মিলে কোনো কাজ পাওয়া যায়নি।'}
             </span>
           </div>
@@ -896,13 +896,13 @@ export default function PortfolioSection({ currentLang, setTab, isFullPage = fal
         <section className="relative overflow-hidden rounded-3xl bg-gray-900 text-white p-8 md:p-12 text-center mt-20 shadow-xl border border-gray-800">
           <div className="absolute inset-0 bg-radial-gradient from-blue-900/20 to-transparent mix-blend-screen pointer-events-none"></div>
           <div className="relative z-10 max-w-2xl mx-auto space-y-4">
-            <span className="text-[9px] font-bold text-blue-400 uppercase tracking-widest font-mono block">
+            <span className="text-[9px] font-bold text-blue-400 dark:text-orange-300 uppercase tracking-widest font-mono block">
               {currentLang === 'en' ? 'COLLABORATE WITH NEXT SOLUTION' : 'নেক্সট সলিউশনের সাথে কাজ করুন'}
             </span>
             <h3 className="text-xl sm:text-3xl font-black tracking-tight leading-tight">
               {currentLang === 'en' ? 'Have a revolutionary product idea?' : 'আপনার কী কোনো অসাধারণ প্রজেক্ট আইডিয়া আছে?'}
             </h3>
-            <p className="text-xs sm:text-sm text-gray-400 leading-relaxed">
+            <p className="text-xs sm:text-sm text-gray-400 dark:text-neutral-500 leading-relaxed">
               {currentLang === 'en'
                 ? 'We align high-fidelity product strategy with fast full-stack builds, helping you scale seamlessly from day zero.'
                 : 'আমরা নিখুঁত প্রোডাক্ট কৌশলের সাথে দ্রুত ফুল-স্ট্যাক বিল্ড একত্রিত করি, যা আপনাকে প্রথম দিন থেকেই মসৃণভাবে স্কেল করতে সাহায্য করে।'}

@@ -1,22 +1,144 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
   --font-sans: var(--font-plus-jakarta), "Inter", ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-jetbrains-mono), ui-monospace, SFMono-Regular, monospace;
   --font-display: var(--font-space-grotesk), sans-serif;
-  --color-primary: #2563EB;
-  --color-secondary: #7C3AED;
-  --color-accent: #06B6D4;
-  --color-agency-bg: #090A0C;
-  --color-agency-accent: #ccff00;
+
+  /* NEXT SOLUTION brand system — WHITE + DEEP BLACK + VIBRANT ORANGE */
+  --color-primary: #FF4D00;
+  --color-secondary: #0A0A0A;
+  --color-accent: #FF4D00;
+  --color-agency-bg: #0A0A0A;
+  --color-agency-accent: #FF4D00;
+
+  --color-white: #FFFFFF;
+  --color-black: #0A0A0A;
+
+  /* Vibrant Orange — brand accent scale */
+  --color-orange-50: #FFF5EF;
+  --color-orange-100: #FFE6D8;
+  --color-orange-200: #FFCBB0;
+  --color-orange-300: #FFA372;
+  --color-orange-400: #FF7030;
+  --color-orange-500: #FF4D00;
+  --color-orange-600: #E64800;
+  --color-orange-700: #C23B00;
+  --color-orange-800: #9E3000;
+  --color-orange-900: #7A2600;
+  --color-orange-950: #3D1300;
+
+  /* Former blue/indigo/violet/purple/fuchsia/pink/rose/cyan/sky hues are
+     consolidated into the brand orange scale so no cold tints remain. */
+  --color-blue-50: #FFF5EF;
+  --color-blue-100: #FFE6D8;
+  --color-blue-200: #FFCBB0;
+  --color-blue-300: #FFA372;
+  --color-blue-400: #FF7030;
+  --color-blue-500: #FF4D00;
+  --color-blue-600: #E64800;
+  --color-blue-700: #C23B00;
+  --color-blue-800: #9E3000;
+  --color-blue-900: #7A2600;
+  --color-blue-950: #3D1300;
+
+  --color-indigo-50: #FFF5EF;
+  --color-indigo-100: #FFE6D8;
+  --color-indigo-200: #FFCBB0;
+  --color-indigo-300: #FFA372;
+  --color-indigo-400: #FF7030;
+  --color-indigo-500: #FF4D00;
+  --color-indigo-600: #E64800;
+  --color-indigo-700: #C23B00;
+
+  --color-violet-50: #FFF5EF;
+  --color-violet-100: #FFE6D8;
+  --color-violet-400: #FF7030;
+  --color-violet-500: #FF4D00;
+  --color-violet-600: #E64800;
+
+  --color-purple-50: #FFF5EF;
+  --color-purple-100: #FFE6D8;
+  --color-purple-200: #FFCBB0;
+  --color-purple-300: #FFA372;
+  --color-purple-400: #FF7030;
+  --color-purple-500: #FF4D00;
+  --color-purple-600: #E64800;
+  --color-purple-700: #C23B00;
+
+  --color-fuchsia-100: #FFE6D8;
+  --color-fuchsia-500: #FF4D00;
+  --color-fuchsia-600: #E64800;
+
+  --color-pink-50: #FFF5EF;
+  --color-pink-100: #FFE6D8;
+  --color-pink-300: #FFA372;
+  --color-pink-400: #FF7030;
+  --color-pink-500: #FF4D00;
+  --color-pink-600: #E64800;
+
+  --color-rose-50: #FFF5EF;
+  --color-rose-100: #FFE6D8;
+  --color-rose-200: #FFCBB0;
+  --color-rose-500: #FF4D00;
+  --color-rose-600: #E64800;
+  --color-rose-700: #C23B00;
+  --color-rose-800: #9E3000;
+
+  --color-cyan-50: #FFF5EF;
+  --color-cyan-100: #FFE6D8;
+  --color-cyan-200: #FFCBB0;
+  --color-cyan-300: #FFA372;
+  --color-cyan-400: #FF7030;
+  --color-cyan-500: #FF4D00;
+  --color-cyan-600: #E64800;
+  --color-cyan-700: #C23B00;
+  --color-cyan-800: #9E3000;
+  --color-cyan-900: #7A2600;
+  --color-cyan-950: #3D1300;
+
+  --color-sky-50: #FFF5EF;
+  --color-sky-100: #FFE6D8;
+  --color-sky-400: #FF7030;
+  --color-sky-500: #FF4D00;
+  --color-sky-600: #E64800;
+  --color-sky-700: #C23B00;
+
+  /* Teal merges into the success green scale (emerald). */
+  --color-teal-50: #ECFDF5;
+  --color-teal-100: #D1FAE5;
+  --color-teal-400: #34D399;
+  --color-teal-500: #10B981;
+  --color-teal-600: #059669;
 }
 
 body {
   font-family: var(--font-sans);
   background-color: #FFFFFF;
-  color: #111827;
+  color: #0A0A0A;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+/* =========================================================
+   PREMIUM DARK MODE — brand black base
+   ========================================================= */
+.dark body {
+  background-color: #0A0A0A;
+  color: #FAFAFA;
+}
+
+.dark .hero-grid {
+  background-image:
+    linear-gradient(to right, rgba(255, 77, 0, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 77, 0, 0.05) 1px, transparent 1px);
+}
+
+::selection {
+  background-color: #FF4D00;
+  color: #FFFFFF;
 }
 
 /* Custom smooth transitions and animations */

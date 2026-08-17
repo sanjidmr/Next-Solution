@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState } from 'react';
 
 type Lang = 'en' | 'bn';
 
@@ -16,27 +16,21 @@ const LangContext = createContext<LangContextValue>({
   toggleLang: () => {},
 });
 
+/**
+ * Next Solution is an English-only brand site.
+ * currentLang is pinned to 'en' so no Bangla content is ever rendered.
+ */
 export function LangProvider({ children }: { children: React.ReactNode }) {
-  const [currentLang, setCurrentLang] = useState<Lang>('en');
-
-  useEffect(() => {
-    const saved = localStorage.getItem('lang') as Lang | null;
-    if (saved === 'en' || saved === 'bn') {
-      setCurrentLang(saved);
-    }
-  }, []);
-
-  const handleSetLang = (lang: Lang) => {
-    setCurrentLang(lang);
-    localStorage.setItem('lang', lang);
-  };
-
-  const toggleLang = () => {
-    handleSetLang(currentLang === 'en' ? 'bn' : 'en');
-  };
+  const [currentLang] = useState<Lang>('en');
 
   return (
-    <LangContext.Provider value={{ currentLang, setCurrentLang: handleSetLang, toggleLang }}>
+    <LangContext.Provider
+      value={{
+        currentLang,
+        setCurrentLang: () => {},
+        toggleLang: () => {},
+      }}
+    >
       {children}
     </LangContext.Provider>
   );

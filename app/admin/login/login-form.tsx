@@ -44,11 +44,11 @@ export default function LoginForm() {
 
   if (resetSent) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4">
+      <div className="flex min-h-screen items-center justify-center bg-gray-50 dark:bg-neutral-900 px-4">
         <div className="w-full max-w-sm text-center space-y-4">
           <img src="/logo.svg" alt="Next Solution" className="mx-auto h-12 w-auto" />
-          <h1 className="text-xl font-bold text-gray-900">Check your email</h1>
-          <p className="text-sm text-gray-500">
+          <h1 className="text-xl font-bold text-gray-900 dark:text-white">Check your email</h1>
+          <p className="text-sm text-gray-500 dark:text-neutral-400 dark:text-neutral-500">
             We sent a password reset link to your email address.
           </p>
         </div>
@@ -57,14 +57,14 @@ export default function LoginForm() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4">
+    <div className="flex min-h-screen items-center justify-center bg-gray-50 dark:bg-neutral-900 px-4">
       <div className="w-full max-w-sm space-y-6">
         <div className="text-center space-y-2">
           <img src="/logo.svg" alt="Next Solution" className="mx-auto h-12 w-auto" />
-          <h1 className="text-xl font-bold text-gray-900">
+          <h1 className="text-xl font-bold text-gray-900 dark:text-white">
             {mode === "login" ? "Admin Login" : "Reset Password"}
           </h1>
-          <p className="text-sm text-gray-500">
+          <p className="text-sm text-gray-500 dark:text-neutral-400 dark:text-neutral-500">
             {mode === "login"
               ? "Sign in to access the admin panel"
               : "Enter your email to receive a reset link"}
@@ -73,7 +73,7 @@ export default function LoginForm() {
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+            <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-neutral-200 mb-1">
               Email
             </label>
             <input
@@ -82,14 +82,14 @@ export default function LoginForm() {
               type="email"
               required
               autoComplete="email"
-              className="block w-full rounded-lg border border-gray-200 px-3 py-2.5 text-sm text-gray-900 placeholder-gray-400 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+              className="block w-full rounded-lg border border-gray-200 dark:border-neutral-700 px-3 py-2.5 text-sm text-gray-900 dark:text-white placeholder-gray-400 focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500 focus:outline-none focus:ring-1 focus:ring-blue-500 dark:focus:ring-orange-500"
               placeholder="admin@nextsolution.co"
             />
           </div>
 
           {mode === "login" && (
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
+              <label htmlFor="password" className="block text-sm font-medium text-gray-700 dark:text-neutral-200 mb-1">
                 Password
               </label>
               <div className="relative">
@@ -99,13 +99,13 @@ export default function LoginForm() {
                   type={showPassword ? "text" : "password"}
                   required
                   autoComplete="current-password"
-                  className="block w-full rounded-lg border border-gray-200 px-3 py-2.5 pr-10 text-sm text-gray-900 placeholder-gray-400 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                  className="block w-full rounded-lg border border-gray-200 dark:border-neutral-700 px-3 py-2.5 pr-10 text-sm text-gray-900 dark:text-white placeholder-gray-400 focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500 focus:outline-none focus:ring-1 focus:ring-blue-500 dark:focus:ring-orange-500"
                   placeholder="Enter your password"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-neutral-500 hover:text-gray-600 dark:hover:text-neutral-300 dark:text-neutral-300 dark:text-neutral-600"
                 >
                   {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                 </button>
@@ -114,7 +114,7 @@ export default function LoginForm() {
           )}
 
           {error && (
-            <div className="rounded-lg bg-red-50 border border-red-100 px-4 py-3 text-sm text-red-600">
+            <div className="rounded-lg bg-red-50 dark:bg-red-500/10 border border-red-100 dark:border-red-500/20 px-4 py-3 text-sm text-red-600 dark:text-red-400">
               {error}
             </div>
           )}
@@ -122,7 +122,7 @@ export default function LoginForm() {
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition"
+            className="w-full rounded-lg bg-blue-600 dark:bg-orange-500 px-4 py-2.5 text-sm font-semibold text-white hover:bg-blue-700 dark:hover:bg-orange-400 disabled:opacity-50 disabled:cursor-not-allowed transition"
           >
             {isLoading
               ? "Please wait..."
@@ -135,10 +135,10 @@ export default function LoginForm() {
             <>
               <div className="relative">
                 <div className="absolute inset-0 flex items-center">
-                  <div className="w-full border-t border-gray-200" />
+                  <div className="w-full border-t border-gray-200 dark:border-neutral-700" />
                 </div>
                 <div className="relative flex justify-center text-xs">
-                  <span className="bg-gray-50 px-2 text-gray-500">or continue with</span>
+                  <span className="bg-gray-50 dark:bg-neutral-900 px-2 text-gray-500 dark:text-neutral-400 dark:text-neutral-500">or continue with</span>
                 </div>
               </div>
 
@@ -146,7 +146,7 @@ export default function LoginForm() {
                 type="button"
                 onClick={handleGoogleLogin}
                 disabled={isLoading}
-                className="w-full flex items-center justify-center gap-2 rounded-lg border border-gray-200 bg-white px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50 transition"
+                className="w-full flex items-center justify-center gap-2 rounded-lg border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-4 py-2.5 text-sm font-medium text-gray-700 dark:text-neutral-200 hover:bg-gray-50 dark:hover:bg-neutral-800/70 dark:bg-neutral-900 disabled:opacity-50 transition"
               >
                 <svg className="h-4 w-4" viewBox="0 0 24 24">
                   <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4" />
@@ -160,12 +160,12 @@ export default function LoginForm() {
           )}
         </form>
 
-        <p className="text-center text-sm text-gray-500">
+        <p className="text-center text-sm text-gray-500 dark:text-neutral-400 dark:text-neutral-500">
           {mode === "login" ? (
             <button
               type="button"
               onClick={() => { setMode("reset"); setError(null); }}
-              className="font-medium text-blue-600 hover:text-blue-500"
+              className="font-medium text-blue-600 dark:text-orange-400 hover:text-blue-500 dark:text-orange-400"
             >
               Forgot your password?
             </button>
@@ -173,7 +173,7 @@ export default function LoginForm() {
             <button
               type="button"
               onClick={() => { setMode("login"); setError(null); }}
-              className="font-medium text-blue-600 hover:text-blue-500"
+              className="font-medium text-blue-600 dark:text-orange-400 hover:text-blue-500 dark:text-orange-400"
             >
               Back to login
             </button>

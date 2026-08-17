@@ -85,13 +85,13 @@ export const metadata: Metadata = {
     canonical: siteConfig.url,
   },
   icons: {
-    icon: "/logo.jpg",
-    apple: "/logo.jpg",
+    icon: "/logow.png",
+    apple: "/logo.",
   },
 };
 
 export const viewport: Viewport = {
-  themeColor: "#2563EB",
+  themeColor: "#0A0A0A",
   width: "device-width",
   initialScale: 1,
   maximumScale: 5,
@@ -111,9 +111,15 @@ export default function RootLayout({
   return (
     <html
       lang="en"
+      suppressHydrationWarning
       className={`${plusJakarta.variable} ${spaceGrotesk.variable} ${jetbrainsMono.variable} ${dmSerifDisplay.variable}`}
     >
       <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var t=localStorage.getItem('theme');var d=t?t==='dark':'dark';document.documentElement.classList.toggle('dark',d);}catch(e){document.documentElement.classList.add('dark');}})();`,
+          }}
+        />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
@@ -121,7 +127,7 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className="min-h-screen bg-white text-gray-900 antialiased">
+      <body className="min-h-screen bg-white text-gray-900 antialiased dark:bg-[#0A0A0A] dark:text-neutral-50">
         <Providers>
           <ShellLayout>
             {children}

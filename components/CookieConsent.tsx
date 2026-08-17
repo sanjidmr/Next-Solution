@@ -120,16 +120,16 @@ export default function CookieConsent({ currentLang, onOpenPrivacyPolicy }: Cook
             transition={{ type: 'spring', damping: 25, stiffness: 150 }}
             className="fixed bottom-6 left-6 right-6 md:left-auto md:max-w-md z-40"
           >
-            <div className="bg-white border border-gray-100 rounded-2xl p-6 shadow-2xl space-y-4">
+            <div className="bg-white dark:bg-[#141414] border border-gray-100 dark:border-neutral-800 rounded-2xl p-6 shadow-2xl space-y-4">
               <div className="flex items-start space-x-3">
-                <div className="p-2 bg-blue-50 text-blue-600 rounded-lg shrink-0 mt-0.5">
+                <div className="p-2 bg-blue-50 dark:bg-orange-500/10 text-blue-600 dark:text-orange-400 rounded-lg shrink-0 mt-0.5">
                   <Shield className="h-5 w-5" />
                 </div>
                 <div className="space-y-1">
-                  <h4 className="text-sm font-bold text-gray-900 font-sans tracking-tight">
+                  <h4 className="text-sm font-bold text-gray-900 dark:text-white font-sans tracking-tight">
                     {t.title}
                   </h4>
-                  <p className="text-xs text-gray-500 leading-relaxed font-sans">
+                  <p className="text-xs text-gray-500 dark:text-neutral-400 dark:text-neutral-500 leading-relaxed font-sans">
                     {t.text}
                   </p>
                 </div>
@@ -146,7 +146,7 @@ export default function CookieConsent({ currentLang, onOpenPrivacyPolicy }: Cook
                 <button
                   id="btn-cookie-reject-all"
                   onClick={handleRejectAllNonEssential}
-                  className="flex-1 min-w-[120px] bg-gray-50 hover:bg-gray-100 text-gray-700 font-semibold py-2 px-3 rounded-lg transition border border-gray-100 text-center"
+                  className="flex-1 min-w-[120px] bg-gray-50 dark:bg-neutral-900 hover:bg-gray-100 dark:bg-neutral-800 text-gray-700 dark:text-neutral-200 font-semibold py-2 px-3 rounded-lg transition border border-gray-100 dark:border-neutral-800 text-center"
                 >
                   {t.rejectNonEssential}
                 </button>
@@ -156,7 +156,7 @@ export default function CookieConsent({ currentLang, onOpenPrivacyPolicy }: Cook
                 <button
                   id="btn-cookie-customize"
                   onClick={() => setShowModal(true)}
-                  className="text-blue-600 hover:underline font-bold flex items-center space-x-1"
+                  className="text-blue-600 dark:text-orange-400 hover:underline font-bold flex items-center space-x-1"
                 >
                   <Settings className="h-3.5 w-3.5" />
                   <span>{t.customize}</span>
@@ -164,7 +164,7 @@ export default function CookieConsent({ currentLang, onOpenPrivacyPolicy }: Cook
                 <button
                   id="btn-cookie-learn-more"
                   onClick={onOpenPrivacyPolicy}
-                  className="text-gray-400 hover:text-gray-600 underline"
+                  className="text-gray-400 dark:text-neutral-500 hover:text-gray-600 dark:text-neutral-300 dark:text-neutral-600 underline"
                 >
                   {t.learnMore}
                 </button>
@@ -194,24 +194,24 @@ export default function CookieConsent({ currentLang, onOpenPrivacyPolicy }: Cook
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.95, opacity: 0 }}
               transition={{ type: 'spring', duration: 0.3 }}
-              className="relative bg-white border border-gray-100 rounded-3xl max-w-lg w-full overflow-hidden shadow-2xl flex flex-col max-h-[85vh]"
+              className="relative bg-white dark:bg-[#141414] border border-gray-100 dark:border-neutral-800 rounded-3xl max-w-lg w-full overflow-hidden shadow-2xl flex flex-col max-h-[85vh]"
             >
               {/* Header */}
-              <div className="p-6 border-b border-gray-100 flex items-start justify-between">
+              <div className="p-6 border-b border-gray-100 dark:border-neutral-800 flex items-start justify-between">
                 <div className="space-y-1">
                   <div className="flex items-center space-x-2">
-                    <Shield className="h-5 w-5 text-blue-600" />
-                    <h3 className="text-base font-bold text-gray-900 font-sans tracking-tight">
+                    <Shield className="h-5 w-5 text-blue-600 dark:text-orange-400" />
+                    <h3 className="text-base font-bold text-gray-900 dark:text-white font-sans tracking-tight">
                       {currentLang === 'en' ? t.modalTitleEn : t.modalTitleBn}
                     </h3>
                   </div>
-                  <p className="text-xs text-gray-400 font-sans leading-relaxed">
+                  <p className="text-xs text-gray-400 dark:text-neutral-500 font-sans leading-relaxed">
                     {currentLang === 'en' ? t.modalSubtitleEn : t.modalSubtitleBn}
                   </p>
                 </div>
                 <button
                   onClick={() => setShowModal(false)}
-                  className="p-1.5 hover:bg-gray-50 text-gray-400 hover:text-gray-600 rounded-xl transition"
+                  className="p-1.5 hover:bg-gray-50 dark:bg-neutral-900 text-gray-400 dark:text-neutral-500 hover:text-gray-600 dark:text-neutral-300 dark:text-neutral-600 rounded-xl transition"
                 >
                   <X className="h-4 w-4" />
                 </button>
@@ -226,31 +226,31 @@ export default function CookieConsent({ currentLang, onOpenPrivacyPolicy }: Cook
                       key={cat.id}
                       className={`p-4 rounded-2xl border transition-colors ${
                         cat.isEssential 
-                          ? 'border-gray-100 bg-gray-50/50' 
+                          ? 'border-gray-100 dark:border-neutral-800 bg-gray-50/50' 
                           : isChecked 
-                          ? 'border-blue-100 bg-blue-50/10' 
-                          : 'border-gray-100 bg-white'
+                          ? 'border-blue-100 dark:border-orange-500/20 bg-blue-50/10 dark:bg-orange-500/5' 
+                          : 'border-gray-100 dark:border-neutral-800 bg-white dark:bg-[#141414]'
                       }`}
                     >
                       <div className="flex items-start justify-between gap-4">
                         <div className="space-y-1 flex-grow">
                           <div className="flex items-center space-x-2">
-                            <span className="text-xs font-bold text-gray-900 font-sans">{cat.name}</span>
+                            <span className="text-xs font-bold text-gray-900 dark:text-white font-sans">{cat.name}</span>
                             {cat.isEssential ? (
-                              <span className="text-[9px] font-bold uppercase tracking-wider text-blue-600 bg-blue-50 px-1.5 py-0.5 rounded">
+                              <span className="text-[9px] font-bold uppercase tracking-wider text-blue-600 dark:text-orange-400 bg-blue-50 dark:bg-orange-500/10 px-1.5 py-0.5 rounded">
                                 {t.requiredLabel}
                               </span>
                             ) : (
                               <span className={`text-[9px] font-semibold uppercase tracking-wider px-1.5 py-0.5 rounded ${
                                 isChecked 
                                   ? 'text-green-600 bg-green-50' 
-                                  : 'text-gray-400 bg-gray-50'
+                                  : 'text-gray-400 dark:text-neutral-500 bg-gray-50 dark:bg-neutral-900'
                               }`}>
                                 {isChecked ? t.activeLabel : t.inactiveLabel}
                               </span>
                             )}
                           </div>
-                          <p className="text-[11px] text-gray-500 leading-relaxed font-sans">
+                          <p className="text-[11px] text-gray-500 dark:text-neutral-400 dark:text-neutral-500 leading-relaxed font-sans">
                             {currentLang === 'en' ? cat.descriptionEn : cat.descriptionBn}
                           </p>
                         </div>
@@ -266,11 +266,11 @@ export default function CookieConsent({ currentLang, onOpenPrivacyPolicy }: Cook
                                 ? 'bg-blue-300 opacity-60 cursor-not-allowed' 
                                 : isChecked 
                                 ? 'bg-blue-600' 
-                                : 'bg-gray-200'
+                                : 'bg-gray-200 dark:bg-neutral-700'
                             }`}
                           >
                             <span
-                              className={`pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow-md ring-0 transition duration-200 ease-in-out ${
+                              className={`pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white dark:bg-[#141414] shadow-md ring-0 transition duration-200 ease-in-out ${
                                 isChecked || cat.isEssential ? 'translate-x-5' : 'translate-x-0'
                               }`}
                             />
@@ -283,7 +283,7 @@ export default function CookieConsent({ currentLang, onOpenPrivacyPolicy }: Cook
               </div>
 
               {/* Actions Footer */}
-              <div className="p-6 border-t border-gray-100 bg-gray-50/50 flex flex-col sm:flex-row gap-3">
+              <div className="p-6 border-t border-gray-100 dark:border-neutral-800 bg-gray-50/50 flex flex-col sm:flex-row gap-3">
                 <button
                   id="btn-modal-save"
                   onClick={handleSavePreferences}
@@ -298,7 +298,7 @@ export default function CookieConsent({ currentLang, onOpenPrivacyPolicy }: Cook
                     handleRejectAllNonEssential();
                     setShowModal(false);
                   }}
-                  className="flex-1 bg-white hover:bg-gray-50 text-gray-600 font-semibold py-2.5 px-4 rounded-xl transition text-xs border border-gray-200 text-center"
+                  className="flex-1 bg-white dark:bg-[#141414] hover:bg-gray-50 dark:bg-neutral-900 text-gray-600 dark:text-neutral-300 dark:text-neutral-600 font-semibold py-2.5 px-4 rounded-xl transition text-xs border border-gray-200 dark:border-neutral-700 text-center"
                 >
                   {t.essentialOnly}
                 </button>

@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { 
   ArrowRight, CheckCircle, ChevronRight, HelpCircle, Star, Quote, 
@@ -416,6 +416,14 @@ export default function HomePageSections({ currentLang, setTab }: HomePageSectio
   const [hoveredEcosystem, setHoveredEcosystem] = useState<any>(null);
   const [activeTimelineStep, setActiveTimelineStep] = useState<number>(0);
 
+  // Horizontal scroll ref for featured portfolio row
+  const portfolioRowRef = useRef<HTMLDivElement>(null);
+  const scrollPortfolioRow = (direction: 'left' | 'right') => {
+    const el = portfolioRowRef.current;
+    if (!el) return;
+    el.scrollBy({ left: direction === 'left' ? -280 : 280, behavior: 'smooth' });
+  };
+
   // Auto scroll testimonials
   useEffect(() => {
     if (testimonials.length <= 1) return;
@@ -463,10 +471,12 @@ export default function HomePageSections({ currentLang, setTab }: HomePageSectio
   const portfolioCategories = [
     'All', 
     'Web Development', 
+    'UI/UX Design', 
     'Mobile App', 
     'Graphic Design', 
     'Video Editing', 
     'Digital Marketing', 
+    'SEO', 
     'AI Automation & Agent'
   ];
 
@@ -474,11 +484,13 @@ export default function HomePageSections({ currentLang, setTab }: HomePageSectio
     if (currentLang === 'bn') {
       switch (cat) {
         case 'All': return 'সব কাজ';
-        case 'Web Development': return 'ওয়েব ডেভেলপমেন্ট';
+        case 'Web Development': return 'ওয়েব ডেভেলপমেন্ট';
+        case 'UI/UX Design': return 'ইউআই/ইউএক্স ডিজাইন';
         case 'Mobile App': return 'মোবাইল অ্যাপ';
         case 'Graphic Design': return 'গ্রাফিক ডিজাইন';
         case 'Video Editing': return 'ভিডিও এডিটিং';
         case 'Digital Marketing': return 'ডিজিটাল মার্কেটিং';
+        case 'SEO': return 'এসইও';
         case 'AI Automation & Agent': return 'এআই অটোমেশন ও এজেন্ট';
         default: return cat;
       }
@@ -637,7 +649,7 @@ export default function HomePageSections({ currentLang, setTab }: HomePageSectio
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.1 }}
-              className="font-sans text-3xl sm:text-4xl md:text-5xl font-black text-neutral-900 dark:text-white leading-tight tracking-tight"
+              className="font-sans text-3xl sm:text-4xl md:text-5xl font-black text-neutral-900 dark:text-black leading-tight tracking-tight"
             >
               {currentLang === 'en' ? 'Everything Your Business Needs, ' : 'আপনার ব্যবসার যাবতীয় চাহিদা, '}
               <span className="bg-gradient-to-r from-blue-600 dark:from-orange-500 via-indigo-600 to-blue-700 bg-clip-text text-transparent">
@@ -1007,41 +1019,41 @@ export default function HomePageSections({ currentLang, setTab }: HomePageSectio
                     
                     {/* Content card (Responsive wrapper) */}
                     <div className="w-full lg:w-1/2 pl-14 md:pl-16 lg:pl-0">
-                      <div className="group relative rounded-3xl border border-gray-100 dark:border-neutral-800 bg-white dark:bg-[#141414] p-4 md:p-5 space-y-3 shadow-sm hover:shadow-xl hover:border-blue-200/60 transition-all duration-300">
+                      <div className="group relative rounded-2xl lg:rounded-3xl border border-gray-100 dark:border-neutral-800 bg-white dark:bg-[#141414] p-3 sm:p-4 lg:p-5 space-y-2.5 lg:space-y-3 shadow-sm hover:shadow-xl hover:border-blue-200/60 transition-all duration-300">
                         {/* Decorative subtle border glow */}
-                        <div className="absolute inset-0 rounded-3xl bg-gradient-to-tr from-blue-500/5 to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
+                        <div className="absolute inset-0 rounded-2xl lg:rounded-3xl bg-gradient-to-tr from-blue-500/5 to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
 
                         {/* Top Metadata Row */}
                         <div className="flex items-center justify-between">
-                          <span className="text-xs font-black px-2.5 py-1 rounded-lg bg-blue-50 dark:bg-orange-500/10 text-blue-600 dark:text-orange-400 font-mono">
+                          <span className="text-[10px] sm:text-xs font-black px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-md lg:rounded-lg bg-blue-50 dark:bg-orange-500/10 text-blue-600 dark:text-orange-400 font-mono">
                             STEP {step.stepNumber}
                           </span>
-                          <span className="text-2xl" role="img" aria-label="step-icon">
+                          <span className="text-lg sm:text-2xl" role="img" aria-label="step-icon">
                             {step.icon}
                           </span>
                         </div>
 
                         {/* Title & Description */}
-                        <div className="space-y-3">
-                          <h3 className="font-sans text-base md:text-lg font-bold text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-orange-400 transition-colors duration-200">
+                        <div className="space-y-1.5 lg:space-y-3">
+                          <h3 className="font-sans text-sm sm:text-base lg:text-lg font-bold text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-orange-400 transition-colors duration-200 leading-snug">
                             {currentLang === 'en' ? step.titleEn : step.titleBn}
                           </h3>
-                          <p className="text-[11px] sm:text-xs text-gray-500 dark:text-neutral-400 leading-relaxed">
+                          <p className="text-[10px] sm:text-[11px] lg:text-xs text-gray-500 dark:text-neutral-400 leading-snug line-clamp-2 lg:line-clamp-none">
                             {currentLang === 'en' ? step.descriptionEn : step.descriptionBn}
                           </p>
                         </div>
 
                         {/* Detail Reveal Panel */}
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-3 border-t border-gray-50 text-[11px]">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 lg:gap-3 pt-2 lg:pt-3 border-t border-gray-50 text-[10px] lg:text-[11px]">
                           {/* Deliverables Column */}
-                          <div className="space-y-2">
-                            <span className="block font-bold text-gray-400 dark:text-neutral-500 uppercase tracking-widest text-[9px]">
+                          <div className="space-y-1.5">
+                            <span className="block font-bold text-gray-400 dark:text-neutral-500 uppercase tracking-widest text-[8px] lg:text-[9px]">
                               {currentLang === 'en' ? 'Deliverables' : 'ডেলিভারিবলস'}
                             </span>
-                            <ul className="space-y-1.5">
+                            <ul className="space-y-1">
                               {(currentLang === 'en' ? step.deliverablesEn : step.deliverablesBn).map((del, dIdx) => (
                                 <li key={dIdx} className="flex items-center space-x-1 text-gray-600 dark:text-neutral-300 dark:text-neutral-600">
-                                  <CheckCircle className="h-3.5 w-3.5 text-emerald-500 dark:text-emerald-400 shrink-0" />
+                                  <CheckCircle className="h-3 w-3 sm:h-3.5 sm:w-3.5 text-emerald-500 dark:text-emerald-400 shrink-0" />
                                   <span>{del}</span>
                                 </li>
                               ))}
@@ -1049,25 +1061,25 @@ export default function HomePageSections({ currentLang, setTab }: HomePageSectio
                           </div>
 
                           {/* Tools & Services Column */}
-                          <div className="space-y-4">
+                          <div className="space-y-2.5 lg:space-y-4">
                             {/* Duration */}
                             <div className="space-y-1">
-                              <span className="block font-bold text-gray-400 dark:text-neutral-500 uppercase tracking-widest text-[9px]">
+                              <span className="block font-bold text-gray-400 dark:text-neutral-500 uppercase tracking-widest text-[8px] lg:text-[9px]">
                                 {currentLang === 'en' ? 'Estimated Duration' : 'আনুমানিক সময়'}
                               </span>
-                              <span className="font-semibold text-gray-700 dark:text-neutral-200 bg-gray-50 dark:bg-neutral-900 px-2 py-0.5 rounded-md inline-block">
+                              <span className="font-semibold text-gray-700 dark:text-neutral-200 bg-gray-50 dark:bg-neutral-900 px-1.5 sm:px-2 py-0.5 rounded-md inline-block text-[10px] lg:text-[11px]">
                                 {currentLang === 'en' ? step.estimatedDurationEn : step.estimatedDurationBn}
                               </span>
                             </div>
 
                             {/* Tools Used */}
-                            <div className="space-y-1.5">
-                              <span className="block font-bold text-gray-400 dark:text-neutral-500 uppercase tracking-widest text-[9px]">
+                            <div className="space-y-1 lg:space-y-1.5">
+                              <span className="block font-bold text-gray-400 dark:text-neutral-500 uppercase tracking-widest text-[8px] lg:text-[9px]">
                                 {currentLang === 'en' ? 'Primary Stack' : 'প্রধান স্ট্যাক'}
                               </span>
                               <div className="flex flex-wrap gap-1">
                                 {step.toolsUsed.map((tool, tIdx) => (
-                                  <span key={tIdx} className="px-2 py-0.5 rounded bg-gray-50 dark:bg-neutral-900 text-gray-500 dark:text-neutral-400 dark:text-neutral-500 font-mono text-[10px]">
+                                  <span key={tIdx} className="px-1.5 sm:px-2 py-0.5 rounded bg-gray-50 dark:bg-neutral-900 text-gray-500 dark:text-neutral-400 dark:text-neutral-500 font-mono text-[9px] lg:text-[10px]">
                                     {tool}
                                   </span>
                                 ))}
@@ -1081,11 +1093,11 @@ export default function HomePageSections({ currentLang, setTab }: HomePageSectio
 
                     {/* Step visual - blends with background */}
                     <div className="w-full lg:w-1/2 pl-14 md:pl-16 lg:pl-0">
-                      <div className="group/visual relative h-full min-h-[150px] sm:min-h-[190px] lg:min-h-full overflow-hidden flex items-center justify-center">
+                      <div className="group/visual relative h-full min-h-[110px] sm:min-h-[150px] lg:min-h-[240px] overflow-hidden flex items-center justify-center">
                         <img
                           src={`/step${parseInt(step.stepNumber, 10)}.png`}
                           alt={currentLang === 'en' ? step.titleEn : step.titleBn}
-                          className="max-h-[280px] lg:max-h-[380px] w-auto max-w-full h-auto object-contain"
+                          className="max-h-[180px] sm:max-h-[240px] lg:max-h-[300px] w-auto max-w-full h-auto object-contain"
                           loading="lazy"
                         />
                       </div>
@@ -1137,127 +1149,136 @@ export default function HomePageSections({ currentLang, setTab }: HomePageSectio
         </div>
       </section>
 
-      {/* ========================================================
+{/* ========================================================
           SECTION 7: FEATURED PORTFOLIO (WITH CATEGORY FILTERING)
          ======================================================== */}
       <section id="featured-portfolio" className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-10">
-        <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6">
-          <div className="space-y-4 max-w-xl text-left">
-            <span className="text-xs font-bold uppercase tracking-wider text-blue-600 dark:text-orange-400">
-              {currentLang === 'en' ? 'CASE STUDIES' : 'আমাদের কাজের নমুনা'}
-            </span>
-            <h2 className="font-sans text-3xl font-black text-gray-900 dark:text-white leading-tight">
-              {currentLang === 'en' ? 'Our Featured Client Deployments' : 'আমাদের তৈরি প্রিমিয়াম কেস স্টাডি সমূহ'}
-            </h2>
-          </div>
-
-          {/* Filtering tabs */}
-          <div className="flex flex-wrap gap-1.5 overflow-x-auto pb-1 select-none">
-            {portfolioCategories.map((cat) => (
-              <button
-                key={cat}
-                onClick={() => setActivePortfolioFilter(cat)}
-                className={`rounded-full px-4 py-1.5 text-xs font-bold transition duration-150 whitespace-nowrap cursor-pointer ${
-                  activePortfolioFilter === cat
-                    ? 'bg-blue-600 text-white shadow-sm'
-                    : 'bg-gray-50 dark:bg-neutral-900 text-gray-500 dark:text-neutral-400 dark:text-neutral-500 hover:bg-gray-100 dark:bg-neutral-800 border border-gray-100 dark:border-neutral-800'
-                }`}
-              >
-                {getPortfolioCategoryLabel(cat)}
-              </button>
-            ))}
-          </div>
+        {/* Header Block */}
+        <div className="text-center space-y-4 max-w-3xl mx-auto">
+          <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 dark:bg-orange-500/10 border border-blue-100/60 dark:border-orange-500/20 text-[11px] font-bold uppercase tracking-wider text-blue-600 dark:text-orange-400">
+            <span className="h-1.5 w-1.5 rounded-full bg-blue-600 dark:bg-orange-400"></span>
+            {currentLang === 'en' ? 'Case Studies' : 'আমাদের কাজের নমুনা'}
+          </span>
+          <h2 className="font-sans text-3xl sm:text-4xl lg:text-5xl font-black text-gray-900 dark:text-white leading-tight tracking-tight">
+            {currentLang === 'en' ? 'Our Featured Client Deployments' : 'আমাদের তৈরি প্রিমিয়াম কেস স্টাডি সমূহ'}
+          </h2>
+          <p className="text-sm md:text-base text-gray-500 dark:text-neutral-400 leading-relaxed max-w-xl mx-auto">
+            {currentLang === 'en'
+              ? 'Real projects, real results — explore the work we have delivered across industries.'
+              : 'বাস্তব প্রজেক্ট, বাস্তব ফলাফল — আমরা বিভিন্ন খাতে যে কাজগুলো করে এসেছি তা দেখুন।'}
+          </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          <AnimatePresence mode="popLayout">
-            {filteredPortfolio.slice(0, 6).map((item, idx) => (
-              <motion.div
-                layout
-                key={item.id}
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.95 }}
-                transition={{ duration: 0.3 }}
-                onClick={() => {
-                  setTab('portfolio');
-                  window.scrollTo({ top: 0, behavior: 'smooth' });
-                }}
-                className="group cursor-pointer rounded-2xl border border-neutral-100 dark:border-neutral-800 bg-white dark:bg-[#141414] p-4 hover:border-blue-600 hover:shadow-[0_15px_45px_-10px_rgba(0,0,0,0.05)] transition-all duration-500 flex flex-col justify-between relative overflow-hidden"
-              >
-                {/* Modern sleek hover glow background element */}
-                <div className="absolute inset-0 bg-gradient-to-b from-transparent to-blue-50/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
+        {/* Layout: left service navbar + right portfolio row */}
+        <div className="grid grid-cols-1 lg:grid-cols-[240px_1fr] gap-8 items-start">
+{/* Left: Service Navbar (vertical on desktop, compact scroll chips on mobile) */}
+          <div className="lg:sticky lg:top-28 flex lg:flex-col gap-1.5 lg:gap-2 lg:p-2 lg:rounded-2xl lg:bg-white lg:dark:bg-[#141414] lg:border lg:border-neutral-100 lg:dark:border-neutral-800 lg:shadow-sm overflow-x-auto scrollbar-none pb-1 lg:pb-0 -mx-4 sm:-mx-6 lg:mx-0 px-4 sm:px-6 lg:px-0">
+            {portfolioCategories.map((cat) => {
+              const isActive = activePortfolioFilter === cat;
+              return (
+                <button
+                  key={cat}
+                  onClick={() => setActivePortfolioFilter(cat)}
+                  className={`flex-shrink-0 lg:w-full flex items-center justify-between gap-2 px-3 py-1.5 lg:px-4 lg:py-3 rounded-lg lg:rounded-xl text-left text-[11px] lg:text-[13px] font-bold transition duration-200 cursor-pointer whitespace-nowrap lg:whitespace-normal ${
+                    isActive
+                      ? 'bg-orange-500 text-white shadow-lg shadow-orange-500/20'
+                      : 'text-neutral-600 dark:text-neutral-300 hover:bg-neutral-50 dark:hover:bg-neutral-900 hover:text-orange-500 dark:hover:text-orange-400'
+                  }`}
+                >
+                  <span>{getPortfolioCategoryLabel(cat)}</span>
+                  {isActive && (
+                    <span className="hidden lg:block h-1.5 w-1.5 rounded-full bg-white"></span>
+                  )}
+                </button>
+              );
+            })}
+          </div>
 
-                <div className="space-y-4 relative z-10">
-                  {/* 1. Project Featured Image (At the top of the design) */}
-                  <div className="aspect-[16/9] overflow-hidden rounded-xl bg-neutral-50 dark:bg-neutral-900 relative border border-neutral-100 dark:border-neutral-800">
-                    <img 
-                      src={item.image} 
-                      alt={item.titleEn} 
-                      className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
-                      referrerPolicy="no-referrer"
-                    />
-                    
-                    {/* Category Badge over Image */}
-                    <div className="absolute top-3 left-3 bg-white/90 backdrop-blur-md text-neutral-800 dark:text-neutral-100 font-mono text-[8.5px] font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider border border-neutral-200/50 shadow-xs">
-                      {getPortfolioCategoryLabel(item.category)}
-                    </div>
+          {/* Right: Portfolio cards in a grid (same size as services cards) */}
+          <div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              <AnimatePresence mode="popLayout">
+                {filteredPortfolio.slice(0, 6).map((item, idx) => (
+                  <motion.div
+                    layout
+                    key={item.id}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, scale: 0.95 }}
+                    transition={{ duration: 0.35, delay: idx * 0.05 }}
+                    onClick={() => {
+                      setTab('portfolio');
+                      window.scrollTo({ top: 0, behavior: 'smooth' });
+                    }}
+className="group cursor-pointer"
+                  >
+{/* 1. Image with border (top/right/left) - only image has border */}
+                    <div className="relative overflow-hidden rounded-xl border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-900">
+                      <img
+                        src={item.image}
+                        alt={item.titleEn}
+                        className="aspect-[16/9] w-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
+                        referrerPolicy="no-referrer"
+                        loading="lazy"
+                      />
 
-                    {/* Modern Quick View Hover Overlay */}
-                    <div className="absolute inset-0 bg-black/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                      <div className="bg-white/95 dark:bg-[#0D0D0D]/95 backdrop-blur-sm text-neutral-900 dark:text-white rounded-full p-2.5 shadow-lg transform translate-y-1 group-hover:translate-y-0 transition-all duration-300">
-                        <ArrowUpRight className="h-3.5 w-3.5 text-blue-600 dark:text-orange-400" />
+                      {/* Category Badge over Image (top right) */}
+                      <div className="absolute top-3 right-3 bg-white/90 dark:bg-neutral-900/90 backdrop-blur-md text-neutral-800 dark:text-neutral-100 font-mono text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider border border-neutral-200/50 dark:border-neutral-700/50 shadow-sm">
+                        {getPortfolioCategoryLabel(item.category)}
+                      </div>
+
+                      {/* Hover arrow */}
+                      <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                        <div className="bg-white dark:bg-[#0D0D0D] text-neutral-900 dark:text-white rounded-full p-3 shadow-lg transform translate-y-1 group-hover:translate-y-0 transition-all duration-300">
+                          <ArrowUpRight className="h-5 w-5 text-orange-500 dark:text-orange-400" />
+                        </div>
                       </div>
                     </div>
-                  </div>
 
-                  {/* Project Metadata & Text Content */}
-                  <div className="space-y-2 px-0.5">
-                    {/* Industry and Duration row */}
-                    <div className="flex items-center justify-between text-[9px] font-mono tracking-wide">
-                      <span className="font-extrabold uppercase text-blue-600 dark:text-orange-400">
-                        {currentLang === 'en' ? item.industryEn || 'Digital Product' : item.industryBn || 'ডিজিটাল প্রোডাক্ট'}
-                      </span>
-                      <span className="text-neutral-400 dark:text-neutral-500 font-medium bg-neutral-50 dark:bg-neutral-900 px-1.5 py-0.5 rounded border border-neutral-100 dark:border-neutral-800">
-                        {item.duration}
-                      </span>
+                    {/* 2. Below image: industry + duration, name, description */}
+                    <div className="mt-3 space-y-2 px-0.5">
+                      <div className="flex items-center justify-between text-[10px] font-mono tracking-wide">
+                        <span className="font-extrabold uppercase text-orange-500 dark:text-orange-400">
+                          {currentLang === 'en' ? item.industryEn || 'Digital Product' : item.industryBn || 'ডিজিটাল প্রোডাক্ট'}
+                        </span>
+                        <span className="text-neutral-400 dark:text-neutral-500 font-medium bg-neutral-50 dark:bg-neutral-900 px-2 py-0.5 rounded border border-neutral-100 dark:border-neutral-800">
+                          {item.duration}
+                        </span>
+                      </div>
+
+                      <h3 className="font-sans text-base md:text-lg font-bold text-neutral-900 dark:text-white group-hover:text-orange-500 dark:group-hover:text-orange-400 transition-colors duration-200 leading-snug line-clamp-1">
+                        {currentLang === 'en' ? item.titleEn : item.titleBn}
+                      </h3>
+
+<p className="text-xs text-neutral-500 dark:text-neutral-400 leading-relaxed line-clamp-2">
+                        {currentLang === 'en' ? item.descriptionEn : item.descriptionBn}
+                      </p>
                     </div>
 
-                    {/* 2. Name / Title */}
-                    <h3 className="font-sans text-sm sm:text-base font-bold text-neutral-900 dark:text-white group-hover:text-blue-600 dark:text-orange-400 transition-colors duration-200 leading-snug">
-                      {currentLang === 'en' ? item.titleEn : item.titleBn}
-                    </h3>
-
-                    {/* 3. Short Description */}
-                    <p className="text-[11px] text-neutral-500 dark:text-neutral-400 dark:text-neutral-500 leading-relaxed font-sans line-clamp-2">
-                      {currentLang === 'en' ? item.descriptionEn : item.descriptionBn}
-                    </p>
-                  </div>
-                </div>
-
-                {/* 4. Built with / Technologies Section */}
-                <div className="pt-3 mt-4 border-t border-neutral-50 dark:border-neutral-800 flex flex-col space-y-2 relative z-10">
-                  <div className="flex items-center space-x-1">
-                    <Code className="h-3 w-3 text-neutral-400 dark:text-neutral-500" />
-                    <span className="text-[9px] font-bold text-neutral-400 dark:text-neutral-500 uppercase tracking-wider font-mono">
-                      {currentLang === 'en' ? 'Built with:' : 'যা দিয়ে তৈরি:'}
-                    </span>
-                  </div>
-                  
-                  <div className="flex flex-wrap gap-1">
-                    {item.technologies.slice(0, 4).map((tech) => (
-                      <span 
-                        key={tech} 
-                        className="rounded-full bg-neutral-50 dark:bg-neutral-900 hover:bg-blue-50/5 dark:bg-orange-500/50 hover:text-blue-600 dark:text-orange-400 border border-neutral-200/60 text-[8.5px] font-bold text-neutral-500 dark:text-neutral-400 dark:text-neutral-500 font-mono px-2 py-0.5 transition-colors duration-200"
-                      >
-                        {tech}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              </motion.div>
-            ))}
-          </AnimatePresence>
+                    {/* 3. Built with tags - orange label */}
+<div className="mt-3 pt-3 border-t border-neutral-50 dark:border-neutral-800">
+                      <div className="flex items-center space-x-1 mb-1.5">
+                        <Code className="h-3 w-3 text-orange-500 dark:text-orange-400" />
+                        <span className="text-[9px] font-bold text-orange-500 dark:text-orange-400 uppercase tracking-wider font-mono">
+                          {currentLang === 'en' ? 'Built with:' : 'যা দিয়ে তৈরি:'}
+                        </span>
+                      </div>
+                      <div className="flex flex-wrap gap-1">
+                        {item.technologies.slice(0, 4).map((tech) => (
+                          <span
+                            key={tech}
+                            className="rounded-full bg-neutral-50 dark:bg-neutral-900 border border-neutral-200/60 dark:border-neutral-700/60 text-[9px] font-bold text-neutral-500 dark:text-neutral-400 font-mono px-2 py-0.5 transition-colors duration-200"
+                          >
+                            {tech}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  </motion.div>
+                ))}
+              </AnimatePresence>
+            </div>
+          </div>
         </div>
 
         <div className="text-center pt-4">
@@ -1270,7 +1291,6 @@ export default function HomePageSections({ currentLang, setTab }: HomePageSectio
           </button>
         </div>
       </section>
-
       {/* ========================================================
           SECTION 8: INDUSTRIES WE SERVE (PREMIUM VERTICALS)
          ======================================================== */}

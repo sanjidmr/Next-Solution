@@ -5,7 +5,8 @@
  */
 
 import React, { useState } from 'react';
-import { useRouter, usePathname } from 'next/navigation';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { Menu, X, Moon, Sun } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { translations } from '@/data/translations';
@@ -30,7 +31,6 @@ export default function Navbar({
   currentTab,
   setTab,
 }: NavbarProps) {
-  const router = useRouter();
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
   const t = translations[currentLang];
@@ -57,9 +57,6 @@ export default function Navbar({
       setTab(tabId);
     }
     setIsOpen(false);
-    const path = getPathForTab(tabId as any);
-    router.push(path);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   return (
@@ -67,20 +64,22 @@ export default function Navbar({
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
-          <div
+          <Link
             id="nav-logo"
+            href={getPathForTab('home')}
             onClick={() => handleTabClick('home')}
             className="flex cursor-pointer items-center space-x-2 transition duration-200 hover:opacity-90"
           >
             <img src={isDark ? "/logow.png" : "/logo.png"} alt="Next Solution" className="h-11 w-auto max-h-11 object-contain" />
-          </div>
+          </Link>
 
           {/* Desktop Navigation */}
           <nav id="nav-desktop-links" className="hidden lg:flex items-center space-x-1.5">
             {navItems.map((item) => (
-              <button
+              <Link
                 id={`nav-link-${item.id}`}
                 key={item.id}
+                href={getPathForTab(item.id as any)}
                 onClick={() => handleTabClick(item.id)}
                 className={`px-3.5 py-2 text-sm font-semibold rounded-lg transition-all duration-200 ${
                   activeTab === item.id
@@ -94,7 +93,7 @@ export default function Navbar({
                 `}
               >
                 {item.label}
-              </button>
+              </Link>
             ))}
           </nav>
 
@@ -120,13 +119,14 @@ export default function Navbar({
             </button>
 
             {/* CTA Button */}
-            <button
+            <Link
               id="navbar-cta-btn"
+              href={getPathForTab('contact')}
               onClick={() => handleTabClick('contact')}
               className="rounded-lg bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 text-xs font-bold transition duration-200 shadow-sm"
             >
               {t.btnFreeQuote}
-            </button>
+            </Link>
           </div>
 
           {/* Mobile menu button */}
@@ -173,39 +173,44 @@ export default function Navbar({
           >
             <div className="space-y-1 px-4 py-4 max-h-[80vh] overflow-y-auto">
               {navItems.map((item, index) => (
-                <motion.button
-                  id={`mobile-nav-link-${item.id}`}
+                <motion.div
                   key={item.id}
                   initial={{ opacity: 0, x: -10 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: index * 0.03 }}
-                  onClick={() => handleTabClick(item.id)}
-                  className={`block w-full text-left px-4 py-3 rounded-xl text-base font-bold transition flex items-center justify-between min-h-[48px] ${
-                    activeTab === item.id
-                      ? item.highlight
-                        ? 'bg-orange-600 text-white'
-                        : 'bg-orange-500/10 text-orange-600 dark:bg-orange-500/15 dark:text-orange-400'
-                      : 'text-gray-600 hover:bg-gray-50/80 active:bg-gray-100/50 dark:text-neutral-300 dark:hover:bg-white/5 dark:active:bg-white/10'
-                  }`}
                 >
-                  <span>{item.label}</span>
-                  {activeTab === item.id && (
-                    <motion.span
-                      layoutId="activeIndicator"
-                      className="h-1.5 w-1.5 rounded-full bg-orange-600"
-                      transition={{ type: 'spring', stiffness: 380, damping: 30 }}
-                    />
-                  )}
-                </motion.button>
+                  <Link
+                    id={`mobile-nav-link-${item.id}`}
+                    href={getPathForTab(item.id as any)}
+                    onClick={() => handleTabClick(item.id)}
+                    className={`block w-full text-left px-4 py-3 rounded-xl text-base font-bold transition flex items-center justify-between min-h-[48px] ${
+                      activeTab === item.id
+                        ? item.highlight
+                          ? 'bg-orange-600 text-white'
+                          : 'bg-orange-500/10 text-orange-600 dark:bg-orange-500/15 dark:text-orange-400'
+                        : 'text-gray-600 hover:bg-gray-50/80 active:bg-gray-100/50 dark:text-neutral-300 dark:hover:bg-white/5 dark:active:bg-white/10'
+                    }`}
+                  >
+                    <span>{item.label}</span>
+                    {activeTab === item.id && (
+                      <motion.span
+                        layoutId="activeIndicator"
+                        className="h-1.5 w-1.5 rounded-full bg-orange-600"
+                        transition={{ type: 'spring', stiffness: 380, damping: 30 }}
+                      />
+                    )}
+                  </Link>
+                </motion.div>
               ))}
               <div className="pt-4 border-t border-gray-100 mt-2 dark:border-neutral-800">
-                <button
+                <Link
                   id="mobile-cta-btn"
+                  href={getPathForTab('contact')}
                   onClick={() => handleTabClick('contact')}
-                  className="w-full rounded-xl bg-orange-600 py-3 text-center text-sm font-bold text-white hover:bg-orange-700 active:bg-orange-800 transition shadow-md min-h-[48px]"
+                  className="block w-full rounded-xl bg-orange-600 py-3 text-center text-sm font-bold text-white hover:bg-orange-700 active:bg-orange-800 transition shadow-md min-h-[48px]"
                 >
                   {t.btnFreeQuote}
-                </button>
+                </Link>
               </div>
             </div>
           </motion.div>

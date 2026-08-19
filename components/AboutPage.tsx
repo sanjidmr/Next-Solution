@@ -53,7 +53,7 @@ function TechIcon({ logo }: { logo: string }) {
       );
     case 'typescript':
       return (
-        <svg className="h-5 w-5 rounded text-blue-600 dark:text-orange-400" fill="currentColor" viewBox="0 0 24 24">
+        <svg className="h-5 w-5 rounded text-blue-600 dark:text-blue-400" fill="currentColor" viewBox="0 0 24 24">
           <path d="M2.39 2.39h19.22v19.22H2.39V2.39z" fill="#3178c6" />
           <path d="M11.57 14.12c-.17-.38-.45-.69-.85-.92-.4-.23-.92-.35-1.54-.35-.34 0-.67.04-.97.11-.3.07-.56.19-.78.35-.22.16-.39.36-.5.6-.11.24-.17.52-.17.84 0 .34.07.61.2.82.13.21.32.39.55.53.23.14.5.25.81.33.31.08.62.16.94.23.51.11.98.24 1.41.39.43.15.8.36 1.11.63.31.27.55.61.72 1.01.17.4.25.9.25 1.51 0 .61-.1 1.14-.31 1.6-.21.46-.51.84-.91 1.14-.4.3-.87.52-1.42.66s-1.15.21-1.81.21c-.74 0-1.42-.09-2.03-.27-.61-.18-1.14-.46-1.59-.83-.45-.37-.79-.84-1.01-1.41-.22-.57-.33-1.25-.33-2.03h2.39c0 .48.09.87.28 1.17.19.3.45.53.79.69.34.16.73.24 1.17.24.36 0 .69-.04.99-.12.3-.08.55-.21.75-.39.2-.18.35-.41.45-.69.1-.28.15-.62.15-1.02 0-.34-.06-.62-.18-.84s-.3-.4-.54-.54c-.24-.14-.52-.25-.84-.33-.32-.08-.66-.16-1.02-.24-.48-.1-.94-.22-1.37-.36-.43-.14-.8-.33-1.11-.57-.31-.24-.55-.54-.72-.9-.17-.36-.26-.81-.26-1.35 0-.53.11-.99.33-1.39.22-.4.53-.73.93-.99.4-.26.87-.45 1.41-.57.54-.12 1.11-.18 1.71-.18.66 0 1.27.08 1.83.24s1.04.4 1.45.72c.41.32.73.73.95 1.23s.34 1.09.35 1.77h-2.39c-.01-.43-.11-.79-.29-1.08zM21.61 4.54H14v2.16h2.52v12.42h2.57V6.7h2.52V4.54z" fill="#fff"/>
         </svg>
@@ -81,7 +81,7 @@ function TechIcon({ logo }: { logo: string }) {
       );
     case 'css3':
       return (
-        <svg className="h-5 w-5 text-blue-500 dark:text-orange-400" fill="currentColor" viewBox="0 0 24 24">
+        <svg className="h-5 w-5 text-blue-500 dark:text-blue-400" fill="currentColor" viewBox="0 0 24 24">
           <path d="M1.5 0h21l-1.9 21.2L12 24l-8.6-2.8L1.5 0zm15.4 17l.5-5.3H8.3l-.2-2.3h8.8l.2-2.4H5.8l.6 7h8.1l-.4 3.8-2.1.7-2.1-.7-.1-1.3H7.6l.2 2.9 4.2 1.3 4.2-1.3.7-3.8z" fill="#1572B6" />
         </svg>
       );
@@ -97,7 +97,7 @@ function TechIcon({ logo }: { logo: string }) {
       );
     case 'postgresql':
       return (
-        <svg className="h-5 w-5 text-blue-500 dark:text-orange-400" fill="currentColor" viewBox="0 0 24 24">
+        <svg className="h-5 w-5 text-blue-500 dark:text-blue-400" fill="currentColor" viewBox="0 0 24 24">
           <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9v-2h2v2zm0-4H9V7h2v5z" opacity=".1" />
           <path d="M15.4 6.6c-.6-.6-1.5-.9-2.4-.9-1.9 0-3.5 1.3-4 3.1h2.2c.4-.8 1.1-1.3 1.8-1.3.9 0 1.6.6 1.8 1.5h2.1c-.2-1-.7-1.8-1.5-2.4z" />
         </svg>
@@ -190,7 +190,7 @@ function TechIcon({ logo }: { logo: string }) {
       );
     default:
       return (
-        <div className="h-5 w-5 flex items-center justify-center font-extrabold text-[9px] text-blue-600 dark:text-orange-400 bg-blue-50 dark:bg-orange-500/10 rounded-lg font-mono">
+        <div className="h-5 w-5 flex items-center justify-center font-extrabold text-[9px] text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-500/10 rounded-lg font-mono">
           {logo.substring(0, 2).toUpperCase()}
         </div>
       );
@@ -506,7 +506,7 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
     descEn: 'In 2022, Next Solution began as a vision driven by a simple belief: every business deserves a modern digital presence built with quality, transparency, and long-term value. We invested our time in learning advanced technologies, studying global design standards, and building a strong foundation before offering services professionally.',
     descBn: '২০২২ সালে একটি স্পষ্ট লক্ষ্য নিয়ে নেক্সট সলিউশনের যাত্রা শুরু হয়—প্রতিটি ব্যবসার জন্য মানসম্মত, আধুনিক এবং দীর্ঘমেয়াদী মূল্য প্রদানকারী ডিজিটাল সমাধান তৈরি করা। আমরা প্রথম বছরটি উন্নত প্রযুক্তি শেখা, আন্তর্জাতিক মানের ডিজাইন বিশ্লেষণ এবং শক্ত ভিত্তি তৈরিতে ব্যয় করি।',
     metric: 'Vision & Foundation',
-    color: 'from-blue-600 dark:from-orange-500 to-indigo-600 dark:to-orange-400'
+    color: 'from-blue-600 dark:from-blue-500 to-indigo-600 dark:to-blue-400'
   },
   {
     year: '2023',
@@ -515,7 +515,7 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
     descEn: 'Throughout 2023, we focused on mastering modern web technologies, UI/UX principles, and scalable development practices. We completed numerous practice projects, refined our workflow, and established quality standards that would shape every future client project.',
     descBn: '২০২৩ সালে আমরা আধুনিক ওয়েব প্রযুক্তি, UI/UX ডিজাইন এবং স্কেলেবল ডেভেলপমেন্ট পদ্ধতিতে নিজেদের দক্ষ করে তুলি। অসংখ্য প্র্যাকটিস প্রজেক্ট সম্পন্ন করে এমন একটি মানসম্মত ওয়ার্কফ্লো তৈরি করি যা ভবিষ্যতের প্রতিটি ক্লায়েন্ট প্রজেক্টের ভিত্তি হয়ে ওঠে।',
     metric: 'Continuous Learning',
-    color: 'from-indigo-600 dark:from-orange-500 to-violet-600'
+    color: 'from-indigo-600 dark:from-blue-500 to-violet-600'
   },
   {
     year: '2024',
@@ -554,7 +554,7 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
       descEn: 'We do not just adopt new frameworks; we push their limits. We build private libraries, test pre-releases, and integrate advanced AI capabilities to keep you years ahead.',
       descBn: 'আমরা কেবল নতুন ফ্রেমওয়ার্ক গ্রহণই করি না, বরং সেগুলোর সীমানা ছাড়িয়ে যাই। আমরা নিজস্ব লাইব্রেরি তৈরি করি এবং উন্নত এআই ক্ষমতা যুক্ত করি যাতে আপনি সবার চেয়ে এগিয়ে থাকেন।',
       icon: Lightbulb,
-      color: 'from-amber-500/10 to-orange-500/10 text-amber-600 dark:text-amber-400 border-amber-100/50'
+      color: 'from-blue-500/10 to-indigo-500/10 text-blue-600 dark:text-blue-400 border-amber-100/50'
     },
     {
       titleEn: 'Absolute Transparency',
@@ -562,7 +562,7 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
       descEn: 'No black boxes. No hidden fees. Every line of code, every developer sprint, and every database latency profile is entirely visible to you on shared dashboards.',
       descBn: 'কোনো অস্বচ্ছতা নেই, কোনো গোপন চার্জ নেই। কোডের প্রতিটি লাইন, ডেভেলপমেন্ট স্প্রিন্ট এবং ডাটাবেসের কার্যক্ষমতা আপনি সরাসরি শেয়ার্ড ড্যাশবোর্ডে দেখতে পাবেন।',
       icon: Eye,
-      color: 'from-blue-500/10 to-indigo-500/10 text-blue-600 dark:text-orange-400 border-blue-100/50'
+      color: 'from-blue-500/10 to-indigo-500/10 text-blue-600 dark:text-blue-400 border-blue-100/50'
     },
     {
       titleEn: 'Triple-Device Quality Check',
@@ -1119,7 +1119,7 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
   ], []);
 
   return (
-    <section id="about-page" className="bg-white dark:bg-[#141414] text-neutral-900 dark:text-white overflow-hidden relative selection:bg-blue-500 dark:bg-orange-500 selection:text-white">
+    <section id="about-page" className="bg-white dark:bg-[#0F0E0C] dark:bg-gradient-to-b dark:from-[#12100D] dark:via-[#0F0E0C] dark:to-[#0A0908] text-neutral-900 dark:text-white overflow-hidden relative selection:bg-blue-500 dark:bg-blue-500 selection:text-white">
       
       {/* Scroll Progress Bar */}
       <div className="fixed top-0 left-0 right-0 h-1 bg-neutral-100 dark:bg-neutral-800 z-50">
@@ -1148,7 +1148,7 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
 
         {/* Breadcrumb row */}
         <nav className="flex items-center space-x-2 text-[10px] font-black text-neutral-400 dark:text-neutral-500 uppercase tracking-widest mb-6">
-          <span className="hover:text-blue-600 dark:text-orange-400 transition cursor-pointer" onClick={() => navigateToTab('home')}>
+          <span className="hover:text-blue-600 dark:text-blue-400 transition cursor-pointer" onClick={() => navigateToTab('home')}>
             {currentLang === 'en' ? 'Home' : 'হোম'}
           </span>
           <span className="text-neutral-300 dark:text-neutral-600">/</span>
@@ -1178,8 +1178,8 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
                   More Than A<br className="hidden sm:inline" /> Digital Agency.<br />
                   We Are Your <br />
                   <span className="relative inline-block mt-1">
-                    <span className="absolute -inset-1 rounded-lg bg-gradient-to-r from-blue-600 dark:from-orange-500 via-violet-600 to-pink-600 opacity-10 blur-md"></span>
-                    <span className="relative bg-gradient-to-r from-blue-600 dark:from-orange-500 via-violet-600 to-pink-600 bg-clip-text text-transparent">
+                    <span className="absolute -inset-1 rounded-lg bg-gradient-to-r from-blue-600 dark:from-blue-500 via-violet-600 to-pink-600 opacity-10 blur-md"></span>
+                    <span className="relative bg-gradient-to-r from-blue-600 dark:from-blue-500 via-violet-600 to-pink-600 bg-clip-text text-transparent">
                       Digital Growth Partner.
                     </span>
                   </span>
@@ -1189,8 +1189,8 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
                   একটি ডিজিটাল এজেন্সির<br /> চেয়েও অনেক বেশি।<br />
                   আমরা আপনার <br />
                   <span className="relative inline-block mt-1">
-                    <span className="absolute -inset-1 rounded-lg bg-gradient-to-r from-blue-600 dark:from-orange-500 via-violet-600 to-pink-600 opacity-10 blur-md"></span>
-                    <span className="relative bg-gradient-to-r from-blue-600 dark:from-orange-500 via-violet-600 to-pink-600 bg-clip-text text-transparent">
+                    <span className="absolute -inset-1 rounded-lg bg-gradient-to-r from-blue-600 dark:from-blue-500 via-violet-600 to-pink-600 opacity-10 blur-md"></span>
+                    <span className="relative bg-gradient-to-r from-blue-600 dark:from-blue-500 via-violet-600 to-pink-600 bg-clip-text text-transparent">
                       ডিজিটাল গ্রোথ পার্টনার।
                     </span>
                   </span>
@@ -1215,7 +1215,7 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
                 className="group relative w-full sm:w-auto inline-flex items-center justify-center space-x-3 rounded-xl bg-neutral-950 text-white text-xs sm:text-sm font-black px-8 py-4.5 shadow-[0_20px_40px_rgba(0,0,0,0.1)] hover:shadow-[0_20px_40px_rgba(255,77,0,0.35)] hover:bg-orange-600 transition-all duration-300 cursor-pointer overflow-hidden"
               >
                 {/* Button glow backdrop */}
-                <span className="absolute inset-0 bg-gradient-to-r from-blue-500 dark:from-orange-500 to-indigo-600 dark:to-orange-400 opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10" />
+                <span className="absolute inset-0 bg-gradient-to-r from-blue-500 dark:from-blue-500 to-indigo-600 dark:to-blue-400 opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10" />
                 <span>🚀 {currentLang === 'en' ? 'Start Your Project' : 'প্রজেক্ট শুরু করুন'}</span>
                 <ArrowRight className="h-4 w-4 group-hover:translate-x-1.5 transition-transform duration-300" />
               </motion.button>
@@ -1239,11 +1239,11 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
               <div className="flex flex-wrap justify-center sm:justify-start gap-2.5">
                 {[
                   { icon: '💡', labelEn: 'Innovation', labelBn: 'উদ্ভাবন', border: 'hover:border-amber-200 hover:bg-amber-50/50 hover:text-amber-700 shadow-amber-100' },
-                  { icon: '🤝', labelEn: 'Transparency', labelBn: 'স্বচ্ছতা', border: 'hover:border-blue-200 dark:border-orange-500/25 hover:bg-blue-50/5 dark:bg-orange-500/50 hover:text-blue-700 shadow-blue-100' },
+                  { icon: '🤝', labelEn: 'Transparency', labelBn: 'স্বচ্ছতা', border: 'hover:border-blue-200 dark:border-blue-500/25 hover:bg-blue-50/5 dark:bg-blue-500/50 hover:text-blue-700 shadow-blue-100' },
                   { icon: '🏆', labelEn: 'Quality', labelBn: 'গুণমান', border: 'hover:border-emerald-200 hover:bg-emerald-50/50 hover:text-emerald-700 shadow-emerald-100' },
                   { icon: '⚡', labelEn: 'Fast Delivery', labelBn: 'দ্রুত ডেলিভারি', border: 'hover:border-rose-200 hover:bg-rose-50/50 hover:text-rose-700 shadow-rose-100' },
                   { icon: '🚀', labelEn: 'Growth Focus', labelBn: 'গ্রোথ ফোকাস', border: 'hover:border-cyan-200 hover:bg-cyan-50/50 hover:text-cyan-700 shadow-cyan-100' },
-                  { icon: '❤️', labelEn: 'Long-Term Partnership', labelBn: 'দীর্ঘমেয়াদী পার্টনারশিপ', border: 'hover:border-purple-200 hover:bg-purple-50/5 dark:bg-orange-500/50 hover:text-purple-700 shadow-purple-100' }
+                  { icon: '❤️', labelEn: 'Long-Term Partnership', labelBn: 'দীর্ঘমেয়াদী পার্টনারশিপ', border: 'hover:border-purple-200 hover:bg-purple-50/5 dark:bg-blue-500/50 hover:text-purple-700 shadow-purple-100' }
                 ].map((item, idx) => (
                   <motion.div
                     key={idx}
@@ -1283,7 +1283,7 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
                         : 'text-neutral-500 dark:text-neutral-400 dark:text-neutral-500 hover:text-neutral-800 dark:text-neutral-100 hover:bg-neutral-50/50 dark:bg-neutral-900/50'
                     }`}
                   >
-                    <IconComponent className={`h-4 w-4 ${isActive ? 'text-blue-600 dark:text-orange-400' : 'text-neutral-400 dark:text-neutral-500'}`} />
+                    <IconComponent className={`h-4 w-4 ${isActive ? 'text-blue-600 dark:text-blue-400' : 'text-neutral-400 dark:text-neutral-500'}`} />
                     <span className="hidden sm:inline">{currentLang === 'en' ? tab.labelEn : tab.labelBn}</span>
                     <span className="inline sm:hidden">{currentLang === 'en' ? tab.labelEn.split(' ')[0] : tab.labelBn.split(' ')[0]}</span>
                   </button>
@@ -1297,10 +1297,10 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
               {/* Outer decorative neon glow backdrop responsive to selected tab */}
               <div className={`absolute -inset-2 rounded-[2rem] opacity-30 blur-2xl transition-all duration-700 pointer-events-none -z-10 ${
                 activeShowcaseTab === 'code' 
-                  ? 'bg-gradient-to-tr from-blue-500 dark:from-orange-500 via-indigo-500 to-violet-500' 
+                  ? 'bg-gradient-to-tr from-blue-500 dark:from-blue-500 via-indigo-500 to-violet-500' 
                   : activeShowcaseTab === 'canvas'
                     ? 'bg-gradient-to-tr from-pink-500 via-rose-500 to-amber-500'
-                    : 'bg-gradient-to-tr from-emerald-500 via-teal-500 to-blue-500 dark:to-orange-400'
+                    : 'bg-gradient-to-tr from-emerald-500 via-teal-500 to-blue-500 dark:to-blue-400'
               }`} />
 
               <AnimatePresence mode="wait">
@@ -1317,7 +1317,7 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
                     <div className="space-y-6">
                       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-neutral-100 dark:border-neutral-800 pb-4">
                         <div>
-                          <span className="text-[9px] font-black uppercase tracking-widest text-blue-600 dark:text-orange-400 bg-blue-50 dark:bg-orange-500/10 px-2 py-0.5 rounded-md">
+                          <span className="text-[9px] font-black uppercase tracking-widest text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-500/10 px-2 py-0.5 rounded-md">
                             {currentLang === 'en' ? 'SPEED ENGINE' : 'স্পিড ইঞ্জিন'}
                           </span>
                           <h3 className="text-base font-black text-neutral-900 dark:text-white mt-1">
@@ -1350,14 +1350,14 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
                           <div className="p-4 space-y-1 select-none overflow-x-auto text-neutral-300 dark:text-neutral-600">
                             <div><span className="text-pink-400">import</span> &#123; <span className="text-cyan-300">NextSolution</span> &#125; <span className="text-pink-400">from</span> <span className="text-amber-200">"next-sol"</span>;</div>
                             <div className="text-neutral-500 dark:text-neutral-400 dark:text-neutral-500">{currentLang === 'en' ? '// Initialize instant assets payload optimization' : '// অ্যাসেট পেলোড অপ্টিমাইজেশন'}</div>
-                            <div><span className="text-pink-400">export async function</span> <span className="text-blue-400 dark:text-orange-300">POST</span>(req: <span className="text-emerald-400">Request</span>) &#123;</div>
+                            <div><span className="text-pink-400">export async function</span> <span className="text-blue-400 dark:text-blue-300">POST</span>(req: <span className="text-emerald-400">Request</span>) &#123;</div>
                             <div>&nbsp;&nbsp;<span className="text-pink-400">const</span> client = <span className="text-pink-400">new</span> <span className="text-cyan-300">NextSolution</span>(&#123; <span className="text-purple-300">engine</span>: <span className="text-amber-200">'core'</span> &#125;);</div>
-                            <div>&nbsp;&nbsp;<span className="text-pink-400">const</span> res = <span className="text-pink-400">await</span> client.<span className="text-blue-400 dark:text-orange-300">optimize</span>(&#123;</div>
+                            <div>&nbsp;&nbsp;<span className="text-pink-400">const</span> res = <span className="text-pink-400">await</span> client.<span className="text-blue-400 dark:text-blue-300">optimize</span>(&#123;</div>
                             <div>&nbsp;&nbsp;&nbsp;&nbsp;minify: <span className="text-amber-400">true</span>,</div>
                             <div>&nbsp;&nbsp;&nbsp;&nbsp;seoPriority: <span className="text-amber-400">"Google-Rank-1"</span>,</div>
                             <div>&nbsp;&nbsp;&nbsp;&nbsp;hydratedTrees: <span className="text-amber-400">true</span></div>
                             <div>&nbsp;&nbsp;&#125;);</div>
-                            <div>&nbsp;&nbsp;<span className="text-pink-400">return</span> <span className="text-cyan-300">Response</span>.<span className="text-blue-400 dark:text-orange-300">json</span>(&#123; res &#125;);</div>
+                            <div>&nbsp;&nbsp;<span className="text-pink-400">return</span> <span className="text-cyan-300">Response</span>.<span className="text-blue-400 dark:text-blue-300">json</span>(&#123; res &#125;);</div>
                             <div>&#125;</div>
                           </div>
 
@@ -1531,7 +1531,7 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
                             {/* Card Glow Mesh */}
                             <div className={`absolute -top-10 -right-10 w-28 h-28 rounded-full blur-[30px] opacity-20 pointer-events-none ${
                               vibeTheme === 'cyber' 
-                                ? 'bg-blue-500 dark:bg-orange-500' 
+                                ? 'bg-blue-500 dark:bg-blue-500' 
                                 : vibeTheme === 'peak' 
                                   ? 'bg-emerald-500' 
                                   : 'bg-rose-500'
@@ -1540,7 +1540,7 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
                             <div className="flex items-center justify-between mb-4">
                               <span className={`text-[8px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full ${
                                 vibeTheme === 'cyber' 
-                                  ? 'bg-blue-50 dark:bg-orange-500/10 text-blue-600 dark:text-orange-400' 
+                                  ? 'bg-blue-50 dark:bg-blue-500/10 text-blue-600 dark:text-blue-400' 
                                   : vibeTheme === 'peak' 
                                     ? 'bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400' 
                                     : 'bg-rose-50 dark:bg-rose-500/10 text-rose-600 dark:text-rose-400'
@@ -1548,7 +1548,7 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
                                 {vibeTheme === 'cyber' ? 'CYBER FINTECH' : vibeTheme === 'peak' ? 'GREEN ECO' : 'SOLAR AGENCY'}
                               </span>
                               <Sparkles className={`h-4 w-4 ${
-                                vibeTheme === 'cyber' ? 'text-blue-500 dark:text-orange-400' : vibeTheme === 'peak' ? 'text-emerald-500 dark:text-emerald-400' : 'text-rose-500 dark:text-rose-400'
+                                vibeTheme === 'cyber' ? 'text-blue-500 dark:text-blue-400' : vibeTheme === 'peak' ? 'text-emerald-500 dark:text-emerald-400' : 'text-rose-500 dark:text-rose-400'
                               }`} />
                             </div>
 
@@ -1573,7 +1573,7 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
                                 <span className="h-4.5 w-4.5 rounded-full border border-white bg-neutral-200 dark:bg-neutral-700 flex items-center justify-center text-[8px] font-black text-neutral-600 dark:text-neutral-300 dark:text-neutral-600">B</span>
                               </div>
                               <span className={`text-[10px] font-black ${
-                                vibeTheme === 'cyber' ? 'text-blue-600 dark:text-orange-400' : vibeTheme === 'peak' ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'
+                                vibeTheme === 'cyber' ? 'text-blue-600 dark:text-blue-400' : vibeTheme === 'peak' ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'
                               }`}>{currentLang === 'en' ? 'Learn More →' : 'জানুন →'}</span>
                             </div>
                           </motion.div>
@@ -1593,7 +1593,7 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
                             </span>
                             <div className="grid grid-cols-3 gap-2">
                               {[
-                                { id: 'cyber', label: currentLang === 'en' ? 'Cyber Blue' : 'সাইবার ব্লু', color: 'bg-blue-500 dark:bg-orange-500' },
+                                { id: 'cyber', label: currentLang === 'en' ? 'Cyber Blue' : 'সাইবার ব্লু', color: 'bg-blue-500 dark:bg-blue-500' },
                                 { id: 'peak', label: currentLang === 'en' ? 'Eco Green' : 'ইকো গ্রিন', color: 'bg-emerald-500' },
                                 { id: 'rose', label: currentLang === 'en' ? 'Solar Rose' : 'সোলার রোজ', color: 'bg-rose-500' }
                               ].map((v) => (
@@ -1683,7 +1683,7 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
                           {/* Top Visual Diagram */}
                           <div className="flex justify-between items-center bg-neutral-900/50 p-2.5 rounded-xl border border-neutral-850 mb-3 relative overflow-hidden">
                             <div className="flex items-center space-x-1.5 relative z-10">
-                              <Users className="h-3.5 w-3.5 text-blue-400 dark:text-orange-300" />
+                              <Users className="h-3.5 w-3.5 text-blue-400 dark:text-blue-300" />
                               <span className="text-[9px] text-neutral-300 dark:text-neutral-600 font-bold">{currentLang === 'en' ? 'Traffic' : 'কাস্টমার'}</span>
                             </div>
                             
@@ -1859,7 +1859,7 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-start">
             
             <div className="lg:col-span-5 space-y-6 lg:sticky lg:top-24">
-              <span className="text-xs font-bold uppercase tracking-widest text-blue-600 dark:text-orange-400">
+              <span className="text-xs font-bold uppercase tracking-widest text-blue-600 dark:text-blue-400">
                 {currentLang === 'en' ? 'OUR BRAND CHRONICLES' : 'আমাদের ব্র্যান্ডের গল্প'}
               </span>
               <h2 className="font-sans text-3xl sm:text-4xl font-black text-neutral-900 dark:text-white leading-tight">
@@ -1879,7 +1879,7 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
                     onClick={() => setSelectedMilestone(idx)}
                     className={`w-full text-left p-3.5 rounded-xl border transition-all duration-300 flex items-center justify-between cursor-pointer ${
                       selectedMilestone === idx 
-                        ? 'bg-white dark:bg-[#141414] border-neutral-200 dark:border-neutral-700 shadow-md text-blue-600 dark:text-orange-400 pl-6' 
+                        ? 'bg-white dark:bg-[#141414] border-neutral-200 dark:border-neutral-700 shadow-md text-blue-600 dark:text-blue-400 pl-6' 
                         : 'bg-transparent border-transparent text-neutral-400 dark:text-neutral-500 hover:text-neutral-950'
                     }`}
                   >
@@ -1887,7 +1887,7 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
                       <span className="font-mono text-xs font-bold">{m.year}</span>
                       <span className="text-xs font-bold">{currentLang === 'en' ? m.titleEn : m.titleBn}</span>
                     </div>
-                    {selectedMilestone === idx && <ArrowRight className="h-4 w-4 text-blue-600 dark:text-orange-400" />}
+                    {selectedMilestone === idx && <ArrowRight className="h-4 w-4 text-blue-600 dark:text-blue-400" />}
                   </button>
                 ))}
               </div>
@@ -1911,7 +1911,7 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
                       <span className="text-5xl font-black text-neutral-100 font-mono tracking-tighter">
                         {storyMilestones[selectedMilestone].year}
                       </span>
-                      <span className="text-[10px] font-bold uppercase tracking-wider text-blue-600 dark:text-orange-400 bg-blue-50 dark:bg-orange-500/10 px-3 py-1 rounded-full border border-blue-100/50">
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-500/10 px-3 py-1 rounded-full border border-blue-100/50">
                         {storyMilestones[selectedMilestone].metric}
                       </span>
                     </div>
@@ -1934,7 +1934,7 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
                     </div>
                     <button
                       onClick={() => navigateToTab('contact')}
-                      className="inline-flex items-center space-x-1.5 text-xs font-extrabold text-blue-600 dark:text-orange-400 hover:underline cursor-pointer"
+                      className="inline-flex items-center space-x-1.5 text-xs font-extrabold text-blue-600 dark:text-blue-400 hover:underline cursor-pointer"
                     >
                       <span>{currentLang === 'en' ? 'Start project with us' : 'আমাদের সাথে কাজ শুরু করুন'}</span>
                       <ArrowUpRight className="h-4 w-4" />
@@ -1953,7 +1953,7 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
          ======================================================== */}
       <section id="mission-vision" className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-24 relative z-10">
         <div className="text-center space-y-4 max-w-2xl mx-auto mb-16">
-          <span className="text-xs font-bold uppercase tracking-widest text-blue-600 dark:text-orange-400">
+          <span className="text-xs font-bold uppercase tracking-widest text-blue-600 dark:text-blue-400">
             {currentLang === 'en' ? 'OUR GUIDING STARS' : 'আমাদের পথপ্রদর্শক দর্শন'}
           </span>
           <h2 className="font-sans text-2xl sm:text-3xl lg:text-4xl font-black text-neutral-900 dark:text-white leading-tight">
@@ -1964,13 +1964,13 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
           {/* Mission card */}
           <div className="group relative rounded-3xl border border-neutral-100 dark:border-neutral-800 bg-white dark:bg-[#141414] p-8 md:p-10 space-y-6 shadow-sm hover:shadow-xl hover:border-blue-500/20 transition-all duration-300 overflow-hidden">
-            <div className="absolute top-0 left-0 w-2.5 h-full bg-gradient-to-b from-blue-600 dark:from-orange-500 to-indigo-600 dark:to-orange-400" />
-            <div className="h-12 w-12 rounded-2xl bg-blue-50 dark:bg-orange-500/10 text-blue-600 dark:text-orange-400 flex items-center justify-center group-hover:scale-110 transition duration-300">
+            <div className="absolute top-0 left-0 w-2.5 h-full bg-gradient-to-b from-blue-600 dark:from-blue-500 to-indigo-600 dark:to-blue-400" />
+            <div className="h-12 w-12 rounded-2xl bg-blue-50 dark:bg-blue-500/10 text-blue-600 dark:text-blue-400 flex items-center justify-center group-hover:scale-110 transition duration-300">
               <Target className="h-6 w-6" />
             </div>
 
             <div className="space-y-3">
-              <span className="text-[10px] font-black uppercase tracking-widest text-blue-600 dark:text-orange-400">01. Our core duty</span>
+              <span className="text-[10px] font-black uppercase tracking-widest text-blue-600 dark:text-blue-400">01. Our core duty</span>
               <h3 className="text-xl md:text-2xl font-black text-neutral-900 dark:text-white">
                 {currentLang === 'en' ? 'Our Core Mission' : 'আমাদের মূল মিশন'}
               </h3>
@@ -1984,7 +1984,7 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
             {/* Decorative Vector simulation */}
             <div className="pt-4 border-t border-neutral-100/70 flex items-center justify-between">
               <span className="text-[10px] font-bold text-neutral-400 dark:text-neutral-500 uppercase tracking-widest italic">"Performance First, Always."</span>
-              <Check className="h-4 w-4 text-blue-600 dark:text-orange-400" />
+              <Check className="h-4 w-4 text-blue-600 dark:text-blue-400" />
             </div>
           </div>
 
@@ -2133,7 +2133,7 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           
           <div className="text-center space-y-3 max-w-2xl mx-auto mb-10">
-            <span className="inline-flex items-center space-x-1 px-2.5 py-0.5 rounded-full bg-indigo-50 dark:bg-orange-500/10 text-indigo-600 dark:text-orange-400 text-[9px] font-bold uppercase tracking-wider">
+            <span className="inline-flex items-center space-x-1 px-2.5 py-0.5 rounded-full bg-indigo-50 dark:bg-blue-500/10 text-indigo-600 dark:text-blue-400 text-[9px] font-bold uppercase tracking-wider">
               <span>👥 {currentLang === 'en' ? 'OUR TEAM EXPERTS' : 'আমাদের টিম বিশেষজ্ঞরা'}</span>
             </span>
             <h3 className="font-sans text-xl sm:text-2xl lg:text-3xl font-black text-neutral-900 dark:text-white leading-tight">
@@ -2223,7 +2223,7 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
                       <div className="p-4 flex flex-col flex-1 justify-between space-y-3">
                         <div className="space-y-1">
                           <div className="flex items-center justify-between">
-                            <h4 className="text-sm font-black text-neutral-900 dark:text-white group-hover:text-blue-600 dark:text-orange-400 transition-colors">
+                            <h4 className="text-sm font-black text-neutral-900 dark:text-white group-hover:text-blue-600 dark:text-blue-400 transition-colors">
                               {currentLang === 'en' ? member.nameEn : member.nameBn}
                             </h4>
                             <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 shrink-0" title="Active" />
@@ -2250,11 +2250,11 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
 
          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-7 gap-4 max-w-6xl mx-auto mb-14">
             {[
-              { value: '5+', label: currentLang === 'en' ? 'Years Technical' : 'বছর টেকনিক্যাল', color: 'from-blue-500 dark:from-orange-500 to-indigo-500', bg: 'bg-blue-50/60', border: 'border-blue-100/60', textColor: 'text-blue-600 dark:text-orange-400' },
-              { value: '4+', label: currentLang === 'en' ? 'Years Agency' : 'বছর এজেন্সি', color: 'from-violet-500 to-purple-500', bg: 'bg-violet-50/60', border: 'border-violet-100/60', textColor: 'text-violet-600 dark:text-orange-400' },
+              { value: '5+', label: currentLang === 'en' ? 'Years Technical' : 'বছর টেকনিক্যাল', color: 'from-blue-500 dark:from-blue-500 to-indigo-500', bg: 'bg-blue-50/60', border: 'border-blue-100/60', textColor: 'text-blue-600 dark:text-blue-400' },
+              { value: '4+', label: currentLang === 'en' ? 'Years Agency' : 'বছর এজেন্সি', color: 'from-violet-500 to-purple-500', bg: 'bg-violet-50/60', border: 'border-violet-100/60', textColor: 'text-violet-600 dark:text-blue-400' },
               { value: '100+', label: currentLang === 'en' ? 'Projects' : 'প্রজেক্ট', color: 'from-emerald-500 to-teal-500', bg: 'bg-emerald-50/60', border: 'border-emerald-100/60', textColor: 'text-emerald-600 dark:text-emerald-400' },
               { value: '50+', label: currentLang === 'en' ? 'Clients' : 'ক্লায়েন্ট', color: 'from-rose-500 to-pink-500', bg: 'bg-rose-50/60', border: 'border-rose-100/60', textColor: 'text-rose-600 dark:text-rose-400' },
-              { value: '15+', label: currentLang === 'en' ? 'Team Members' : 'টিম মেম্বার', color: 'from-amber-500 to-orange-500', bg: 'bg-amber-50/60', border: 'border-amber-100/60', textColor: 'text-amber-600 dark:text-amber-400' },
+              { value: '15+', label: currentLang === 'en' ? 'Team Members' : 'টিম মেম্বার', color: 'from-blue-500 to-indigo-500', bg: 'bg-amber-50/60', border: 'border-amber-100/60', textColor: 'text-blue-600 dark:text-blue-400' },
               { value: '8+', label: currentLang === 'en' ? 'Digital Services' : 'ডিজিটাল সেবা', color: 'from-cyan-500 to-sky-500', bg: 'bg-cyan-50/60', border: 'border-cyan-100/60', textColor: 'text-cyan-600 dark:text-cyan-400' },
               { value: '20+', label: currentLang === 'en' ? 'Industries Served' : 'ইন্ডাস্ট্রি', color: 'from-slate-600 to-gray-500', bg: 'bg-slate-50/60', border: 'border-slate-100/60', textColor: 'text-slate-600' },
             ].map((stat, i) => (
@@ -2292,7 +2292,7 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
       <section id="core-values" className="border-y border-neutral-100 dark:border-neutral-800 bg-neutral-50/20 py-24 relative z-10">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-16">
           <div className="text-center space-y-4 max-w-2xl mx-auto">
-            <span className="text-xs font-bold uppercase tracking-widest text-blue-600 dark:text-orange-400">
+            <span className="text-xs font-bold uppercase tracking-widest text-blue-600 dark:text-blue-400">
               {currentLang === 'en' ? 'FOUNDATIONAL PILLARS' : 'আমাদের মূল ভিত্তিপ্রস্তর'}
             </span>
             <h2 className="font-sans text-3xl font-black text-neutral-900 dark:text-white leading-tight">
@@ -2315,7 +2315,7 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
                   <v.icon className="h-5 w-5" />
                 </div>
                 <div className="space-y-1">
-                  <h4 className="text-sm font-extrabold text-neutral-900 dark:text-white group-hover:text-blue-600 dark:text-orange-400 transition-colors">
+                  <h4 className="text-sm font-extrabold text-neutral-900 dark:text-white group-hover:text-blue-600 dark:text-blue-400 transition-colors">
                     {currentLang === 'en' ? v.titleEn : v.titleBn}
                   </h4>
                   <p className="text-[11px] leading-relaxed text-neutral-500 dark:text-neutral-400 dark:text-neutral-500 font-normal">
@@ -2333,7 +2333,7 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
          ======================================================== */}
       <section id="why-choose-us" className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-24 relative z-10">
         <div className="text-center space-y-4 max-w-2xl mx-auto mb-16">
-          <span className="text-xs font-bold uppercase tracking-widest text-blue-600 dark:text-orange-400">
+          <span className="text-xs font-bold uppercase tracking-widest text-blue-600 dark:text-blue-400">
             {currentLang === 'en' ? 'THE AGENCY ADVANTAGE' : 'কেন আমরা সেরা'}
           </span>
           <h2 className="font-sans text-2xl sm:text-3xl lg:text-4xl font-black text-neutral-900 dark:text-white leading-tight">
@@ -2351,7 +2351,7 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
               { titleEn: 'Extreme Load Tuning', titleBn: 'চরম লোড অপ্টিমাইজেশন', descEn: 'We implement advanced Redis caching, index pooling, and optimized static asset compression.', descBn: 'আমরা উন্নত রেডিস ক্যাশিং এবং সর্বোচ্চ ইমেজ কম্প্রেশন ব্যবহারের মাধ্যমে ট্রানজেকশন লোড সামলানো নিশ্চিত করি।' }
             ].map((f, i) => (
               <div key={i} className="border border-neutral-100/70 rounded-2xl p-6 bg-white dark:bg-[#141414] shadow-sm hover:shadow-md transition-shadow">
-                <div className="h-8 w-8 rounded-lg bg-blue-50 dark:bg-orange-500/10 text-blue-600 dark:text-orange-400 flex items-center justify-center mb-3">
+                <div className="h-8 w-8 rounded-lg bg-blue-50 dark:bg-blue-500/10 text-blue-600 dark:text-blue-400 flex items-center justify-center mb-3">
                   <Check className="h-4 w-4" />
                 </div>
                 <h4 className="text-xs font-black text-neutral-900 dark:text-white uppercase tracking-wider">{currentLang === 'en' ? f.titleEn : f.titleBn}</h4>
@@ -2362,7 +2362,7 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
 
           {/* Central Logo Panel */}
           <div className="lg:col-span-4 flex justify-center relative">
-            <div className="h-64 w-64 rounded-full bg-gradient-to-tr from-blue-600 dark:from-orange-500 to-indigo-600 dark:to-orange-400 text-white p-8 flex flex-col items-center justify-center text-center shadow-2xl relative">
+            <div className="h-64 w-64 rounded-full bg-gradient-to-tr from-blue-600 dark:from-blue-500 to-indigo-600 dark:to-blue-400 text-white p-8 flex flex-col items-center justify-center text-center shadow-2xl relative">
               <div className="absolute inset-2 border-2 border-white/20 rounded-full border-dashed animate-spin [animation-duration:12s]"></div>
               
               <Network className="h-10 w-10 text-white mb-3" />
@@ -2378,7 +2378,7 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
               { titleEn: 'Direct Developer SLA Hotline', titleBn: 'ডেভেলপার এসএলএ হটলাইন', descEn: 'Direct access to engineering channels on Slack without wading through slow ticket boards.', descBn: 'ঝামেলাহীন সরাসরি সাপোর্ট চ্যানেল। ধীরগতির টিকিট ব্যবস্থার অবসান ঘটিয়ে সরাসরি স্ল্যাকে ডেভেলপারদের অ্যাক্সেস।' }
             ].map((f, i) => (
               <div key={i} className="border border-neutral-100/70 rounded-2xl p-6 bg-white dark:bg-[#141414] shadow-sm hover:shadow-md transition-shadow">
-                <div className="h-8 w-8 rounded-lg bg-blue-50 dark:bg-orange-500/10 text-blue-600 dark:text-orange-400 flex items-center justify-center mb-3">
+                <div className="h-8 w-8 rounded-lg bg-blue-50 dark:bg-blue-500/10 text-blue-600 dark:text-blue-400 flex items-center justify-center mb-3">
                   <Check className="h-4 w-4" />
                 </div>
                 <h4 className="text-xs font-black text-neutral-900 dark:text-white uppercase tracking-wider">{currentLang === 'en' ? f.titleEn : f.titleBn}</h4>
@@ -2400,7 +2400,7 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
          ======================================================== */}
       <section id="services-ecosystem" className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-24 relative z-10">
         <div className="text-center space-y-4 max-w-2xl mx-auto mb-12">
-          <span className="text-xs font-bold uppercase tracking-widest text-blue-600 dark:text-orange-400">
+          <span className="text-xs font-bold uppercase tracking-widest text-blue-600 dark:text-blue-400">
             {currentLang === 'en' ? 'OUR CAPABILITIES' : 'আমাদের সার্ভিস সমূহ'}
           </span>
           <h2 className="font-sans text-3xl font-black text-neutral-900 dark:text-white leading-tight">
@@ -2445,7 +2445,7 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
               >
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
-                    <div className="h-10 w-10 rounded-xl bg-blue-50 dark:bg-orange-500/10 text-blue-600 dark:text-orange-400 flex items-center justify-center">
+                    <div className="h-10 w-10 rounded-xl bg-blue-50 dark:bg-blue-500/10 text-blue-600 dark:text-blue-400 flex items-center justify-center">
                       <service.icon className="h-5 w-5" />
                     </div>
                     <span className="text-[9px] font-bold uppercase tracking-wider bg-neutral-50 dark:bg-neutral-900 text-neutral-400 dark:text-neutral-500 px-2 py-0.5 rounded">
@@ -2453,7 +2453,7 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
                     </span>
                   </div>
 
-                  <h3 className="text-sm font-extrabold text-neutral-900 dark:text-white group-hover:text-blue-600 dark:text-orange-400 transition-colors">
+                  <h3 className="text-sm font-extrabold text-neutral-900 dark:text-white group-hover:text-blue-600 dark:text-blue-400 transition-colors">
                     {currentLang === 'en' ? service.nameEn : service.nameBn}
                   </h3>
 
@@ -2470,7 +2470,7 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
                       </span>
                     ))}
                   </div>
-                  <div className="flex items-center justify-between text-[10px] font-bold text-blue-600 dark:text-orange-400">
+                  <div className="flex items-center justify-between text-[10px] font-bold text-blue-600 dark:text-blue-400">
                     <span>{currentLang === 'en' ? service.benefitEn : service.benefitBn}</span>
                     <ArrowRight className="h-3.5 w-3.5 group-hover:translate-x-1 transition-transform" />
                   </div>
@@ -2487,7 +2487,7 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
       <section id="industries-serve" className="border-t border-neutral-100 dark:border-neutral-800 bg-neutral-50/20 py-24 relative z-10">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-16">
           <div className="text-center space-y-4 max-w-2xl mx-auto">
-            <span className="text-xs font-bold uppercase tracking-widest text-blue-600 dark:text-orange-400">
+            <span className="text-xs font-bold uppercase tracking-widest text-blue-600 dark:text-blue-400">
               {currentLang === 'en' ? 'SECTOR FOCUS' : 'শিল্পক্ষেত্র সমূহ'}
             </span>
             <h2 className="font-sans text-3xl font-black text-neutral-900 dark:text-white leading-tight">
@@ -2506,7 +2506,7 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
                 key={i}
                 className="group relative rounded-2xl border border-neutral-100 dark:border-neutral-800 bg-white dark:bg-[#141414] p-5 space-y-4 hover:border-blue-500/15 hover:shadow-xl transition-all duration-300"
               >
-                <div className="h-10 w-10 rounded-xl bg-blue-50 dark:bg-orange-500/10 text-blue-600 dark:text-orange-400 flex items-center justify-center group-hover:scale-105 transition-transform duration-300">
+                <div className="h-10 w-10 rounded-xl bg-blue-50 dark:bg-blue-500/10 text-blue-600 dark:text-blue-400 flex items-center justify-center group-hover:scale-105 transition-transform duration-300">
                   <ind.icon className="h-5 w-5" />
                 </div>
                 <div className="space-y-1">
@@ -2530,7 +2530,7 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-start">
           
           <div className="lg:col-span-4 space-y-6 lg:sticky lg:top-24">
-            <span className="text-xs font-bold uppercase tracking-widest text-blue-600 dark:text-orange-400">
+            <span className="text-xs font-bold uppercase tracking-widest text-blue-600 dark:text-blue-400">
               {currentLang === 'en' ? 'OUR IMPLEMENTATION WORKFLOW' : 'আমাদের কাজের ধাপসমূহ'}
             </span>
             <h2 className="font-sans text-3xl font-black text-neutral-900 dark:text-white leading-tight">
@@ -2549,7 +2549,7 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
                   onClick={() => setActiveProcessStep(idx)}
                   className={`w-full text-left px-4 py-2.5 rounded-lg text-xs font-bold transition-all duration-200 cursor-pointer ${
                     activeProcessStep === idx 
-                      ? 'bg-white dark:bg-[#141414] text-blue-600 dark:text-orange-400 shadow-sm border border-neutral-100 dark:border-neutral-800' 
+                      ? 'bg-white dark:bg-[#141414] text-blue-600 dark:text-blue-400 shadow-sm border border-neutral-100 dark:border-neutral-800' 
                       : 'text-neutral-400 dark:text-neutral-500 hover:text-neutral-900 dark:text-white'
                   }`}
                 >
@@ -2569,12 +2569,12 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
                 transition={{ duration: 0.3 }}
                 className="bg-white dark:bg-[#141414] border border-neutral-100 dark:border-neutral-800 rounded-3xl p-8 md:p-10 shadow-xl relative overflow-hidden"
               >
-                <div className="absolute top-0 right-0 h-24 w-24 bg-blue-50/5 dark:bg-orange-500/50 rounded-bl-full flex items-center justify-end pr-6 pt-2 text-4xl font-black text-blue-100">
+                <div className="absolute top-0 right-0 h-24 w-24 bg-blue-50/5 dark:bg-blue-500/50 rounded-bl-full flex items-center justify-end pr-6 pt-2 text-4xl font-black text-blue-100">
                   {processSteps[activeProcessStep].step}
                 </div>
 
                 <div className="space-y-6">
-                  <span className="text-[10px] font-black uppercase tracking-widest text-blue-600 dark:text-orange-400 bg-blue-50 dark:bg-orange-500/10 px-3 py-1 rounded-full border border-blue-100/50">
+                  <span className="text-[10px] font-black uppercase tracking-widest text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-500/10 px-3 py-1 rounded-full border border-blue-100/50">
                     Phase {processSteps[activeProcessStep].step}
                   </span>
 
@@ -2633,7 +2633,7 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
 
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-16">
           <div className="text-center space-y-4 max-w-2xl mx-auto">
-            <span className="text-xs font-bold uppercase tracking-widest text-blue-600 dark:text-orange-400">
+            <span className="text-xs font-bold uppercase tracking-widest text-blue-600 dark:text-blue-400">
               {currentLang === 'en' ? 'OUR TECH STACK' : 'আমাদের আধুনিক প্রযুক্তি'}
             </span>
             <h2 className="font-sans text-3xl font-black text-neutral-900 dark:text-white leading-tight">
@@ -2663,7 +2663,7 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
                         {currentLang === 'en' ? cat.descEn : cat.descBn}
                       </p>
                     </div>
-                    <span className="self-start md:self-auto text-[9px] font-mono font-bold uppercase tracking-wider bg-blue-50 dark:bg-orange-500/10 text-blue-600 dark:text-orange-400 px-3 py-1 rounded-full border border-blue-100/30">
+                    <span className="self-start md:self-auto text-[9px] font-mono font-bold uppercase tracking-wider bg-blue-50 dark:bg-blue-500/10 text-blue-600 dark:text-blue-400 px-3 py-1 rounded-full border border-blue-100/30">
                       {currentLang === 'en' ? 'Live Tech Train' : 'টেকনোলজি ট্রেন'}
                     </span>
                   </div>
@@ -2685,7 +2685,7 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
                             <TechIcon logo={tech.logo} />
                           </div>
                           <div className="overflow-hidden min-w-0">
-                            <span className="block text-xs font-black text-neutral-800 dark:text-neutral-100 truncate group-hover:text-blue-600 dark:text-orange-400 transition-colors">
+                            <span className="block text-xs font-black text-neutral-800 dark:text-neutral-100 truncate group-hover:text-blue-600 dark:text-blue-400 transition-colors">
                               {tech.name}
                             </span>
                             <span className="block text-[8.5px] text-neutral-400 dark:text-neutral-500 font-mono font-bold uppercase tracking-widest truncate">
@@ -2711,7 +2711,7 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
          ======================================================== */}
       <section id="success-stories" className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-24 relative z-10">
         <div className="text-center space-y-4 max-w-2xl mx-auto mb-16">
-          <span className="text-xs font-bold uppercase tracking-widest text-blue-600 dark:text-orange-400">
+          <span className="text-xs font-bold uppercase tracking-widest text-blue-600 dark:text-blue-400">
             {currentLang === 'en' ? 'MEASURABLE BUSINESS OUTCOMES' : 'সাফল্যের বিবরণী'}
           </span>
           <h2 className="font-sans text-3xl font-black text-neutral-900 dark:text-white leading-tight">
@@ -2727,7 +2727,7 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
               <div className="space-y-2">
                 <span className="text-[10px] font-black uppercase tracking-widest text-neutral-400 dark:text-neutral-500">{story.company}</span>
                 <div className="flex items-baseline space-x-2">
-                  <span className="text-3xl font-black text-blue-600 dark:text-orange-400">{story.metric}</span>
+                  <span className="text-3xl font-black text-blue-600 dark:text-blue-400">{story.metric}</span>
                 </div>
                 <p className="text-[11px] text-neutral-400 dark:text-neutral-500 leading-relaxed font-normal">
                   {currentLang === 'en' ? story.metricDescEn : story.metricDescBn}
@@ -2748,7 +2748,7 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
                   </p>
                 </div>
                 <div className="space-y-1">
-                  <span className="text-[9px] font-bold uppercase tracking-widest text-blue-500 dark:text-orange-400">The Result</span>
+                  <span className="text-[9px] font-bold uppercase tracking-widest text-blue-500 dark:text-blue-400">The Result</span>
                   <p className="text-xs text-neutral-500 dark:text-neutral-400 dark:text-neutral-500 leading-relaxed font-normal">
                     {currentLang === 'en' ? story.resultsEn : story.resultsBn}
                   </p>
@@ -2765,7 +2765,7 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
       <section id="awards-certifications" className="border-t border-neutral-100 dark:border-neutral-800 bg-neutral-50/20 py-24 relative z-10">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-16">
           <div className="text-center space-y-4 max-w-2xl mx-auto">
-            <span className="text-xs font-bold uppercase tracking-widest text-blue-600 dark:text-orange-400">
+            <span className="text-xs font-bold uppercase tracking-widest text-blue-600 dark:text-blue-400">
               {currentLang === 'en' ? 'VERIFIED EXPERTISE' : 'যাচাইকৃত সনদপত্র'}
             </span>
             <h2 className="font-sans text-3xl font-black text-neutral-900 dark:text-white leading-tight">
@@ -2776,11 +2776,11 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
             {awardsList.map((aw, i) => (
               <div key={i} className="group border border-neutral-100/70 bg-white dark:bg-[#141414] p-6 rounded-2xl shadow-sm hover:shadow-md transition-shadow flex items-start space-x-4">
-                <div className="h-10 w-10 rounded-xl bg-blue-50 dark:bg-orange-500/10 text-blue-600 dark:text-orange-400 flex items-center justify-center shrink-0">
+                <div className="h-10 w-10 rounded-xl bg-blue-50 dark:bg-blue-500/10 text-blue-600 dark:text-blue-400 flex items-center justify-center shrink-0">
                   <Award className="h-5 w-5" />
                 </div>
                 <div>
-                  <span className="block text-xs font-black text-neutral-900 dark:text-white group-hover:text-blue-600 dark:text-orange-400 transition-colors">{aw.title}</span>
+                  <span className="block text-xs font-black text-neutral-900 dark:text-white group-hover:text-blue-600 dark:text-blue-400 transition-colors">{aw.title}</span>
                   <span className="block text-[10px] text-neutral-400 dark:text-neutral-500 mt-1">{aw.issuer}</span>
                 </div>
               </div>
@@ -2796,7 +2796,7 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
           
           <div className="lg:col-span-6 space-y-6">
-            <span className="text-xs font-bold uppercase tracking-widest text-blue-600 dark:text-orange-400">
+            <span className="text-xs font-bold uppercase tracking-widest text-blue-600 dark:text-blue-400">
               {currentLang === 'en' ? 'GLOBAL NETWORK' : 'বিশ্বব্যাপী কার্যক্রম'}
             </span>
             <h2 className="font-sans text-3xl font-black text-neutral-900 dark:text-white leading-tight">
@@ -2810,11 +2810,11 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
 
             <div className="grid grid-cols-2 gap-4">
               <div className="border border-neutral-100/75 p-4 rounded-xl">
-                <span className="block text-xl font-black text-blue-600 dark:text-orange-400">12+</span>
+                <span className="block text-xl font-black text-blue-600 dark:text-blue-400">12+</span>
                 <span className="block text-[10px] text-neutral-400 dark:text-neutral-500 uppercase tracking-widest">{currentLang === 'en' ? 'Countries Served' : 'সেবাপ্রাপ্ত দেশ'}</span>
               </div>
               <div className="border border-neutral-100/75 p-4 rounded-xl">
-                <span className="block text-xl font-black text-blue-600 dark:text-orange-400">100%</span>
+                <span className="block text-xl font-black text-blue-600 dark:text-blue-400">100%</span>
                 <span className="block text-[10px] text-neutral-400 dark:text-neutral-500 uppercase tracking-widest">{currentLang === 'en' ? 'Remote Delivery' : 'রিমোট কোলাবরেশন'}</span>
               </div>
             </div>
@@ -2823,11 +2823,11 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
           <div className="lg:col-span-6 flex justify-center">
             {/* Elegant luxury minimalist map grid */}
             <div className="relative w-full max-w-md aspect-video bg-neutral-50 dark:bg-neutral-900 border border-neutral-100 dark:border-neutral-800 rounded-2xl p-6 flex flex-col justify-between shadow-inner">
-              <div className="absolute inset-0 bg-[radial-gradient(#FF4D00_1.5px,transparent_1.5px)] [background-size:24px_24px] opacity-10"></div>
+              <div className="absolute inset-0 bg-[radial-gradient(#2563eb_1.5px,transparent_1.5px)] [background-size:24px_24px] opacity-10"></div>
               
               <div className="flex justify-between items-start relative z-10">
                 <span className="text-[9px] font-mono font-bold text-neutral-400 dark:text-neutral-500">NEXT_SOLUTION_CORE_NODES</span>
-                <Globe className="h-4 w-4 text-blue-600 dark:text-orange-400 animate-spin [animation-duration:20s]" />
+                <Globe className="h-4 w-4 text-blue-600 dark:text-blue-400 animate-spin [animation-duration:20s]" />
               </div>
 
               {/* Simulated Cities pins */}
@@ -2862,7 +2862,7 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
       <section id="community-contributions" className="border-t border-neutral-100 dark:border-neutral-800 bg-neutral-50/20 py-24 relative z-10">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-16">
           <div className="text-center space-y-4 max-w-2xl mx-auto">
-            <span className="text-xs font-bold uppercase tracking-widest text-blue-600 dark:text-orange-400">
+            <span className="text-xs font-bold uppercase tracking-widest text-blue-600 dark:text-blue-400">
               {currentLang === 'en' ? 'COMMUNITY & IMPACT' : 'সামাজিক অবদান ও উদ্ভাবন'}
             </span>
             <h2 className="font-sans text-3xl font-black text-neutral-900 dark:text-white leading-tight">
@@ -2874,7 +2874,7 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
             {communityContributions.map((c, i) => (
               <div key={i} className="border border-neutral-100 dark:border-neutral-800 bg-white dark:bg-[#141414] p-6 md:p-8 rounded-3xl shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between space-y-6">
                 <div className="space-y-3">
-                  <span className="text-[10px] font-black uppercase tracking-widest text-blue-600 dark:text-orange-400 bg-blue-50 dark:bg-orange-500/10 px-2.5 py-1 rounded border border-blue-100/50">
+                  <span className="text-[10px] font-black uppercase tracking-widest text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-500/10 px-2.5 py-1 rounded border border-blue-100/50">
                     {c.metric}
                   </span>
                   <h4 className="text-sm font-extrabold text-neutral-900 dark:text-white pt-1">
@@ -2900,7 +2900,7 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
          ======================================================== */}
       <section id="about-final-cta" className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-24 relative z-10">
         <div className="rounded-3xl bg-neutral-950 text-white p-8 md:p-16 text-center space-y-8 relative overflow-hidden shadow-2xl">
-          <div className="absolute inset-0 bg-[radial-gradient(#FF4D00_1.5px,transparent_1.5px)] [background-size:24px_24px] opacity-10"></div>
+          <div className="absolute inset-0 bg-[radial-gradient(#2563eb_1.5px,transparent_1.5px)] [background-size:24px_24px] opacity-10"></div>
           
           <div className="space-y-4 max-w-2xl mx-auto relative z-10">
             <span className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full bg-white/10 text-white text-[9px] font-bold uppercase tracking-wider">

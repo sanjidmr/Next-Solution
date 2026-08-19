@@ -13,7 +13,7 @@ import {
   Users, Calendar, BarChart3, TrendingUp, Award, Clock, ArrowLeft, 
   Check, Mail, Send, Activity, Play, Plus, Trash2, Edit2,
   ShoppingCart, Palette, Search, Clapperboard, Bot,
-  Target, Handshake
+  Target, Handshake, MapPin, Truck, Briefcase
 } from 'lucide-react';
 
 import { translations } from '@/data/translations';
@@ -22,12 +22,15 @@ import {
   getTestimonials, getBlogs, getPortfolio, getPricingPackages, 
   addSubscriber, getWhyChooseUsCards, getWhyChooseUsStats, 
   getWhyChooseUsBadges, getWhyChooseUsTechs, getWhyChooseUsCTA,
-  getProcessSteps, getProcessCTA, getTechServiceCards
+  getProcessSteps, getProcessCTA, getTechServiceCards,
+  getCurrencies, getCurrencySettings
 } from '@/lib/db';
+import { getLocalItem, setLocalItem } from '@/lib/utils';
 import { 
   Service, PortfolioItem, BlogPost, Testimonial, SuccessStory, 
   ClientLogo, PricingPackage, WhyChooseUsCard, WhyChooseUsStat, 
-  WhyChooseUsBadge, WhyChooseUsTech, WhyChooseUsCTA, ProcessStep, ProcessCTA, TechServiceCard 
+  WhyChooseUsBadge, WhyChooseUsTech, WhyChooseUsCTA, ProcessStep, ProcessCTA, TechServiceCard,
+  Currency
 } from '@/types';
 
 const IconHelper = ({ name, className }: { name: string; className?: string }) => {
@@ -415,6 +418,49 @@ export default function HomePageSections({ currentLang, setTab }: HomePageSectio
   const [newsletterError, setNewsletterError] = useState('');
   const [hoveredEcosystem, setHoveredEcosystem] = useState<any>(null);
   const [activeTimelineStep, setActiveTimelineStep] = useState<number>(0);
+  const [hoveredIndustry, setHoveredIndustry] = useState<string | null>(null);
+
+  // Currency switcher (shared with pricing page)
+  const allCurrencies = getCurrencies().filter(c => c.enabled !== false).sort((a, b) => a.sortOrder - b.sortOrder);
+  const currencySettings = getCurrencySettings();
+  const [selectedCurrency, setSelectedCurrency] = useState<Currency | null>(() => {
+    const storedCode = getLocalItem('next_solution_selected_currency_code');
+    if (storedCode) {
+      const found = allCurrencies.find(c => c.code === storedCode);
+      if (found) return found;
+    }
+    const defaultCurr = allCurrencies.find(c => c.code === (getCurrencySettings().defaultCurrencyCode || 'USD'));
+    return defaultCurr || allCurrencies[0] || null;
+  });
+  const [liveRates, setLiveRates] = useState<Record<string, number>>({});
+
+  useEffect(() => {
+    if (currencySettings.enableLiveRates) {
+      fetch('https://open.er-api.com/v6/latest/USD')
+        .then(res => res.json())
+        .then(data => {
+          if (data && data.rates) setLiveRates(data.rates);
+        })
+        .catch(() => {});
+    }
+  }, [currencySettings.enableLiveRates]);
+
+  const handleCurrencyChange = (curr: Currency) => {
+    setSelectedCurrency(curr);
+    setLocalItem('next_solution_selected_currency_code', curr.code);
+  };
+
+  const formatPrice = (usdAmount: number) => {
+    if (!selectedCurrency) return `$${usdAmount.toLocaleString()}`;
+    const liveRate = currencySettings.enableLiveRates ? liveRates[selectedCurrency.code] : undefined;
+    const rate = liveRate ?? selectedCurrency.exchangeRate ?? 1.0;
+    const amount = usdAmount * rate;
+    const formattedAmount = amount.toLocaleString(undefined, {
+      minimumFractionDigits: currencySettings.decimalPrecision ?? 0,
+      maximumFractionDigits: currencySettings.decimalPrecision ?? 0,
+    });
+    return `${selectedCurrency.symbol}${formattedAmount}`;
+  };
 
   // Horizontal scroll ref for featured portfolio row
   const portfolioRowRef = useRef<HTMLDivElement>(null);
@@ -456,7 +502,8 @@ export default function HomePageSections({ currentLang, setTab }: HomePageSectio
       ArrowRight, CheckCircle, ChevronRight, HelpCircle, Star, Quote, 
       Sparkles, Layers, Cpu, ShieldCheck, Heart, ArrowUpRight, Code, 
       MessageSquare, Shield, Megaphone, Smartphone, Globe, Zap, 
-      Users, Calendar, BarChart3, TrendingUp, Award, Clock
+      Users, Calendar, BarChart3, TrendingUp, Award, Clock,
+      ShoppingCart, MapPin, Truck, Briefcase
     };
     const IconComp = (name && Object.prototype.hasOwnProperty.call(iconsMap, name)) ? iconsMap[name] : Globe;
     return <IconComp className={className} />;
@@ -500,86 +547,15 @@ export default function HomePageSections({ currentLang, setTab }: HomePageSectio
 
   // Static Details for Industries (Section 8)
   const industries = [
-    {
-      id: 'ind-1',
-      nameEn: 'E-Commerce',
-      nameBn: 'ই-কমার্স',
-      descEn: 'High conversion payment architectures, sub-second search matching, and dynamic cart scaling.',
-      descBn: 'উচ্চ কনভার্সন পেমেন্ট ফ্রেমওয়ার্ক, দ্রুততম প্রোডাক্ট সার্চ ফিল্টারিং এবং ডাইনামিক কার্ট স্কেলিং সলিউশন।',
-      iconName: 'Zap'
-    },
-    {
-      id: 'ind-2',
-      nameEn: 'Healthcare & Biotech',
-      nameBn: 'স্বাস্থ্যসেবা ও বায়োটেক',
-      descEn: 'Telemetry visualizer panels, HIPAA-ready database queries, and secure client-record vaults.',
-      descBn: 'টেলিমেট্রি ভিজ্যুয়ালাইজার প্যানেল, নিরাপদ ডেটা ম্যানেজমেন্ট এবং সুরক্ষিত পেশেন্ট রেকর্ড ভল্ট।',
-      iconName: 'Activity'
-    },
-    {
-      id: 'ind-3',
-      nameEn: 'SaaS & Enterprise Portals',
-      nameBn: 'সফটওয়্যার ও কর্পোরেট পোর্টাল',
-      descEn: 'Multi-tenant database orchestration, granular role permissions, and slick analytics boards.',
-      descBn: 'মাল্টি-ট্যানেন্ট ডেটাবেস সিস্টেম, সূক্ষ্ম রোল পারমিশন এবং আকর্ষণীয় অ্যানালিটিক্স ড্যাশবোর্ড।',
-      iconName: 'Cpu'
-    },
-    {
-      id: 'ind-4',
-      nameEn: 'Fintech & Blockchain',
-      nameBn: 'ফিনটেক ও ব্লকচেইন',
-      descEn: 'Double-entry ledger validation, cryptographic key integrations, and secure payment proxies.',
-      descBn: 'ডাবল-অ্যান্ট্রি লেজার ভ্যালিডেশন, ক্রিপ্টোগ্রাফিক সিকিউরিটি এবং নিরাপদ গেটওয়ে প্রক্সি।',
-      iconName: 'ShieldCheck'
-    },
-    {
-      id: 'ind-5',
-      nameEn: 'Education & LMS',
-      nameBn: 'শিক্ষা ও এলএমএস',
-      descEn: 'Interactive live video streaming, course progress tracking, and secure payment gateways.',
-      descBn: 'ইন্টারেক্টিভ লাইভ ক্লাস স্ট্রিমিং, কোর্স অগ্রগতি ট্র্যাকিং এবং পেমেন্ট গেটওয়ে সমাধান।',
-      iconName: 'Globe'
-    },
-    {
-      id: 'ind-6',
-      nameEn: 'Real Estate & Property',
-      nameBn: 'রিয়েল এস্টেট ও প্রোপার্টি',
-      descEn: 'Interactive location mapping, advanced property filters, and secure contact booking channels.',
-      descBn: 'ইন্টারেক্টিভ লোকেশন ম্যাপিং, অ্যাডভান্সড প্রোপার্টি ফিল্টারিং এবং বুকিং চ্যানেল।',
-      iconName: 'Layers'
-    },
-    {
-      id: 'ind-7',
-      nameEn: 'Logistics & Smart Delivery',
-      nameBn: 'লজিস্টিকস ও স্মার্ট ডেলিভারি',
-      descEn: 'Real-time fleet tracking, automated delivery dispatching systems, and predictive supply chain analytics.',
-      descBn: 'রিয়েল-টাইম ডেলিভারি ট্র্যাকিং, অটোমেটেড লজিস্টিকস ডিসপ্যাচিং এবং সাপ্লাই চেইন অ্যানালিটিক্স সলিউশন।',
-      iconName: 'Clock'
-    },
-    {
-      id: 'ind-8',
-      nameEn: 'Media, Entertainment & Creators',
-      nameBn: 'মিডিয়া, এন্টারটেইনমেন্ট ও ক্রিয়েটর',
-      descEn: 'High-performance streaming platforms, automated video processing pipelines, and custom creator economy assets.',
-      descBn: 'উচ্চ-গতির স্ট্রিমিং প্ল্যাটফর্ম, স্বয়ংক্রিয় ভিডিও প্রসেসিং এবং ডিজিটাল ব্র্যান্ডিং ডিজাইন।',
-      iconName: 'Megaphone'
-    },
-    {
-      id: 'ind-9',
-      nameEn: 'Retail & Fashion Brands',
-      nameBn: 'রিটেইল ও ফ্যাশন ব্র্যান্ড',
-      descEn: 'Premium brand identity packages, highly engaging promotional product videos, and targeted marketing campaigns.',
-      descBn: 'প্রিমিয়াম ব্র্যান্ড আইডেন্টিটি প্যাকেজ, আকর্ষণীয় ভিডিও বিজ্ঞাপন এবং হাই-কনভার্টিং মার্কেটিং ক্যাম্পেইন।',
-      iconName: 'Sparkles'
-    },
-    {
-      id: 'ind-10',
-      nameEn: 'Travel, Leisure & Hospitality',
-      nameBn: 'ভ্রমণ, বিনোদন ও হসপিটালিটি',
-      descEn: 'Interactive multi-resource booking calendars, optimized localized SEO engines, and immersive promotional reels.',
-      descBn: 'ইন্টারেক্টিভ বুকিং ক্যালেন্ডার সিস্টেম, অপ্টিমাইজড লোকাল এসইও এবং চমৎকার সিনেমাটিক প্রচারমূলক ভিডিও।',
-      iconName: 'TrendingUp'
-    }
+    { id: 'ind-1', nameEn: 'E-Commerce & Retail', nameBn: 'ই-কমার্স ও রিটেইল', descEn: 'Digital experiences that turn visitors into loyal customers.', descBn: 'ডিজিটাল অভিজ্ঞতা যা ভিজিটরদের অনুগত কাস্টমারে রূপান্তর করে।', image: '/industry1.jpg', icon: 'ShoppingCart' },
+    { id: 'ind-2', nameEn: 'Technology & SaaS', nameBn: 'প্রযুক্তি ও স্যাস', descEn: 'Scalable platforms built for the future of software.', descBn: 'সফটওয়্যারের ভবিষ্যতের জন্য স্কেলেবল প্ল্যাটফর্ম।', image: '/industry2.jpg', icon: 'Cpu' },
+    { id: 'ind-3', nameEn: 'Healthcare', nameBn: 'স্বাস্থ্যসেবা', descEn: 'Secure, compliant systems that improve patient outcomes.', descBn: 'নিরাপদ, কমপ্লায়েন্ট সিস্টেম যা রোগীদের ফলাফল উন্নত করে।', image: '/industry3.jpg', icon: 'Heart' },
+    { id: 'ind-4', nameEn: 'Finance & FinTech', nameBn: 'ফিনান্স ও ফিনটেক', descEn: 'Intelligent financial platforms with bank-grade security.', descBn: 'ব্যাংক-গ্রেড নিরাপত্তাসহ বুদ্ধিমান ফিনান্সিয়াল প্ল্যাটফর্ম।', image: '/industry4.jpg', icon: 'ShieldCheck' },
+    { id: 'ind-5', nameEn: 'Real Estate', nameBn: 'রিয়েল এস্টেট', descEn: 'Immersive property experiences that drive bookings.', descBn: 'বুকিং বৃদ্ধির জন্য ইমারসিভ প্রোপার্টি অভিজ্ঞতা।', image: '/industry5.jpg', icon: 'Layers' },
+    { id: 'ind-6', nameEn: 'Education & E-Learning', nameBn: 'শিক্ষা ও ই-লার্নিং', descEn: 'Engaging learning platforms that educate and inspire.', descBn: 'শিক্ষাদান ও অনুপ্রেরণামূলক লার্নিং প্ল্যাটফর্ম।', image: '/industry6.jpg', icon: 'Globe' },
+    { id: 'ind-7', nameEn: 'Travel & Hospitality', nameBn: 'ভ্রমণ ও হসপিটালিটি', descEn: 'Seamless booking journeys for the modern traveler.', descBn: 'আধুনিক ভ্রমণকারীদের জন্য সুগম বুকিং যাত্রা।', image: '/industry7.jpg', icon: 'MapPin' },
+    { id: 'ind-8', nameEn: 'Logistics & Transportation', nameBn: 'লজিস্টিকস ও পরিবহন', descEn: 'Real-time tracking and optimized supply chain systems.', descBn: 'রিয়েল-টাইম ট্র্যাকিং ও অপ্টিমাইজড সাপ্লাই চেইন সিস্টেম।', image: '/industry8.jpg', icon: 'Truck' },
+    { id: 'ind-9', nameEn: 'Professional Services', nameBn: 'পেশাদার সেবা', descEn: 'Digital-first solutions for modern consulting firms.', descBn: 'আধুনিক কনসালটিং ফার্মের জন্য ডিজিটাল-ফার্স্ট সলিউশন।', image: '/industry9.jpg', icon: 'Briefcase' },
   ];
 
   // Static Details for Technologies (Section 9)
@@ -1292,59 +1268,247 @@ className="group cursor-pointer"
         </div>
       </section>
       {/* ========================================================
-          SECTION 8: INDUSTRIES WE SERVE (PREMIUM VERTICALS)
+          SECTION 8: INDUSTRIES WE SERVE (PREMIUM ASYMMETRIC EDITORIAL)
          ======================================================== */}
-      <section id="industries" className="bg-gray-50/20 border-y border-gray-100 dark:border-neutral-800 py-12">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-10">
-          <div className="text-center space-y-4 max-w-2xl mx-auto">
-            <span className="text-xs font-bold uppercase tracking-wider text-blue-600 dark:text-orange-400">
-              {currentLang === 'en' ? 'SECTOR DOMINANCE' : 'আমাদের দক্ষতাসমূহ'}
-            </span>
-            <h2 className="font-sans text-3xl font-black text-gray-900 dark:text-white leading-tight">
-              {currentLang === 'en' ? 'Custom Engineering for Diverse Industries' : 'ভিন্ন খাতের জন্য বিশেষায়িত সফটওয়্যার সলিউশন'}
+      <section id="industries" className="relative bg-white py-16 sm:py-20 overflow-hidden">
+        {/* Subtle background decorations */}
+        <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-orange-100/30 rounded-full blur-[120px] pointer-events-none" />
+        <div className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] bg-orange-50/40 rounded-full blur-[100px] pointer-events-none" />
+        <div className="absolute inset-0 bg-[radial-gradient(#FF4A00_0.8px,transparent_0.8px)] [background-size:32px_32px] opacity-[0.03] pointer-events-none" />
+
+        <div className="relative z-10 mx-auto max-w-[1400px] px-4 sm:px-6 lg:px-8">
+          {/* ── Section Header ── */}
+          <div className="text-center space-y-4 max-w-3xl mx-auto mb-12 sm:mb-16">
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-orange-50 border border-orange-200/60">
+              <span className="h-1.5 w-1.5 rounded-full bg-orange-500 animate-pulse" />
+              <span className="text-[10px] font-black uppercase tracking-[0.2em] text-orange-600">
+                {currentLang === 'en' ? 'INDUSTRIES WE SERVE' : 'যে সকল সেক্টরে আমরা সেবা দিই'}
+              </span>
+            </div>
+            <h2 className="font-sans text-3xl sm:text-4xl lg:text-5xl font-black text-gray-900 leading-[1.1] tracking-tight">
+              {currentLang === 'en' ? (
+                <>Built for <span className="text-orange-500">Your Industry.</span><br />Designed for Your Growth.</>
+              ) : (
+                <>আপনার <span className="text-orange-500">সেক্টরের</span> জন্য তৈরি।<br />আপনার প্রবৃদ্ধির জন্য ডিজাইন।</>
+              )}
             </h2>
-            <p className="text-xs md:text-sm text-gray-500 dark:text-neutral-400 dark:text-neutral-500 leading-relaxed max-w-xl mx-auto">
-              {currentLang === 'en' 
-                ? 'We translate complex industry workflows into intuitive, lighting-fast Typesafe software interfaces.'
-                : 'আমরা জটিল সেক্টর রিকোয়ারমেন্টকে সহজ ও অত্যন্ত গতিশীল ডিজিটাল ইন্টারফেসে রূপান্তর করি।'}
+            <p className="text-sm sm:text-base text-gray-500 leading-relaxed max-w-2xl mx-auto">
+              {currentLang === 'en'
+                ? 'From startups to established enterprises, we create digital experiences and solutions tailored to the unique needs of every industry.'
+                : 'স্টার্টআপ থেকে প্রতিষ্ঠিত এন্টারপ্রাইজ — প্রতিটি সেক্টরের অনন্য চাহিদার জন্য আমরা কাস্টম ডিজিটাল সলিউশন তৈরি করি।'}
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {industries.map((industry, idx) => (
-              <motion.div
-                key={industry.id}
-                initial={{ opacity: 0, y: 15 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: idx * 0.05, duration: 0.5 }}
-                className="rounded-3xl border border-gray-100 dark:border-neutral-800 bg-white dark:bg-[#141414] p-6 md:p-8 space-y-4 shadow-sm hover:shadow-lg transition duration-200 flex flex-col justify-between group"
-              >
-                <div className="space-y-4">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-blue-50/5 dark:bg-orange-500/50 text-blue-600 dark:text-orange-400 group-hover:bg-blue-600 group-hover:text-white transition duration-200">
-                    {renderLucideIcon(industry.iconName, "h-5 w-5")}
-                  </div>
-                  <div className="space-y-2">
-                    <h4 className="font-sans text-base font-bold text-gray-900 dark:text-white">
-                      {currentLang === 'en' ? industry.nameEn : industry.nameBn}
-                    </h4>
-                    <p className="text-xs text-gray-400 dark:text-neutral-500 leading-relaxed">
-                      {currentLang === 'en' ? industry.descEn : industry.descBn}
-                    </p>
-                  </div>
-                </div>
+          {/* ── Desktop Asymmetric Layout ── */}
+          <div
+            className="hidden lg:grid relative"
+            style={{ gridTemplateColumns: 'minmax(0,1fr) minmax(0,1.6fr) minmax(0,1fr)', gridTemplateRows: 'repeat(4, auto)', gap: '16px 20px', alignItems: 'center' }}
+            onMouseLeave={() => setHoveredIndustry(null)}
+          >
+            {/* Subtle connecting lines SVG (behind everything) */}
+            <svg className="absolute inset-0 w-full h-full pointer-events-none z-0" style={{ overflow: 'visible' }}>
+              {/* Dots pattern connecting cards to center */}
+              {industries.slice(0, 4).map((_, i) => (
+                <circle key={`ldot-${i}`} cx="33%" cy={`${14 + i * 24}%`} r={hoveredIndustry !== null ? 3 : 2} fill={hoveredIndustry !== null ? '#FF4A00' : '#d1d5db'} className="transition-all duration-500" />
+              ))}
+              {industries.slice(4, 8).map((_, i) => (
+                <circle key={`rdot-${i}`} cx="67%" cy={`${14 + i * 24}%`} r={hoveredIndustry !== null ? 3 : 2} fill={hoveredIndustry !== null ? '#FF4A00' : '#d1d5db'} className="transition-all duration-500" />
+              ))}
+            </svg>
 
-                <div className="pt-4 border-t border-gray-50 flex justify-end">
-                  <button 
-                    onClick={() => { setTab('contact'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-                    className="inline-flex items-center space-x-1 text-xs font-bold text-gray-400 dark:text-neutral-500 group-hover:text-blue-600 dark:text-orange-400 transition"
+            {/* ── Left Column (4 cards) ── */}
+            <div className="flex flex-col gap-4 z-10">
+              {industries.slice(0, 4).map((ind, idx) => {
+                const isHovered = hoveredIndustry === ind.id;
+                return (
+                  <motion.div
+                    key={ind.id}
+                    initial={{ opacity: 0, x: -30 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: idx * 0.08, duration: 0.5 }}
+                    whileHover={{ y: -6 }}
+                    onMouseEnter={() => setHoveredIndustry(ind.id)}
+                    className={`relative group cursor-pointer rounded-[22px] overflow-hidden border transition-all duration-400 ${isHovered ? 'border-orange-400 shadow-[0_12px_40px_rgba(255,74,0,0.15)]' : 'border-gray-200 shadow-sm hover:shadow-lg'}`}
+                    style={{ transform: idx % 2 === 1 ? 'translateX(8px)' : 'none' }}
                   >
-                    <span>{currentLang === 'en' ? 'Discuss Vertical' : 'পরামর্শ নিন'}</span>
-                    <ChevronRight className="h-4 w-4" />
-                  </button>
+                    <div className="relative w-full h-[155px]">
+                      <img src={ind.image} alt={currentLang === 'en' ? ind.nameEn : ind.nameBn} className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+                      {/* Icon */}
+                      <div className="absolute top-3 left-3 w-8 h-8 rounded-full bg-black/50 border border-orange-500/40 flex items-center justify-center backdrop-blur-sm group-hover:border-orange-500 group-hover:shadow-[0_0_12px_rgba(255,74,0,0.3)] transition-all duration-400">
+                        {renderLucideIcon(ind.icon, 'h-3.5 w-3.5 text-orange-400')}
+                      </div>
+                      {/* Arrow button */}
+                      <div className="absolute top-3 right-3 w-7 h-7 rounded-full bg-white/10 border border-white/20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 backdrop-blur-sm">
+                        <ArrowRight className="h-3 w-3 text-white -rotate-45" />
+                      </div>
+                      {/* Text */}
+                      <div className="absolute bottom-0 left-0 right-0 p-4">
+                        <h4 className="text-[13px] font-bold text-white leading-tight mb-0.5">
+                          {currentLang === 'en' ? ind.nameEn : ind.nameBn}
+                        </h4>
+                        <p className="text-[10px] text-gray-300 leading-snug opacity-80 group-hover:opacity-100 transition-opacity duration-300 line-clamp-2">
+                          {currentLang === 'en' ? ind.descEn : ind.descBn}
+                        </p>
+                      </div>
+                    </div>
+                  </motion.div>
+                );
+              })}
+            </div>
+
+            {/* ── Center Featured Area ── */}
+            <motion.div
+              className="flex items-center justify-center z-10"
+              initial={{ opacity: 0, scale: 0.9 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+            >
+              <div className={`relative w-full aspect-square max-w-[400px] rounded-full transition-all duration-500 ${hoveredIndustry !== null ? 'shadow-[0_0_60px_rgba(255,74,0,0.12)]' : ''}`}>
+                {/* Outer ring */}
+                <div className={`absolute -inset-3 rounded-full border-2 border-dashed transition-all duration-500 ${hoveredIndustry !== null ? 'border-orange-400/50' : 'border-gray-200'}`} />
+                {/* Inner ring */}
+                <div className={`absolute -inset-1 rounded-full border transition-all duration-500 ${hoveredIndustry !== null ? 'border-orange-400' : 'border-gray-300'}`} />
+                {/* Image */}
+                <div className="w-full h-full rounded-full overflow-hidden border-4 border-white shadow-2xl">
+                  <img
+                    src={hoveredIndustry ? industries.find(i => i.id === hoveredIndustry)?.image || industries[0].image : industries[0].image}
+                    alt="Industries"
+                    className="w-full h-full object-cover transition-all duration-700"
+                  />
                 </div>
-              </motion.div>
-            ))}
+                {/* Center label */}
+                <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 bg-white border border-gray-200 rounded-full px-5 py-2 shadow-lg">
+                  <span className="text-[10px] font-black uppercase tracking-[0.15em] text-gray-900">
+                    {currentLang === 'en' ? '9+ INDUSTRIES' : '৯+ সেক্টর'}
+                  </span>
+                </div>
+              </div>
+            </motion.div>
+
+            {/* ── Right Column (4 cards) ── */}
+            <div className="flex flex-col gap-4 z-10">
+              {industries.slice(4, 8).map((ind, idx) => {
+                const isHovered = hoveredIndustry === ind.id;
+                return (
+                  <motion.div
+                    key={ind.id}
+                    initial={{ opacity: 0, x: 30 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: (idx + 4) * 0.08, duration: 0.5 }}
+                    whileHover={{ y: -6 }}
+                    onMouseEnter={() => setHoveredIndustry(ind.id)}
+                    className={`relative group cursor-pointer rounded-[22px] overflow-hidden border transition-all duration-400 ${isHovered ? 'border-orange-400 shadow-[0_12px_40px_rgba(255,74,0,0.15)]' : 'border-gray-200 shadow-sm hover:shadow-lg'}`}
+                    style={{ transform: idx % 2 === 0 ? 'translateX(-8px)' : 'none' }}
+                  >
+                    <div className="relative w-full h-[155px]">
+                      <img src={ind.image} alt={currentLang === 'en' ? ind.nameEn : ind.nameBn} className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+                      <div className="absolute top-3 left-3 w-8 h-8 rounded-full bg-black/50 border border-orange-500/40 flex items-center justify-center backdrop-blur-sm group-hover:border-orange-500 group-hover:shadow-[0_0_12px_rgba(255,74,0,0.3)] transition-all duration-400">
+                        {renderLucideIcon(ind.icon, 'h-3.5 w-3.5 text-orange-400')}
+                      </div>
+                      <div className="absolute top-3 right-3 w-7 h-7 rounded-full bg-white/10 border border-white/20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 backdrop-blur-sm">
+                        <ArrowRight className="h-3 w-3 text-white -rotate-45" />
+                      </div>
+                      <div className="absolute bottom-0 left-0 right-0 p-4">
+                        <h4 className="text-[13px] font-bold text-white leading-tight mb-0.5">
+                          {currentLang === 'en' ? ind.nameEn : ind.nameBn}
+                        </h4>
+                        <p className="text-[10px] text-gray-300 leading-snug opacity-80 group-hover:opacity-100 transition-opacity duration-300 line-clamp-2">
+                          {currentLang === 'en' ? ind.descEn : ind.descBn}
+                        </p>
+                      </div>
+                    </div>
+                  </motion.div>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* ── 9th Industry — Featured Wide Card (Desktop) ── */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.4, duration: 0.5 }}
+            className="hidden lg:block mt-6 relative mx-auto max-w-3xl group cursor-pointer rounded-[24px] overflow-hidden border border-gray-200 shadow-sm hover:shadow-xl transition-all duration-400 hover:border-orange-400"
+          >
+            <div className="relative h-[180px] flex">
+              <img src={industries[8].image} alt={currentLang === 'en' ? industries[8].nameEn : industries[8].nameBn} className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+              <div className="absolute inset-0 bg-gradient-to-r from-black/75 via-black/40 to-transparent" />
+              <div className="relative z-10 flex items-center gap-6 p-8 w-full">
+                <div className="w-14 h-14 rounded-2xl bg-black/50 border border-orange-500/40 flex items-center justify-center backdrop-blur-sm shrink-0 group-hover:border-orange-500 group-hover:shadow-[0_0_20px_rgba(255,74,0,0.3)] transition-all duration-400">
+                  {renderLucideIcon(industries[8].icon, 'h-6 w-6 text-orange-400')}
+                </div>
+                <div className="space-y-1.5">
+                  <h4 className="text-lg font-bold text-white">
+                    {currentLang === 'en' ? industries[8].nameEn : industries[8].nameBn}
+                  </h4>
+                  <p className="text-xs text-gray-300 max-w-md leading-relaxed">
+                    {currentLang === 'en' ? industries[8].descEn : industries[8].descBn}
+                  </p>
+                </div>
+                <div className="ml-auto shrink-0 w-10 h-10 rounded-full bg-white/10 border border-white/20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 backdrop-blur-sm">
+                  <ArrowRight className="h-4 w-4 text-white -rotate-45" />
+                </div>
+              </div>
+            </div>
+          </motion.div>
+
+          {/* ── Mobile / Tablet Layout ── */}
+          <div className="lg:hidden space-y-6">
+            {/* Featured image on mobile */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="relative rounded-[24px] overflow-hidden aspect-[16/9] sm:aspect-[21/9]"
+            >
+              <img src={industries[0].image} alt="Industries" className="w-full h-full object-cover" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+              <div className="absolute bottom-0 left-0 right-0 p-5 sm:p-8">
+                <div className="inline-flex items-center gap-2 bg-white/15 backdrop-blur-sm rounded-full px-3 py-1 mb-3 border border-white/20">
+                  <span className="h-1.5 w-1.5 rounded-full bg-orange-400" />
+                  <span className="text-[9px] font-bold text-white uppercase tracking-widest">{currentLang === 'en' ? 'Our Expertise' : 'আমাদের দক্ষতা'}</span>
+                </div>
+                <h3 className="text-xl sm:text-2xl font-black text-white leading-tight">
+                  {currentLang === 'en' ? 'Digital Solutions Across Every Industry' : 'প্রতিটি সেক্টরে ডিজিটাল সলিউশন'}
+                </h3>
+              </div>
+            </motion.div>
+
+            {/* Industry cards grid */}
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4">
+              {industries.map((ind, idx) => (
+                <motion.div
+                  key={ind.id}
+                  initial={{ opacity: 0, y: 15 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: idx * 0.04, duration: 0.4 }}
+                  className="group cursor-pointer rounded-[18px] overflow-hidden border border-gray-200 shadow-sm hover:shadow-lg hover:border-orange-300 transition-all duration-300"
+                >
+                  <div className="relative h-[110px] sm:h-[130px]">
+                    <img src={ind.image} alt={currentLang === 'en' ? ind.nameEn : ind.nameBn} className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+                    <div className="absolute top-2 left-2 w-7 h-7 rounded-full bg-black/50 border border-orange-500/40 flex items-center justify-center backdrop-blur-sm">
+                      {renderLucideIcon(ind.icon, 'h-3 w-3 text-orange-400')}
+                    </div>
+                    <div className="absolute bottom-0 left-0 right-0 p-3">
+                      <h4 className="text-[11px] sm:text-[12px] font-bold text-white leading-tight mb-0.5">
+                        {currentLang === 'en' ? ind.nameEn : ind.nameBn}
+                      </h4>
+                      <p className="text-[9px] sm:text-[10px] text-gray-300 leading-snug line-clamp-2 opacity-80">
+                        {currentLang === 'en' ? ind.descEn : ind.descBn}
+                      </p>
+                    </div>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
           </div>
         </div>
       </section>
@@ -1369,6 +1533,34 @@ className="group cursor-pointer"
                 ? 'Milestone-based billing, zero hidden fees, and absolute source-code transparency.'
                 : 'নির্ধারিত কাজের জন্য স্বচ্ছ মাইলস্টোন চুক্তি, কোনো অতিরিক্ত হিডেন চার্জ নেই।'}
             </p>
+          </div>
+
+          <div className="flex flex-col items-center space-y-3">
+            <div className="inline-flex flex-wrap items-center justify-center gap-1.5 bg-white dark:bg-[#141414] border border-gray-100 dark:border-neutral-800 rounded-2xl p-1.5 shadow-sm">
+              {allCurrencies.map((curr) => {
+                const isSelected = selectedCurrency?.code === curr.code;
+                return (
+                  <button
+                    key={curr.code}
+                    onClick={() => handleCurrencyChange(curr)}
+                    className={`relative px-4 py-2.5 rounded-xl text-xs font-bold transition-all duration-300 cursor-pointer flex items-center space-x-2 ${
+                      isSelected
+                        ? 'bg-blue-600 text-white shadow-md shadow-blue-600/10'
+                        : 'text-neutral-600 dark:text-neutral-300 hover:bg-gray-50 dark:bg-neutral-900 hover:text-neutral-950'
+                    }`}
+                  >
+                    <span className="text-sm shrink-0" role="img" aria-label={curr.name}>
+                      {curr.flag || '🏳️'}
+                    </span>
+                    <span className="font-sans shrink-0">{curr.symbol}</span>
+                    <span className="font-mono uppercase tracking-wider shrink-0">{curr.code}</span>
+                  </button>
+                );
+              })}
+            </div>
+            <span className="text-[10px] font-bold uppercase tracking-widest text-gray-400 dark:text-neutral-500">
+              {currentLang === 'en' ? 'Select Preferred Currency' : 'পছন্দসই কারেন্সি সিলেক্ট করুন'}
+            </span>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -1396,7 +1588,7 @@ className="group cursor-pointer"
                   </div>
 
                   <div className="py-2 border-y border-gray-50 flex items-baseline space-x-1.5">
-                    <span className="text-3xl font-black text-gray-900 dark:text-white font-mono">${pkg.priceMonthly}</span>
+                    <span className="text-3xl font-black text-gray-900 dark:text-white font-mono">{formatPrice(pkg.priceMonthly)}</span>
                     <span className="text-xs text-gray-400 dark:text-neutral-500">/ {currentLang === 'en' ? 'mo' : 'মাস'}</span>
                   </div>
 

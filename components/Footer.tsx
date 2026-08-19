@@ -5,7 +5,7 @@
  */
 
 import React, { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { Code, Mail, Phone, MapPin, Clock, ArrowUp, Facebook, Linkedin, Twitter, Instagram, Send, Check } from 'lucide-react';
 import { translations } from '@/data/translations';
 import { createClient } from '@/lib/supabase/client';
@@ -18,7 +18,6 @@ interface FooterProps {
 }
 
 export default function Footer({ currentLang, setTab }: FooterProps) {
-  const router = useRouter();
   const t = translations[currentLang];
   const [email, setEmail] = useState('');
   const [isSubscribed, setIsSubscribed] = useState(false);
@@ -56,8 +55,6 @@ export default function Footer({ currentLang, setTab }: FooterProps) {
     if (setTab) {
       setTab(tabId);
     }
-    const path = getPathForTab(tabId as any);
-    router.push(path);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -67,10 +64,10 @@ export default function Footer({ currentLang, setTab }: FooterProps) {
         <div className="grid grid-cols-1 gap-12 lg:grid-cols-12">
           {/* Brand Info */}
           <div id="footer-col-brand" className="lg:col-span-4 space-y-6">
-            <div onClick={() => handleQuickLink('home')} className="flex cursor-pointer items-center space-x-2">
+            <Link href={getPathForTab('home')} onClick={() => handleQuickLink('home')} className="flex cursor-pointer items-center space-x-2">
               <img src="/logow.png" alt="Next Solution" className="h-12 w-auto rounded-lg" />
               
-            </div>
+            </Link>
             <p className="text-xs md:text-sm leading-relaxed text-gray-400 max-w-xs">
               {t.footerAbout}
             </p>
@@ -104,12 +101,13 @@ export default function Footer({ currentLang, setTab }: FooterProps) {
                 { id: 'faq', label: t.navFAQ },
               ].map((link) => (
                 <li key={link.id}>
-                  <button
+                  <Link
+                    href={getPathForTab(link.id as any)}
                     onClick={() => handleQuickLink(link.id)}
                     className="hover:text-orange-500 transition text-left"
                   >
                     {link.label}
-                  </button>
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -120,29 +118,29 @@ export default function Footer({ currentLang, setTab }: FooterProps) {
             <h3 className="text-xs font-bold tracking-wider text-white uppercase">{t.footerServices}</h3>
             <ul className="space-y-2 text-xs md:text-sm">
               <li>
-                <button onClick={() => handleQuickLink('services')}               className="hover:text-orange-500 transition text-left">
+                <Link href={getPathForTab('services')} onClick={() => handleQuickLink('services')} className="hover:text-orange-500 transition text-left">
                   {currentLang === 'en' ? 'Enterprise Web Development' : 'ওয়েব ডেভেলপমেন্ট'}
-                </button>
+                </Link>
               </li>
               <li>
-                <button onClick={() => handleQuickLink('services')}               className="hover:text-orange-500 transition text-left">
+                <Link href={getPathForTab('services')} onClick={() => handleQuickLink('services')} className="hover:text-orange-500 transition text-left">
                   {currentLang === 'en' ? 'UI/UX Product Design' : 'ইউআই/ইউএক্স ডিজাইন'}
-                </button>
+                </Link>
               </li>
               <li>
-                <button onClick={() => handleQuickLink('services')}               className="hover:text-orange-500 transition text-left">
+                <Link href={getPathForTab('services')} onClick={() => handleQuickLink('services')} className="hover:text-orange-500 transition text-left">
                   {currentLang === 'en' ? 'SEO Search Dominance' : 'এসইও অপ্টিমাইজেশন'}
-                </button>
+                </Link>
               </li>
               <li>
-                <button onClick={() => handleQuickLink('services')}               className="hover:text-orange-500 transition text-left">
+                <Link href={getPathForTab('services')} onClick={() => handleQuickLink('services')} className="hover:text-orange-500 transition text-left">
                   {currentLang === 'en' ? 'Digital Growth' : 'ডিজিটাল মার্কেটিং'}
-                </button>
+                </Link>
               </li>
               <li>
-                <button onClick={() => handleQuickLink('services')}               className="hover:text-orange-500 transition text-left">
+                <Link href={getPathForTab('services')} onClick={() => handleQuickLink('services')} className="hover:text-orange-500 transition text-left">
                   {currentLang === 'en' ? 'Brand Strategy' : 'ব্র্যান্ড আইডেন্টিটি'}
-                </button>
+                </Link>
               </li>
             </ul>
           </div>
@@ -211,34 +209,38 @@ export default function Footer({ currentLang, setTab }: FooterProps) {
             &copy; {new Date().getFullYear()} Next Solution. {t.footerRights}
           </p>
           <div className="flex flex-wrap gap-x-6 gap-y-2 text-xs text-gray-400">
-            <button 
+            <Link
               id="footer-link-privacy"
-              onClick={() => handleQuickLink('privacy_policy')} 
+              href={getPathForTab('privacy_policy')}
+              onClick={() => handleQuickLink('privacy_policy')}
               className="hover:text-orange-500 transition"
             >
               {currentLang === 'en' ? 'Privacy Policy' : 'গোপনীয়তা নীতি'}
-            </button>
-            <button 
+            </Link>
+            <Link
               id="footer-link-terms"
-              onClick={() => handleQuickLink('terms_conditions')} 
+              href={getPathForTab('terms_conditions')}
+              onClick={() => handleQuickLink('terms_conditions')}
               className="hover:text-orange-500 transition"
             >
               {currentLang === 'en' ? 'Terms & Conditions' : 'শর্তাবলী'}
-            </button>
-            <button 
+            </Link>
+            <Link
               id="footer-link-cookies"
-              onClick={() => handleQuickLink('cookie_policy')} 
+              href={getPathForTab('cookie_policy')}
+              onClick={() => handleQuickLink('cookie_policy')}
               className="hover:text-orange-500 transition"
             >
               {currentLang === 'en' ? 'Cookie Policy' : 'কুকি নীতি'}
-            </button>
-            <button 
+            </Link>
+            <Link
               id="footer-link-admin"
-              onClick={() => handleQuickLink('admin')} 
+              href={getPathForTab('admin')}
+              onClick={() => handleQuickLink('admin')}
               className="hover:text-orange-500 transition"
             >
               {currentLang === 'en' ? 'Admin Panel' : 'অ্যাডমিন প্যানেল'}
-            </button>
+            </Link>
           </div>
           <button
             id="back-to-top-btn"

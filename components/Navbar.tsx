@@ -46,7 +46,6 @@ export default function Navbar({
     { id: 'services', label: t.navServices },
     { id: 'portfolio', label: t.navPortfolio },
     { id: 'pricing', label: t.navPricing },
-    { id: 'blogs', label: t.navBlogs },
     { id: 'faq', label: t.navFAQ },
     { id: 'reviews', label: t.navReviews },
     { id: 'contact', label: t.navContact },

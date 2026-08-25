@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 /**
  * @license
  * SPDX-License-Identifier: Apache-2.0
@@ -30,7 +30,10 @@ import {
   Video,
   Megaphone,
   Brain,
-  Code
+  Code,
+  Tag,
+  Diamond,
+  Target
 } from 'lucide-react';
 import { translations } from '@/data/translations';
 import { 
@@ -53,7 +56,7 @@ interface PricingSectionProps {
 
 export default function PricingSection({ currentLang, setTab, isFullPage = false }: PricingSectionProps) {
   const t = translations[currentLang];
-  const [billingPeriod, setBillingPeriod] = useState<'monthly' | 'yearly'>('yearly');
+  const [billingPeriod, setBillingPeriod] = useState<'project' | 'monthly'>('project');
   const [valueTab, setValueTab] = useState<'mvp' | 'saas' | 'enterprise'>('mvp');
   const [activeSpectrum, setActiveSpectrum] = useState<'all' | 'design' | 'dev' | 'video' | 'marketing' | 'ai'>('all');
 
@@ -170,13 +173,15 @@ export default function PricingSection({ currentLang, setTab, isFullPage = false
 
   // Filter Categories
   const categories = [
-    { key: 'Agency Packages', labelEn: 'Agency Packages', labelBn: 'এজেন্সি প্যাকেজ' },
-    { key: 'Web Development', labelEn: 'Website', labelBn: 'ওয়েবসাইট' },
-    { key: 'Web App', labelEn: 'Web App', labelBn: 'ওয়েব অ্যাপ' },
-    { key: 'SEO', labelEn: 'SEO', labelBn: 'এসইও' },
-    { key: 'Digital Marketing', labelEn: 'Marketing', labelBn: 'মার্কেটিং' },
-    { key: 'UI/UX Design', labelEn: 'Design', labelBn: 'ডিজাইন' },
-    { key: 'AI Automation & Agent', labelEn: 'AI', labelBn: 'এআই' }
+    { key: 'Agency Packages', labelEn: 'All Works', labelBn: 'সব কাজ' },
+    { key: 'Web Development', labelEn: 'Web Development', labelBn: 'ওয়েব ডেভেলপমেন্ট' },
+    { key: 'Mobile App', labelEn: 'Mobile App', labelBn: 'মোবাইল অ্যাপ' },
+    { key: 'UI/UX Design', labelEn: 'UI/UX Design', labelBn: 'ইউআই/ইউএক্স ডিজাইন' },
+    { key: 'Graphic Design', labelEn: 'Graphic Design', labelBn: 'গ্রাফিক ডিজাইন' },
+    { key: 'Video Editing', labelEn: 'Video Editing', labelBn: 'ভিডিও এডিটিং' },
+    { key: 'Digital Marketing', labelEn: 'Digital Marketing', labelBn: 'ডিজিটাল মার্কেটিং' },
+    { key: 'AI Automation', labelEn: 'AI Automation', labelBn: 'এআই অটোমেশন' },
+    { key: 'SEO', labelEn: 'SEO', labelBn: 'এসইও' }
   ];
 
   const [selectedCategory, setSelectedCategory] = useState<string>('Agency Packages');
@@ -198,7 +203,7 @@ export default function PricingSection({ currentLang, setTab, isFullPage = false
 
   const calculatedTotal = useMemo(() => {
     if (!selectedBasePackage) return 0;
-    const basePrice = billingPeriod === 'yearly' ? selectedBasePackage.priceYearly : selectedBasePackage.priceMonthly;
+    const basePrice = billingPeriod === 'project' ? selectedBasePackage.priceYearly : selectedBasePackage.priceMonthly;
     
     let addonsCost = 0;
     selectedAddonIds.forEach(id => {
@@ -240,9 +245,9 @@ export default function PricingSection({ currentLang, setTab, isFullPage = false
 
   // CTA Package Pick
   const handleSelectPlan = (pkg: PricingPackage) => {
-    const periodStr = billingPeriod === 'yearly' ? 'Yearly Billing' : 'Monthly Billing';
+    const periodStr = billingPeriod === 'project' ? 'Project Basis' : 'Monthly Billing';
     const localizedName = currentLang === 'en' ? pkg.nameEn : pkg.nameBn;
-    const localizedPrice = billingPeriod === 'yearly' ? pkg.priceYearly : pkg.priceMonthly;
+    const localizedPrice = billingPeriod === 'project' ? pkg.priceYearly : pkg.priceMonthly;
     
     // Autofill quote form with chosen package
     setQuoteForm(prev => ({
@@ -343,359 +348,224 @@ export default function PricingSection({ currentLang, setTab, isFullPage = false
   return (
     <section id="pricing-page-root" className={`bg-neutral-50/60 selection:bg-blue-600 selection:text-white ${isFullPage ? 'pt-0 pb-20' : 'py-20'}`}>
       
-      {/* 1. HERO SECTION */}
-      <div id="pricing-hero" className="relative overflow-hidden bg-white dark:bg-[#141414] border-b border-neutral-100 dark:border-neutral-800 pt-8 pb-16 md:pt-12 md:pb-20">
-        {/* Subtle geometric grid & abstract ambient lights */}
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,#8080800a_1px,transparent_1px),linear-gradient(to_bottom,#8080800a_1px,transparent_1px)] bg-[size:14px_24px] opacity-75" />
-        <div className="absolute -top-40 -left-40 h-[450px] w-[450px] rounded-full bg-radial from-blue-400/10 via-blue-200/5 to-transparent blur-3xl pointer-events-none" />
-        <div className="absolute top-1/2 right-0 h-[600px] w-[600px] rounded-full bg-radial from-indigo-300/10 via-transparent to-transparent blur-3xl pointer-events-none" />
-        
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10">
-          
-          {/* Breadcrumb */}
-          <nav className="flex mb-6 text-xs font-semibold tracking-wide text-neutral-400 dark:text-neutral-500 uppercase" aria-label="Breadcrumb">
-            <ol className="inline-flex items-center space-x-1.5 md:space-x-2">
-              <li className="inline-flex items-center">
-                <button onClick={() => setTab('hero')} className="hover:text-blue-600 dark:text-orange-400 transition-colors cursor-pointer bg-transparent border-none p-0 outline-none flex items-center gap-1.5 font-bold">
-                  <span>{currentLang === 'en' ? 'Home' : 'হোম'}</span>
-                </button>
-              </li>
-              <li>
-                <div className="flex items-center">
-                  <span className="mx-1 text-neutral-300 dark:text-neutral-600">/</span>
-                  <span className="text-neutral-800 dark:text-neutral-100 font-bold">{currentLang === 'en' ? 'Pricing & Value Hub' : 'প্রাইসিং ও ভ্যালু হাব'}</span>
-                </div>
-              </li>
-            </ol>
-          </nav>
+      {/* 1. HERO SECTION — Big Impact. Small Investment. */}
+      <section className="relative min-h-screen flex items-center overflow-hidden bg-[#050607]">
+        {/* Dark atmospheric layers */}
+        <div className="absolute inset-0 bg-gradient-to-br from-[#050607] via-[#0a0b0d] to-[#08090b]" />
+        <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(ellipse_80%_50%_at_70%_50%,rgba(255,102,0,0.06),transparent)]" />
+        <div className="absolute bottom-0 right-0 w-[800px] h-[800px] rounded-full bg-[radial-gradient(circle,rgba(255,102,0,0.08),transparent_70%)] blur-3xl pointer-events-none" />
+        <div className="absolute top-20 left-10 w-[400px] h-[400px] rounded-full bg-[radial-gradient(circle,rgba(255,102,0,0.03),transparent_70%)] blur-3xl pointer-events-none" />
 
-          <div className="grid grid-cols-1 gap-12 lg:grid-cols-12 lg:items-center">
-            
-            {/* Left Content */}
-            <div className="lg:col-span-6 space-y-6 text-left">
-              <div className="inline-flex items-center space-x-2 rounded-full bg-blue-50/80 border border-blue-100/50 px-3 py-1 text-xs font-semibold text-blue-700 shadow-sm">
-                <Sparkles className="h-3.5 w-3.5 animate-pulse text-blue-600 dark:text-orange-400" />
-                <span className="tracking-wider uppercase font-mono">{currentLang === 'en' ? 'NextValue™ Active Engine' : 'নেক্সটভ্যালু™ একটিভ ইঞ্জিন'}</span>
-              </div>
-              
-              <h1 className="font-sans text-4xl font-extrabold tracking-tight text-neutral-900 dark:text-white sm:text-5xl lg:text-6xl leading-[1.1]">
-                {currentLang === 'en' ? (
-                  <>
-                    One Flat Rate.<br />
-                    <span className="bg-gradient-to-r from-blue-600 dark:from-orange-500 via-indigo-600 to-violet-600 bg-clip-text text-transparent">
-                      All Digital Services.
-                    </span>
-                  </>
-                ) : (
-                  <>
-                    একদম সরল রেট।<br />
-                    <span className="bg-gradient-to-r from-blue-600 dark:from-orange-500 via-indigo-600 to-violet-600 bg-clip-text text-transparent">
-                      সব ডিজিটাল সেবা একসাথে।
-                    </span>
-                  </>
-                )}
-              </h1>
-              
-              <p className="text-sm md:text-base text-neutral-500 dark:text-neutral-400 dark:text-neutral-500 max-w-xl leading-relaxed font-sans">
-                {currentLang === 'en' 
-                  ? 'Access senior designers, expert full-stack engineers, creative video editors, SEO masters, and advanced AI experts. We integrate all core disciplines under transparent, milestone-gated budgets.'
-                  : 'সিনিয়র ডিজাইনার, এক্সপার্ট ডেভেলপার, অভিজ্ঞ ভিডিও এডিটর, এসইও এবং এআই স্পেশালিস্টদের সমন্বিত সার্ভিস। আলাদা আলাদা ডোমেইনের দক্ষ টিমদের সেবা একসাথে পাবেন স্বচ্ছ ও পরিকল্পিত বাজেটে।'}
-              </p>
+        <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 w-full py-16 md:py-20 lg:py-0">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-4 items-center">
 
-              {/* Service Spectrum Selector - Proving All Services are Included */}
-              <div className="space-y-3">
-                <span className="text-[10px] font-bold uppercase tracking-wider text-neutral-400 dark:text-neutral-500 font-mono block">
-                  {currentLang === 'en' ? '⚡ Tap to preview integrated discipline tiers:' : '⚡ আমাদের সব ডিজিটাল সেবার যেকোনোটিতে ক্লিক করে দেখুন:'}
+            {/* LEFT SIDE — Content */}
+            <div className="space-y-6 md:space-y-7 lg:pr-8">
+
+              {/* Label pill */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.1 }}
+              >
+                <span className="inline-flex items-center space-x-2 rounded-full border border-orange-500/30 bg-orange-500/5 px-3.5 py-1.5">
+                  <span className="h-1.5 w-1.5 rounded-full bg-orange-500 animate-pulse" />
+                  <span className="text-[10px] font-black uppercase tracking-[0.2em] text-orange-500">
+                    {currentLang === 'en' ? 'PRICING & PACKAGES' : 'মূল্য ও প্যাকেজ'}
+                  </span>
                 </span>
-                
-                <div className="grid grid-cols-5 gap-2 max-w-md">
-                  {/* Category 1: Design */}
-                  <button
-                    onClick={() => handleSpectrumSelect('design')}
-                    className={`flex flex-col items-center justify-center p-2 rounded-xl border transition-all duration-300 cursor-pointer ${
-                      activeSpectrum === 'design' 
-                        ? 'border-pink-300 bg-pink-50/50 shadow-sm text-pink-600 dark:text-pink-400 scale-[1.03]' 
-                        : 'border-neutral-200/60 hover:border-neutral-300 dark:border-neutral-600 bg-neutral-50/40 text-neutral-500 dark:text-neutral-400 dark:text-neutral-500 hover:text-neutral-800 dark:text-neutral-100'
-                    }`}
-                  >
-                    <Palette className="h-4.5 w-4.5 mb-1" />
-                    <span className="text-[9px] font-bold tracking-tight text-center">
-                      {currentLang === 'en' ? 'Design' : 'ডিজাইন'}
-                    </span>
-                  </button>
+              </motion.div>
 
-                  {/* Category 2: Code */}
-                  <button
-                    onClick={() => handleSpectrumSelect('dev')}
-                    className={`flex flex-col items-center justify-center p-2 rounded-xl border transition-all duration-300 cursor-pointer ${
-                      activeSpectrum === 'dev' 
-                        ? 'border-blue-300 bg-blue-50/5 dark:bg-orange-500/50 shadow-sm text-blue-600 dark:text-orange-400 scale-[1.03]' 
-                        : 'border-neutral-200/60 hover:border-neutral-300 dark:border-neutral-600 bg-neutral-50/40 text-neutral-500 dark:text-neutral-400 dark:text-neutral-500 hover:text-neutral-800 dark:text-neutral-100'
-                    }`}
-                  >
-                    <Code className="h-4.5 w-4.5 mb-1" />
-                    <span className="text-[9px] font-bold tracking-tight text-center">
-                      {currentLang === 'en' ? 'Web/Apps' : 'ডেভেলপমেন্ট'}
-                    </span>
-                  </button>
+              {/* Headline */}
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.2 }}
+                className="space-y-1"
+              >
+                <h1 className="font-sans text-[clamp(2.8rem,5.5vw,5.2rem)] font-black leading-[1.05] tracking-tight text-white">
+                  {currentLang === 'en' ? 'Big Impact.' : 'বড় প্রভাব।'}
+                  <br />
+                  <span className="text-white">
+                    {currentLang === 'en' ? 'Small ' : 'ছোট '}
+                  </span>
+                  <span className="text-orange-500">
+                    {currentLang === 'en' ? 'Investment.' : 'বিনিয়োগ।'}
+                  </span>
+                </h1>
+                {/* Hand-drawn underline SVG */}
+                <svg className="w-48 md:w-56 h-4 mt-1 text-orange-500" viewBox="0 0 200 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M2 8 C30 2, 60 2, 100 6 S160 10, 198 4" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </motion.div>
 
-                  {/* Category 3: Video */}
-                  <button
-                    onClick={() => handleSpectrumSelect('video')}
-                    className={`flex flex-col items-center justify-center p-2 rounded-xl border transition-all duration-300 cursor-pointer ${
-                      activeSpectrum === 'video' 
-                        ? 'border-amber-300 bg-amber-50/50 shadow-sm text-amber-600 dark:text-amber-400 scale-[1.03]' 
-                        : 'border-neutral-200/60 hover:border-neutral-300 dark:border-neutral-600 bg-neutral-50/40 text-neutral-500 dark:text-neutral-400 dark:text-neutral-500 hover:text-neutral-800 dark:text-neutral-100'
-                    }`}
-                  >
-                    <Video className="h-4.5 w-4.5 mb-1" />
-                    <span className="text-[9px] font-bold tracking-tight text-center">
-                      {currentLang === 'en' ? 'Video/Edit' : 'ভিডিও এডিট'}
-                    </span>
-                  </button>
+              {/* Description */}
+              <motion.p
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.35 }}
+                className="text-base md:text-lg text-neutral-400 leading-relaxed max-w-lg"
+              >
+                {currentLang === 'en'
+                  ? 'Premium digital solutions that deliver maximum results without stretching your budget.'
+                  : 'আপনার বাজেট না বাড়িয়ে সর্বোচ্চ ফলাফল প্রদানকারী প্রিমিয়াম ডিজিটাল সমাধান।'}
+              </motion.p>
 
-                  {/* Category 4: Growth/SEO */}
-                  <button
-                    onClick={() => handleSpectrumSelect('marketing')}
-                    className={`flex flex-col items-center justify-center p-2 rounded-xl border transition-all duration-300 cursor-pointer ${
-                      activeSpectrum === 'marketing' 
-                        ? 'border-emerald-300 bg-emerald-50/50 shadow-sm text-emerald-600 dark:text-emerald-400 scale-[1.03]' 
-                        : 'border-neutral-200/60 hover:border-neutral-300 dark:border-neutral-600 bg-neutral-50/40 text-neutral-500 dark:text-neutral-400 dark:text-neutral-500 hover:text-neutral-800 dark:text-neutral-100'
-                    }`}
-                  >
-                    <Megaphone className="h-4.5 w-4.5 mb-1" />
-                    <span className="text-[9px] font-bold tracking-tight text-center">
-                      {currentLang === 'en' ? 'SEO/Ads' : 'এসইও ও গ্রোথ'}
-                    </span>
-                  </button>
-
-                  {/* Category 5: AI Automation */}
-                  <button
-                    onClick={() => handleSpectrumSelect('ai')}
-                    className={`flex flex-col items-center justify-center p-2 rounded-xl border transition-all duration-300 cursor-pointer ${
-                      activeSpectrum === 'ai' 
-                        ? 'border-purple-300 bg-purple-50/5 dark:bg-orange-500/50 shadow-sm text-purple-600 dark:text-purple-400 dark:text-purple-300 scale-[1.03]' 
-                        : 'border-neutral-200/60 hover:border-neutral-300 dark:border-neutral-600 bg-neutral-50/40 text-neutral-500 dark:text-neutral-400 dark:text-neutral-500 hover:text-neutral-800 dark:text-neutral-100'
-                    }`}
-                  >
-                    <Brain className="h-4.5 w-4.5 mb-1" />
-                    <span className="text-[9px] font-bold tracking-tight text-center">
-                      {currentLang === 'en' ? 'AI/Agents' : 'এআই ও বট'}
-                    </span>
-                  </button>
-                </div>
-              </div>
-
-              {/* Unique Trust Mini Indicators */}
-              <div className="grid grid-cols-2 gap-4 py-2 border-y border-neutral-100/80 max-w-lg">
-                <div className="flex items-center space-x-2.5">
-                  <div className="p-1 rounded-md bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">
-                    <ShieldCheck className="h-4 w-4" />
+              {/* Three Value Points */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.45 }}
+                className="grid grid-cols-3 gap-0 max-w-lg"
+              >
+                {/* Affordable Pricing */}
+                <div className="flex flex-col items-start pr-5 relative">
+                  <div className="rounded-full border border-orange-500/30 bg-orange-500/5 p-2.5 mb-3">
+                    <Tag className="h-5 w-5 text-orange-500" />
                   </div>
-                  <span className="text-xs font-bold text-neutral-700 dark:text-neutral-200">
-                    {currentLang === 'en' ? '100% IP Code & Art Ownership' : '১০০% সোর্স ও আর্ট মালিকানা'}
+                  <span className="text-sm font-bold text-white leading-tight mb-1.5">
+                    {currentLang === 'en' ? 'Affordable' : 'সাশ্রয়ী'}
+                    <br />
+                    {currentLang === 'en' ? 'Pricing' : 'মূল্য'}
+                  </span>
+                  <span className="text-xs text-neutral-500 leading-snug">
+                    {currentLang === 'en' ? 'Plans that fit your budget perfectly.' : 'আপনার বাজেটে ফিটিং প্ল্যান।'}
+                  </span>
+                  <div className="absolute right-0 top-0 bottom-0 w-px bg-gradient-to-b from-transparent via-neutral-700 to-transparent" />
+                </div>
+
+                {/* Best Value */}
+                <div className="flex flex-col items-start px-5 relative">
+                  <div className="rounded-full border border-orange-500/30 bg-orange-500/5 p-2.5 mb-3">
+                    <Diamond className="h-5 w-5 text-orange-500" />
+                  </div>
+                  <span className="text-sm font-bold text-white leading-tight mb-1.5">
+                    {currentLang === 'en' ? 'Best' : 'সেরা'}
+                    <br />
+                    {currentLang === 'en' ? 'Value' : 'মূল্য'}
+                  </span>
+                  <span className="text-xs text-neutral-500 leading-snug">
+                    {currentLang === 'en' ? 'Top quality service at the best price.' : 'সেরা দামে সেরা সেবা।'}
+                  </span>
+                  <div className="absolute right-0 top-0 bottom-0 w-px bg-gradient-to-b from-transparent via-neutral-700 to-transparent" />
+                </div>
+
+                {/* Max Results */}
+                <div className="flex flex-col items-start pl-5">
+                  <div className="rounded-full border border-orange-500/30 bg-orange-500/5 p-2.5 mb-3">
+                    <Target className="h-5 w-5 text-orange-500" />
+                  </div>
+                  <span className="text-sm font-bold text-white leading-tight mb-1.5">
+                    {currentLang === 'en' ? 'Max' : 'সর্বোচ্চ'}
+                    <br />
+                    {currentLang === 'en' ? 'Results' : 'ফলাফল'}
+                  </span>
+                  <span className="text-xs text-neutral-500 leading-snug">
+                    {currentLang === 'en' ? 'Real, measurable growth focus.' : 'প্রকৃত, পরিমাপযোগ্য বৃদ্ধি।'}
                   </span>
                 </div>
-                <div className="flex items-center space-x-2.5">
-                  <div className="p-1 rounded-md bg-indigo-50 dark:bg-orange-500/10 text-indigo-600 dark:text-orange-400">
-                    <Clock className="h-4 w-4" />
-                  </div>
-                  <span className="text-xs font-bold text-neutral-700 dark:text-neutral-200">
-                    {currentLang === 'en' ? 'Multidisciplinary Sprints' : 'সব সার্ভিস, একটি সমন্বিত চুক্তি'}
-                  </span>
-                </div>
-              </div>
+              </motion.div>
 
-              <div className="flex flex-wrap gap-4 pt-2">
-                <button 
-                  id="hero-free-consult"
-                  onClick={() => { setTab('contact'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-                  className="group rounded-xl bg-gradient-to-r from-blue-600 dark:from-orange-500 to-indigo-600 dark:to-orange-400 px-6 py-3.5 text-xs font-bold text-white shadow-lg shadow-blue-500/15 hover:shadow-blue-500/25 transition-all duration-300 cursor-pointer flex items-center space-x-2"
+              {/* CTA Buttons */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.55 }}
+                className="flex flex-wrap gap-3 pt-1"
+              >
+                <button
+                  onClick={() => {
+                    document.getElementById('pricing-plans-grid-section')?.scrollIntoView({ behavior: 'smooth' });
+                  }}
+                  className="group rounded-xl bg-orange-500 hover:bg-orange-600 px-7 py-4 text-sm font-bold text-white shadow-lg shadow-orange-500/20 hover:shadow-orange-500/30 hover:-translate-y-0.5 transition-all duration-300 cursor-pointer flex items-center space-x-2"
                 >
-                  <span>{currentLang === 'en' ? 'Get Free Consultation' : 'ফ্রি কনসালটেশন নিন'}</span>
-                  <ArrowRight className="h-4 w-4 group-hover:translate-x-1.5 transition-transform duration-200" />
+                  <span>{currentLang === 'en' ? 'View Pricing Plans' : 'প্রাইসিং প্ল্যান দেখুন'}</span>
+                  <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform duration-200" />
                 </button>
-                
-                <a 
-                  href="#quote-form-section"
-                  className="rounded-xl border border-neutral-200/80 bg-neutral-50/50 dark:bg-neutral-900/50 backdrop-blur-xs px-6 py-3.5 text-xs font-bold text-neutral-700 dark:text-neutral-200 hover:bg-neutral-100/80 hover:border-neutral-300 dark:border-neutral-600 transition-all duration-200 cursor-pointer flex items-center"
+                <button
+                  onClick={() => {
+                    document.getElementById('pricing-matrix-section')?.scrollIntoView({ behavior: 'smooth' });
+                  }}
+                  className="rounded-xl border border-orange-500/30 bg-transparent hover:bg-orange-500/5 px-7 py-4 text-sm font-bold text-white hover:text-orange-400 transition-all duration-300 cursor-pointer flex items-center space-x-2"
                 >
-                  <span>{currentLang === 'en' ? 'Request Custom Quote' : 'কাস্টম কোটেশন পাঠান'}</span>
-                </a>
-              </div>
+                  <span>{currentLang === 'en' ? 'Compare Plans' : 'প্ল্যান তুলনা করুন'}</span>
+                  <ArrowRight className="h-4 w-4" />
+                </button>
+              </motion.div>
             </div>
 
-            {/* Right Side - Interactive NextValue™ Estimator & Trust Matrix */}
-            <div className="lg:col-span-6">
-              <div className="relative p-0.5 rounded-3xl bg-gradient-to-b from-neutral-200/60 via-neutral-100/30 to-blue-500/10 shadow-xl shadow-neutral-100/80">
-                <div className="bg-white dark:bg-[#141414] rounded-[22px] p-6 md:p-8 space-y-6 relative overflow-hidden">
-                  
-                  {/* Decorative glowing gradient circle inside card */}
-                  <div className="absolute top-0 right-0 h-44 w-44 rounded-full bg-blue-100/20 dark:bg-orange-500/5 blur-3xl pointer-events-none" />
-                  
-                  {/* Header Title for the matrix */}
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-2">
-                      <Calculator className="h-4 w-4 text-blue-600 dark:text-orange-400" />
-                      <span className="text-xs font-bold uppercase tracking-widest text-neutral-400 dark:text-neutral-500 font-mono">
-                        {currentLang === 'en' ? 'NextValue™ Interactive Estimator' : 'নেক্সটভ্যালু™ ইন্টারেক্টিভ এস্টিমেটর'}
-                      </span>
-                    </div>
-                    <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-300 dark:text-neutral-600 uppercase tracking-wider">
-                      {currentLang === 'en' ? 'Live Rates' : 'সরাসরি রেট'}
-                    </span>
-                  </div>
+            {/* RIGHT SIDE — price.png Visual */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.96 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.8, delay: 0.3, ease: 'easeOut' }}
+              className="relative flex items-center justify-center lg:justify-end"
+            >
+              {/* Atmospheric orange glow behind image */}
+              <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                <div className="w-[500px] h-[500px] rounded-full bg-[radial-gradient(circle,rgba(255,102,0,0.12),transparent_70%)] blur-2xl" />
+              </div>
 
-                  {/* Slider/Tab Selector */}
-                  <div className="grid grid-cols-3 gap-1 p-1 bg-neutral-100/80 rounded-xl relative">
-                    <button
-                      onClick={() => setValueTab('mvp')}
-                      className={`relative py-2 text-[11px] font-bold rounded-lg transition-all duration-200 ${
-                        valueTab === 'mvp' ? 'bg-white dark:bg-[#141414] text-blue-600 dark:text-orange-400 shadow-sm' : 'text-neutral-500 dark:text-neutral-400 dark:text-neutral-500 hover:text-neutral-800 dark:text-neutral-100'
-                      }`}
-                    >
-                      {currentLang === 'en' ? 'Startup MVP' : 'স্টার্টআপ এমভিপি'}
-                    </button>
-                    <button
-                      onClick={() => setValueTab('saas')}
-                      className={`relative py-2 text-[11px] font-bold rounded-lg transition-all duration-200 ${
-                        valueTab === 'saas' ? 'bg-white dark:bg-[#141414] text-blue-600 dark:text-orange-400 shadow-sm' : 'text-neutral-500 dark:text-neutral-400 dark:text-neutral-500 hover:text-neutral-800 dark:text-neutral-100'
-                      }`}
-                    >
-                      {currentLang === 'en' ? 'Scale SaaS' : 'স্কেল সাফ'}
-                    </button>
-                    <button
-                      onClick={() => setValueTab('enterprise')}
-                      className={`relative py-2 text-[11px] font-bold rounded-lg transition-all duration-200 ${
-                        valueTab === 'enterprise' ? 'bg-white dark:bg-[#141414] text-blue-600 dark:text-orange-400 shadow-sm' : 'text-neutral-500 dark:text-neutral-400 dark:text-neutral-500 hover:text-neutral-800 dark:text-neutral-100'
-                      }`}
-                    >
-                      {currentLang === 'en' ? 'Enterprise' : 'এন্টারপ্রাইজ'}
-                    </button>
-                  </div>
-
-                  {/* Interactive Details Container with smooth state rendering */}
-                  <AnimatePresence mode="wait">
-                    <motion.div
-                      key={valueTab}
-                      initial={{ opacity: 0, y: 8 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -8 }}
-                      transition={{ duration: 0.2 }}
-                      className="space-y-5"
-                    >
-                      {/* Cost & Timeline Gauge */}
-                      <div className="bg-neutral-50/80 rounded-2xl p-5 border border-neutral-100 dark:border-neutral-800 space-y-4">
-                        <div className="flex justify-between items-end">
-                          <div>
-                            <span className="text-[10px] font-bold uppercase text-neutral-400 dark:text-neutral-500 tracking-wider font-mono">
-                              {currentLang === 'en' ? 'Simulated Cost Range' : 'আনুমানিক প্রজেক্ট বাজেট'}
-                            </span>
-                            <div className="text-2xl md:text-3xl font-extrabold text-neutral-900 dark:text-white mt-0.5 tracking-tight">
-                              {valueTab === 'mvp' && `${formatPrice(5000)} - ${formatPrice(10000)}`}
-                              {valueTab === 'saas' && `${formatPrice(15000)} - ${formatPrice(30000)}`}
-                              {valueTab === 'enterprise' && (currentLang === 'en' ? 'Custom Quote' : 'কাস্টম কোটেশন')}
-                            </div>
-                          </div>
-                          <div className="text-right">
-                            <span className="text-[10px] font-bold uppercase text-neutral-400 dark:text-neutral-500 tracking-wider font-mono">
-                              {currentLang === 'en' ? 'Guaranteed Timeline' : 'ডেলিভারি সময়সীমা'}
-                            </span>
-                            <div className="text-sm font-extrabold text-blue-600 dark:text-orange-400 flex items-center gap-1.5 justify-end mt-1">
-                              <Clock className="h-4 w-4" />
-                              <span>
-                                {valueTab === 'mvp' && (currentLang === 'en' ? '21 - 28 Days' : '২১ - ২৮ দিন')}
-                                {valueTab === 'saas' && (currentLang === 'en' ? '42 - 56 Days' : '৪২ - ৫৬ দিন')}
-                                {valueTab === 'enterprise' && (currentLang === 'en' ? 'Agile Sprints' : 'ধারাবাহিক ডেলিভারি')}
-                              </span>
-                            </div>
-                          </div>
-                        </div>
-
-                        {/* Progress visual indicator representing speed ratio */}
-                        <div className="h-1.5 bg-neutral-200/50 rounded-full overflow-hidden">
-                          <div 
-                            className="h-full bg-gradient-to-r from-blue-500 dark:from-orange-500 to-indigo-600 dark:to-orange-400 transition-all duration-500" 
-                            style={{ 
-                              width: valueTab === 'mvp' ? '33%' : valueTab === 'saas' ? '66%' : '100%' 
-                            }}
-                          />
-                        </div>
-                      </div>
-
-                      {/* Squad and Quality KPI Details */}
-                      <div className="space-y-3.5">
-                        <div className="flex items-start space-x-3 text-left">
-                          <div className="rounded-lg bg-indigo-50 dark:bg-orange-500/10 p-1.5 text-indigo-600 dark:text-orange-400 shrink-0 mt-0.5">
-                            <Briefcase className="h-3.5 w-3.5" />
-                          </div>
-                          <div>
-                            <span className="text-[10px] font-bold uppercase text-neutral-400 dark:text-neutral-500 font-mono tracking-wider">
-                              {currentLang === 'en' ? 'Multidisciplinary Team Squad' : 'মাল্টি-ডিসিপ্লিনারি স্কোয়াড বরাদ্দ'}
-                            </span>
-                            <p className="text-xs font-bold text-neutral-800 dark:text-neutral-100 leading-normal">
-                              {valueTab === 'mvp' && (currentLang === 'en' ? '1 Sr. Brand Designer + 1 Fullstack Developer + 1 launch Lead' : '১ জন সিনিয়র ব্র্যান্ড ডিজাইনার + ১ জন ফুলস্ট্যাক ডেভেলপার + ১ জন প্রজেক্ট লিড')}
-                              {valueTab === 'saas' && (currentLang === 'en' ? '2 Software Devs + 1 Lead UI Architect + 1 Video Motion Producer' : '২ জন সফটওয়্যার ডেভেলপার + ১ জন লিড ইউআই আর্কিটেক্ট + ১ জন মোশন প্রডিউসার')}
-                              {valueTab === 'enterprise' && (currentLang === 'en' ? 'Dedicated Full-Cycle Squad (Devs, DevOps, QA, Brand Strategists, SEO masters)' : 'সম্পূর্ণ ডেডিকেটেড স্কোয়াড (ডেভেলপারস, ডিভঅপস, কিউএ, ব্র্যান্ড ডিজাইনার, এসইও স্পেশালিস্ট)')}
-                            </p>
-                          </div>
-                        </div>
-
-                        <div className="flex items-start space-x-3 text-left">
-                          <div className="rounded-lg bg-emerald-50 dark:bg-emerald-500/10 p-1.5 text-emerald-600 dark:text-emerald-400 shrink-0 mt-0.5">
-                            <ShieldCheck className="h-3.5 w-3.5" />
-                          </div>
-                          <div>
-                            <span className="text-[10px] font-bold uppercase text-neutral-400 dark:text-neutral-500 font-mono tracking-wider">
-                              {currentLang === 'en' ? 'Deliverable Scope Included' : 'ডেলিভারি স্কোপের বিস্তারিত'}
-                            </span>
-                            <p className="text-xs font-medium text-neutral-600 dark:text-neutral-300 dark:text-neutral-600 leading-normal">
-                              {valueTab === 'mvp' && (currentLang === 'en' ? 'Premium identity & vector design assets, complete interactive UI prototype, high-speed code, and basic SEO.' : 'প্রিমিয়াম আইডেন্টিটি ও ভেক্টর ডিজাইন অ্যাসেট, ইন্টারঅ্যাক্টিভ ইউআই প্রোটোটাইপ, হাই-স্পিড কোড এবং বেসিক এসইও।')}
-                              {valueTab === 'saas' && (currentLang === 'en' ? 'Production-ready SaaS architecture, client dashboard, 2 High-retention video ad assets, and complete SEO ranking audits.' : 'প্রোডাকশন-রেডি সফটওয়্যার আর্কিটেক্ট, ক্লায়েন্ট ড্যাশবোর্ড, ২টি হাই-রিটেনশন ভিডিও বিজ্ঞাপন এবং সম্পূর্ণ এসইও র‍্যাঙ্কিং অডিট।')}
-                              {valueTab === 'enterprise' && (currentLang === 'en' ? 'Custom LLM integrations, cloud automations, continuous high-fidelity video rendering, copy/marketing and priority support.' : 'কাস্টম এআই ইন্টিগ্রেশন, ক্লাউড অটোমেশন, নিয়মিত হাই-ফিডেলিটি ভিডিও এডিটিং, কন্টেন্ট মার্কেটিং এবং ২৪/৭ প্রায়োরিটি সাপোর্ট।')}
-                            </p>
-                          </div>
-                        </div>
-
-                        <div className="flex items-start space-x-3 text-left">
-                          <div className="rounded-lg bg-amber-50 dark:bg-amber-500/10 p-1.5 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5">
-                            <Zap className="h-3.5 w-3.5" />
-                          </div>
-                          <div>
-                            <span className="text-[10px] font-bold uppercase text-neutral-400 dark:text-neutral-500 font-mono tracking-wider">
-                              {currentLang === 'en' ? 'True Agency Savings' : 'সরাসরি আর্থিক সাশ্রয়'}
-                            </span>
-                            <p className="text-xs font-semibold text-neutral-700 dark:text-neutral-200 leading-normal">
-                              {valueTab === 'mvp' && (currentLang === 'en' ? 'Saves ~$15,000 compared to hiring isolated design agencies & developers.' : 'আলাদা আলাদা ডিজাইন এজেন্সি ও ডেভেলপার হায়ার করার চেয়ে প্রায় $১৫,০০০ ডলার সাশ্রয়।')}
-                              {valueTab === 'saas' && (currentLang === 'en' ? 'Saves over $45,000 monthly by merging development, design, and content editing.' : 'ডেভেলপমেন্ট, ডিজাইন এবং মোশন প্রডাকশন এক ছাদের নিচে এনে প্রতি মাসে $৪৫,০০০+ সাশ্রয়।')}
-                              {valueTab === 'enterprise' && (currentLang === 'en' ? 'Infinite adaptability. Ramp up or scale down specialized resources on demand.' : 'প্রয়োজন অনুযায়ী যেকোনো সময় ডেডিকেটেড টিমের পরিধি ও স্কিলসেট পরিবর্তন করার সম্পূর্ণ স্বাধীনতা।')}
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-                    </motion.div>
-                  </AnimatePresence>
-
-                  {/* Guaranteed Trust Footer */}
-                  <div className="mt-4 pt-5 border-t border-neutral-100 dark:border-neutral-800 flex flex-col sm:flex-row gap-4 items-center justify-between">
-                    <div className="flex -space-x-2 shrink-0">
-                      <img className="inline-block h-7 w-7 rounded-full ring-2 ring-white" src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=100" alt="Client 1" />
-                      <img className="inline-block h-7 w-7 rounded-full ring-2 ring-white" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=100" alt="Client 2" />
-                      <img className="inline-block h-7 w-7 rounded-full ring-2 ring-white" src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=100" alt="Client 3" />
-                    </div>
-                    <span className="text-[10px] font-bold text-neutral-400 dark:text-neutral-500 uppercase tracking-widest text-center sm:text-right font-mono">
-                      {currentLang === 'en' ? '⚡ ZERO BULK GUARANTEE • TRUSTED BY 40+ LEADERS' : '⚡ জিরো রিস্ক গ্যারান্টি • ৪০+ কোম্পানির বিশ্বস্ত'}
-                    </span>
-                  </div>
-
+{/* Handwritten text top-right - moved higher */}
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.7 }}
+                className="absolute -top-6 right-4 md:right-8 lg:right-0 z-20 select-none"
+              >
+                <div className="relative">
+                  <span className="font-['Caveat',cursive] text-lg md:text-xl text-white italic leading-tight block">
+                    {currentLang === 'en' ? 'Best Results' : 'সেরা ফলাফল'}
+                    <br />
+                    {currentLang === 'en' ? 'Lower Cost' : 'কম খরচ'}
+                  </span>
+                  {/* Orange underline */}
+                  <svg className="w-28 h-3 mt-0.5 text-orange-500" viewBox="0 0 120 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M2 6 C20 2, 50 2, 80 6 S100 8, 118 4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+                  </svg>
+                  {/* Curved arrow pointing down */}
+                  <svg className="w-10 h-10 text-orange-500/60 -mt-1 ml-4" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M10 4 C10 4, 15 20, 20 28 S28 36, 30 32" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" fill="none" />
+                    <path d="M26 30 L30 34 L32 28" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+                  </svg>
                 </div>
-              </div>
-            </div>
+              </motion.div>
+
+              {/* Floating animation wrapper */}
+              <motion.div
+                animate={{ y: [0, -8, 0] }}
+                transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
+                className="relative z-10"
+              >
+                <img
+                  src="/price.png"
+                  alt="Smart Pricing - Low Cost, High Impact"
+                  className="w-full max-w-[600px] lg:max-w-[750px] xl:max-w-[860px] h-auto object-contain"
+                />
+              </motion.div>
+
+              {/* Bottom-right badge */}
+              <motion.div
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.5, delay: 0.9 }}
+                className="absolute bottom-8 right-0 md:bottom-12 md:right-0 z-20"
+              >
+                <div className="flex items-center space-x-2 rounded-xl border border-orange-500/20 bg-[#0a0b0d]/80 backdrop-blur-md px-3.5 py-3.5 shadow-xl shadow-black/30">
+                  <Zap className="h-3.5 w-3.5 text-orange-500 shrink-0" />
+                  <span className="text-[11px] md:text-[12px] font-bold text-neutral-300 leading-tight">
+                    {currentLang === 'en' ? 'Maximum Results, Minimum Budget.' : 'সর্বোচ্চ ফলাফল, ন্যূনতম বাজেট।'}
+                  </span>
+                </div>
+              </motion.div>
+            </motion.div>
 
           </div>
         </div>
-      </div>
 
+        {/* Bottom gradient fade into next section */}
+        <div className="absolute bottom-0 left-0 w-full h-32 bg-gradient-to-t from-[#050607] to-transparent pointer-events-none" />
+      </section>
       {/* 2. ALL-IN-ONE & SERVICE PRICING MODULE */}
       <div id="pricing-plans-grid-section" className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-20">
         
@@ -729,7 +599,7 @@ export default function PricingSection({ currentLang, setTab, isFullPage = false
                     <button
                       key={curr.code}
                       onClick={() => handleCurrencyChange(curr)}
-                      className={`relative px-4 py-2.5 rounded-xl text-xs font-bold transition-all duration-300 cursor-pointer flex items-center space-x-2 ${
+                      className={`relative px-4 py-3.5 rounded-xl text-xs font-bold transition-all duration-300 cursor-pointer flex items-center space-x-2 ${
                         isSelected
                           ? 'bg-blue-600 text-white shadow-md shadow-blue-600/10 scale-100'
                           : 'text-neutral-600 dark:text-neutral-300 dark:text-neutral-600 hover:bg-neutral-50 dark:bg-neutral-900 hover:text-neutral-950'
@@ -747,26 +617,29 @@ export default function PricingSection({ currentLang, setTab, isFullPage = false
             </div>
           )}
 
-          {/* Billing Switcher (Monthly / Yearly) */}
-          <div className="inline-flex items-center space-x-3.5 bg-white dark:bg-[#141414] border border-neutral-100 dark:border-neutral-800 rounded-full p-1.5 shadow-sm">
-            <button 
-              onClick={() => setBillingPeriod('monthly')}
-              className={`px-4.5 py-2 text-xs font-bold rounded-full transition-all duration-200 cursor-pointer ${
-                billingPeriod === 'monthly' ? 'bg-neutral-900 text-white shadow-sm' : 'text-neutral-500 dark:text-neutral-400 dark:text-neutral-500 hover:text-neutral-900 dark:text-white'
+          {/* Billing Period Toggle */}
+          <div className="inline-flex items-center space-x-1 bg-white dark:bg-[#141414] border border-neutral-100 dark:border-neutral-800 rounded-2xl p-1.5 shadow-sm">
+            <button
+              onClick={() => setBillingPeriod('project')}
+              className={`px-5 py-3.5 rounded-xl text-xs font-bold transition-all duration-300 cursor-pointer flex items-center space-x-2 ${
+                billingPeriod === 'project'
+                  ? 'bg-orange-500 text-white shadow-md shadow-orange-500/20'
+                  : 'text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white'
               }`}
             >
-              {currentLang === 'en' ? 'Monthly Billing' : 'মাসিক বিলিং'}
+              <Briefcase className="h-3.5 w-3.5" />
+              <span>{currentLang === 'en' ? 'Project Basis' : 'প্রজেক্ট ভিত্তিক'}</span>
             </button>
-            <button 
-              onClick={() => setBillingPeriod('yearly')}
-              className={`px-4.5 py-2 text-xs font-bold rounded-full transition-all duration-200 cursor-pointer flex items-center space-x-1.5 ${
-                billingPeriod === 'yearly' ? 'bg-blue-600 text-white shadow-sm' : 'text-neutral-500 dark:text-neutral-400 dark:text-neutral-500 hover:text-neutral-900 dark:text-white'
+            <button
+              onClick={() => setBillingPeriod('monthly')}
+              className={`px-5 py-3.5 rounded-xl text-xs font-bold transition-all duration-300 cursor-pointer flex items-center space-x-2 ${
+                billingPeriod === 'monthly'
+                  ? 'bg-orange-500 text-white shadow-md shadow-orange-500/20'
+                  : 'text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white'
               }`}
             >
-              <span>{currentLang === 'en' ? 'Yearly Billing' : 'বার্ষিক বিলিং'}</span>
-              <span className="bg-white/15 px-1.5 py-0.5 rounded-md text-[9px] font-black uppercase tracking-wide">
-                -20%
-              </span>
+              <Clock className="h-3.5 w-3.5" />
+              <span>{currentLang === 'en' ? 'Monthly' : 'মাসিক'}</span>
             </button>
           </div>
 
@@ -778,7 +651,7 @@ export default function PricingSection({ currentLang, setTab, isFullPage = false
                 <button
                   key={cat.key}
                   onClick={() => setSelectedCategory(cat.key)}
-                  className={`px-4.5 py-2.5 rounded-2xl text-xs font-bold transition-all duration-300 cursor-pointer ${
+                  className={`px-4.5 py-3.5 rounded-2xl text-xs font-bold transition-all duration-300 cursor-pointer ${
                     isSelected
                       ? 'bg-blue-600 text-white shadow-md shadow-blue-600/10 scale-100'
                       : 'bg-white dark:bg-[#141414] text-neutral-600 dark:text-neutral-300 dark:text-neutral-600 border border-neutral-100 dark:border-neutral-800 hover:bg-neutral-50 dark:bg-neutral-900 hover:text-neutral-950'
@@ -792,7 +665,7 @@ export default function PricingSection({ currentLang, setTab, isFullPage = false
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 items-stretch mt-12">
               {activePackages.map((pkg, idx) => {
-                const price = billingPeriod === 'yearly' ? pkg.priceYearly : pkg.priceMonthly;
+                const price = billingPeriod === 'project' ? pkg.priceYearly : pkg.priceMonthly;
                 const pkgName = currentLang === 'en' ? pkg.nameEn : pkg.nameBn;
                 
                 // Determine package tier based on index or popular status
@@ -800,24 +673,18 @@ export default function PricingSection({ currentLang, setTab, isFullPage = false
                 const isPro = idx === 1 || pkg.popular;
                 const isEnterprise = idx === 2;
 
-                // Derive delivery time, support, perfect for, money back, icons, badges
-                const deliveryTime = isStarter 
-                  ? (currentLang === 'en' ? '7 Days Delivery' : '৭ দিন ডেলিভারি')
-                  : isPro 
-                    ? (currentLang === 'en' ? '15 Days Delivery' : '১৫ দিন ডেলিভারি')
-                    : (currentLang === 'en' ? '30 Days Delivery' : '৩০ দিন ডেলিভারি');
+                // Use admin-editable fields or sensible defaults
+                const deliveryTime = pkg.deliveryTimeEn
+                  ? (currentLang === 'en' ? pkg.deliveryTimeEn : pkg.deliveryTimeBn || pkg.deliveryTimeEn)
+                  : (currentLang === 'en' ? '7-30 Days Delivery' : '৭-৩০ দিন ডেলিভারি');
 
-                const supportPeriod = isStarter 
-                  ? (currentLang === 'en' ? '1 Month Support' : '১ মাস সাপোর্ট')
-                  : isPro 
-                    ? (currentLang === 'en' ? '3 Months Support' : '৩ মাস সাপোর্ট')
-                    : (currentLang === 'en' ? '12 Months Support' : '১২ মাস সাপোর্ট');
+                const supportPeriod = pkg.supportPeriodEn
+                  ? (currentLang === 'en' ? pkg.supportPeriodEn : pkg.supportPeriodBn || pkg.supportPeriodEn)
+                  : (currentLang === 'en' ? '1 Month Support' : '১ মাস সাপোর্ট');
 
-                const perfectFor = isStarter 
-                  ? (currentLang === 'en' ? 'Perfect for: Startups & Personal Brands' : 'স্টার্টআপ ও ব্যক্তি ব্র্যান্ডের জন্য আদর্শ')
-                  : isPro 
-                    ? (currentLang === 'en' ? 'Perfect for: Growing Companies & Agencies' : 'ক্রমবর্ধমান কোম্পানি ও এজেন্সির জন্য আদর্শ')
-                    : (currentLang === 'en' ? 'Perfect for: Large Businesses & Corporates' : 'বৃহৎ ব্যবসা ও করপোরেটের জন্য আদর্শ');
+                const perfectFor = pkg.perfectForEn
+                  ? (currentLang === 'en' ? pkg.perfectForEn : pkg.perfectForBn || pkg.perfectForEn)
+                  : (currentLang === 'en' ? 'Perfect for all businesses' : 'সব ব্যবসার জন্য আদর্শ');
 
                 const moneyBack = isEnterprise 
                   ? (currentLang === 'en' ? '100% Satisfaction Guarantee' : '১০০% সন্তুষ্টির নিশ্চয়তা')
@@ -849,7 +716,7 @@ export default function PricingSection({ currentLang, setTab, isFullPage = false
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5, delay: idx * 0.1 }}
                     whileHover={{ y: -8, scale: isPro ? 1.05 : 1.02 }}
-                    className={`group relative rounded-3xl bg-white dark:bg-[#141414] border p-6 md:p-8 flex flex-col justify-between transition-all duration-300 ${
+                    className={`group relative rounded-2xl bg-white dark:bg-[#141414] border p-5 md:p-6 flex flex-col justify-between transition-all duration-300 ${
                       isPro
                         ? 'border-blue-600/80 ring-2 ring-blue-600/20 shadow-2xl shadow-blue-600/10 scale-100 lg:scale-[1.04] z-10'
                         : 'border-neutral-200/90 shadow-sm hover:shadow-xl hover:border-neutral-300 dark:border-neutral-600'
@@ -866,10 +733,10 @@ export default function PricingSection({ currentLang, setTab, isFullPage = false
                       </span>
                     )}
 
-                    <div className="space-y-6">
+                    <div className="space-y-4">
                       {/* Badge and Icon header */}
                       <div className="flex items-start justify-between">
-                        <div className="rounded-2xl bg-neutral-50 dark:bg-neutral-900 p-3.5 border border-neutral-100 dark:border-neutral-800 group-hover:bg-blue-50/5 dark:bg-orange-500/50 group-hover:border-blue-100 dark:border-orange-500/20 transition-colors duration-300">
+                        <div className="rounded-xl bg-neutral-50 dark:bg-neutral-900 p-2.5 border border-neutral-100 dark:border-neutral-800 group-hover:bg-blue-50/5 dark:bg-orange-500/50 group-hover:border-blue-100 dark:border-orange-500/20 transition-colors duration-300">
                           {icon}
                         </div>
                         <div className="text-right">
@@ -885,11 +752,11 @@ export default function PricingSection({ currentLang, setTab, isFullPage = false
                       </div>
 
                       {/* Head info */}
-                      <div className="space-y-2">
-                        <h3 className="text-xl font-black text-neutral-900 dark:text-white tracking-tight group-hover:text-blue-600 dark:text-orange-400 transition-colors duration-200">
+                      <div className="space-y-1">
+                        <h3 className="text-lg font-black text-neutral-900 dark:text-white tracking-tight group-hover:text-blue-600 dark:text-orange-400 transition-colors duration-200">
                           {pkgName}
                         </h3>
-                        <p className="text-xs text-neutral-500 dark:text-neutral-400 dark:text-neutral-500 leading-relaxed min-h-[44px]">
+                        <p className="text-[11px] text-neutral-500 dark:text-neutral-400 dark:text-neutral-500 leading-relaxed min-h-[32px]">
                           {currentLang === 'en' ? pkg.descriptionEn : pkg.descriptionBn}
                         </p>
                       </div>
@@ -900,59 +767,59 @@ export default function PricingSection({ currentLang, setTab, isFullPage = false
                       </div>
 
                       {/* Pricing block */}
-                      <div className="pt-4 border-t border-neutral-100 dark:border-neutral-800 space-y-2">
-                        <div className="flex flex-col items-baseline">
-                          <span className="text-[10px] font-black uppercase tracking-widest text-neutral-400 dark:text-neutral-500 mb-1">
+                      <div className="pt-3 border-t border-neutral-100 dark:border-neutral-800 space-y-1">
+                          <div className="flex flex-col items-baseline">
+                          <span className="text-[10px] font-black uppercase tracking-widest text-neutral-400 dark:text-neutral-500 mb-0.5">
                             {currentLang === 'en' ? 'Starting From' : 'শুরুমাত্র'}
                           </span>
                           <div className="flex items-baseline">
-                            <span className="text-4xl md:text-5xl font-black tracking-tight bg-gradient-to-r from-neutral-950 via-neutral-900 to-blue-800 bg-clip-text text-transparent">
+                            <span className="text-3xl md:text-4xl font-black tracking-tight text-gray-900 dark:text-white">
                               {formatPrice(price)}
                             </span>
                             <span className="text-xs font-semibold text-neutral-400 dark:text-neutral-500 ml-1.5">
-                              {billingPeriod === 'yearly' ? (currentLang === 'en' ? '/mo' : '/মাস') : (currentLang === 'en' ? '/mo' : '/মাস')}
+                              {billingPeriod === 'monthly' ? (currentLang === 'en' ? '/mo' : '/মাস') : ''}
                             </span>
                           </div>
                           <span className="text-[10px] font-bold text-neutral-400 dark:text-neutral-500 mt-1 uppercase tracking-widest font-mono">
-                            {billingPeriod === 'yearly' 
-                              ? (currentLang === 'en' ? 'Billed Annually' : 'বার্ষিক বিলিং') 
-                              : (currentLang === 'en' ? 'One-time Project' : 'ওয়ান-টাইম প্রজেক্ট')
+                            {billingPeriod === 'monthly'
+                              ? (currentLang === 'en' ? 'Monthly Billing' : 'মাসিক বিলিং')
+                              : (currentLang === 'en' ? 'One-time Project' : 'এককালীন প্রজেক্ট')
                             }
                           </span>
                         </div>
                       </div>
 
                       {/* Delivery and Support meta cards */}
-                      <div className="grid grid-cols-2 gap-2.5 pt-2">
-                        <div className="rounded-xl border border-neutral-100 dark:border-neutral-800 bg-neutral-50/50 dark:bg-neutral-900/50 p-2 text-center">
-                          <span className="block text-[8px] font-bold uppercase tracking-widest text-neutral-400 dark:text-neutral-500">
-                            {currentLang === 'en' ? 'Delivery Time' : 'ডেলিভারির সময়'}
+                      <div className="grid grid-cols-2 gap-2 pt-1">
+                        <div className="rounded-lg border border-neutral-100 dark:border-neutral-800 bg-neutral-50/50 dark:bg-neutral-900/50 p-1.5 text-center">
+                          <span className="block text-[7px] font-bold uppercase tracking-widest text-neutral-400 dark:text-neutral-500">
+                            {currentLang === 'en' ? 'Delivery' : 'ডেলিভারি'}
                           </span>
-                          <span className="text-[10px] font-extrabold text-neutral-800 dark:text-neutral-100 font-mono">
+                          <span className="text-[9px] font-extrabold text-neutral-800 dark:text-neutral-100 font-mono">
                             {deliveryTime}
                           </span>
                         </div>
-                        <div className="rounded-xl border border-neutral-100 dark:border-neutral-800 bg-neutral-50/50 dark:bg-neutral-900/50 p-2 text-center">
-                          <span className="block text-[8px] font-bold uppercase tracking-widest text-neutral-400 dark:text-neutral-500">
-                            {currentLang === 'en' ? 'Support SLA' : 'সাপোর্ট চুক্তি'}
+                        <div className="rounded-lg border border-neutral-100 dark:border-neutral-800 bg-neutral-50/50 dark:bg-neutral-900/50 p-1.5 text-center">
+                          <span className="block text-[7px] font-bold uppercase tracking-widest text-neutral-400 dark:text-neutral-500">
+                            {currentLang === 'en' ? 'Support' : 'সাপোর্ট'}
                           </span>
-                          <span className="text-[10px] font-extrabold text-neutral-800 dark:text-neutral-100 font-mono">
+                          <span className="text-[9px] font-extrabold text-neutral-800 dark:text-neutral-100 font-mono">
                             {supportPeriod}
                           </span>
                         </div>
                       </div>
 
                       {/* Feature list */}
-                      <div className="space-y-3 pt-2">
+                      <div className="space-y-2 pt-1">
                         <span className="block text-[10px] font-extrabold uppercase tracking-widest text-neutral-400 dark:text-neutral-500">
                           {currentLang === 'en' ? "Key Capabilities" : 'প্রধান সুবিধাসমূহ'}
                         </span>
 
-                        <ul className="space-y-3 text-xs">
+                        <ul className="space-y-1.5 text-xs">
                           {(currentLang === 'en' ? pkg.featuresEn : pkg.featuresBn).map((feature, idx) => (
-                            <li key={idx} className="group/item relative flex items-start space-x-2.5 hover:text-blue-600 dark:text-orange-400 transition-colors py-0.5">
+                            <li key={idx} className="group/item relative flex items-start space-x-2 hover:text-blue-600 dark:text-orange-400 transition-colors py-0">
                               <div className="rounded-full bg-blue-50 dark:bg-orange-500/10 p-0.5 text-blue-600 dark:text-orange-400 group-hover/item:bg-blue-100 dark:bg-orange-500/15 group-hover/item:scale-110 transition-all duration-200 mt-0.5 shrink-0">
-                                <Check className="h-3.5 w-3.5" />
+                                <Check className="h-3 w-3" />
                               </div>
                               <span className="leading-tight text-neutral-700 dark:text-neutral-200 group-hover/item:text-neutral-900 dark:text-white transition-colors font-medium">
                                 {feature}
@@ -982,11 +849,11 @@ export default function PricingSection({ currentLang, setTab, isFullPage = false
                       </div>
                     </div>
 
-                    <div className="space-y-3.5 pt-8">
+                    <div className="space-y-2.5 pt-4">
                       {/* Choose CTA */}
                       <button
                         onClick={() => handleSelectPlan(pkg)}
-                        className={`w-full rounded-2xl py-4 text-center text-xs font-bold transition duration-300 border cursor-pointer relative overflow-hidden flex items-center justify-center space-x-2 ${
+                        className={`w-full rounded-xl py-3 text-center text-xs font-bold transition duration-300 border cursor-pointer relative overflow-hidden flex items-center justify-center space-x-2 ${
                           isPro
                             ? 'bg-gradient-to-r from-blue-600 dark:from-orange-500 to-indigo-600 dark:to-orange-400 hover:from-blue-700 hover:to-indigo-700 text-white shadow-xl shadow-blue-600/10 border-transparent hover:shadow-blue-600/20'
                             : 'bg-white dark:bg-[#141414] border-neutral-200 dark:border-neutral-700 hover:bg-neutral-50 dark:bg-neutral-900 text-neutral-700 dark:text-neutral-200 hover:text-neutral-950'
@@ -1142,7 +1009,7 @@ export default function PricingSection({ currentLang, setTab, isFullPage = false
                     className="w-full appearance-none rounded-xl border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-900 px-4.5 py-3.5 text-xs font-bold text-neutral-800 dark:text-neutral-100 focus:outline-none focus:ring-1 focus:ring-blue-600 cursor-pointer"
                   >
                     {allPackages.filter(p => p.enabled !== false).map(p => {
-                      const optPrice = billingPeriod === 'yearly' ? p.priceYearly : p.priceMonthly;
+                      const optPrice = billingPeriod === 'project' ? p.priceYearly : p.priceMonthly;
                       return (
                         <option key={p.id} value={p.id}>
                           [{p.category}] {currentLang === 'en' ? p.nameEn : p.nameBn} - {formatPrice(optPrice)} / {currentLang === 'en' ? 'mo' : 'মাস'}
@@ -1219,7 +1086,7 @@ export default function PricingSection({ currentLang, setTab, isFullPage = false
                         </div>
                       </div>
                       <span className="font-mono font-bold text-neutral-100">
-                        {formatPrice(billingPeriod === 'yearly' ? selectedBasePackage.priceYearly : selectedBasePackage.priceMonthly)}
+                        {formatPrice(billingPeriod === 'project' ? selectedBasePackage.priceYearly : selectedBasePackage.priceMonthly)}
                       </span>
                     </div>
                   )}
@@ -1398,7 +1265,7 @@ export default function PricingSection({ currentLang, setTab, isFullPage = false
                     </p>
                     <button
                       onClick={() => setSubmitSuccess(false)}
-                      className="mt-4 inline-flex rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold px-5 py-2.5 text-xs transition duration-200 cursor-pointer"
+                      className="mt-4 inline-flex rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold px-5 py-3.5 text-xs transition duration-200 cursor-pointer"
                     >
                       {currentLang === 'en' ? 'Submit Another Application' : 'নতুন কোটেশন পাঠান'}
                     </button>

@@ -540,12 +540,8 @@ export function initDB(): void {
   const currentServices = getLocal<any[]>(KEYS.SERVICES, []);
   if (currentServices.length !== initialServices.length) {
     setLocal(KEYS.SERVICES, initialServices);
-    setLocal(KEYS.PORTFOLIO, initialPortfolio);
   }
   const currentPortfolio = getLocal<any[]>(KEYS.PORTFOLIO, []);
-  if (!localStorage.getItem(KEYS.PORTFOLIO) || currentPortfolio.length < 5) {
-    setLocal(KEYS.PORTFOLIO, initialPortfolio);
-  }
   if (!localStorage.getItem(KEYS.BLOGS)) {
     setLocal(KEYS.BLOGS, initialBlogs);
   }
@@ -860,7 +856,7 @@ export function deleteService(id: string): void {
 
 // PORTFOLIO CRUD
 export function getPortfolio(): PortfolioItem[] {
-  return getLocal<PortfolioItem[]>(KEYS.PORTFOLIO, initialPortfolio);
+  return getLocal<PortfolioItem[]>(KEYS.PORTFOLIO, []);
 }
 
 export function savePortfolioItem(item: PortfolioItem): void {

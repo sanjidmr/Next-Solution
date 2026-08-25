@@ -97,7 +97,6 @@ export default function Footer({ currentLang, setTab }: FooterProps) {
                 { id: 'about', label: t.navAbout },
                 { id: 'portfolio', label: t.navPortfolio },
                 { id: 'pricing', label: t.navPricing },
-                { id: 'blogs', label: t.navBlogs },
                 { id: 'faq', label: t.navFAQ },
               ].map((link) => (
                 <li key={link.id}>

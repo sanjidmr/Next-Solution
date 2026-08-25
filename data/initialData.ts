@@ -6,7 +6,130 @@
 import { Service, PortfolioItem, BlogPost, Testimonial, FAQ, SiteSettings, PricingPackage, PricingAddon, PricingComparison, TechServiceCard } from '@/types';
 
 export const initialServices: Service[] = [
-  
+
+  {
+    id: '9',
+    category: 'Strategy',
+    titleEn: 'Product & Business Innovation',
+    titleBn: 'প্রোডাক্ট ও বিজনেস ইনোভেশন',
+    descriptionEn: 'End-to-end product strategy, business model innovation, and go-to-market frameworks that transform raw ideas into revenue-generating digital products.',
+    descriptionBn: 'কাঁচি আইডিয়াকে রাজস্ব-উৎপাদনকারী ডিজিটাল প্রোডাক্টে রূপান্তরিত করার জন্য সম্পূর্ণ প্রোডাক্ট কৌশল, ব্যবসা মডেল ইনোভেশন এবং গো-টু-মার্কেট ফ্রেমওয়ার্ক।',
+    featuresEn: ['Product Discovery & Validation', 'Business Model Canvas Design', 'Go-to-Market Strategy', 'MVP Definition & Roadmapping', 'Revenue Model & Pricing Strategy', 'Market Research & Competitor Analysis'],
+    featuresBn: ['প্রোডাক্ট ডিসকভারি ও ভ্যালিডেশন', 'বিজনেস মডেল ক্যানভাস ডিজাইন', 'গো-টু-মার্কেট কৌশল', 'এমভিপি সংজ্ঞা ও রোডম্যাপিং', 'রাজস্ব মডেল ও প্রাইসিং কৌশল', 'মার্কেট রিসার্চ ও প্রতিযোগী বিশ্লেষণ'],
+    benefitsEn: ['Reduce Time-to-Market by 60%', 'Validate Ideas Before Heavy Investment', 'Clear Roadmap for Investors & Teams', 'Data-Driven Decision Frameworks'],
+    benefitsBn: ['টাইম-টু-মার্কেট ৬০% কমান', 'ভারী বিনিয়োগের আগে আইডিয়া ভ্যালিডেট করুন', 'বিনিয়োগকারী ও টিমের জন্য পরিষ্কার রোডম্যাপ', 'ডেটা-চালিত সিদ্ধান্ত গ্রহণ ফ্রেমওয়ার্ক'],
+    price: '$3,999',
+    icon: 'Lightbulb',
+    slug: 'product-innovation',
+    processEn: ['Ideation & Opportunity Mapping', 'Customer Persona & Pain Point Research', 'Business Model & Revenue Architecture', 'MVP Feature Prioritization', 'Go-to-Market Launch Blueprint', 'Post-Launch Iteration & Growth'],
+    processBn: ['আইডিয়া ও সুযোগ ম্যাপিং', 'কাস্টমার পার্সোনা ও পেইন পয়েন্ট রিসার্চ', 'বিজনেস মডেল ও রাজস্ব আর্কিটেকচার', 'এমভিপি ফিচার প্রায়োরিটাইজেশন', 'গো-টু-মার্কেট লঞ্চ ব্লুপ্রিন্ট', 'লঞ্চ পরবর্তী ইটারেশন ও গ্রোথ'],
+    techUsed: ['Miro', 'Figma', 'Notion', 'Airtable', 'Google Sheets', 'Pitch Deck Tools', 'Trello', 'Productboard'],
+    subtitleEn: 'We help you discover, validate, and launch digital products that people actually want — with a clear path to revenue.',
+    subtitleBn: 'আমরা আপনাকে এমন ডিজিটাল প্রোডাক্ট আবিষ্কার, যাচাই এবং লঞ্চ করতে সাহায্য করি যেটা মানুষ সত্যিই চায় — রাজস্বের পরিষ্কার পথসহ।',
+    whyNeedEn: 'Most failed startups die not from bad code, but from building the wrong product. Our validation-first approach eliminates guesswork and aligns your product with real market demand.',
+    whyNeedBn: 'বেশিরভাগ ব্যর্থ স্টার্টআপ খারাপ কোড নয়, ভুল প্রোডাক্ট তৈরি করার কারণে ব্যর্থ হয়। আমাদের ভ্যালিডেশন-ফার্স্ট পদ্ধতি অনুমানকে দূর করে এবং প্রোডাক্টকে প্রকৃত মার্কেট চাহিদার সাথে সামঞ্জস্য করে।',
+    whoForEn: 'Early-stage startups, corporate innovation teams, entrepreneurs validating new business ideas, and agencies building client products.',
+    whoForBn: 'আর্লি-স্টেজ স্টার্টআপ, কর্পোরেট ইনোভেশন টিম, নতুন ব্যবসায়িক আইডিয়া যাচাইকারী উদ্যোক্তা এবং ক্লায়েন্ট প্রোডাক্ট তৈরিকারী এজেন্সি।',
+    businessImpactEn: 'Reduces failed launches by 70%, accelerates investor pitching with clear roadmaps, and creates a measurable path from idea to $1M ARR.',
+    businessImpactBn: 'ব্যর্থ লঞ্চ ৭০% পর্যন্ত কমায়, পরিষ্কার রোডম্যাপ দিয়ে বিনিয়োগকারীদের পিচিং ত্বরান্বিত করে এবং আইডিয়া থেকে $1M ARR পর্যন্ত একটি পরিমাপযোগ্য পথ তৈরি করে।',
+    subServicesJson: JSON.stringify([
+      { titleEn: 'Product Discovery Sprint', titleBn: 'প্রোডাক্ট ডিসকভারি স্প্রিন্ট', descEn: 'Rapid 2-week validation sprints to test market demand before building.', descBn: 'বিল্ড করার আগে মার্কেট চাহিদা পরীক্ষার জন্য দ্রুত ২-সপ্তাহের ভ্যালিডেশন স্প্রিন্ট।' },
+      { titleEn: 'Business Model Design', titleBn: 'বিজনেস মডেল ডিজাইন', descEn: 'Canvas-based business model architecture with revenue stream mapping.', descBn: 'রাজস্ব স্ট্রিম ম্যাপিং সহ ক্যানভাস-ভিত্তিক ব্যবসা মডেল আর্কিটেকচার।' },
+      { titleEn: 'Go-to-Market Strategy', titleBn: 'গো-টু-মার্কেট কৌশল', descEn: 'Full launch playbook from positioning to channel selection to pricing.', descBn: 'পজিশনিং থেকে চ্যানেল সিলেকশন এবং প্রাইসিং পর্যন্ত সম্পূর্ণ লঞ্চ প্লেবুক।' },
+      { titleEn: 'MVP Roadmapping', titleBn: 'এমভিপি রোডম্যাপিং', descEn: 'Feature prioritization frameworks aligned with lean startup methodology.', descBn: 'লিন স্টার্টআপ পদ্ধতির সাথে সামঞ্জস্যপূর্ণ ফিচার প্রায়োরিটাইজেশন ফ্রেমওয়ার্ক।' }
+    ]),
+    faqsJson: JSON.stringify([
+      { questionEn: 'When should I invest in product strategy before development?', questionBn: 'ডেভেলপমেন্টের আগে প্রোডাক্ট কৌশলে কখন বিনিয়োগ করবেন?', answerEn: 'Ideally before writing a single line of code. Our discovery sprints save you months of wasted development by validating assumptions early.', answerBn: 'আদর্শভাবে একটি কোড লেখার আগে। আমাদের ডিসকভারি স্প্রিন্ট ধারণাগুলো আগে থেকে যাচাই করে আপনাকে মাসের পর মাস অপচয় থেকে বাঁচায়।' },
+      { questionEn: 'Do you also help with investor pitch decks?', questionBn: 'আপনারা কি ইনভেস্টর পিচ ডেকেও সাহায্য করেন?', answerEn: 'Yes, our innovation packages include investor-ready pitch deck creation, financial modeling, and competitive landscape analysis.', answerBn: 'হ্যাঁ, আমাদের ইনোভেশন প্যাকেজে ইনভেস্টর-রেডি পিচ ডেক, ফিনান্সিয়াল মডেলিং এবং প্রতিযোগিতামূলক ল্যান্ডস্কেপ বিশ্লেষণ অন্তর্ভুক্ত।' }
+    ]),
+    pricingJson: JSON.stringify([
+      { nameEn: 'Innovation Sprint', nameBn: 'ইনোভেশন স্প্রিন্ট', price: '$3,999', periodEn: '2-Week Sprint', periodBn: '২-সপ্তাহ স্প্রিন্ট', featuresEn: ['Product Discovery & Validation', 'Market Research Report', 'Business Model Canvas', 'Competitor Landscape Map', 'MVP Feature Roadmap'], featuresBn: ['প্রোডাক্ট ডিসকভারি ও ভ্যালিডেশন', 'মার্কেট রিসার্চ রিপোর্ট', 'বিজনেস মডেল ক্যানভাস', 'প্রতিযোগী ল্যান্ডস্কেপ ম্যাপ', 'এমভিপি ফিচার রোডম্যাপ'] },
+      { nameEn: 'Launch Blueprint', nameBn: 'লঞ্চ ব্লুপ্রিন্ট', price: '$8,999', periodEn: '4-Week Engagement', periodBn: '৪-সপ্তাহ এনগেজমেন্ট', featuresEn: ['Everything in Sprint', 'Go-to-Market Strategy', 'Pitch Deck Creation', 'Financial Model & Projections', '30-Day Post-Launch Advisory'], featuresBn: ['স্প্রিন্টের সব কিছু', 'গো-টু-মার্কেট কৌশল', 'পিচ ডেক তৈরি', 'ফিনান্সিয়াল মডেল ও প্রজেকশন', '৩০ দিনের লঞ্চ পরবর্তী পরামর্শ'] }
+    ])
+  },
+
+  {
+    id: '10',
+    category: 'Creative',
+    titleEn: 'Creative Content & Visual Storytelling',
+    titleBn: 'ক্রিয়েটিভ কনটেন্ট ও ভিজ্যুয়াল স্টোরিটেলিং',
+    descriptionEn: 'High-impact visual storytelling through branded content, social media creative, campaign visuals, and multimedia storytelling that captures attention and drives engagement.',
+    descriptionBn: 'ব্র্যান্ডেড কনটেন্ট, সোশ্যাল মিডিয়া ক্রিয়েটিভ, ক্যাম্পেইন ভিজ্যুয়াল এবং মাল্টিমিডিয়া স্টোরিটেলিংয়ের মাধ্যমে উচ্চ-প্রভাবশালী ভিজ্যুয়াল স্টোরিটেলিং।',
+    featuresEn: ['Brand Visual Identity Systems', 'Social Media Content Strategy', 'Campaign Creative Design', 'Infographic & Data Visualization', 'Photography Direction', 'Motion Graphics & Animated Content'],
+    featuresBn: ['ব্র্যান্ড ভিজ্যুয়াল আইডেন্টিটি সিস্টেম', 'সোশ্যাল মিডিয়া কনটেন্ট কৌশল', 'ক্যাম্পেইন ক্রিয়েটিভ ডিজাইন', 'ইনফোগ্রাফিক ও ডেটা ভিজ্যুয়ালাইজেশন', 'ফটোগ্রাফি ডাইরেকশন', 'মোশন গ্রাফিক্স ও অ্যানিমেটেড কনটেন্ট'],
+    benefitsEn: ['3x Higher Social Media Engagement', 'Consistent Brand Visual Language', 'Scroll-Stopping Campaign Assets', 'Reusable Content Asset Libraries'],
+    benefitsBn: ['৩ গুণ বেশি সোশ্যাল মিডিয়া এনগেজমেন্ট', 'সামঞ্জস্যপূর্ণ ব্র্যান্ড ভিজ্যুয়াল ভাষা', 'স্ক্রল-স্টপিং ক্যাম্পেইন অ্যাসেট', 'পুনঃব্যবহারযোগ্য কনটেন্ট অ্যাসেট লাইব্রেরি'],
+    price: '$2,999',
+    icon: 'Film',
+    slug: 'creative-content',
+    processEn: ['Brand Visual Audit & Moodboarding', 'Content Pillar & Calendar Design', 'Campaign Creative Production', 'Social Asset Batch Creation', 'Performance Review & Optimization'],
+    processBn: ['ব্র্যান্ড ভিজ্যুয়াল অডিট ও মুডবোর্ডিং', 'কনটেন্ট পিলার ও ক্যালেন্ডার ডিজাইন', 'ক্যাম্পেইন ক্রিয়েটিভ প্রোডাকশন', 'সোশ্যাল অ্যাসেট ব্যাচ তৈরি', 'পারফরম্যান্স পর্যালোচনা ও অপ্টিমাইজেশন'],
+    techUsed: ['Figma', 'Adobe Creative Suite', 'Canva Pro', 'After Effects', 'DaVinci Resolve', 'CapCut Pro', 'Midjourney', 'DALL-E'],
+    subtitleEn: 'We create thumb-stopping visual content and brand narratives that make your audience stop scrolling and start engaging.',
+    subtitleBn: 'আমরা থাম্ব-স্টপিং ভিজ্যুয়াল কনটেন্ট এবং ব্র্যান্ড ন্যারেটিভ তৈরি করি যা আপনার অডিয়েন্সকে স্ক্রল থামিয়ে এনগেজ করায়।',
+    whyNeedEn: 'Visual content gets 94% more views than text. In a world of infinite scrolling, your brand needs thumb-stopping creative that stops the feed and starts conversations.',
+    whyNeedBn: 'ভিজ্যুয়াল কনটেন্ট টেক্সটের তুলনায় ৯৪% বেশি দেখা হয়। অসীম স্ক্রলিংয়ের এই জগতে, আপনার ব্র্যান্ডকে থাম্ব-স্টপিং ক্রিয়েটিভ দরকার।',
+    whoForEn: 'Brands seeking visual consistency, social media-driven businesses, lifestyle brands, and companies launching marketing campaigns.',
+    whoForBn: 'ভিজ্যুয়াল সামঞ্জস্য খোঁজা ব্র্যান্ড, সোশ্যাল মিডিয়া-চালিত ব্যবসা, লাইফস্টাইল ব্র্যান্ড এবং মার্কেটিং ক্যাম্পেইন চালু করা কোম্পানি।',
+    businessImpactEn: 'Increases social engagement by 300%, builds recognizable brand equity, and creates reusable content libraries that reduce future creative costs.',
+    businessImpactBn: 'সোশ্যাল এনগেজমেন্ট ৩০০% বৃদ্ধি করে, স্বীকৃত ব্র্যান্ড ইকুইটি তৈরি করে এবং ভবিষ্যতের ক্রিয়েটিভ খরচ কমায় পুনঃব্যবহারযোগ্য কনটেন্ট লাইব্রেরি তৈরি করে।',
+    subServicesJson: JSON.stringify([
+      { titleEn: 'Brand Visual Identity', titleBn: 'ব্র্যান্ড ভিজ্যুয়াল আইডেন্টিটি', descEn: 'Complete brand visual systems including logos, color palettes, and typography.', descBn: 'লোগো, রঙের প্যালেট এবং টাইপোগ্রাফি সহ সম্পূর্ণ ব্র্যান্ড ভিজ্যুয়াল সিস্টেম।' },
+      { titleEn: 'Social Media Content', titleBn: 'সোশ্যাল মিডিয়া কনটেন্ট', descEn: 'Scroll-stopping posts, reels, and stories designed for maximum engagement.', descBn: 'সর্বোচ্চ এনগেজমেন্টের জন্য ডিজাইন করা স্ক্রল-স্টপিং পোস্ট, রিলস এবং স্টোরি।' },
+      { titleEn: 'Campaign Visual Design', titleBn: 'ক্যাম্পেইন ভিজ্যুয়াল ডিজাইন', descEn: 'End-to-end campaign creative from concept to production-ready assets.', descBn: 'কনসেপ্ট থেকে প্রোডাকশন-রেডি অ্যাসেট পর্যন্ত সম্পূর্ণ ক্যাম্পেইন ক্রিয়েটিভ।' },
+      { titleEn: 'Motion Graphics', titleBn: 'মোশন গ্রাফিক্স', descEn: 'Animated brand content, explainer videos, and dynamic visual effects.', descBn: 'অ্যানিমেটেড ব্র্যান্ড কনটেন্ট, এক্সপ্লেইনার ভিডিও এবং ডায়নামিক ভিজ্যুয়াল ইফেক্ট।' }
+    ]),
+    faqsJson: JSON.stringify([
+      { questionEn: 'How often should we post visual content on social media?', questionBn: 'সোশ্যাল মিডিয়ায় কত ঘন ঘন ভিজ্যুয়াল কনটেন্ট পোস্ট করবেন?', answerEn: 'We recommend 4-5 posts per week on primary platforms with 2-3 stories daily. Our content calendars ensure consistent posting without overwhelming your team.', answerBn: 'আমরা প্রাইমারি প্ল্যাটফর্মে সপ্তাহে ৪-৫টি পোস্ট এবং দৈনিক ২-৩টি স্টোরি পোস্ট করার পরামর্শ দিই।' },
+      { questionEn: 'Do you provide photography services as well?', questionBn: 'আপনারা কি ফটোগ্রাফি সেবাও প্রদান করেন?', answerEn: 'Yes, we offer photography direction, shoots coordination, and post-production editing for brand campaigns and product photography.', answerBn: 'হ্যাঁ, আমরা ব্র্যান্ড ক্যাম্পেইন এবং প্রোডাক্ট ফটোগ্রাফির জন্য ফটোগ্রাফি ডাইরেকশন, শুট সমন্বয় এবং পোস্ট-প্রোডাকশন এডিটিং অফার করি।' }
+    ]),
+    pricingJson: JSON.stringify([
+      { nameEn: 'Content Starter', nameBn: 'কনটেন্ট স্টার্টার', price: '$2,999', periodEn: 'Monthly', periodBn: 'মাসিক', featuresEn: ['20 Social Media Posts', '4 Story Sets', '2 Campaign Concepts', 'Brand Style Guide', 'Content Calendar'], featuresBn: ['২০টি সোশ্যাল মিডিয়া পোস্ট', '৪টি স্টোরি সেট', '২টি ক্যাম্পেইন কনসেপ্ট', 'ব্র্যান্ড স্টাইল গাইড', 'কনটেন্ট ক্যালেন্ডার'] },
+      { nameEn: 'Growth Creative', nameBn: 'গ্রোথ ক্রিয়েটিভ', price: '$5,999', periodEn: 'Monthly', periodBn: 'মাসিক', featuresEn: ['Everything in Starter', '40 Social Posts + Reels', 'Motion Graphics Package', 'Campaign A/B Testing', 'Monthly Performance Report'], featuresBn: ['স্টার্টারের সব কিছু', '৪০টি পোস্ট + রিলস', 'মোশন গ্রাফিক্স প্যাকেজ', 'ক্যাম্পেইন A/B টেস্টিং', 'মাসিক পারফরম্যান্স রিপোর্ট'] }
+    ])
+  },
+
+  {
+    id: '11',
+    category: 'Marketing',
+    titleEn: 'Marketing, PR & Brand Strategy',
+    titleBn: 'মার্কেটিং, পিআর ও ব্র্যান্ড কৌশল',
+    descriptionEn: 'Full-funnel marketing strategy, public relations, brand positioning, and performance marketing campaigns that drive measurable business growth and market dominance.',
+    descriptionBn: 'পরিমাপযোগ্য ব্যবসায়িক বৃদ্ধি এবং মার্কেট আধিপত্য তৈরি করার জন্য ফুল-ফানেল মার্কেটিং কৌশল, পাবলিক রিলেশন্স, ব্র্যান্ড পজিশনিং এবং পারফরম্যান্স মার্কেটিং ক্যাম্পেইন।',
+    featuresEn: ['Performance Marketing (Google & Meta Ads)', 'SEO & Content Marketing Strategy', 'Public Relations & Media Outreach', 'Brand Positioning & Messaging', 'Email Marketing Automation', 'Influencer & Partnership Marketing'],
+    featuresBn: ['পারফরম্যান্স মার্কেটিং (গুগল ও মেটা অ্যাডস)', 'এসইও ও কনটেন্ট মার্কেটিং কৌশল', 'পাবলিক রিলেশন্স ও মিডিয়া আউটরিচ', 'ব্র্যান্ড পজিশনিং ও মেসেজিং', 'ইমেইল মার্কেটিং অটোমেশন', 'ইনফ্লুয়েন্সার ও পার্টনারশিপ মার্কেটিং'],
+    benefitsEn: ['3-5x ROAS on Paid Campaigns', 'Measurable KPI-Driven Results', 'Multi-Channel Growth Engine', 'Crisis PR & Reputation Management'],
+    benefitsBn: ['পেইড ক্যাম্পেইনে ৩-৫x ROAS', 'পরিমাপযোগ্য KPI-চালিত ফলাফল', 'মাল্টি-চ্যানেল গ্রোথ ইঞ্জিন', 'ক্রাইসিস PR ও সুনাম ব্যবস্থাপনা'],
+    price: '$3,499',
+    icon: 'Megaphone',
+    slug: 'marketing-pr',
+    processEn: ['Brand & Market Audit', 'Marketing Strategy & Channel Selection', 'Campaign Setup & Creative Brief', 'Launch, Monitor & Optimize', 'Monthly Reporting & Iteration'],
+    processBn: ['ব্র্যান্ড ও মার্কেট অডিট', 'মার্কেটিং কৌশল ও চ্যানেল সিলেকশন', 'ক্যাম্পেইন সেটআপ ও ক্রিয়েটিভ ব্রিফ', 'লঞ্চ, মনিটর ও অপ্টিমাইজ', 'মাসিক রিপোর্টিং ও ইটারেশন'],
+    techUsed: ['Google Analytics 4', 'Google Ads', 'Meta Business Suite', 'SEMrush', 'Ahrefs', 'HubSpot', 'Mailchimp', 'Hootsuite'],
+    subtitleEn: 'From brand awareness to lead generation, we build and execute marketing engines that deliver measurable ROI across every channel.',
+    subtitleBn: 'ব্র্যান্ড অ্যাওয়ারনেস থেকে লিড জেনারেশন পর্যন্ত, আমরা প্রতিটি চ্যানেলে পরিমাপযোগ্য ROI প্রদানকারী মার্কেটিং ইঞ্জিন তৈরি ও চালাই।',
+    whyNeedEn: 'Great products fail without great marketing. 82% of consumers research online before buying. Without a strategic marketing presence, you are invisible to your ideal customers.',
+    whyNeedBn: 'দারুণ মার্কেটিং ছাড়া দারুণ প্রোডাক্টও ব্যর্থ হয়। ৮২% গ্রাহক কেনার আগে অনলাইনে গবেষণা করে। কৌশলগত মার্কেটিং উপস্থিতি ছাড়া, আপনি আপনার আদর্শ গ্রাহকদের কাছে অদৃশ্য।',
+    whoForEn: 'Businesses ready to scale, brands entering new markets, companies with strong products but weak visibility, and organizations needing PR support.',
+    whoForBn: 'স্কেল করতে প্রস্তুত ব্যবসা, নতুন মার্কেটে প্রবেশকারী ব্র্যান্ড, শক্তিশালী প্রোডাক্ট কিন্তু দুর্বল দৃশ্যমানতা সহ কোম্পানি এবং PR সাপোর্ট প্রয়োজনীয় সংস্থা।',
+    businessImpactEn: 'Delivers 3-5x return on ad spend, reduces customer acquisition cost by 40%, and builds sustainable brand equity that compounds over time.',
+    businessImpactBn: 'অ্যাড খরচে ৩-৫x রিটার্ন প্রদান করে, কাস্টমার একুইজিশন কস্ট ৪০% কমায় এবং সময়ের সাথে জমা হওয়া টেকসই ব্র্যান্ড ইকুইটি তৈরি করে।',
+    subServicesJson: JSON.stringify([
+      { titleEn: 'Google & Meta Ads', titleBn: 'গুগল ও মেটা অ্যাডস', descEn: 'Data-driven paid campaigns across Google Search, Display, YouTube, Instagram, and Facebook.', descBn: 'গুগল সার্চ, ডিসপ্লে, ইউটিউব, ইনস্টাগ্রাম এবং ফেসবুক জুড়ে ডেটা-চালিত পেইড ক্যাম্পেইন।' },
+      { titleEn: 'SEO & Content Marketing', titleBn: 'এসইও ও কনটেন্ট মার্কেটিং', descEn: 'Technical SEO, on-page optimization, content strategy, and organic growth campaigns.', descBn: 'টেকনিক্যাল এসইও, অন-পেজ অপ্টিমাইজেশন, কনটেন্ট কৌশল এবং অর্গানিক গ্রোথ ক্যাম্পেইন।' },
+      { titleEn: 'PR & Media Relations', titleBn: 'পিআর ও মিডিয়া রিলেশন্স', descEn: 'Press releases, media outreach, journalist networking, and crisis communications.', descBn: 'প্রেস রিলিজ, মিডিয়া আউটরিচ, সাংবাদিক নেটওয়ার্কিং এবং ক্রাইসিস কমিউনিকেশন।' },
+      { titleEn: 'Email & Automation', titleBn: 'ইমেইল ও অটোমেশন', descEn: 'Automated email sequences, drip campaigns, lead nurturing, and marketing automation workflows.', descBn: 'স্বয়ংক্রিয় ইমেইল সিকোয়েন্স, ড্রিপ ক্যাম্পেইন, লিড নার্চিং এবং মার্কেটিং অটোমেশন ওয়ার্কফ্লো।' }
+    ]),
+    faqsJson: JSON.stringify([
+      { questionEn: 'How soon can we expect results from marketing campaigns?', questionBn: 'মার্কেটিং ক্যাম্পেইন থেকে কত দ্রুত ফলাফল আশা করতে পারি?', answerEn: 'Paid ads show results within 2-4 weeks. SEO and content marketing typically take 3-6 months for compounding organic growth. We set clear KPIs from day one.', answerBn: 'পেইড অ্যাড ২-৪ সপ্তাহের মধ্যে ফলাফল দেখায়। SEO এবং কনটেন্ট মার্কেটিং সাধারণত কম্পাউন্ডিং অর্গানিক গ্রোথের জন্য ৩-৬ মাস সময় নেয়।' },
+      { questionEn: 'What is your minimum engagement period?', questionBn: 'আপনার ন্যূনতম এনগেজমেন্ট পিরিয়ড কত?', answerEn: 'We recommend a minimum 3-month engagement for marketing campaigns to reach statistical significance. One-off projects are available for PR and brand strategy.', answerBn: 'আমরা পরিসংখ্যানগত গুরুত্ব পৌঁছাতে মার্কেটিং ক্যাম্পেইনের জন্য ন্যূনতম ৩-মাসের এনগেজমেন্টের পরামর্শ দিই।' }
+    ]),
+    pricingJson: JSON.stringify([
+      { nameEn: 'Growth Starter', nameBn: 'গ্রোথ স্টার্টার', price: '$3,499', periodEn: 'Monthly', periodBn: 'মাসিক', featuresEn: ['Google & Meta Ads Management', 'Basic SEO Setup', 'Social Media Management (3 platforms)', 'Monthly Analytics Report', 'Content Calendar'], featuresBn: ['গুগল ও মেটা অ্যাডস ব্যবস্থাপনা', 'বেসিক এসইও সেটআপ', 'সোশ্যাল মিডিয়া ব্যবস্থাপনা (৩টি প্ল্যাটফর্ম)', 'মাসিক অ্যানালিটিক্স রিপোর্ট', 'কনটেন্ট ক্যালেন্ডার'] },
+      { nameEn: 'Scale Engine', nameBn: 'স্কেল ইঞ্জিন', price: '$7,999', periodEn: 'Monthly', periodBn: 'মাসিক', featuresEn: ['Everything in Starter', 'Advanced SEO & Content Marketing', 'PR & Media Outreach', 'Email Automation', 'Dedicated Marketing Strategist', 'Weekly Performance Calls'], featuresBn: ['স্টার্টারের সব কিছু', 'অ্যাডভান্সড এসইও ও কনটেন্ট মার্কেটিং', 'পিআর ও মিডিয়া আউটরিচ', 'ইমেইল অটোমেশন', 'নিবেদিত মার্কেটিং কৌশলবিদ', 'সাপ্তাহিক পারফরম্যান্স কল'] }
+    ])
+  },
+
   {
     id: '1',
     category: 'Development',
@@ -51,6 +174,7 @@ export const initialServices: Service[] = [
       { nameEn: 'Custom E-Commerce', nameBn: 'কাস্টম ই-কমার্স', price: '$3,499', periodEn: 'Scale Package', periodBn: 'স্কেল প্যাকেজ', featuresEn: ['Fully Functional Online Store', 'Secure Payment Gateways (Stripe/SSL)', 'Admin Inventory & CRM Suite', 'Auto Invoice & Email Notification', 'Customer Accounts System', '6 Months Free Tech SLA Support'], featuresBn: ['সম্পূর্ণ ই-কমার্স অনলাইন স্টোর', 'নিরাপদ পেমেন্ট গেটওয়ে (Stripe/SSL)', 'ইনভেন্টরি ও সিআরএম স্যুট', 'অটো ইনভয়েস ও ইমেল নোটিফিকেশন', 'গ্রাহক অ্যাকাউন্ট সিস্টেম', '৬ মাসের ফ্রি টেকনিক্যাল এসএলএ সাপোর্ট'] }
     ])
   },
+
   {
     id: '2',
     category: 'Design',
@@ -93,6 +217,7 @@ export const initialServices: Service[] = [
       { nameEn: 'Full Design System', nameBn: 'কমপ্লিট ডিজাইন সিস্টেম', price: '$5,999', periodEn: 'Product Package', periodBn: 'প্রোডাক্ট প্যাকেজ', featuresEn: ['Up to 30 Premium App Views', 'Comprehensive Design System Tokens', 'Multi-device UI Layouts (Web/iOS)', 'User Validation Testing Session', 'Dedicated Senior Design Architect', 'Weekly Iterations Sprint Sync'], featuresBn: ['৩০টি পর্যন্ত প্রিমিয়াম অ্যাপ ভিউ', 'সম্পূর্ণ ডিজাইন সিস্টেম টোকেন', 'মাল্টি-ডিভাইস ইউআই লেআউট (Web/iOS)', 'ইউজার ভ্যালিডেশন টেস্টিং সেশন', 'ডেডিকেটেড সিনিয়র ডিজাইন আর্কিটেক্ট', 'সাপ্তাহিক ইটারেশন স্প্রিন্ট সিঙ্ক'] }
     ])
   },
+
   {
     id: '3',
     category: 'Marketing',
@@ -134,6 +259,7 @@ export const initialServices: Service[] = [
       { nameEn: 'Enterprise Scaling', nameBn: 'এন্টারপ্রাইজ স্কেলিং', price: '$2,999', periodEn: 'Per Month', periodBn: 'প্রতি মাসে', featuresEn: ['Multi-channel Ads (Meta + Google)', 'Conversion Rate Optimization (CRO)', 'Email Nurturing Sequences Set Up', 'Advanced Google Tag Manager Setup', 'A/B Creative Matrix Tests', 'Weekly Video Sync Reviews'], featuresBn: ['মাল্টি-চ্যানেল অ্যাডস (মেটা + গুগল)', 'কনভার্সন রেট অপ্টিমাইজেশন (CRO)', 'ইমেল নার্চারিং সিকোয়েন্স সেটআপ', 'উন্নত গুগল ট্যাগ ম্যানেজার সেটআপ', 'সাপ্তাহিক ভিডিও রিভিউ মিটিং'] }
     ])
   },
+
   {
     id: '4',
     category: 'Marketing',
@@ -174,6 +300,7 @@ export const initialServices: Service[] = [
       { nameEn: 'Authority Core', nameBn: 'অথরিটি কোর', price: '$1,499', periodEn: 'Per Month', periodBn: 'প্রতি মাসে', featuresEn: ['Up to 30 Target Keywords', 'Full Technical Schema Fixes', '5 High-Authority Guest Posts', 'On-page Optimization (15 Pages)', 'Search Console Diagnostics Reports'], featuresBn: ['৩০টি পর্যন্ত টার্গেট কি-ওয়ার্ড', 'সম্পূর্ণ টেকনিক্যাল স্কিমা ফিক্স', '৫টি হাই-অথরিটি গেস্ট পোস্ট', 'অন-পেজ অপ্টিমাইজেশন (১৫ পেজ)', 'সার্চ কনসোল ডায়াগনস্টিক রিপোর্ট'] }
     ])
   },
+
   {
     id: '5',
     category: 'Design',
@@ -215,6 +342,7 @@ export const initialServices: Service[] = [
       { nameEn: 'Retainer Studio Pack', nameBn: 'স্টুডিও রিটেইনার প্যাক', price: '$2,499', periodEn: 'Per Month', periodBn: 'প্রতি মাসে', featuresEn: ['Unlimited Monthly Ad Graphics', 'Social Media template designs', 'Physical Package & Retail Mockups', 'Custom Presentation updates', 'Priority SLA 24 Hour Delivery', 'Direct designer Slack channel access'], featuresBn: ['আনলিমিটেড মাসিক গ্রাফিক্স ডিজাইন', 'সোশ্যাল মিডিয়া টেমপ্লেট ও পোস্ট', 'পণ্য প্যাকেজিং ও রিটেইল মকআপ', 'কাস্টম প্রেজেন্টেশন স্লাইড আপডেট', '২৪ ঘণ্টার মধ্যে দ্রুত ডেলিভারি', 'ডিজাইনারের সাথে সরাসরি স্ল্যাক কানেক্ট'] }
     ])
   },
+
   {
     id: '6',
     category: 'Development',
@@ -255,6 +383,7 @@ export const initialServices: Service[] = [
       { nameEn: 'Flow Master Pack', nameBn: 'অটোমেশন মাস্টার প্যাক', price: '$8,999', periodEn: 'Workflow Package', periodBn: 'ওয়ার্কফ্লো প্যাকেজ', featuresEn: ['Unlimited n8n/Make Automation Loops', 'Cross-platform Sync (CRM + Slack + Mail)', 'Custom LLM Agent Fine-Tuning', 'AI Voice Booking Assistant Module', '90 Days High-Level Tech Support SLA', 'Interactive Performance Dashboards'], featuresBn: ['আনলিমিটেড n8n/Make অটোমেশন লুপ', 'ক্রস-প্ল্যাটফর্ম ডেটা সিঙ্ক', 'কাস্টম এলএলএম মডেল ফাইন-টিউনিং', 'এআই ভয়েস বুকিং অ্যাসিস্ট্যান্ট মডিউল', '৯০ দিনের উন্নত টেকনিক্যাল এসএলএ সাপোর্ট', 'পারফরম্যান্স মনিটরিং ড্যাশবোর্ড'] }
     ])
   },
+
   {
     id: '7',
     category: 'Design',
@@ -295,6 +424,7 @@ export const initialServices: Service[] = [
       { nameEn: 'Cinematic Launch Kit', nameBn: 'সিনেমাটিক লঞ্চ কিট', price: '$2,499', periodEn: 'Production Pack', periodBn: 'প্রোডাকশন প্যাক', featuresEn: ['1 Core Corporate Brand video', 'Professional Storyboard Drafting', 'Custom Motion Graphic templates', 'High-End Cinematic Sound Design', 'Full Color Grading Treatment', 'Unlimited Revisions on active lines'], featuresBn: ['১টি প্রধান কর্পোরেট ব্র্যান্ড ভিডিও', 'পেশাদার স্টোরিবোর্ড ড্রাফটিং', 'কাস্টম মোশন গ্রাফিক্স উপাদান', 'প্রিমিয়াম সিনেমাটিক সাউন্ড ডিজাইন', 'সম্পূর্ণ কালার গ্রেডিং ও এফেক্টস', 'সক্রিয় লাইনে আনলিমিটেড রিভিশন'] }
     ])
   },
+
   {
     id: '8',
     category: 'Development',

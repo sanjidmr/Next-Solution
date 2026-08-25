@@ -172,7 +172,7 @@ export default function FAQSection({ currentLang, setTab, isFullPage = false }: 
         )}
 
         {/* FAQ CTA bottom banner */}
-        <div id="faq-footer-banner" className="mt-16 text-center bg-[#FAFAFA] border border-gray-100 dark:border-neutral-800 p-6 rounded-2xl space-y-4">
+        <div id="faq-footer-banner" className="mt-16 text-center bg-[#FAFAFA] dark:bg-[#1a1a1a] border border-gray-100 dark:border-neutral-800 p-6 rounded-2xl space-y-4">
           <h4 className="text-base font-bold text-gray-900 dark:text-white flex items-center justify-center gap-1.5">
             <Sparkles className="h-4.5 w-4.5 text-blue-500 dark:text-orange-400" />
             <span>{currentLang === 'en' ? 'Still have lingering questions?' : 'এখনও কোনো অমীমাংসিত প্রশ্ন আছে?'}</span>

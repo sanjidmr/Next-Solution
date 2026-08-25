@@ -375,71 +375,7 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
   // Active Process Step state
   const [activeProcessStep, setActiveProcessStep] = useState(0);
 
-  // Hero Rotator Index State for premium word rotation
-  const [heroRotatorIndex, setHeroRotatorIndex] = useState(0);
 
-  // Hero interactive showcase active tab state ('code' | 'canvas' | 'ai')
-  const [activeShowcaseTab, setActiveShowcaseTab] = useState<'code' | 'canvas' | 'ai'>('code');
-
-  // Interactive Showcase Custom States
-  const [optimizationStage, setOptimizationStage] = useState<'bloated' | 'optimizing' | 'optimized'>('bloated');
-  const [vibeTheme, setVibeTheme] = useState<'cyber' | 'peak' | 'rose'>('cyber');
-  const [cornerRadius, setCornerRadius] = useState<number>(16);
-  const [glowIntensity, setGlowIntensity] = useState<number>(40);
-  const [aiStep, setAiStep] = useState<'idle' | 'running' | 'completed'>('idle');
-  const [aiLogs, setAiLogs] = useState<string[]>([]);
-
-  const triggerOptimization = () => {
-    if (optimizationStage === 'optimized') {
-      setOptimizationStage('bloated');
-      return;
-    }
-    setOptimizationStage('optimizing');
-    setTimeout(() => {
-      setOptimizationStage('optimized');
-    }, 1500);
-  };
-
-  const runAiSimulation = () => {
-    if (aiStep === 'running') return;
-    if (aiStep === 'completed') {
-      setAiStep('idle');
-      setAiLogs([]);
-      return;
-    }
-    setAiStep('running');
-    setAiLogs([]);
-    
-    const logs = [
-      currentLang === 'en' ? "⚡ Initiating Gemini 2.5 Flash secure gateway..." : "⚡ জেমিনি ২.৫ ফ্ল্যাশ সিকিউর গেটওয়ে চালু হচ্ছে...",
-      currentLang === 'en' ? "🔍 Querying search impressions & visual conversion gaps..." : "🔍 সার্চ ইম্প্রেশন ও ভিজ্যুয়াল কনভার্সন গ্যাপ বিশ্লেষণ করা হচ্ছে...",
-      currentLang === 'en' ? "📈 Generating 120 custom optimized viewport assets..." : "📈 ১২০টি কাস্টম অপ্টিমাইজড ভিউপোর্ট অ্যাসেট তৈরি হচ্ছে...",
-      currentLang === 'en' ? "🔄 Adapting database index profiles for ultra-fast TTFB..." : "🔄 আল্ট্রা-ফাস্ট রেসপন্স টাইমের জন্য ডাটাবেস ইনডেক্স ঠিক করা হচ্ছে...",
-      currentLang === 'en' ? "🚀 AI Engine Core online! Predicted Conversion Lift: +240%" : "🚀 এআই ইঞ্জিন কোর অনলাইন! সম্ভাব্য কনভার্সন বৃদ্ধি: +২৪০%"
-    ];
-
-    let current = 0;
-    const interval = setInterval(() => {
-      if (current < logs.length) {
-        const msg = logs[current] as string;
-        setAiLogs(prev => {
-          if (prev.includes(msg)) return prev;
-          return [...prev, msg];
-        });
-        current++;
-      } else {
-        clearInterval(interval);
-        setAiStep('completed');
-      }
-    }, 600);
-  };
-
-  useEffect(() => {
-    const rotatorInterval = setInterval(() => {
-      setHeroRotatorIndex((prev) => (prev + 1) % 4);
-    }, 4000);
-    return () => clearInterval(rotatorInterval);
-  }, []);
 
   // Dynamic statistics from Settings or premium default values
   const stats = useMemo(() => ({
@@ -500,49 +436,22 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
   // Story Milestones
   const storyMilestones = useMemo(() => [
   {
-    year: '2022',
-    titleEn: 'The Vision Was Born',
-    titleBn: 'স্বপ্নের সূচনা',
-    descEn: 'In 2022, Next Solution began as a vision driven by a simple belief: every business deserves a modern digital presence built with quality, transparency, and long-term value. We invested our time in learning advanced technologies, studying global design standards, and building a strong foundation before offering services professionally.',
-    descBn: '২০২২ সালে একটি স্পষ্ট লক্ষ্য নিয়ে নেক্সট সলিউশনের যাত্রা শুরু হয়—প্রতিটি ব্যবসার জন্য মানসম্মত, আধুনিক এবং দীর্ঘমেয়াদী মূল্য প্রদানকারী ডিজিটাল সমাধান তৈরি করা। আমরা প্রথম বছরটি উন্নত প্রযুক্তি শেখা, আন্তর্জাতিক মানের ডিজাইন বিশ্লেষণ এবং শক্ত ভিত্তি তৈরিতে ব্যয় করি।',
-    metric: 'Vision & Foundation',
+    year: '2025',
+    titleEn: 'Where The Vision Took Shape',
+    titleBn: 'যেখানে স্঵প্ন রূপ নিল',
+    descEn: 'In 2025, we made a bold decision — to build something the industry has never seen. We spent countless hours architecting our technology stack, perfecting AI-driven workflows, and designing systems that don\'t just work — they dominate. Every pixel, every line of code, every automation was crafted with one obsession: making your business unstoppable.',
+    descBn: '০০০০ সালে আমরা ২০০০ সালে একটি সাহসী সিদ্ধান্ত সিনে মেনে নিল — ২ম কিজু তৈরি তৈরি করতে যে ছেল শিল্পে আগে কশনো দেখা যায়নি তে তৈরি করিছিস সে রূপ নিল সে সে তৈরি করিছিস সে রূপ নিল — সে ক্ষেত্রে আধিপত্্য বজায় রাখে পরে তেসের পিক্সেল, প্রতিটি কোড লাইন, প্রতিটি অটোমেশন তৈরি হযেছে ২কটি মাত্র পাগলামি দেয়ে ছিয়শেশ সে রতত ব্যবসাকে অজেয় করাতে টরেসি হনসরিচারদ তৈরি তৈরি করা হযেছে—এটা মাত্র নূধ তৈরি করা অনুস্থিত তৈরি করতে টরেসের অন্তর দেখা যায়নি অুসে ধস্রে সে খুজে পধ্রতে নির্ভার দুর্রসতা থডে কাটলাম নসল্স্তর তস্ন দরুশী করতে — আপনার ব্যবসাকে অজেয় করা।।',
+    metric: 'Vision & Architecture',
     color: 'from-blue-600 dark:from-blue-500 to-indigo-600 dark:to-blue-400'
   },
   {
-    year: '2023',
-    titleEn: 'Building Skills & Experience',
-    titleBn: 'দক্ষতা ও অভিজ্ঞতা গঠন',
-    descEn: 'Throughout 2023, we focused on mastering modern web technologies, UI/UX principles, and scalable development practices. We completed numerous practice projects, refined our workflow, and established quality standards that would shape every future client project.',
-    descBn: '২০২৩ সালে আমরা আধুনিক ওয়েব প্রযুক্তি, UI/UX ডিজাইন এবং স্কেলেবল ডেভেলপমেন্ট পদ্ধতিতে নিজেদের দক্ষ করে তুলি। অসংখ্য প্র্যাকটিস প্রজেক্ট সম্পন্ন করে এমন একটি মানসম্মত ওয়ার্কফ্লো তৈরি করি যা ভবিষ্যতের প্রতিটি ক্লায়েন্ট প্রজেক্টের ভিত্তি হয়ে ওঠে।',
-    metric: 'Continuous Learning',
-    color: 'from-indigo-600 dark:from-blue-500 to-violet-600'
-  },
-  {
-    year: '2024',
-    titleEn: 'From Vision to Reality',
-    titleBn: 'স্বপ্ন থেকে বাস্তবতা',
-    descEn: 'In 2024, Next Solution officially started delivering professional digital solutions. We began working with businesses to create modern websites, user-friendly interfaces, and reliable digital experiences focused on performance, design quality, and business growth.',
-    descBn: '২০২৪ সালে নেক্সট সলিউশন আনুষ্ঠানিকভাবে পেশাদার ডিজিটাল সেবা প্রদান শুরু করে। আধুনিক ওয়েবসাইট, আকর্ষণীয় ইউজার ইন্টারফেস এবং ব্যবসার প্রবৃদ্ধিকে কেন্দ্র করে নির্ভরযোগ্য ডিজিটাল সমাধান তৈরি করতে আমরা বিভিন্ন প্রতিষ্ঠানের সাথে কাজ শুরু করি।',
-    metric: 'Professional Launch',
-    color: 'from-violet-600 to-purple-600'
-  },
-  {
-    year: '2025',
-    titleEn: 'Expanding Our Digital Services',
-    titleBn: 'সেবার পরিধি সম্প্রসারণ',
-    descEn: 'As our experience grew, we expanded beyond web development into UI/UX design, branding, SEO, automation, and AI-powered digital solutions. Our mission became helping businesses build a complete digital ecosystem rather than just a website.',
-    descBn: 'অভিজ্ঞতার সাথে সাথে আমরা ওয়েব ডেভেলপমেন্টের পাশাপাশি UI/UX ডিজাইন, ব্র্যান্ডিং, SEO, অটোমেশন এবং AI-ভিত্তিক ডিজিটাল সমাধান যুক্ত করি। আমাদের লক্ষ্য শুধু একটি ওয়েবসাইট নয়, বরং ব্যবসার জন্য একটি পূর্ণাঙ্গ ডিজিটাল ইকোসিস্টেম তৈরি করা।',
-    metric: 'Digital Growth',
-    color: 'from-purple-600 to-pink-600'
-  },
-  {
     year: '2026',
-    titleEn: 'Growing With Every Partnership',
-    titleBn: 'প্রতিটি অংশীদারিত্বে নতুন অগ্রযাত্রা',
-    descEn: 'Today, Next Solution continues to grow by delivering high-quality digital experiences with transparency, innovation, and long-term support. Every project is treated as a partnership where our success is measured by the success of our clients. We are committed to becoming a trusted long-term digital partner for businesses worldwide.',
-    descBn: 'আজ নেক্সট সলিউশন স্বচ্ছতা, উদ্ভাবন এবং দীর্ঘমেয়াদী সহযোগিতার মাধ্যমে প্রতিটি ক্লায়েন্টের জন্য মানসম্মত ডিজিটাল অভিজ্ঞতা তৈরি করে চলেছে। আমরা প্রতিটি প্রজেক্টকে একটি দীর্ঘমেয়াদী অংশীদারিত্ব হিসেবে দেখি, যেখানে আমাদের সফলতা নির্ভর করে ক্লায়েন্টের সফলতার উপর। বিশ্বব্যাপী ব্যবসার জন্য একটি বিশ্বস্ত ডিজিটাল পার্টনার হওয়াই আমাদের লক্ষ্য।',
-    metric: 'Growing Together',
-    color: 'from-pink-600 to-blue-600'
+    titleEn: 'The Era Of Execution Begins',
+    titleBn: 'বাস্তবায়নের যুগ শুরু',
+    descEn: '2026 is the year we stop planning and start dominating. With our foundation locked in, we\'re unleashing full-stack digital ecosystems — lightning-fast websites, AI-powered automations, conversion-optimized designs, and enterprise-grade platforms — all engineered to make your competitors wonder what just happened. This isn\'t a service. This is your unfair advantage.',
+    descBn: '০০২০ হলো সেই সেই বন্ধ করে আধিপ্ত্্য শুরু করি তস্ন ছিলসত তৈরি দিচ্ছি ছিন্সেন শুনসেসসে তৈরি করিছিস। অতহ দুর্ত অত্তে প্রস্তুত — অতিদ্রুত ওয়েবসাইট, AI-চালিত অটোমেশন, কনভার্সন-঑প্টিমাইজ্ড ডিজাইন এবং নন্তরনীর গ্রেড প্ল্যাটফর্ম — সবকিছু ইঞ্জিনিয়ার করা হযেছে আপনার প্রতিযোগীদের হতনবুদ্ধি করতে। ২২ শুধু ২টি সেবা নয়। ২২ হলো আপনার অসাধারণ সুবিধা।।।',
+    metric: 'Full Launch & Domination',
+    color: 'from-indigo-600 to-purple-600'
   }
 ], []);
 
@@ -1137,884 +1046,407 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
       <div className="absolute bottom-[15%] left-10 w-[500px] h-[500px] bg-gradient-to-tr from-fuchsia-500/5 to-purple-500/5 rounded-full blur-[120px] pointer-events-none" />
 
       {/* ========================================================
-          01. HERO STORY - PREMIUM AWARD-WINNING HERO
+          01. HERO STORY — ABOUT US PREMIUM HERO
          ======================================================== */}
-      <section id="about-hero" className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-2 sm:pt-4 pb-20 relative z-10 overflow-visible">
+      <section id="about-hero" className="relative overflow-hidden bg-white dark:bg-[#080a0d] min-h-[calc(100vh-72px)] lg:min-h-[110vh]">
         
-        {/* Decorative Grid and Ambient Lights */}
-        <div className="absolute inset-0 -top-20 -z-10 h-[120%] w-full bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px] [mask-image:radial-gradient(ellipse_50%_50%_at_50%_50%,#000_70%,transparent_100%)] opacity-30 pointer-events-none" />
-        <div className="absolute top-1/4 left-1/3 w-80 h-80 bg-gradient-to-tr from-blue-400/10 via-indigo-400/10 to-violet-400/10 rounded-full blur-[100px] pointer-events-none animate-pulse duration-5000" />
-        <div className="absolute top-1/3 right-1/4 w-72 h-72 bg-gradient-to-bl from-teal-400/10 via-emerald-400/10 to-blue-400/10 rounded-full blur-[90px] pointer-events-none animate-pulse duration-7000" />
+        {/* Background "NEXT SOLUTION" watermark typography */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none select-none z-0" aria-hidden="true">
+          <span className="block text-[120px] sm:text-[180px] lg:text-[260px] font-black uppercase tracking-wider text-black/[0.018] dark:text-white/[0.025] whitespace-nowrap leading-none">N E X T</span>
+        </div>
 
-        {/* Breadcrumb row */}
-        <nav className="flex items-center space-x-2 text-[10px] font-black text-neutral-400 dark:text-neutral-500 uppercase tracking-widest mb-6">
-          <span className="hover:text-blue-600 dark:text-blue-400 transition cursor-pointer" onClick={() => navigateToTab('home')}>
-            {currentLang === 'en' ? 'Home' : 'হোম'}
-          </span>
-          <span className="text-neutral-300 dark:text-neutral-600">/</span>
-          <span className="text-neutral-900 dark:text-white">
-            {currentLang === 'en' ? 'About Us' : 'আমাদের সম্পর্কে'}
-          </span>
-        </nav>
+        {/* Orange dot pattern — upper middle */}
+        <div className="absolute top-16 left-[45%] w-[180px] h-[120px] pointer-events-none opacity-[0.08] dark:opacity-[0.06] z-0" aria-hidden="true"
+          style={{ backgroundImage: 'radial-gradient(circle, #FF5A00 1px, transparent 1px)', backgroundSize: '10px 10px' }} />
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
-          
-          {/* Left Side (45% on desktop) */}
-          <div className="lg:col-span-5 space-y-8 text-center sm:text-left relative">
-            
-            {/* Small live-ping badge */}
-            <div className="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-emerald-50/80 border border-emerald-100 dark:border-emerald-500/20 text-emerald-700 text-[10px] sm:text-xs font-black uppercase tracking-widest justify-center sm:justify-start shadow-sm">
-              <span className="relative flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-              </span>
-              <span>{currentLang === 'en' ? '🟢 ABOUT NEXT SOLUTION' : '🟢 নেক্সট সলিউশন সম্পর্কে'}</span>
-            </div>
+        {/* Orange dot pattern — far right */}
+        <div className="absolute bottom-24 right-8 w-[140px] h-[100px] pointer-events-none opacity-[0.07] dark:opacity-[0.05] z-0" aria-hidden="true"
+          style={{ backgroundImage: 'radial-gradient(circle, #FF5A00 1px, transparent 1px)', backgroundSize: '10px 10px' }} />
 
-            {/* Headline */}
-            <h1 className="font-sans text-3xl sm:text-5xl lg:text-[4rem] font-black tracking-tight text-neutral-950 leading-[1.08]">
-              {currentLang === 'en' ? (
-                <>
-                  More Than A<br className="hidden sm:inline" /> Digital Agency.<br />
-                  We Are Your <br />
-                  <span className="relative inline-block mt-1">
-                    <span className="absolute -inset-1 rounded-lg bg-gradient-to-r from-blue-600 dark:from-blue-500 via-violet-600 to-pink-600 opacity-10 blur-md"></span>
-                    <span className="relative bg-gradient-to-r from-blue-600 dark:from-blue-500 via-violet-600 to-pink-600 bg-clip-text text-transparent">
-                      Digital Growth Partner.
-                    </span>
-                  </span>
-                </>
-              ) : (
-                <>
-                  একটি ডিজিটাল এজেন্সির<br /> চেয়েও অনেক বেশি।<br />
-                  আমরা আপনার <br />
-                  <span className="relative inline-block mt-1">
-                    <span className="absolute -inset-1 rounded-lg bg-gradient-to-r from-blue-600 dark:from-blue-500 via-violet-600 to-pink-600 opacity-10 blur-md"></span>
-                    <span className="relative bg-gradient-to-r from-blue-600 dark:from-blue-500 via-violet-600 to-pink-600 bg-clip-text text-transparent">
-                      ডিজিটাল গ্রোথ পার্টনার।
-                    </span>
-                  </span>
-                </>
-              )}
-            </h1>
+        {/* Large abstract orange curved shape — far right */}
+        <div className="absolute -right-32 bottom-0 w-[400px] h-[700px] pointer-events-none z-0" aria-hidden="true">
+          <div className="absolute inset-0 rounded-l-full bg-gradient-to-l from-[#FF5A00]/12 via-[#FF5A00]/6 to-transparent" />
+          <div className="absolute top-20 right-0 w-[250px] h-[400px] rounded-l-full border-[3px] border-[#FF5A00]/15 dark:border-[#FF5A00]/10" />
+          <div className="absolute top-40 right-12 w-[180px] h-[300px] rounded-l-full border-[2px] border-[#FF5A00]/8 dark:border-[#FF5A00]/6" />
+        </div>
 
-            {/* Description */}
-            <p className="text-sm sm:text-base lg:text-[1.05rem] leading-relaxed text-neutral-500 dark:text-neutral-400 dark:text-neutral-500 font-normal max-w-2xl">
-              {currentLang === 'en' 
-                ? 'Next Solution helps modern businesses scale dynamically by handling every dimension of digital growth. We build high-performance mobile apps, visually captivating brand identities, high-conversion SEO setups, and intelligent AI automation, acts as your reliable long-term digital headquarters.'
-                : 'নেক্সট সলিউশন আপনার ব্যবসাকে বড় করতে ডিজিটাল খাতের প্রতিটি দিকে কাজ করে। হাই-পারফরম্যান্স ওয়েব অ্যাপস, চমৎকার ব্র্যান্ড আইডেন্টিটি, হাই-কনভার্সন এসইও এবং কাস্টম এআই অটোমেশন নিয়ে আমরা আপনার বিশ্বস্ত ও দীর্ঘমেয়াদী ডিজিটাল পার্টনার হিসেবে কাজ করি।'}
-            </p>
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-6 sm:pt-10 lg:pt-12 pb-0 relative z-10">
 
-            {/* CTA Buttons */}
-            <div className="flex flex-col sm:flex-row items-center gap-4 pt-2">
-              <motion.button
-                id="about-hero-btn-primary"
-                onClick={() => navigateToTab('contact')}
-                whileHover={{ scale: 1.03, y: -2 }}
-                whileTap={{ scale: 0.97 }}
-                className="group relative w-full sm:w-auto inline-flex items-center justify-center space-x-3 rounded-xl bg-neutral-950 text-white text-xs sm:text-sm font-black px-8 py-4.5 shadow-[0_20px_40px_rgba(0,0,0,0.1)] hover:shadow-[0_20px_40px_rgba(255,77,0,0.35)] hover:bg-orange-600 transition-all duration-300 cursor-pointer overflow-hidden"
-              >
-                {/* Button glow backdrop */}
-                <span className="absolute inset-0 bg-gradient-to-r from-blue-500 dark:from-blue-500 to-indigo-600 dark:to-blue-400 opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10" />
-                <span>🚀 {currentLang === 'en' ? 'Start Your Project' : 'প্রজেক্ট শুরু করুন'}</span>
-                <ArrowRight className="h-4 w-4 group-hover:translate-x-1.5 transition-transform duration-300" />
-              </motion.button>
+          {/* Breadcrumb */}
+          <nav className="flex items-center space-x-2 text-[10px] font-black text-neutral-400 dark:text-neutral-500 uppercase tracking-widest mb-10 lg:mb-14">
+            <span className="hover:text-[#FF5A00] dark:hover:text-[#FF5A00] transition cursor-pointer" onClick={() => navigateToTab('home')}>
+              {currentLang === 'en' ? 'Home' : 'হোম'}
+            </span>
+            <span className="text-neutral-300 dark:text-neutral-600">/</span>
+            <span className="text-neutral-900 dark:text-white">
+              {currentLang === 'en' ? 'About Us' : 'আমাদের সম্পর্কে'}
+            </span>
+          </nav>
 
-              <motion.button
-                id="about-hero-btn-secondary"
-                onClick={() => navigateToTab('contact')}
-                whileHover={{ scale: 1.03, y: -2 }}
-                whileTap={{ scale: 0.97 }}
-                className="group relative w-full sm:w-auto inline-flex items-center justify-center space-x-2 rounded-xl border border-neutral-200/80 bg-white dark:bg-[#141414] hover:bg-neutral-50 dark:bg-neutral-900 hover:border-neutral-900 text-neutral-800 dark:text-neutral-100 text-xs sm:text-sm font-black px-8 py-4.5 shadow-sm hover:shadow-md transition-all duration-300 cursor-pointer"
-              >
-                <span>📅 {currentLang === 'en' ? 'Book Free Consultation' : 'ফ্রি পরামর্শ বুক করুন'}</span>
-              </motion.button>
-            </div>
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-6 items-stretch">
 
-            {/* Core Values Pills below buttons */}
-            <div className="pt-6 border-t border-neutral-100 dark:border-neutral-800 text-left">
-              <span className="block text-[9px] font-black uppercase tracking-widest text-neutral-400 dark:text-neutral-500 mb-3 text-center sm:text-left">
-                {currentLang === 'en' ? 'OUR GUIDING CORES' : 'আমাদের মূল আদর্শ সমূহ'}
-              </span>
-              <div className="flex flex-wrap justify-center sm:justify-start gap-2.5">
-                {[
-                  { icon: '💡', labelEn: 'Innovation', labelBn: 'উদ্ভাবন', border: 'hover:border-amber-200 hover:bg-amber-50/50 hover:text-amber-700 shadow-amber-100' },
-                  { icon: '🤝', labelEn: 'Transparency', labelBn: 'স্বচ্ছতা', border: 'hover:border-blue-200 dark:border-blue-500/25 hover:bg-blue-50/5 dark:bg-blue-500/50 hover:text-blue-700 shadow-blue-100' },
-                  { icon: '🏆', labelEn: 'Quality', labelBn: 'গুণমান', border: 'hover:border-emerald-200 hover:bg-emerald-50/50 hover:text-emerald-700 shadow-emerald-100' },
-                  { icon: '⚡', labelEn: 'Fast Delivery', labelBn: 'দ্রুত ডেলিভারি', border: 'hover:border-rose-200 hover:bg-rose-50/50 hover:text-rose-700 shadow-rose-100' },
-                  { icon: '🚀', labelEn: 'Growth Focus', labelBn: 'গ্রোথ ফোকাস', border: 'hover:border-cyan-200 hover:bg-cyan-50/50 hover:text-cyan-700 shadow-cyan-100' },
-                  { icon: '❤️', labelEn: 'Long-Term Partnership', labelBn: 'দীর্ঘমেয়াদী পার্টনারশিপ', border: 'hover:border-purple-200 hover:bg-purple-50/5 dark:bg-blue-500/50 hover:text-purple-700 shadow-purple-100' }
-                ].map((item, idx) => (
-                  <motion.div
-                    key={idx}
-                    whileHover={{ y: -3, scale: 1.03 }}
-                    className={`inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-full border border-neutral-200/60 bg-white dark:bg-[#141414] text-[11px] font-black text-neutral-600 dark:text-neutral-300 dark:text-neutral-600 transition-all duration-300 shadow-sm cursor-default hover:shadow-[0_4px_20px_rgba(0,0,0,0.06)] ${item.border}`}
-                  >
-                    <span>{item.icon}</span>
-                    <span>{currentLang === 'en' ? item.labelEn : item.labelBn}</span>
-                  </motion.div>
-                ))}
-              </div>
-            </div>
-          </div>
+            {/* ── LEFT COLUMN ── */}
+            <div className="lg:col-span-5 space-y-7 lg:space-y-8 relative z-10 flex flex-col justify-center py-10 lg:py-0">
 
-          {/* Right Side (55% on desktop) - INTERACTIVE DIGITAL GROWTH CORE */}
-          <div className="lg:col-span-7 w-full relative flex flex-col space-y-6 lg:space-y-8 h-auto overflow-visible">
-            
-            {/* Interactive Showcase Mode Selectors */}
-            <div className="flex space-x-1.5 p-1.5 bg-neutral-100/90 backdrop-blur-md rounded-2xl border border-neutral-200/50 w-full max-w-lg mx-auto lg:mx-0 shadow-sm relative z-20">
-              {[
-                { id: 'code', labelEn: 'Scalability Core', labelBn: 'স্কেলেবিলিটি কোর', icon: Terminal },
-                { id: 'canvas', labelEn: 'Design Tokens', labelBn: 'ডিজাইন টোকেন', icon: Palette },
-                { id: 'ai', labelEn: 'Autonomous AI', labelBn: 'অটোনোমাস এআই', icon: BrainCircuit }
-              ].map((tab) => {
-                const IconComponent = tab.icon;
-                const isActive = activeShowcaseTab === tab.id;
-                return (
-                  <button
-                    key={tab.id}
-                    id={`showcase-tab-${tab.id}`}
-                    onClick={() => {
-                      setActiveShowcaseTab(tab.id as 'code' | 'canvas' | 'ai');
-                    }}
-                    className={`flex-1 flex items-center justify-center space-x-2 py-3 px-3 rounded-xl text-xs font-black tracking-wide transition-all duration-300 relative cursor-pointer ${
-                      isActive 
-                        ? 'text-neutral-950 bg-white dark:bg-[#141414] shadow-sm border border-neutral-200/20' 
-                        : 'text-neutral-500 dark:text-neutral-400 dark:text-neutral-500 hover:text-neutral-800 dark:text-neutral-100 hover:bg-neutral-50/50 dark:bg-neutral-900/50'
-                    }`}
-                  >
-                    <IconComponent className={`h-4 w-4 ${isActive ? 'text-blue-600 dark:text-blue-400' : 'text-neutral-400 dark:text-neutral-500'}`} />
-                    <span className="hidden sm:inline">{currentLang === 'en' ? tab.labelEn : tab.labelBn}</span>
-                    <span className="inline sm:hidden">{currentLang === 'en' ? tab.labelEn.split(' ')[0] : tab.labelBn.split(' ')[0]}</span>
-                  </button>
-                );
-              })}
-            </div>
-
-            {/* Main Interactive Cabinet Container */}
-            <div className="relative w-full overflow-visible">
-              
-              {/* Outer decorative neon glow backdrop responsive to selected tab */}
-              <div className={`absolute -inset-2 rounded-[2rem] opacity-30 blur-2xl transition-all duration-700 pointer-events-none -z-10 ${
-                activeShowcaseTab === 'code' 
-                  ? 'bg-gradient-to-tr from-blue-500 dark:from-blue-500 via-indigo-500 to-violet-500' 
-                  : activeShowcaseTab === 'canvas'
-                    ? 'bg-gradient-to-tr from-pink-500 via-rose-500 to-amber-500'
-                    : 'bg-gradient-to-tr from-emerald-500 via-teal-500 to-blue-500 dark:to-blue-400'
-              }`} />
-
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={activeShowcaseTab}
-                  initial={{ opacity: 0, y: 15, scale: 0.98 }}
-                  animate={{ opacity: 1, y: 0, scale: 1 }}
-                  exit={{ opacity: 0, y: -15, scale: 0.98 }}
-                  transition={{ duration: 0.35, ease: "easeOut" }}
-                  className="bg-white/85 backdrop-blur-xl rounded-3xl border border-neutral-200/70 shadow-[0_30px_70px_rgba(0,0,0,0.06)] overflow-hidden relative p-5 sm:p-7 md:p-8"
-                >
-                  {/* TAB 1: CODE SCALABILITY ENGINE */}
-                  {activeShowcaseTab === 'code' && (
-                    <div className="space-y-6">
-                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-neutral-100 dark:border-neutral-800 pb-4">
-                        <div>
-                          <span className="text-[9px] font-black uppercase tracking-widest text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-500/10 px-2 py-0.5 rounded-md">
-                            {currentLang === 'en' ? 'SPEED ENGINE' : 'স্পিড ইঞ্জিন'}
-                          </span>
-                          <h3 className="text-base font-black text-neutral-900 dark:text-white mt-1">
-                            {currentLang === 'en' ? 'Clean TypeScript Architecture' : 'পরিচ্ছন্ন টাইপস্ক্রিপ্ট আর্কিটেকচার'}
-                          </h3>
-                        </div>
-                        <div className="flex items-center space-x-1.5 self-start sm:self-center">
-                          <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
-                          <span className="text-[10px] font-mono text-neutral-400 dark:text-neutral-500">SSR Active</span>
-                        </div>
-                      </div>
-
-                      <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-stretch">
-                        
-                        {/* Editor Box */}
-                        <div className="md:col-span-7 flex flex-col bg-neutral-950 rounded-2xl border border-neutral-800 shadow-2xl overflow-hidden relative font-mono text-[11px] leading-relaxed min-h-[230px] justify-between">
-                          
-                          {/* Code Window Header */}
-                          <div className="flex items-center justify-between px-4 py-2.5 bg-neutral-900/80 border-b border-neutral-800/60">
-                            <div className="flex space-x-1.5">
-                              <span className="h-2.5 w-2.5 rounded-full bg-rose-500/80" />
-                              <span className="h-2.5 w-2.5 rounded-full bg-amber-500/80" />
-                              <span className="h-2.5 w-2.5 rounded-full bg-emerald-500/80" />
-                            </div>
-                            <span className="text-[10px] text-neutral-400 dark:text-neutral-500 font-mono">api/growth/optimize.ts</span>
-                            <div className="w-4" />
-                          </div>
-
-                          {/* Code Body */}
-                          <div className="p-4 space-y-1 select-none overflow-x-auto text-neutral-300 dark:text-neutral-600">
-                            <div><span className="text-pink-400">import</span> &#123; <span className="text-cyan-300">NextSolution</span> &#125; <span className="text-pink-400">from</span> <span className="text-amber-200">"next-sol"</span>;</div>
-                            <div className="text-neutral-500 dark:text-neutral-400 dark:text-neutral-500">{currentLang === 'en' ? '// Initialize instant assets payload optimization' : '// অ্যাসেট পেলোড অপ্টিমাইজেশন'}</div>
-                            <div><span className="text-pink-400">export async function</span> <span className="text-blue-400 dark:text-blue-300">POST</span>(req: <span className="text-emerald-400">Request</span>) &#123;</div>
-                            <div>&nbsp;&nbsp;<span className="text-pink-400">const</span> client = <span className="text-pink-400">new</span> <span className="text-cyan-300">NextSolution</span>(&#123; <span className="text-purple-300">engine</span>: <span className="text-amber-200">'core'</span> &#125;);</div>
-                            <div>&nbsp;&nbsp;<span className="text-pink-400">const</span> res = <span className="text-pink-400">await</span> client.<span className="text-blue-400 dark:text-blue-300">optimize</span>(&#123;</div>
-                            <div>&nbsp;&nbsp;&nbsp;&nbsp;minify: <span className="text-amber-400">true</span>,</div>
-                            <div>&nbsp;&nbsp;&nbsp;&nbsp;seoPriority: <span className="text-amber-400">"Google-Rank-1"</span>,</div>
-                            <div>&nbsp;&nbsp;&nbsp;&nbsp;hydratedTrees: <span className="text-amber-400">true</span></div>
-                            <div>&nbsp;&nbsp;&#125;);</div>
-                            <div>&nbsp;&nbsp;<span className="text-pink-400">return</span> <span className="text-cyan-300">Response</span>.<span className="text-blue-400 dark:text-blue-300">json</span>(&#123; res &#125;);</div>
-                            <div>&#125;</div>
-                          </div>
-
-                          {/* Code Window Footer */}
-                          <div className="px-4 py-2 bg-neutral-900/40 border-t border-neutral-900/80 flex justify-between items-center text-[9px] text-neutral-500 dark:text-neutral-400 dark:text-neutral-500">
-                            <span>UTF-8</span>
-                            <span>TypeScript / React</span>
-                          </div>
-
-                          {/* Optimizing Overlay */}
-                          {optimizationStage === 'optimizing' && (
-                            <motion.div 
-                              initial={{ opacity: 0 }}
-                              animate={{ opacity: 1 }}
-                              className="absolute inset-0 bg-neutral-950/85 backdrop-blur-sm flex flex-col items-center justify-center space-y-3 z-10"
-                            >
-                              <div className="h-7 w-7 rounded-full border-2 border-blue-500 border-t-transparent animate-spin" />
-                              <span className="text-xs text-neutral-300 dark:text-neutral-600 font-mono">
-                                {currentLang === 'en' ? 'Reindexing virtual DOM trees...' : 'ভার্চুয়াল ডম ইনডেক্স করা হচ্ছে...'}
-                              </span>
-                            </motion.div>
-                          )}
-                        </div>
-
-                        {/* Lighthouse Gauge and Stats Panel */}
-                        <div className="md:col-span-5 flex flex-col justify-between p-4.5 bg-neutral-50/70 dark:bg-neutral-900/70 rounded-2xl border border-neutral-150/40 space-y-4">
-                          <div className="text-center md:text-left">
-                            <span className="block text-[9px] font-black uppercase tracking-widest text-neutral-400 dark:text-neutral-500">
-                              {currentLang === 'en' ? 'Lighthouse Score' : 'লাইটহাউস স্কোর'}
-                            </span>
-                            
-                            {/* SVG Radial Gauge */}
-                            <div className="flex items-center justify-center py-4 relative">
-                              <svg className="w-24 h-24 transform -rotate-90">
-                                <circle cx="48" cy="48" r="40" className="stroke-neutral-200 fill-none" strokeWidth="6" />
-                                <motion.circle 
-                                  cx="48" cy="48" r="40" 
-                                  className={`fill-none transition-colors duration-500 ${
-                                    optimizationStage === 'optimized' 
-                                      ? 'stroke-emerald-500 shadow-emerald-400' 
-                                      : optimizationStage === 'optimizing'
-                                        ? 'stroke-amber-400'
-                                        : 'stroke-rose-500'
-                                  }`} 
-                                  strokeWidth="6" 
-                                  strokeDasharray="251.2"
-                                  initial={{ strokeDashoffset: 251.2 }}
-                                  animate={{ 
-                                    strokeDashoffset: optimizationStage === 'optimized' 
-                                      ? 2.5 
-                                      : optimizationStage === 'optimizing' 
-                                        ? 70 
-                                        : 145 
-                                  }}
-                                  transition={{ duration: 1, ease: "easeInOut" }}
-                                />
-                              </svg>
-                              <div className="absolute inset-0 flex flex-col items-center justify-center">
-                                <motion.span 
-                                  key={optimizationStage}
-                                  initial={{ scale: 0.85, opacity: 0 }}
-                                  animate={{ scale: 1, opacity: 1 }}
-                                  className={`text-2xl font-black font-sans ${
-                                    optimizationStage === 'optimized' 
-                                      ? 'text-emerald-600 dark:text-emerald-400' 
-                                      : optimizationStage === 'optimizing'
-                                        ? 'text-amber-500 dark:text-amber-400'
-                                        : 'text-rose-600 dark:text-rose-400'
-                                  }`}
-                                >
-                                  {optimizationStage === 'optimized' ? '99' : optimizationStage === 'optimizing' ? '72' : '42'}
-                                </motion.span>
-                                <span className="text-[8px] font-black uppercase tracking-widest text-neutral-400 dark:text-neutral-500 -mt-1">
-                                  {optimizationStage === 'optimized' ? 'PERFECT' : optimizationStage === 'optimizing' ? 'TUNING' : 'BLOATED'}
-                                </span>
-                              </div>
-                            </div>
-                          </div>
-
-                          {/* Quick Specs */}
-                          <div className="space-y-2 border-t border-b border-neutral-100 dark:border-neutral-800 py-3 text-xs">
-                            <div className="flex justify-between font-mono">
-                              <span className="text-neutral-400 dark:text-neutral-500">{currentLang === 'en' ? 'TTFB:' : 'প্রথম বাইট টাইম:'}</span>
-                              <span className={`font-black ${optimizationStage === 'optimized' ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-500 dark:text-rose-400'}`}>
-                                {optimizationStage === 'optimized' ? '12ms' : '240ms'}
-                              </span>
-                            </div>
-                            <div className="flex justify-between font-mono">
-                              <span className="text-neutral-400 dark:text-neutral-500">{currentLang === 'en' ? 'Bundle Weight:' : 'বান্ডেল সাইজ:'}</span>
-                              <span className={`font-black ${optimizationStage === 'optimized' ? 'text-emerald-600 dark:text-emerald-400' : 'text-neutral-700 dark:text-neutral-200'}`}>
-                                {optimizationStage === 'optimized' ? '14.2 KB' : '3.4 MB'}
-                              </span>
-                            </div>
-                            <div className="flex justify-between font-mono">
-                              <span className="text-neutral-400 dark:text-neutral-500">{currentLang === 'en' ? 'Interactive:' : 'ইন্টারেক্টিভ টাইম:'}</span>
-                              <span className={`font-black ${optimizationStage === 'optimized' ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-500 dark:text-rose-400'}`}>
-                                {optimizationStage === 'optimized' ? '0.12s' : '2.1s'}
-                              </span>
-                            </div>
-                          </div>
-
-                          {/* Trigger Action Button */}
-                          <motion.button
-                            onClick={triggerOptimization}
-                            whileHover={{ scale: 1.02 }}
-                            whileTap={{ scale: 0.98 }}
-                            className={`w-full py-2.5 rounded-xl text-[11px] font-black uppercase tracking-widest transition-all duration-300 cursor-pointer shadow-sm text-center ${
-                              optimizationStage === 'optimized'
-                                ? 'bg-neutral-100 dark:bg-neutral-800 hover:bg-neutral-200 dark:bg-neutral-700 text-neutral-800 dark:text-neutral-100'
-                                : 'bg-neutral-900 hover:bg-blue-600 text-white'
-                            }`}
-                          >
-                            {optimizationStage === 'optimized' 
-                              ? (currentLang === 'en' ? '↩️ Reset Simulator' : '↩️ রিসেট করুন') 
-                              : optimizationStage === 'optimizing'
-                                ? (currentLang === 'en' ? '⚡ Tuning...' : '⚡ টিউনিং...')
-                                : (currentLang === 'en' ? '⚡ Optimize My Speed' : '⚡ স্পিড অপ্টিমাইজ করুন')
-                            }
-                          </motion.button>
-                        </div>
-
-                      </div>
-                    </div>
-                  )}
-
-                  {/* TAB 2: CANVAS DESIGN TOKENS SYSTEM */}
-                  {activeShowcaseTab === 'canvas' && (
-                    <div className="space-y-6">
-                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-neutral-100 dark:border-neutral-800 pb-4">
-                        <div>
-                          <span className="text-[9px] font-black uppercase tracking-widest text-pink-600 dark:text-pink-400 bg-pink-50 dark:bg-pink-500/10 px-2 py-0.5 rounded-md">
-                            {currentLang === 'en' ? 'DESIGN LAB' : 'ডিজাইন ল্যাব'}
-                          </span>
-                          <h3 className="text-base font-black text-neutral-900 dark:text-white mt-1">
-                            {currentLang === 'en' ? 'Interactive Figma-Like Sandbox' : 'ইন্টারেক্টিভ ফিগমা ডিজাইন স্যান্ডবক্স'}
-                          </h3>
-                        </div>
-                        <div className="flex items-center space-x-1.5 self-start sm:self-center">
-                          <span className="h-2 w-2 rounded-full bg-pink-500 animate-pulse" />
-                          <span className="text-[10px] font-mono text-neutral-400 dark:text-neutral-500">Tokens Engaged</span>
-                        </div>
-                      </div>
-
-                      <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
-                        
-                        {/* Interactive Client Card Preview */}
-                        <div className="md:col-span-6 flex items-center justify-center p-4 bg-neutral-50/50 dark:bg-neutral-900/50 rounded-2xl border border-neutral-100/50 h-[260px] relative overflow-hidden">
-                          
-                          {/* Beautiful background grids */}
-                          <div className="absolute inset-0 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:12px_12px] opacity-40 pointer-events-none" />
-
-                          {/* Dynamic Custom Card */}
-                          <motion.div 
-                            layout
-                            style={{ 
-                              borderRadius: `${cornerRadius}px`,
-                              boxShadow: vibeTheme === 'cyber' 
-                                ? `0 15px ${glowIntensity}px -5px rgba(255, 77, 0, 0.45)` 
-                                : vibeTheme === 'peak' 
-                                  ? `0 15px ${glowIntensity}px -5px rgba(16, 185, 129, 0.45)` 
-                                  : `0 15px ${glowIntensity}px -5px rgba(255, 77, 0, 0.45)`
-                            }}
-                            className={`w-[250px] p-5 border relative overflow-hidden transition-all duration-300 bg-white dark:bg-[#141414] ${
-                              vibeTheme === 'cyber' 
-                                ? 'border-blue-100 dark:border-orange-500/20' 
-                                : vibeTheme === 'peak' 
-                                  ? 'border-emerald-100 dark:border-emerald-500/20' 
-                                  : 'border-rose-100 dark:border-rose-500/20'
-                            }`}
-                          >
-                            {/* Card Glow Mesh */}
-                            <div className={`absolute -top-10 -right-10 w-28 h-28 rounded-full blur-[30px] opacity-20 pointer-events-none ${
-                              vibeTheme === 'cyber' 
-                                ? 'bg-blue-500 dark:bg-blue-500' 
-                                : vibeTheme === 'peak' 
-                                  ? 'bg-emerald-500' 
-                                  : 'bg-rose-500'
-                            }`} />
-
-                            <div className="flex items-center justify-between mb-4">
-                              <span className={`text-[8px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full ${
-                                vibeTheme === 'cyber' 
-                                  ? 'bg-blue-50 dark:bg-blue-500/10 text-blue-600 dark:text-blue-400' 
-                                  : vibeTheme === 'peak' 
-                                    ? 'bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400' 
-                                    : 'bg-rose-50 dark:bg-rose-500/10 text-rose-600 dark:text-rose-400'
-                              }`}>
-                                {vibeTheme === 'cyber' ? 'CYBER FINTECH' : vibeTheme === 'peak' ? 'GREEN ECO' : 'SOLAR AGENCY'}
-                              </span>
-                              <Sparkles className={`h-4 w-4 ${
-                                vibeTheme === 'cyber' ? 'text-blue-500 dark:text-blue-400' : vibeTheme === 'peak' ? 'text-emerald-500 dark:text-emerald-400' : 'text-rose-500 dark:text-rose-400'
-                              }`} />
-                            </div>
-
-                            <h4 className={`text-sm font-black tracking-tight mb-2 text-neutral-950 ${
-                              vibeTheme === 'peak' ? 'font-serif' : vibeTheme === 'rose' ? 'font-sans uppercase tracking-wider' : 'font-sans'
-                            }`}>
-                              {vibeTheme === 'cyber' ? 'Infinite Transactions' : vibeTheme === 'peak' ? 'Forest Green Core' : 'Symphony Agency'}
-                            </h4>
-
-                            <p className="text-[10px] leading-relaxed text-neutral-400 dark:text-neutral-500 mb-4">
-                              {currentLang === 'en' 
-                                ? 'Crafting stunning immersive digital systems that perform under heavy traffic.'
-                                : 'পণ্য বা সার্ভিসের সাথে কাস্টমারের চমৎকার ডিজিটাল অভিজ্ঞতার মেলবন্ধন।'
-                              }
-                            </p>
-
-                            <div className="flex items-center justify-between pt-3 border-t border-neutral-100 dark:border-neutral-800">
-                              <div className="flex -space-x-1.5">
-                                <span className={`h-4.5 w-4.5 rounded-full border border-white flex items-center justify-center text-[8px] font-black text-white ${
-                                  vibeTheme === 'cyber' ? 'bg-blue-600' : vibeTheme === 'peak' ? 'bg-emerald-600' : 'bg-rose-600'
-                                }`}>A</span>
-                                <span className="h-4.5 w-4.5 rounded-full border border-white bg-neutral-200 dark:bg-neutral-700 flex items-center justify-center text-[8px] font-black text-neutral-600 dark:text-neutral-300 dark:text-neutral-600">B</span>
-                              </div>
-                              <span className={`text-[10px] font-black ${
-                                vibeTheme === 'cyber' ? 'text-blue-600 dark:text-blue-400' : vibeTheme === 'peak' ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'
-                              }`}>{currentLang === 'en' ? 'Learn More →' : 'জানুন →'}</span>
-                            </div>
-                          </motion.div>
-
-                          {/* Draggable cursor feedback */}
-                          <div className="absolute bottom-3 right-4 flex items-center space-x-1 bg-neutral-900 text-white rounded-full px-2.5 py-1 text-[8px] font-mono shadow-md">
-                            <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-ping" />
-                            <span>UI UX LIVE</span>
-                          </div>
-                        </div>
-
-                        {/* Sliders and Preset Controls */}
-                        <div className="md:col-span-6 space-y-5">
-                          <div className="space-y-2">
-                            <span className="block text-[10px] font-black uppercase tracking-widest text-neutral-400 dark:text-neutral-500">
-                              {currentLang === 'en' ? '1. Select Visual Vibe' : '১. ব্র্যান্ড ভাইব নির্বাচন করুন'}
-                            </span>
-                            <div className="grid grid-cols-3 gap-2">
-                              {[
-                                { id: 'cyber', label: currentLang === 'en' ? 'Cyber Blue' : 'সাইবার ব্লু', color: 'bg-blue-500 dark:bg-blue-500' },
-                                { id: 'peak', label: currentLang === 'en' ? 'Eco Green' : 'ইকো গ্রিন', color: 'bg-emerald-500' },
-                                { id: 'rose', label: currentLang === 'en' ? 'Solar Rose' : 'সোলার রোজ', color: 'bg-rose-500' }
-                              ].map((v) => (
-                                <button
-                                  key={v.id}
-                                  onClick={() => setVibeTheme(v.id as 'cyber' | 'peak' | 'rose')}
-                                  className={`flex items-center space-x-1.5 py-2 px-2.5 border rounded-xl text-[10px] font-black transition-all cursor-pointer ${
-                                    vibeTheme === v.id 
-                                      ? 'border-neutral-900 bg-neutral-50/50 dark:bg-neutral-900/50 text-neutral-950 shadow-sm' 
-                                      : 'border-neutral-200 dark:border-neutral-700 hover:border-neutral-400 bg-white dark:bg-[#141414] text-neutral-500 dark:text-neutral-400 dark:text-neutral-500'
-                                  }`}
-                                >
-                                  <span className={`h-2.5 w-2.5 rounded-full ${v.color}`} />
-                                  <span>{v.label}</span>
-                                </button>
-                              ))}
-                            </div>
-                          </div>
-
-                          <div className="space-y-4 pt-3 border-t border-neutral-100 dark:border-neutral-800">
-                            
-                            {/* Border Radius control */}
-                            <div className="space-y-1.5">
-                              <div className="flex justify-between items-center">
-                                <span className="text-[10px] font-black uppercase tracking-widest text-neutral-400 dark:text-neutral-500">
-                                  {currentLang === 'en' ? '2. Border Radius' : '২. বর্ডার রেডিয়াস'}
-                                </span>
-                                <span className="text-[10px] font-mono font-bold text-neutral-700 dark:text-neutral-200">{cornerRadius}px</span>
-                              </div>
-                              <input 
-                                type="range" 
-                                min="0" 
-                                max="28" 
-                                value={cornerRadius}
-                                onChange={(e) => setCornerRadius(Number(e.target.value))}
-                                className="w-full h-1 bg-neutral-200 dark:bg-neutral-700 rounded-lg appearance-none cursor-pointer accent-neutral-900" 
-                              />
-                            </div>
-
-                            {/* Glow Intensity control */}
-                            <div className="space-y-1.5">
-                              <div className="flex justify-between items-center">
-                                <span className="text-[10px] font-black uppercase tracking-widest text-neutral-400 dark:text-neutral-500">
-                                  {currentLang === 'en' ? '3. Glow Intensity' : '৩. গ্লো ইনটেনসিটি'}
-                                </span>
-                                <span className="text-[10px] font-mono font-bold text-neutral-700 dark:text-neutral-200">{glowIntensity}px</span>
-                              </div>
-                              <input 
-                                type="range" 
-                                min="0" 
-                                max="80" 
-                                value={glowIntensity}
-                                onChange={(e) => setGlowIntensity(Number(e.target.value))}
-                                className="w-full h-1 bg-neutral-200 dark:bg-neutral-700 rounded-lg appearance-none cursor-pointer accent-neutral-900" 
-                              />
-                            </div>
-
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-
-                  {/* TAB 3: AUTONOMOUS AI GROWTH PIPELINE */}
-                  {activeShowcaseTab === 'ai' && (
-                    <div className="space-y-6">
-                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-neutral-100 dark:border-neutral-800 pb-4">
-                        <div>
-                          <span className="text-[9px] font-black uppercase tracking-widest text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-500/10 px-2 py-0.5 rounded-md">
-                            {currentLang === 'en' ? 'INTELLIGENCE CORE' : 'এআই ইন্টেলিজেন্স কোর'}
-                          </span>
-                          <h3 className="text-base font-black text-neutral-900 dark:text-white mt-1">
-                            {currentLang === 'en' ? 'Gemini-Powered Neural Growth' : 'জেমিনি-চালিত নিউরাল গ্রোথ পাইপলাইন'}
-                          </h3>
-                        </div>
-                        <div className="flex items-center space-x-1.5 self-start sm:self-center">
-                          <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
-                          <span className="text-[10px] font-mono text-neutral-400 dark:text-neutral-500">Model 2.5 Flash</span>
-                        </div>
-                      </div>
-
-                      <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-stretch">
-                        
-                        {/* Interactive Neural Diagram + Terminal Logs */}
-                        <div className="md:col-span-7 flex flex-col bg-neutral-950 rounded-2xl border border-neutral-800 p-4 font-mono text-[10px] leading-relaxed min-h-[240px] justify-between relative shadow-2xl overflow-hidden">
-                          
-                          {/* Top Visual Diagram */}
-                          <div className="flex justify-between items-center bg-neutral-900/50 p-2.5 rounded-xl border border-neutral-850 mb-3 relative overflow-hidden">
-                            <div className="flex items-center space-x-1.5 relative z-10">
-                              <Users className="h-3.5 w-3.5 text-blue-400 dark:text-blue-300" />
-                              <span className="text-[9px] text-neutral-300 dark:text-neutral-600 font-bold">{currentLang === 'en' ? 'Traffic' : 'কাস্টমার'}</span>
-                            </div>
-                            
-                            {/* Animated connection beam */}
-                            <div className="flex-1 h-0.5 mx-2 bg-neutral-800 relative">
-                              <motion.div 
-                                animate={aiStep === 'running' ? { left: ["0%", "100%"] } : { left: "0%" }}
-                                transition={aiStep === 'running' ? { repeat: Infinity, duration: 1.5, ease: "linear" } : {}}
-                                className="absolute top-0 w-8 h-full bg-gradient-to-r from-transparent via-blue-400 to-transparent" 
-                              />
-                            </div>
-
-                            <div className="flex items-center space-x-1.5 relative z-10">
-                              <BrainCircuit className="h-3.5 w-3.5 text-purple-400 dark:text-purple-300 animate-spin" />
-                              <span className="text-[9px] text-neutral-300 dark:text-neutral-600 font-bold">Gemini AI</span>
-                            </div>
-
-                            {/* Animated connection beam */}
-                            <div className="flex-1 h-0.5 mx-2 bg-neutral-800 relative">
-                              <motion.div 
-                                animate={aiStep === 'running' ? { left: ["0%", "100%"] } : { left: "0%" }}
-                                transition={aiStep === 'running' ? { repeat: Infinity, duration: 1.5, ease: "linear", delay: 0.75 } : {}}
-                                className="absolute top-0 w-8 h-full bg-gradient-to-r from-transparent via-purple-400 to-transparent" 
-                              />
-                            </div>
-
-                            <div className="flex items-center space-x-1.5 relative z-10">
-                              <TrendingUp className="h-3.5 w-3.5 text-emerald-400" />
-                              <span className="text-[9px] text-neutral-300 dark:text-neutral-600 font-bold">{currentLang === 'en' ? 'Revenue' : 'প্রবৃদ্ধি'}</span>
-                            </div>
-                          </div>
-
-                          {/* Terminal Output */}
-                          <div className="flex-1 overflow-y-auto space-y-1.5 max-h-[130px] pr-2 scrollbar-thin scrollbar-thumb-neutral-800">
-                            {aiLogs.length === 0 ? (
-                              <div className="text-neutral-500 dark:text-neutral-400 dark:text-neutral-500 italic h-full flex items-center justify-center text-center p-3">
-                                {currentLang === 'en' 
-                                  ? 'Click "Trigger Growth Agent" below to run simulated crawl & database auto-optimizations...'
-                                  : 'নিচের "গ্রোথ এজেন্ট চালু করুন" বাটনে ক্লিক করে ডেমো সিমুলেশন রান করুন...'
-                                }
-                              </div>
-                            ) : (
-                              aiLogs.map((log, index) => (
-                                <motion.div 
-                                  key={index}
-                                  initial={{ opacity: 0, x: -10 }}
-                                  animate={{ opacity: 1, x: 0 }}
-                                  className="text-neutral-300 dark:text-neutral-600 font-mono text-[9px] sm:text-[10px]"
-                                >
-                                  {log}
-                                </motion.div>
-                              ))
-                            )}
-                          </div>
-
-                          {/* Console indicator */}
-                          <div className="mt-3 pt-2 border-t border-neutral-900 flex items-center justify-between text-[9px] text-neutral-500 dark:text-neutral-400 dark:text-neutral-500">
-                            <span>Sys: SECURE_AGENTS_ON</span>
-                            <span>{aiStep === 'running' ? '● RUNNING' : aiStep === 'completed' ? '● COMPLETED' : '● IDLE'}</span>
-                          </div>
-                        </div>
-
-                        {/* Interactive Growth hockey stick chart */}
-                        <div className="md:col-span-5 flex flex-col justify-between p-4.5 bg-neutral-50/70 dark:bg-neutral-900/70 rounded-2xl border border-neutral-150/40 space-y-4">
-                          <div>
-                            <span className="block text-[9px] font-black uppercase tracking-widest text-neutral-400 dark:text-neutral-500">
-                              {currentLang === 'en' ? 'Funnel Conversion Rate' : 'ফানেল কনভার্সন রেট'}
-                            </span>
-                            
-                            {/* Animated SVG Sparkline */}
-                            <div className="h-28 w-full bg-neutral-950 rounded-xl mt-3 relative overflow-hidden flex items-end">
-                              <div className="absolute inset-0 bg-[radial-gradient(#262626_1px,transparent_1px)] [background-size:12px_12px] opacity-40 pointer-events-none" />
-                              
-                              <svg className="w-full h-full p-2" viewBox="0 0 200 100" preserveAspectRatio="none">
-                                {/* Flat base reference path */}
-                                <path d="M0,80 L50,78 L100,75 L150,70 L200,68" fill="none" stroke="#262626" strokeWidth="1" strokeDasharray="3,3" />
-                                
-                                {/* Dynamic hockey line */}
-                                <motion.path 
-                                  d="M0,80 L50,78 L100,75 L140,55 L200,10" 
-                                  fill="none" 
-                                  className="stroke-emerald-500" 
-                                  strokeWidth="2.5" 
-                                  strokeLinecap="round"
-                                  initial={{ pathLength: 0.1 }}
-                                  animate={{ pathLength: aiStep === 'completed' ? 1 : aiStep === 'running' ? 0.6 : 0.25 }}
-                                  transition={{ duration: 1.5, ease: "easeInOut" }}
-                                />
-                              </svg>
-
-                              {/* Hover tooltip overlay */}
-                              {aiStep === 'completed' && (
-                                <motion.div 
-                                  initial={{ opacity: 0, scale: 0.8 }}
-                                  animate={{ opacity: 1, scale: 1 }}
-                                  className="absolute top-2 right-2 bg-emerald-500/10 border border-emerald-500/20 rounded-lg px-2 py-1 flex items-center space-x-1 shadow-sm"
-                                >
-                                  <span className="text-[9px] font-mono font-black text-emerald-600 dark:text-emerald-400">+240% CTR</span>
-                                  <span className="relative flex h-1.5 w-1.5">
-                                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                                    <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-500"></span>
-                                  </span>
-                                </motion.div>
-                              )}
-
-                              <div className="absolute bottom-2 left-3 text-[8px] font-mono text-neutral-500 dark:text-neutral-400 dark:text-neutral-500">
-                                {currentLang === 'en' ? 'Organic Traffic Trend' : 'অর্গানিক ট্রাফিক ট্রেন্ড'}
-                              </div>
-                            </div>
-                          </div>
-
-                          {/* Stat rows */}
-                          <div className="space-y-1.5">
-                            <div className="flex justify-between items-center text-[11px] font-mono border-b border-neutral-100 dark:border-neutral-800 pb-1.5">
-                              <span className="text-neutral-400 dark:text-neutral-500">{currentLang === 'en' ? 'Model latency:' : 'এআই ল্যাটেন্সি:'}</span>
-                              <span className="font-bold text-neutral-800 dark:text-neutral-100">120ms</span>
-                            </div>
-                            <div className="flex justify-between items-center text-[11px] font-mono">
-                              <span className="text-neutral-400 dark:text-neutral-500">{currentLang === 'en' ? 'Database sync:' : 'ডাটাবেস সিঙ্ক:'}</span>
-                              <span className="font-bold text-emerald-600 dark:text-emerald-400">Active (Uptime 100%)</span>
-                            </div>
-                          </div>
-
-                          {/* Trigger simulation button */}
-                          <motion.button
-                            onClick={runAiSimulation}
-                            whileHover={{ scale: 1.02 }}
-                            whileTap={{ scale: 0.98 }}
-                            className={`w-full py-2.5 rounded-xl text-[11px] font-black uppercase tracking-widest transition-all duration-300 cursor-pointer shadow-sm text-center ${
-                              aiStep === 'completed'
-                                ? 'bg-neutral-100 dark:bg-neutral-800 hover:bg-neutral-200 dark:bg-neutral-700 text-neutral-800 dark:text-neutral-100'
-                                : 'bg-neutral-900 hover:bg-emerald-600 text-white'
-                            }`}
-                          >
-                            {aiStep === 'running' 
-                              ? (currentLang === 'en' ? '🤖 Processing...' : '🤖 প্রোসেস হচ্ছে...') 
-                              : aiStep === 'completed'
-                                ? (currentLang === 'en' ? '↩️ Reset Simulation' : '↩️ সিমুলেশন রিসেট')
-                                : (currentLang === 'en' ? '🚀 Trigger Growth Agent' : '🚀 গ্রোথ এজেন্ট চালু করুন')
-                            }
-                          </motion.button>
-                        </div>
-
-                      </div>
-                    </div>
-                  )}
-
-                </motion.div>
-              </AnimatePresence>
-
-              {/* Floating micro indicators decoration (No photos, completely abstract design) */}
-              <div className="absolute -bottom-8 -left-4 hidden md:flex items-center space-x-2 bg-white dark:bg-[#141414] px-3.5 py-2 rounded-2xl border border-neutral-200/60 shadow-md">
-                <div className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
-                <span className="text-[10px] font-black tracking-wide text-neutral-600 dark:text-neutral-300 dark:text-neutral-600 uppercase">
-                  {currentLang === 'en' ? '🌐 ZERO DOWNTIME CORE' : '🌐 জিরো ডাউনটাইম কোর'}
+              {/* Label */}
+              <div className="inline-flex items-center space-x-2.5">
+                <span className="h-2.5 w-2.5 rounded-full bg-[#FF5A00] shrink-0" />
+                <span className="text-[11px] sm:text-xs font-bold uppercase tracking-[0.2em] text-[#FF5A00]">
+                  {currentLang === 'en' ? 'About Us' : 'আমাদের সম্পর্কে'}
                 </span>
               </div>
 
-              <div className="absolute -top-6 -right-4 hidden md:flex items-center space-x-1.5 bg-neutral-950 text-white px-3 py-1.5 rounded-xl shadow-lg border border-neutral-800">
-                <span className="text-[9px] font-mono">NEXT SOLUTION v2.0</span>
-              </div>
-            </div>
+              {/* Headline */}
+              <h1 className="font-sans text-[2rem] sm:text-[2.6rem] lg:text-[3.4rem] font-black tracking-tight leading-[1.02] text-neutral-900 dark:text-white">
+                {currentLang === 'en' ? (
+                  <>
+                    We Are Not Just<br />
+                    An Agency.<br />
+                    We Are Your Digital<br />
+                    Growth <span className="text-[#FF5A00]">Partner</span>.
+                  </>
+                ) : (
+                  <>
+                    আমরা শুধু একটি<br />
+                    এজেন্সি নই।<br />
+                    আমরা আপনার ডিজিটাল<br />
+                    <span className="text-[#FF5A00]">গ্রোথ পার্টনার</span>।
+                  </>
+                )}
+              </h1>
 
-          </div>
-        </div>
-      </section>
+              {/* Orange underline */}
+              <div className="w-[45px] h-[3.5px] rounded-full bg-[#FF5A00]" />
 
-      {/* ========================================================
-          02. OUR STORY (Storytelling Timeline)
-         ======================================================== */}
-      <section id="our-story" className="border-t border-neutral-100 dark:border-neutral-800 bg-neutral-50/30 py-24 relative z-10">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-start">
-            
-            <div className="lg:col-span-5 space-y-6 lg:sticky lg:top-24">
-              <span className="text-xs font-bold uppercase tracking-widest text-blue-600 dark:text-blue-400">
-                {currentLang === 'en' ? 'OUR BRAND CHRONICLES' : 'আমাদের ব্র্যান্ডের গল্প'}
-              </span>
-              <h2 className="font-sans text-3xl sm:text-4xl font-black text-neutral-900 dark:text-white leading-tight">
-                {currentLang === 'en' ? 'The History & Philosophy of Next Solution' : 'নেক্সট সলিউশনের জন্ম ও আমাদের দীর্ঘ ইতিহাস'}
-              </h2>
-              <p className="text-xs sm:text-sm text-neutral-500 dark:text-neutral-400 dark:text-neutral-500 leading-relaxed max-w-md">
-                {currentLang === 'en' 
-                  ? 'We founded this agency with one simple rule: never deploy lazy templates, and never compromise on relational performance. Click through our milestones to see how we expanded our digital footprint.' 
-                  : 'আমরা কেবল একটি সরল নিয়মে বিশ্বাস করি: কখনো রেডিমেড টেমপ্লেট ব্যবহার করব না এবং গতির সাথে আপস করব না। মাইলস্টোনগুলোতে ক্লিক করে দেখে নিন কীভাবে আমরা প্রযুক্তির উৎকর্ষে নিজেদের নিয়োজিত করেছি।'}
+              {/* Description */}
+              <p className="text-[15px] sm:text-[16px] leading-[1.65] text-[#555555] dark:text-[#b5b5b5] max-w-[460px]">
+                {currentLang === 'en'
+                  ? 'At Next Solution, we combine creativity, technology and strategy to help businesses grow faster. From web development to AI automation, we deliver complete digital solutions under one roof.'
+                  : 'নেক্সট সলিউশনে, আমরা সৃজনশীলতা, প্রযুক্তি এবং কৌশল একত্রিত করে ব্যবসাগুলোকে দ্রুত বৃদ্ধি পেতে সাহায্য করি। ওয়েব ডেভেলপমেন্ট থেকে AI অটোমেশন — আমরা এক ছাদের নিচে সম্পূর্ণ ডিজিটাল সমাধান প্রদান করি।'}
               </p>
 
-              {/* Milestone Selectors */}
-              <div className="space-y-2 pt-4">
-                {storyMilestones.map((m, idx) => (
-                  <button
-                    key={m.year}
-                    onClick={() => setSelectedMilestone(idx)}
-                    className={`w-full text-left p-3.5 rounded-xl border transition-all duration-300 flex items-center justify-between cursor-pointer ${
-                      selectedMilestone === idx 
-                        ? 'bg-white dark:bg-[#141414] border-neutral-200 dark:border-neutral-700 shadow-md text-blue-600 dark:text-blue-400 pl-6' 
-                        : 'bg-transparent border-transparent text-neutral-400 dark:text-neutral-500 hover:text-neutral-950'
-                    }`}
-                  >
-                    <div className="flex items-center space-x-3">
-                      <span className="font-mono text-xs font-bold">{m.year}</span>
-                      <span className="text-xs font-bold">{currentLang === 'en' ? m.titleEn : m.titleBn}</span>
+              {/* CTA Buttons */}
+              <div className="flex flex-wrap items-center gap-4 pt-1">
+                <motion.button
+                  id="about-hero-btn-primary"
+                  onClick={() => navigateToTab('services')}
+                  whileHover={{ y: -2 }}
+                  whileTap={{ scale: 0.97 }}
+                  className="group inline-flex items-center justify-center gap-2.5 rounded-[10px] bg-[#FF5A00] hover:bg-[#E04F00] text-white text-[13px] sm:text-sm font-bold px-7 py-3.5 shadow-lg shadow-[#FF5A00]/20 hover:shadow-xl hover:shadow-[#FF5A00]/30 transition-all duration-300 cursor-pointer"
+                >
+                  <span>{currentLang === 'en' ? 'Explore Services' : 'সেবাসমূহ দেখুন'}</span>
+                  <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform duration-300" />
+                </motion.button>
+
+                <motion.button
+                  id="about-hero-btn-secondary"
+                  onClick={() => navigateToTab('team')}
+                  whileHover={{ y: -2 }}
+                  whileTap={{ scale: 0.97 }}
+                  className="group inline-flex items-center justify-center gap-2.5 rounded-[10px] border border-neutral-300 dark:border-neutral-600 bg-white dark:bg-transparent text-neutral-800 dark:text-white text-[13px] sm:text-sm font-bold px-7 py-3.5 hover:border-neutral-500 dark:hover:border-neutral-400 transition-all duration-300 cursor-pointer"
+                >
+                  <span>{currentLang === 'en' ? 'Meet Our Team' : 'আমাদের টিম দেখুন'}</span>
+                  <Users className="h-4 w-4" />
+                </motion.button>
+              </div>
+
+              {/* Four Stats Row */}
+              <div className="flex flex-wrap items-center gap-x-5 gap-y-4 pt-4">
+                {[
+                  { icon: Users, value: '500+', labelEn: 'Happy Clients', labelBn: 'সুখী ক্লায়েন্ট' },
+                  { icon: Rocket, value: '15K+', labelEn: 'Projects Done', labelBn: 'প্রজেক্ট সম্পন্ন' },
+                  { icon: Globe, value: 'Global', labelEn: 'Service Provider', labelBn: 'সেবা প্রদানকারী' },
+                  { icon: BrainCircuit, value: 'AI', labelEn: 'Automation Experts', labelBn: 'অটোমেশন বিশেষজ্ঞ' },
+                ].map((s, i) => (
+                  <React.Fragment key={i}>
+                    {i > 0 && <div className="hidden sm:block w-px h-8 bg-neutral-200 dark:bg-neutral-700" />}
+                    <div className="flex items-center space-x-2.5">
+                      <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[#FF5A00]/10 shrink-0">
+                        <s.icon className="h-3.5 w-3.5 text-[#FF5A00]" />
+                      </span>
+                      <div>
+                        <span className="block text-[13px] font-black text-neutral-900 dark:text-white leading-tight">{s.value}</span>
+                        <span className="block text-[10px] sm:text-[11px] text-neutral-400 dark:text-neutral-500 font-medium leading-tight">
+                          {currentLang === 'en' ? s.labelEn : s.labelBn}
+                        </span>
+                      </div>
                     </div>
-                    {selectedMilestone === idx && <ArrowRight className="h-4 w-4 text-blue-600 dark:text-blue-400" />}
-                  </button>
+                  </React.Fragment>
                 ))}
               </div>
             </div>
 
-            {/* Active Milestone Card Detail */}
-            <div className="lg:col-span-7">
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={selectedMilestone}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -20 }}
-                  transition={{ duration: 0.4 }}
-                  className="bg-white dark:bg-[#141414] border border-neutral-100 dark:border-neutral-800 rounded-3xl p-8 md:p-12 shadow-xl relative overflow-hidden flex flex-col justify-between min-h-[420px]"
-                >
-                  <div className={`absolute top-0 left-0 right-0 h-2.5 bg-gradient-to-r ${storyMilestones[selectedMilestone].color}`} />
-                  
-                  <div className="space-y-6">
-                    <div className="flex items-center justify-between">
-                      <span className="text-5xl font-black text-neutral-100 font-mono tracking-tighter">
-                        {storyMilestones[selectedMilestone].year}
-                      </span>
-                      <span className="text-[10px] font-bold uppercase tracking-wider text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-500/10 px-3 py-1 rounded-full border border-blue-100/50">
-                        {storyMilestones[selectedMilestone].metric}
-                      </span>
-                    </div>
+            {/* ── RIGHT COLUMN — Team Visual ── */}
+            <div className="lg:col-span-7 relative z-10 flex justify-center lg:justify-end lg:items-end -mr-4 xl:-mr-12 2xl:-mr-20">
+              <div className="relative w-full max-w-[540px] lg:max-w-none ml-auto lg:ml-8 xl:ml-12">
 
-                    <h3 className="font-sans text-2xl md:text-3xl font-black text-neutral-900 dark:text-white leading-tight">
-                      {currentLang === 'en' ? storyMilestones[selectedMilestone].titleEn : storyMilestones[selectedMilestone].titleBn}
-                    </h3>
+                {/* Circular glow frame */}
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[280px] h-[280px] sm:w-[360px] sm:h-[360px] lg:w-[500px] lg:h-[500px] xl:w-[580px] xl:h-[580px] rounded-full border border-[#FF5A00]/25 dark:border-[#FF5A00]/20 bg-gradient-to-br from-[#FF5A00]/5 via-[#FF5A00]/3 to-transparent pointer-events-none" />
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[310px] h-[310px] sm:w-[400px] sm:h-[400px] lg:w-[540px] lg:h-[540px] xl:w-[620px] xl:h-[620px] rounded-full border border-[#FF5A00]/10 dark:border-[#FF5A00]/8 pointer-events-none" />
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[240px] h-[240px] sm:w-[320px] sm:h-[320px] lg:w-[460px] lg:h-[460px] xl:w-[540px] xl:h-[540px] rounded-full bg-[#FF5A00]/[0.04] dark:bg-[#FF5A00]/[0.06] blur-[60px] pointer-events-none" />
 
-                    <p className="text-xs sm:text-sm md:text-base text-neutral-500 dark:text-neutral-400 dark:text-neutral-500 leading-relaxed font-normal">
-                      {currentLang === 'en' ? storyMilestones[selectedMilestone].descEn : storyMilestones[selectedMilestone].descBn}
-                    </p>
+                {/* Team image */}
+                <div className="relative z-10">
+                  <img
+                    src="/about.png"
+                    alt={currentLang === 'en' ? 'Next Solution Team' : 'নেক্সট সলিউশন টিম'}
+                    className="w-full h-auto relative z-10 scale-[0.95] sm:scale-[1.05] lg:scale-[1.05] xl:scale-[1.15] 2xl:scale-[1.25] origin-bottom dark:hidden"
+                    style={{ WebkitMaskImage: 'linear-gradient(to bottom, black 65%, transparent 100%)', maskImage: 'linear-gradient(to bottom, black 65%, transparent 100%)' }}
+                  />
+                  <img
+                    src="/aboutb.png"
+                    alt={currentLang === 'en' ? 'Next Solution Team' : 'নেক্সট সলিউশন টিম'}
+                    className="w-full h-auto relative z-10 scale-[0.95] sm:scale-[1.05] lg:scale-[1.05] xl:scale-[1.15] 2xl:scale-[1.25] origin-bottom hidden dark:block"
+                    style={{ WebkitMaskImage: 'linear-gradient(to bottom, black 65%, transparent 100%)', maskImage: 'linear-gradient(to bottom, black 65%, transparent 100%)' }}
+                  />
+                </div>
+
+                {/* ── Floating Cards (Desktop) ── */}
+                <div className="hidden lg:block">
+                </div>
+
+              </div>
+            </div>
+
+            {/* ── Mobile Floating Cards ── */}
+            <div className="col-span-full lg:hidden grid grid-cols-2 gap-3 mt-2">
+              {[
+                { icon: Users, value: '500+', labelEn: 'Happy Clients', labelBn: 'সুখী ক্লায়েন্ট' },
+                { icon: Rocket, value: '15K+', labelEn: 'Projects Done', labelBn: 'প্রজেক্ট সম্পন্ন' },
+                { icon: Globe, value: 'Global', labelEn: 'Service Provider', labelBn: 'সেবা প্রদানকারী' },
+                { icon: BrainCircuit, value: 'AI', labelEn: 'Automation Experts', labelBn: 'অটোমেশন বিশেষজ্ঞ' },
+              ].map((c, i) => (
+                <div key={i} className="bg-white dark:bg-[#111418] rounded-xl border border-neutral-100 dark:border-neutral-700/50 p-3.5 shadow-md flex items-center space-x-3">
+                  <span className="flex h-9 w-9 items-center justify-center rounded-full bg-[#FF5A00] shrink-0">
+                    <c.icon className="h-4 w-4 text-white" />
+                  </span>
+                  <div>
+                    <span className="block text-sm font-black text-neutral-900 dark:text-white leading-tight">{c.value}</span>
+                    <span className="block text-[10px] text-neutral-400 dark:text-[#b5b5b5] leading-tight">
+                      {currentLang === 'en' ? c.labelEn : c.labelBn}
+                    </span>
                   </div>
-
-                  <div className="pt-8 border-t border-neutral-100 dark:border-neutral-800 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                    <div className="flex items-center space-x-3">
-                      <div className="h-2 w-2 rounded-full bg-blue-600 animate-ping"></div>
-                      <span className="text-[10px] font-extrabold text-neutral-400 dark:text-neutral-500 uppercase tracking-widest">
-                        {currentLang === 'en' ? 'Verified Milestone Record' : 'যাচাইকৃত ইতিহাস রেকর্ড'}
-                      </span>
-                    </div>
-                    <button
-                      onClick={() => navigateToTab('contact')}
-                      className="inline-flex items-center space-x-1.5 text-xs font-extrabold text-blue-600 dark:text-blue-400 hover:underline cursor-pointer"
-                    >
-                      <span>{currentLang === 'en' ? 'Start project with us' : 'আমাদের সাথে কাজ শুরু করুন'}</span>
-                      <ArrowUpRight className="h-4 w-4" />
-                    </button>
-                  </div>
-                </motion.div>
-              </AnimatePresence>
+                </div>
+              ))}
             </div>
 
           </div>
         </div>
       </section>
+      {/* ========================================================
+          02. WHO WE ARE
+         ======================================================== */}
+      <section id="who-we-are" className="relative py-28 overflow-hidden z-10">
+        <div className="absolute inset-0 bg-gradient-to-br from-white via-orange-50/20 to-white dark:from-[#0A0908] dark:via-[#0F0E0C] dark:to-[#12100D]" />
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[600px] bg-orange-500/[0.03] rounded-full blur-[150px] pointer-events-none" />
+        <div className="absolute bottom-0 right-0 w-[400px] h-[400px] bg-orange-500/[0.02] rounded-full blur-[120px] pointer-events-none" />
+
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10">
+
+          {/* Header */}
+          <div className="text-center space-y-5 max-w-3xl mx-auto mb-20">
+            <div className="inline-flex items-center space-x-2 bg-white/80 dark:bg-[#141414]/80 backdrop-blur-sm rounded-full px-5 py-2 border border-orange-100 dark:border-orange-500/20 shadow-sm">
+              <span className="h-2 w-2 rounded-full bg-orange-500 animate-pulse" />
+              <span className="text-[10px] font-black uppercase tracking-[0.2em] text-orange-600 dark:text-orange-400">
+                {currentLang === 'en' ? 'WHO WE ARE' : '\u0986\u09AE\u09B0\u09BE \u0995\u09C7'}
+              </span>
+              <span className="h-2 w-2 rounded-full bg-orange-400 animate-pulse" />
+            </div>
+            <h2 className="font-sans text-3xl sm:text-4xl lg:text-[2.75rem] font-black text-neutral-900 dark:text-white leading-[1.1] tracking-tight">
+              {currentLang === 'en' ? (
+                <>Not Just An Agency.<br />We Are Your <span className="text-orange-500">Digital Growth</span> Engine.</>
+              ) : (
+                <>\u09B6\u09C1\u09A7\u09C1 \u09E8\u099F\u09BF \u098F\u099C\u09C7\u09A8\u09CD\u09B8\u09BF \u09A8\u09DF\u0964<br />\u0986\u09AE\u09B0\u09BE \u0986\u09AA\u09A8\u09BE\u09B0 <span className="text-orange-500">\u09A1\u09BF\u099C\u09BF\u099F\u09BE\u09B2 \u09AC\u09C3\u09A6\u09CD\u09A7\u09BF\u09B0</span> \u0987\u09A8\u09CD\u099C\u09BF\u09A8\u0964</>
+              )}
+            </h2>
+          </div>
+
+          {/* Main Content Grid */}
+          <div className="grid grid-cols-1 lg:grid-cols-5 gap-12 lg:gap-16 items-start max-w-6xl mx-auto">
+
+            {/* Left: Narrative (3 cols) */}
+            <div className="lg:col-span-3 space-y-8">
+              <div className="space-y-6">
+                <p className="text-base sm:text-lg text-neutral-600 dark:text-neutral-300 leading-relaxed">
+                  {currentLang === 'en'
+                    ? 'Next Solution was born from a frustration with the status quo \u2014 agencies that deliver pretty designs but zero measurable business impact. We refused to be another cookie-cutter shop.'
+                    : '\u09A8\u09C7\u0995\u09CD\u09B8\u09CD\u09A4 \u09B8\u09B2\u09BF\u0989\u09B6\u09A8 \u099C\u09A8\u09CD\u09AE\u09C7\u099B\u09C7 \u09AC\u09B0\u09CD\u09A4\u09AE\u09BE\u09A8 \u0985\u09AC\u09B8\u09CD\u09A5\u09BE \u09B9\u09A4\u09BE\u09B6\u09BE \u09A5\u09C7\u0995\u09C7 \u2014 \u09E8\u09AE \u098F\u099C\u09C7\u09A8\u09CD\u09B8\u09BF \u09A5\u09C7\u0995\u09C7 \u09AF\u09C7 \u09B8\u09C1\u09A8\u09CD\u09A6\u09B0 \u09A1\u09BF\u099C\u09BE\u0987\u09A8 \u09A6\u09C7\u09AF\u09BC \u0995\u09BF\u09A8\u09CD\u09A4\u09C1 \u0995\u09CB\u09A8\u09CB \u09AA\u09B0\u09BF\u09AE\u09BE\u09AA\u09AF\u09CB\u0997\u09CD\u09A6 \u09AC\u09CD\u09AF\u09AC\u09B8\u09BE\u09AF\u09BC\u09BF\u0995 \u09AA\u09CD\u09B0\u09AD\u09BE\u09AC \u09A4\u09C8\u09B0\u09BF \u0995\u09B0\u09C7 \u09A8\u09BE\u0964 \u0986\u09AE\u09B0\u09BE \u0986\u09B0\u09C7\u0995\u099F\u09BF \u09B8\u09BE\u09A7\u09BE\u09B0\u09A3 \u09A6\u09CB\u0995\u09BE\u09A8 \u09B9\u09A4\u09C7 \u09B0\u09BE\u099C\u09BF \u099B\u09BF\u09B2\u09BE\u09AE \u09A8\u09BE\u0964'}
+                </p>
+                <p className="text-base sm:text-lg text-neutral-600 dark:text-neutral-300 leading-relaxed">
+                  {currentLang === 'en'
+                    ? 'We are a team of engineers, architects, and strategists who think in systems \u2014 not templates. Every line of code we write, every workflow we automate, every pixel we place is designed to generate revenue and compound growth.'
+                    : '\u0986\u09AE\u09B0\u09BE \u0987\u09A8\u09CD\u099C\u09BF\u09A8\u09BF\u09AF\u09BC\u09BE\u09B0, \u0986\u09B0\u09CD\u0995\u09BF\u099F\u09C7\u0995\u09CD\u09A4 \u098F\u09AC\u0982 \u0995\u09CC\u09B6\u09B2\u09AC\u09BF\u09A6\u09A6\u09C7\u09B0 \u098F\u0995\u099F\u09BF \u09A6\u09B2 \u09AF\u09BE\u09B0\u09BE \u099F\u09C7\u09AE\u09AA\u09CD\u09B2\u09C7\u099F \u09A8\u09DF, \u09B8\u09BF\u09B8\u09CD\u09A4\u09C7\u09AE \u09AD\u09BE\u09AC\u09C7\u0964 \u0986\u09AE\u09B0\u09BE \u09AF\u09C7 \u09AA\u09CD\u09B0\u09A4\u09BF\u099F\u09BF \u0995\u09CB\u09A1 \u09B2\u09BF\u0996\u09BF, \u09AF\u09C7 \u09AA\u09CD\u09B0\u09A4\u09BF\u099F\u09BF \u0993\u09DF\u09BE\u09B0\u09CD\u0995\u09AB\u09CD\u09B2\u09CB \u0985\u099F\u09CB\u09AE\u09C7\u099F \u0995\u09B0\u09BF, \u09AF\u09C7 \u09AA\u09CD\u09B0\u09A4\u09BF\u099F\u09BF \u09AA\u09BF\u0995\u09CD\u09B8\u09C7\u09B2 \u09B8\u09CD\u09A5\u09BE\u09AA\u09A8 \u0995\u09B0\u09BF \u2014 \u09B8\u09AC\u0987 \u09B0\u09BE\u099C\u09B8\u09CD\u09AC \u09A4\u09C8\u09B0\u09BF \u09A4\u09C8\u09B0\u09BF \u098F\u09AC\u0982 \u09AC\u09C3\u09A6\u09CD\u09A7\u09BF \u09AC\u09BE\u09A1\u09BC\u09BE\u09A8\u09CB\u09B0 \u099C\u09A8\u09CD\u09AF \u09A1\u09BF\u099C\u09BE\u0987\u09A8\u0964'}
+                </p>
+              </div>
+
+              {/* Key pillars */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                {[
+                  { icon: '01', titleEn: 'Engineer-Led', titleBn: '\u0987\u09A8\u09CD\u099C\u09BF\u09A8\u09BF\u09AF\u09BC\u09BE\u09B0-\u09A8\u09C7\u09A4\u09C3\u09A4\u09CD\u09B5\u09AC\u09B9\u09C0\u09A8', descEn: 'Every solution is built by senior engineers, not junior designers with a template.', descBn: '\u09AA\u09CD\u09B0\u09A4\u09BF\u099F\u09BF \u09B8\u09AE\u09BE\u09A7\u09BE\u09A8 \u09B8\u09BF\u09A8\u09BF\u09AF\u09BC\u09B0 \u0987\u09A8\u09CD\u099C\u09BF\u09A8\u09BF\u09AF\u09BC\u09BE\u09B0 \u09A6\u09CD\u09AC\u09BE\u09B0\u09BE \u09A4\u09C8\u09B0\u09BF, \u099F\u09C7\u09AE\u09AA\u09CD\u09B2\u09C7\u099F \u09A6\u09BF\u09AF\u09BC\u09C7 \u09A8\u09DF\u0964' },
+                  { icon: '02', titleEn: 'Revenue-First', titleBn: '\u09B0\u09BE\u099C\u09B8\u09CD\u09AC-\u09AA\u09CD\u09B0\u09A5\u09AE', descEn: 'We measure success by your revenue lift, not deliverable checkboxes.', descBn: '\u0986\u09AE\u09B0\u09BE \u09B8\u09AB\u09B2\u09A4\u09BE \u09AE\u09BE\u09AA\u09BF \u0986\u09AA\u09A8\u09BE\u09B0 \u09B0\u09BE\u099C\u09B8\u09CD\u09AC \u09AC\u09C3\u09A6\u09CD\u09A7\u09BF \u09A6\u09BF\u09AF\u09BC\u09C7, \u09A1\u09C7\u09B2\u09BF\u09AD\u09BE\u09B0\u09C7\u09AC\u09B2 \u099A\u09C7\u0995\u09AC\u0995\u09CD\u09B8 \u09A6\u09BF\u09AF\u09BC\u09C7 \u09A8\u09DF\u0964' },
+                  { icon: '03', titleEn: 'AI-Powered', titleBn: 'AI-\u099A\u09BE\u09B2\u09BF\u09A4', descEn: 'We bake AI automation into every workflow from day one \u2014 not as an afterthought.', descBn: '\u0986\u09AE\u09B0\u09BE \u09AA\u09CD\u09B0\u09A5\u09AE \u09A6\u09BF\u09A8 \u09A5\u09C7\u0995\u09C7\u09A8 \u09A5\u09C7\u0995\u09C7\u09A8\u09A8\u09C0\u09B0 \u09AA\u09CD\u09B0\u09A4\u09BF\u099F\u09BF \u0993\u09DF\u09BE\u09B0\u09CD\u0995\u09AB\u09CD\u09B2\u09CB\u09A4\u09C7 AI \u0985\u099F\u09CB\u09AE\u09C7\u09B6\u09A8 \u09AC\u09CD\u09AF\u09AC\u09B9\u09BE\u09B0 \u0995\u09B0\u09BF\u0964' }
+                ].map((pillar, i) => (
+                  <div key={i} className="group relative rounded-2xl bg-white dark:bg-[#141414] border border-neutral-100 dark:border-neutral-800 p-5 space-y-3 hover:border-orange-200 dark:hover:border-orange-500/20 hover:shadow-lg hover:shadow-orange-500/5 transition-all duration-500">
+                    <span className="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-orange-50 dark:bg-orange-500/10 text-[11px] font-black text-orange-600 dark:text-orange-400">{pillar.icon}</span>
+                    <h4 className="text-sm font-black text-neutral-900 dark:text-white">{currentLang === 'en' ? pillar.titleEn : pillar.titleBn}</h4>
+                    <p className="text-xs text-neutral-500 dark:text-neutral-400 leading-relaxed">{currentLang === 'en' ? pillar.descEn : pillar.descBn}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Right: Stats & CTA (2 cols) */}
+            <div className="lg:col-span-2 space-y-6">
+              {/* Stats grid */}
+              <div className="grid grid-cols-2 gap-4">
+                {[
+                  { number: '50+', labelEn: 'Projects Delivered', labelBn: '\u09AA\u09CD\u09B0\u099C\u09C7\u0995\u09CD\u099F \u09B8\u09AE\u09CD\u09AA\u09A8\u09CD\u09A8' },
+                  { number: '100%', labelEn: 'Client Retention', labelBn: '\u0995\u09CD\u09B2\u09BE\u09AF\u09BC\u09C7\u09A8\u09CD\u099F \u09A7\u09BE\u09B0\u09A3' },
+                  { number: '24/7', labelEn: 'Active Support', labelBn: '\u09B8\u0995\u09CD\u09B0\u09BF\u09AF\u09BC \u09B8\u09BE\u09AA\u09CB\u09B0\u09CD\u099F' },
+                  { number: '<200ms', labelEn: 'Avg Response Time', labelBn: '\u0997\u09B2 \u09B0\u09C7\u09B8\u09AA\u09A8\u09CD\u09B8 \u099F\u09BE\u0987\u09AE' }
+                ].map((stat, i) => (
+                  <div key={i} className="relative rounded-2xl bg-white dark:bg-[#141414] border border-neutral-100 dark:border-neutral-800 p-5 text-center space-y-1 hover:border-orange-200 dark:hover:border-orange-500/20 transition-all duration-300">
+                    <span className="block text-2xl font-black text-orange-500 font-mono">{stat.number}</span>
+                    <span className="block text-[10px] font-bold text-neutral-400 dark:text-neutral-500 uppercase tracking-wider">{currentLang === 'en' ? stat.labelEn : stat.labelBn}</span>
+                  </div>
+                ))}
+              </div>
+
+              {/* Philosophy card */}
+              <div className="relative rounded-2xl bg-gradient-to-br from-orange-500 to-orange-600 p-6 md:p-8 text-white space-y-4 overflow-hidden">
+                <div className="absolute -top-10 -right-10 w-40 h-40 bg-white/10 rounded-full blur-2xl pointer-events-none" />
+                <div className="absolute bottom-0 left-0 w-32 h-32 bg-white/5 rounded-full blur-2xl pointer-events-none" />
+                <div className="relative z-10 space-y-3">
+                  <span className="text-[10px] font-black uppercase tracking-widest text-white/70">{currentLang === 'en' ? 'Our Philosophy' : '\u0986\u09AE\u09BE\u09A6\u09C7\u09B0 \u09A6\u09B0\u09CD\u09B6\u09A8'}</span>
+                  <h3 className="text-lg font-black leading-snug">
+                    {currentLang === 'en'
+                      ? '"We don\'t deliver websites. We deliver revenue engines."'
+                      : '"\u0986\u09AE\u09B0\u09BE \u0993\u09DF\u09C7\u09AC\u09B8\u09BE\u0987\u099F \u09A6\u09BF\u09DF \u09A8\u09BE\u0964 \u0986\u09AE\u09B0\u09BE \u09B0\u09BE\u099C\u09B8\u09CD\u09AC \u0987\u09A8\u09CD\u099C\u09BF\u09A8 \u09A6\u09BF\u09DF\u0964"'}
+                  </h3>
+                  <p className="text-xs text-white/70 leading-relaxed">
+                    {currentLang === 'en'
+                      ? 'Every project is treated as a business partnership. Your success metrics are our KPIs.'
+                      : '\u09AA\u09CD\u09B0\u09A4\u09BF\u099F\u09BF \u09AA\u09CD\u09B0\u099C\u09C7\u0995\u09CD\u099F\u0995\u09C7 \u09AC\u09CD\u09AF\u09AC\u09B8\u09BE\u09AF\u09BC\u09BF\u0995 \u0985\u0982\u09B6\u09C0\u09A6\u09BE\u09B0\u09BF\u09A4\u09CD\u09B5 \u09B9\u09BF\u09B8\u09C7\u09AC\u09C7 \u09A6\u09C7\u0996\u09BE \u09B9\u09AF\u0964 \u0986\u09AA\u09A8\u09BE\u09B0 \u09B8\u09AB\u09B2\u09A4\u09BE\u09B0 \u09AE\u09BE\u09AA\u0995\u09BE\u09A0\u09BF \u0986\u09AE\u09BE\u09A6\u09C7\u09B0 KPI\u0964'}
+                  </p>
+                </div>
+              </div>
+
+              {/* CTA */}
+              <button
+                onClick={() => navigateToTab('contact')}
+                className="w-full rounded-xl bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 text-xs font-bold px-6 py-4 hover:scale-[1.01] transition-all duration-300 shadow-lg cursor-pointer"
+              >
+                {currentLang === 'en' ? 'Work With Us \u2192' : '\u0986\u09AE\u09BE\u09A6\u09C7\u09B0 \u09B8\u09BE\u09A5\u09C7 \u0995\u09BE\u099C \u0995\u09B0\u09C1\u09A8 \u2192'}
+              </button>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
 
       {/* ========================================================
-          03. MISSION & VISION (Spread Cards)
+          03. OUR GUIDING STARS (Mission & Vision)
          ======================================================== */}
-      <section id="mission-vision" className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-24 relative z-10">
-        <div className="text-center space-y-4 max-w-2xl mx-auto mb-16">
-          <span className="text-xs font-bold uppercase tracking-widest text-blue-600 dark:text-blue-400">
-            {currentLang === 'en' ? 'OUR GUIDING STARS' : 'আমাদের পথপ্রদর্শক দর্শন'}
-          </span>
-          <h2 className="font-sans text-2xl sm:text-3xl lg:text-4xl font-black text-neutral-900 dark:text-white leading-tight">
-            {currentLang === 'en' ? 'Aligning Complex Technical Logic With Clear Brand Direction' : 'পরিষ্কার ও নিখুঁত পরিকল্পনার সাথে সফল ডিজিটাল বাস্তবায়ন'}
-          </h2>
-        </div>
+      <section id="mission-vision" className="relative py-28 overflow-hidden z-10">
+        <div className="absolute inset-0 bg-gradient-to-br from-orange-50/30 via-white to-orange-50/20 dark:from-[#0A0908] dark:via-[#0F0E0C] dark:to-[#12100D]" />
+        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-orange-500/[0.04] dark:bg-orange-500/[0.02] rounded-full blur-[140px] pointer-events-none" />
+        <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-orange-500/[0.03] dark:bg-orange-500/[0.015] rounded-full blur-[120px] pointer-events-none" />
+        <div className="absolute top-10 left-10 w-[200px] h-[150px] pointer-events-none opacity-[0.06] dark:opacity-[0.04]"
+          style={{ backgroundImage: 'radial-gradient(circle, #FF4A00 1px, transparent 1px)', backgroundSize: '12px 12px' }} />
+        <div className="absolute bottom-10 right-10 w-[180px] h-[130px] pointer-events-none opacity-[0.06] dark:opacity-[0.04]"
+          style={{ backgroundImage: 'radial-gradient(circle, #FF4A00 1px, transparent 1px)', backgroundSize: '12px 12px' }} />
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
-          {/* Mission card */}
-          <div className="group relative rounded-3xl border border-neutral-100 dark:border-neutral-800 bg-white dark:bg-[#141414] p-8 md:p-10 space-y-6 shadow-sm hover:shadow-xl hover:border-blue-500/20 transition-all duration-300 overflow-hidden">
-            <div className="absolute top-0 left-0 w-2.5 h-full bg-gradient-to-b from-blue-600 dark:from-blue-500 to-indigo-600 dark:to-blue-400" />
-            <div className="h-12 w-12 rounded-2xl bg-blue-50 dark:bg-blue-500/10 text-blue-600 dark:text-blue-400 flex items-center justify-center group-hover:scale-110 transition duration-300">
-              <Target className="h-6 w-6" />
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="text-center space-y-5 max-w-3xl mx-auto mb-20">
+            <div className="inline-flex items-center space-x-2 bg-white/80 dark:bg-[#141414]/80 backdrop-blur-sm rounded-full px-5 py-2 border border-orange-100 dark:border-orange-500/20 shadow-sm">
+              <span className="h-2 w-2 rounded-full bg-orange-500 animate-pulse" />
+              <span className="text-[10px] font-black uppercase tracking-[0.2em] text-orange-600 dark:text-orange-400">
+                {currentLang === 'en' ? 'OUR GUIDING STARS' : '\u0986\u09AE\u09BE\u09A6\u09C7\u09B0 \u09AA\u09A5\u09AA\u09CD\u09B0\u09A6\u09B0\u09CD\u09B6\u0995 \u09A6\u09B0\u09CD\u09B6\u09A8'}
+              </span>
+              <span className="h-2 w-2 rounded-full bg-orange-400 animate-pulse" />
             </div>
-
-            <div className="space-y-3">
-              <span className="text-[10px] font-black uppercase tracking-widest text-blue-600 dark:text-blue-400">01. Our core duty</span>
-              <h3 className="text-xl md:text-2xl font-black text-neutral-900 dark:text-white">
-                {currentLang === 'en' ? 'Our Core Mission' : 'আমাদের মূল মিশন'}
-              </h3>
-              <p className="text-xs sm:text-sm text-neutral-500 dark:text-neutral-400 dark:text-neutral-500 leading-relaxed font-normal">
-                {currentLang === 'en'
-                  ? (settings.aboutMissionEn || 'To orchestrate incredibly fast, reliable, and secure mobile app platforms coupled with gorgeous brand design systems that reliably scale businesses, eliminate technical debt, and maximize operational ROI.')
-                  : (settings.aboutMissionBn || 'আমাদের মূল মিশন হলো অতি-দ্রুত, বিশ্বস্ত ও সুরক্ষিত অ্যাপ্লিকেশন প্ল্যাটফর্ম তৈরি করা যা এআই অটোমেশনের মাধ্যমে ব্যবসায়িক জটিলতা ও অপচয় দূর করে প্রবৃদ্ধি এবং বিনিয়োগের নিশ্চিত রিটার্ন প্রদান করে।')}
-              </p>
-            </div>
-
-            {/* Decorative Vector simulation */}
-            <div className="pt-4 border-t border-neutral-100/70 flex items-center justify-between">
-              <span className="text-[10px] font-bold text-neutral-400 dark:text-neutral-500 uppercase tracking-widest italic">"Performance First, Always."</span>
-              <Check className="h-4 w-4 text-blue-600 dark:text-blue-400" />
-            </div>
+            <h2 className="font-sans text-3xl sm:text-4xl lg:text-[2.75rem] font-black text-neutral-900 dark:text-white leading-[1.1] tracking-tight">
+              {currentLang === 'en' ? (
+                <>The <span className="text-orange-500">Mission</span> That Drives Us.<br className="hidden sm:block" /> The <span className="text-orange-400">Vision</span> That Guides Us.</>
+              ) : (
+                <>যে <span className="text-orange-500">\u09AE\u09BF\u09B6\u09A8</span> \u0986\u09AE\u09BE\u09A6\u09C7\u09B0 \u099A\u09BE\u09B2\u09BF\u09DF\u09C7 \u09A6\u09C7\u09AF\u09BC\u0964<br className="hidden sm:block" /> যে <span className="text-orange-400">\u09AD\u09BF\u09B6\u09A8</span> \u0986\u09AE\u09BE\u09A6\u09C7\u09B0 \u09AA\u09A5 \u09A6\u09C7\u0996\u09BE\u09B2\u09BE\u09B8\u09A8\u09C7 \u09A6\u09C7\u09AF\u09BC\u0964</>
+              )}
+            </h2>
           </div>
 
-          {/* Vision card */}
-          <div className="group relative rounded-3xl border border-neutral-100 dark:border-neutral-800 bg-white dark:bg-[#141414] p-8 md:p-10 space-y-6 shadow-sm hover:shadow-xl hover:border-purple-500/20 transition-all duration-300 overflow-hidden">
-            <div className="absolute top-0 left-0 w-2.5 h-full bg-gradient-to-b from-purple-600 to-pink-600" />
-            <div className="h-12 w-12 rounded-2xl bg-purple-50 dark:bg-purple-500/10 text-purple-600 dark:text-purple-400 dark:text-purple-300 flex items-center justify-center group-hover:scale-110 transition duration-300">
-              <Eye className="h-6 w-6" />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-6xl mx-auto">
+            {/* Mission card */}
+            <div className="group relative rounded-3xl bg-white dark:bg-[#141414] p-8 md:p-10 space-y-6 shadow-sm hover:shadow-2xl hover:shadow-orange-500/10 dark:hover:shadow-orange-500/5 border border-neutral-100 dark:border-neutral-800 hover:border-orange-200 dark:hover:border-orange-500/30 transition-all duration-500 overflow-hidden">
+              <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-orange-600 via-orange-500 to-amber-500 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+              <div className="absolute -top-20 -right-20 w-40 h-40 bg-orange-500/5 dark:bg-orange-500/[0.03] rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
+              <div className="absolute -top-4 -right-4 text-[120px] font-black text-orange-500/[0.04] dark:text-orange-500/[0.02] leading-none select-none pointer-events-none">01</div>
+
+              <div className="relative z-10">
+                <div className="h-14 w-14 rounded-2xl bg-gradient-to-br from-orange-500 to-amber-500 text-white flex items-center justify-center group-hover:scale-110 group-hover:rotate-3 transition-all duration-500 shadow-lg shadow-orange-500/25">
+                  <Target className="h-6 w-6" />
+                </div>
+              </div>
+
+              <div className="relative z-10 space-y-3">
+                <span className="inline-flex items-center px-3 py-1 rounded-full bg-orange-50 dark:bg-orange-500/10 text-[10px] font-black uppercase tracking-widest text-orange-600 dark:text-orange-400 border border-orange-100 dark:border-orange-500/20">01. Our core duty</span>
+                <h3 className="text-xl md:text-2xl font-black text-neutral-900 dark:text-white">
+                  {currentLang === 'en' ? 'Our Core Mission' : '\u0986\u09AE\u09BE\u09A6\u09C7\u09B0 \u09AE\u09C2\u09B2 \u09AE\u09BF\u09B6\u09A8'}
+                </h3>
+                <p className="text-sm text-neutral-500 dark:text-neutral-400 leading-relaxed font-normal">
+                  {currentLang === 'en'
+                    ? (settings.aboutMissionEn || 'We don\'t just build apps \u2014 we engineer revenue-generating digital ecosystems. Our mission is to deploy lightning-fast, bulletproof platforms fused with AI-powered automation that eliminates waste, scales revenue, and turns technical complexity into your unfair competitive advantage.')
+                    : (settings.aboutMissionBn || '\u0986\u09AE\u09B0\u09BE \u09B6\u09C1\u09A7\u09C1 \u0985\u09CD\u09AF\u09BE\u09AA \u09A4\u09C8\u09B0\u09BF \u0995\u09B0\u09BF \u09A8\u09BE \u2014 \u0986\u09AE\u09B0\u09BE \u0986\u09AF\u09BC\u09AC\u09C3\u09A6\u09CD\u09A7\u09BF\u0995\u09BE\u09B0\u09C0 \u09A1\u09BF\u099C\u09BF\u099F\u09BE\u09B2 \u0987\u09A8\u09CD\u09B8\u09C7\u099F\u09B8\u09C7\u09B8\u09A4\u09C7\u09AE \u09A4\u09C8\u09B0\u09BF \u0995\u09B0\u09BF\u0964 \u0986\u09AE\u09BE\u09A6\u09C7\u09B0 \u09AE\u09BF\u09B6\u09A8 \u09B9\u09B2\u09CB \u0985\u09A4\u09BF-\u09A6\u09CD\u09B0\u09C1\u09A4, \u0985\u099F\u09B2 \u09AA\u09CD\u09B2\u09CD\u09AF\u09BE\u099F\u09AB\u09B0\u09CD\u09AE \u09A4\u09C8\u09B0\u09BF \u09AF\u09BE \u09AF\u09BE AI-\u099A\u09BE\u09B2\u09BF\u09A4 \u0985\u099F\u09CB\u09AE\u09C7\u09B6\u09A8\u09C7\u09B0 \u09B8\u09BE\u09A5\u09C7 \u09B8\u09AE\u09A8\u09CD\u09AD\u09BF\u09A4 \u09AF\u09C7 \u09A5\u09C7\u0995\u09C7 \u0985\u09AA\u099A\u09AF\u09BC \u09A6\u09C2\u09B0 \u0995\u09B0\u09C7, \u0986\u09AF\u09BC \u09AC\u09C3\u09A6\u09CD\u09A7\u09BE\u09AF\u09BC \u09AC\u09BE\u09A1\u09BC\u09BE\u09AF\u09BC \u09A4\u09B0\u09C7 \u09AF\u09C7 \u09AA\u09CD\u09B0\u09AF\u09C1\u0995\u09CD\u09A4\u09BF\u0997\u09A4 \u099C\u099F\u09BF\u09B2\u09A4\u09BE\u0995\u09C7 \u0986\u09AA\u09A8\u09BE\u09B0 \u0985\u09B8\u09BE\u09A7\u09BE\u09B0\u09A3 \u09AA\u09CD\u09B0\u09A4\u09BF\u09AF\u09CB\u0997\u09A4\u09BE\u09AE\u09C2\u09B2\u0995 \u09B8\u09C1\u09AC\u09BF\u09A7\u09BE\u09AF\u09BC\u09C7 \u09B0\u09C2\u09AA\u09BE\u09A8\u09CD\u09A4\u09B0\u09BF\u09A4 \u0995\u09B0\u09C7\u0964')}
+                </p>
+              </div>
+
+              <div className="relative z-10 pt-4 border-t border-neutral-100 dark:border-neutral-800 flex items-center justify-between">
+                <span className="text-[11px] font-bold text-neutral-400 dark:text-neutral-500 italic">"We ship revenue, not just code."</span>
+                <div className="flex items-center space-x-1.5">
+                  <span className="h-1.5 w-1.5 rounded-full bg-orange-500" />
+                  <span className="h-1.5 w-1.5 rounded-full bg-orange-400" />
+                  <span className="h-1.5 w-1.5 rounded-full bg-orange-300" />
+                </div>
+              </div>
             </div>
 
-            <div className="space-y-3">
-              <span className="text-[10px] font-black uppercase tracking-widest text-purple-600 dark:text-purple-400 dark:text-purple-300">02. Our futuristic vision</span>
-              <h3 className="text-xl md:text-2xl font-black text-neutral-900 dark:text-white">
-                {currentLang === 'en' ? 'Our Longterm Vision' : 'আমাদের দীর্ঘমেয়াদী ভিশন'}
-              </h3>
-              <p className="text-xs sm:text-sm text-neutral-500 dark:text-neutral-400 dark:text-neutral-500 leading-relaxed font-normal">
-                {currentLang === 'en'
-                  ? (settings.aboutVisionEn || 'To define the absolute gold standard for full-stack digital craftsmanship and secure AI integrations, establishing ourselves as the ultimate digital headquarters for leading organizations worldwide.')
-                  : (settings.aboutVisionBn || 'প্রযুক্তির বৈশ্বিক মানদণ্ড বা পরম গোল্ড স্ট্যান্ডার্ড হিসেবে নিজেদের প্রতিষ্ঠিত করা, যাতে সারাবিশ্বের সফল প্রতিষ্ঠানসমূহ নির্দ্বিধায় নেক্সট সリューションকে তাদের প্রধান ডিজিটাল সহযোগী মনে করে।')}
-              </p>
-            </div>
+            {/* Vision card */}
+            <div className="group relative rounded-3xl bg-white dark:bg-[#141414] p-8 md:p-10 space-y-6 shadow-sm hover:shadow-2xl hover:shadow-orange-500/10 dark:hover:shadow-orange-500/5 border border-neutral-100 dark:border-neutral-800 hover:border-orange-200 dark:hover:border-orange-500/30 transition-all duration-500 overflow-hidden">
+              <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-orange-500 via-amber-500 to-orange-600 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+              <div className="absolute -top-20 -right-20 w-40 h-40 bg-orange-500/5 dark:bg-orange-500/[0.03] rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
+              <div className="absolute -top-4 -right-4 text-[120px] font-black text-orange-500/[0.04] dark:text-orange-500/[0.02] leading-none select-none pointer-events-none">02</div>
 
-            {/* Decorative Vector simulation */}
-            <div className="pt-4 border-t border-neutral-100/70 flex items-center justify-between">
-              <span className="text-[10px] font-bold text-neutral-400 dark:text-neutral-500 uppercase tracking-widest italic">"Uncompromised Integrity."</span>
-              <Check className="h-4 w-4 text-purple-600 dark:text-purple-400 dark:text-purple-300" />
+              <div className="relative z-10">
+                <div className="h-14 w-14 rounded-2xl bg-gradient-to-br from-orange-400 to-amber-500 text-white flex items-center justify-center group-hover:scale-110 group-hover:-rotate-3 transition-all duration-500 shadow-lg shadow-orange-500/25">
+                  <Eye className="h-6 w-6" />
+                </div>
+              </div>
+
+              <div className="relative z-10 space-y-3">
+                <span className="inline-flex items-center px-3 py-1 rounded-full bg-orange-50 dark:bg-orange-500/10 text-[10px] font-black uppercase tracking-widest text-orange-600 dark:text-orange-400 border border-orange-100 dark:border-orange-500/20">02. Our futuristic vision</span>
+                <h3 className="text-xl md:text-2xl font-black text-neutral-900 dark:text-white">
+                  {currentLang === 'en' ? 'Our Longterm Vision' : '\u0986\u09AE\u09BE\u09A6\u09C7\u09B0 \u09A6\u09C0\u09B0\u09CD\u0998\u09AE\u09C7\u09AF\u09BC\u09A6\u09C0 \u09AD\u09BF\u09B6\u09A8'}
+                </h3>
+                <p className="text-sm text-neutral-500 dark:text-neutral-400 leading-relaxed font-normal">
+                  {currentLang === 'en'
+                    ? (settings.aboutVisionEn || 'We\'re building the agency that Fortune 500 companies will call when they\'re tired of agencies that deliver pretty designs but zero measurable impact. Our vision: to become the undisputed global gold standard where cutting-edge AI meets flawless craftsmanship \u2014 your ultimate digital growth partner.')
+                    : (settings.aboutVisionBn || '\u0986\u09AE\u09B0\u09BE \u09B8\u09C7\u0987 \u098F\u099C\u09C7\u09A8\u09CD\u09B8\u09BF \u09A4\u09C8\u09B0\u09BF \u0995\u09B0\u099B\u09BF \u09AF\u09BE\u0995\u09C7 Fortune 500 \u0995\u09CB\u09AE\u09CD\u09AA\u09BE\u09A8\u09BF\u0997\u09C1\u09B2\u09CB \u09A1\u09BE\u0995\u09AC\u09C7 \u09AF\u09A6\u09BF \u09A4\u09BE\u09B0\u09BE \u09B6\u09C1\u09A7\u09C1 \u09B8\u09C1\u09A8\u09CD\u09A6\u09B0 \u09A1\u09BF\u099C\u09BE\u0987\u09A8 \u0995\u09BF\u09A8\u09CD\u09A4\u09C1 \u0995\u09BF\u09A8\u09CD\u09A4\u09C1 \u09AA\u09B0\u09BF\u09AE\u09BE\u09AA\u09AF\u09CB\u0997\u09CD\u09A6 \u09AA\u09CD\u09B0\u09AD\u09BE\u09AC \u09A8\u09BE \u09A6\u09C7\u0995\u09C7 \u098F\u099C\u09C7\u09A8\u09CD\u09B8\u09BF \u09A5\u09C7\u0995\u09C7 \u0995\u09CD\u09B2\u09BE\u09A8\u09CD\u09A4 \u09B9\u09AC\u09C7\u0964 \u0986\u09AE\u09BE\u09A6\u09C7\u09B0 \u09AD\u09BF\u09B6\u09A8: \u0985\u09A4\u09CD\u09AF\u09BE\u09A7\u09C1\u09A8\u09BF\u0995 AI \u098F\u09AC\u0982 \u09A4\u09CD\u09B0\u09C1\u099F\u09BF\u09B9\u09C0\u09A8 \u0995\u09BE\u09B0\u09BF\u0997\u09B0\u09BF \u09AA\u09BE\u09B0\u09A6\u09B0\u09CD\u09B6\u09BF\u09A4\u09BE\u09B0 \u09B8\u09AE\u09A8\u09CD\u09AC\u09AF\u09C7 \u0985\u09AA\u09B0\u09BF\u09B8\u09C0\u09AE \u09AC\u09C8\u09B6\u09CD\u09AC\u09BF\u0995 \u09B8\u09CD\u09AC\u09B0\u09CD\u09A3\u09AE\u09BE\u09A8 \u09B9\u09DF\u09C7 \u0993\u09A0\u09BE \u2014 \u0986\u09AA\u09A8\u09BE\u09B0 \u099A\u09C2\u09A1\u09BE\u09A8\u09CD\u09A4 \u09A1\u09BF\u099C\u09BF\u099F\u09BE\u09B2 \u09AC\u09C3\u09A6\u09CD\u09A7\u09BF \u09B8\u09B9\u09AF\u09CB\u0997\u09C0\u0964')}
+                </p>
+              </div>
+
+              <div className="relative z-10 pt-4 border-t border-neutral-100 dark:border-neutral-800 flex items-center justify-between">
+                <span className="text-[11px] font-bold text-neutral-400 dark:text-neutral-500 italic">"Your competitors fear us. Your users love us."</span>
+                <div className="flex items-center space-x-1.5">
+                  <span className="h-1.5 w-1.5 rounded-full bg-orange-400" />
+                  <span className="h-1.5 w-1.5 rounded-full bg-orange-300" />
+                  <span className="h-1.5 w-1.5 rounded-full bg-orange-200" />
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </section>
+
 
       {/* ========================================================
           03.5. MEET THE MINDS BEHIND NEXT SOLUTION (Leadership Showcase)

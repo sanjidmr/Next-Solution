@@ -224,7 +224,7 @@ export interface SiteSettings {
 
 export interface PricingPackage {
   id: string;
-  category: string; // 'Agency Packages', 'Web Development', 'Web App', 'UI/UX Design', etc.
+  category: string;
   nameEn: string;
   nameBn: string;
   priceMonthly: number;
@@ -242,7 +242,13 @@ export interface PricingPackage {
   sortOrder?: number;
   badgeEn?: string;
   badgeBn?: string;
-  techEn?: string; // Optional techs comma separated
+  techEn?: string;
+  deliveryTimeEn?: string;
+  deliveryTimeBn?: string;
+  supportPeriodEn?: string;
+  supportPeriodBn?: string;
+  perfectForEn?: string;
+  perfectForBn?: string;
 }
 
 export interface PricingAddon {

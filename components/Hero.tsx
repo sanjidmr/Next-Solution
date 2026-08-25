@@ -1,5 +1,4 @@
 "use client";
-
 /**
  * @license
  * SPDX-License-Identifier: Apache-2.0
@@ -23,9 +22,6 @@ interface HeroProps {
 export default function Hero({ currentLang, setTab }: HeroProps) {
   const isEn = currentLang === "en";
 
-  // =========================================================
-  // STATS
-  // =========================================================
   const stats = [
     {
       value: "120+",
@@ -64,9 +60,6 @@ export default function Hero({ currentLang, setTab }: HeroProps) {
       id="hero-section"
       className="relative overflow-hidden bg-white font-sans selection:bg-orange-600 selection:text-white transition-colors duration-300 dark:bg-[#0A0A0A]"
     >
-      {/* =====================================================
-          CUSTOM ANIMATIONS
-      ====================================================== */}
       <style>{`
         @keyframes heroFloat {
           0% {
@@ -167,10 +160,6 @@ export default function Hero({ currentLang, setTab }: HeroProps) {
         }
       `}</style>
 
-      {/* =====================================================
-          BACKGROUND
-      ====================================================== */}
-
       <div
         className="hero-grid pointer-events-none absolute inset-0"
         aria-hidden="true"
@@ -185,10 +174,6 @@ export default function Hero({ currentLang, setTab }: HeroProps) {
         className="pointer-events-none absolute -left-40 top-[45%] h-[420px] w-[420px] rounded-full bg-orange-50/70 blur-[130px]"
         aria-hidden="true"
       />
-
-      {/* =====================================================
-          MAIN HERO WRAPPER
-      ====================================================== */}
 
       <div className="relative z-10 mx-auto flex min-h-screen max-w-[1600px] flex-col justify-center px-5 sm:px-7 lg:px-10 xl:px-12">
         <div
@@ -207,12 +192,7 @@ export default function Hero({ currentLang, setTab }: HeroProps) {
             xl:grid-cols-[1.15fr_1fr]
           "
         >
-          {/* =================================================
-              LEFT SIDE — HEADLINE / CTA / TRUST
-          ================================================== */}
-
           <div className="relative z-30 order-1 text-center lg:pr-0 lg:text-left">
-            {/* Small eyebrow */}
             <div className="mb-5 flex items-center justify-center gap-3 lg:justify-start">
               <span className="h-[2px] w-7 bg-orange-600" />
 
@@ -223,7 +203,6 @@ export default function Hero({ currentLang, setTab }: HeroProps) {
               </span>
             </div>
 
-            {/* Main heading */}
             <h1
               className="
                 max-w-[720px]
@@ -277,14 +256,12 @@ export default function Hero({ currentLang, setTab }: HeroProps) {
               )}
             </h1>
 
-            {/* Description */}
             <p className="mx-auto mt-7 max-w-[560px] text-base font-medium leading-8 text-gray-600 dark:text-neutral-400 sm:text-lg lg:mx-0">
               {isEn
                 ? "From powerful websites to digital growth strategies — we deliver complete solutions that drive real results."
                 : "শক্তিশালী ওয়েবসাইট থেকে ডিজিটাল গ্রোথ স্ট্র্যাটেজি — আমরা বাস্তব ফলাফল আনার জন্য সম্পূর্ণ সলিউশন দেই।"}
             </p>
 
-            {/* CTA */}
             <div className="mt-8 flex flex-wrap items-center justify-center gap-6 lg:justify-start">
               <button
                 id="hero-primary-cta"
@@ -318,7 +295,6 @@ export default function Hero({ currentLang, setTab }: HeroProps) {
                 <ArrowRight className="h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
               </button>
 
-              {/* Showreel */}
               <div className="flex items-center gap-3">
                 <button
                   onClick={() => setTab("portfolio")}
@@ -370,10 +346,6 @@ export default function Hero({ currentLang, setTab }: HeroProps) {
             </div>
           </div>
 
-          {/* =================================================
-              RIGHT SIDE — LARGE GATE IMAGE
-          ================================================== */}
-
           <div
             className="
               relative
@@ -388,13 +360,6 @@ export default function Hero({ currentLang, setTab }: HeroProps) {
               lg:justify-end
             "
           >
-            {/* =================================================
-                IMPORTANT:
-                gate.png contains the full gate + person + logo.
-                File location:
-                /public/gate.png
-            ================================================== */}
-
             <div
               className="
                 relative
@@ -410,7 +375,6 @@ export default function Hero({ currentLang, setTab }: HeroProps) {
                 2xl:w-[760px]
               "
             >
-              {/* Large ambient glow */}
               <div
                 className="
                   pointer-events-none
@@ -427,7 +391,6 @@ export default function Hero({ currentLang, setTab }: HeroProps) {
                 aria-hidden="true"
               />
 
-              {/* Ground shadow */}
               <div
                 className="
                   pointer-events-none
@@ -458,7 +421,6 @@ export default function Hero({ currentLang, setTab }: HeroProps) {
                 "
               />
 
-              {/* Orange particles around gate */}
               <span
                 className="
                   hero-particle
@@ -509,10 +471,6 @@ export default function Hero({ currentLang, setTab }: HeroProps) {
           </div>
         </div>
 
-        {/* =====================================================
-            STATS CARD
-        ====================================================== */}
-
         <div className="relative z-40 mt-2 pb-8 lg:-mt-4">
           <div
             className="
@@ -548,15 +506,15 @@ export default function Hero({ currentLang, setTab }: HeroProps) {
                     sm:gap-4
                     lg:py-5
                     ${idx > 1
-                      ? "border-t border-gray-100 lg:border-t-0"
+                      ? "border-t border-gray-100 dark:border-neutral-800 lg:border-t-0"
                       : ""
                     }
                     ${idx % 2 === 1
-                      ? "max-lg:border-l max-lg:border-gray-100"
+                      ? "max-lg:border-l max-lg:border-gray-100 dark:max-lg:border-neutral-800"
                       : ""
                     }
                     ${idx > 0
-                      ? "lg:border-l lg:border-gray-100"
+                      ? "lg:border-l lg:border-gray-100 dark:lg:border-neutral-800"
                       : ""
                     }
                   `}
@@ -597,12 +555,7 @@ export default function Hero({ currentLang, setTab }: HeroProps) {
           </div>
         </div>
 
-        {/* =====================================================
-            TRUSTED BY — MARQUEE
-        ====================================================== */}
-
         <div className="relative z-40 mt-6 pb-16 lg:mt-8">
-          {/* Label */}
           <div className="flex items-center justify-center gap-4">
             <span className="h-px w-10 bg-gradient-to-r from-transparent to-orange-500/60 sm:w-16" />
             <p className="text-center text-xs font-black uppercase tracking-[0.25em] text-gray-500 dark:text-neutral-400 sm:text-sm">
@@ -611,7 +564,6 @@ export default function Hero({ currentLang, setTab }: HeroProps) {
             <span className="h-px w-10 bg-gradient-to-l from-transparent to-orange-500/60 sm:w-16" />
           </div>
 
-          {/* Marquee */}
           <div className="relative mt-8 overflow-hidden py-2">
             <div className="trusted-marquee flex w-max items-center">
               {[...trustedBy, ...trustedBy].map((name, i) => (
@@ -627,7 +579,6 @@ export default function Hero({ currentLang, setTab }: HeroProps) {
               ))}
             </div>
 
-            {/* Edge fades */}
             <div className="pointer-events-none absolute inset-y-0 left-0 w-24 bg-gradient-to-r from-white to-transparent dark:from-[#0A0A0A] dark:to-transparent sm:w-40" />
             <div className="pointer-events-none absolute inset-y-0 right-0 w-24 bg-gradient-to-l from-white to-transparent dark:from-[#0A0A0A] dark:to-transparent sm:w-40" />
           </div>

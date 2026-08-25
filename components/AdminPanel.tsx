@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 /**
  * @license
  * SPDX-License-Identifier: Apache-2.0
@@ -7,30 +7,7 @@
 import React, { useState, useEffect } from 'react';
 import { getLocalItem, setLocalItem } from '@/lib/utils';
 import { translations } from '@/data/translations';
-import { 
-  getMessages, updateMessageStatus, deleteMessage, getSubscribers, deleteSubscriber, 
-  getBlogs, saveBlogPost, deleteBlogPost, getServices, saveService, deleteService, getSettings, saveSettings, 
-  resetDatabaseToDefault, getPortfolio, savePortfolioItem, deletePortfolioItem,
-  getFAQs, saveFAQ, deleteFAQ, getTestimonials, saveTestimonial, deleteTestimonial,
-  getPricingPackages, savePricingPackage, deletePricingPackage,
-  getPricingAddons, savePricingAddon, deletePricingAddon,
-  getPricingComparisons, savePricingComparison, deletePricingComparison,
-  getPricingQuotes, updatePricingQuoteStatus, deletePricingQuote,
-  getCurrencies, saveCurrency, deleteCurrency, getCurrencySettings, saveCurrencySettings,
-  getTestimonialCategories, saveTestimonialCategory, deleteTestimonialCategory,
-  getTestimonialVideos, saveTestimonialVideo, deleteTestimonialVideo,
-  getTestimonialStatistics, saveTestimonialStatistics,
-  getClientLogos, saveClientLogo, deleteClientLogo,
-  getSuccessStories, saveSuccessStory, deleteSuccessStory,
-  getReviewSettings, saveReviewSettings,
-  getWhyChooseUsCards, saveWhyChooseUsCard, deleteWhyChooseUsCard,
-  getWhyChooseUsStats, saveWhyChooseUsStat, deleteWhyChooseUsStat,
-  getWhyChooseUsBadges, saveWhyChooseUsBadge, deleteWhyChooseUsBadge,
-  getWhyChooseUsTechs, saveWhyChooseUsTech, deleteWhyChooseUsTech,
-  getWhyChooseUsCTA, saveWhyChooseUsCTA,
-  getProcessSteps, saveProcessStep, deleteProcessStep, getProcessCTA, saveProcessCTA,
-  getTechServiceCards, saveTechServiceCard, deleteTechServiceCard, restoreTechServiceCards
-} from '@/lib/db';
+import { adminDB } from '@/lib/admin-fetch';
 import { 
   ContactMessage, Subscriber, BlogPost, Service, SiteSettings, PortfolioItem, FAQ, Testimonial,
   PricingPackage, PricingAddon, PricingComparison, PricingQuoteRequest, Currency, CurrencySettings,
@@ -358,26 +335,26 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
   const currFlag = (c: any) => c?.flag || '🏳️';
 
   // Load Admin Data from central simulated DB with auxiliary loaders
-  const loadAdminData = () => {
-    setMessages(getMessages());
-    setSubscribers(getSubscribers());
-    setBlogs(getBlogs());
-    setServices(getServices());
-    setSettings(getSettings());
-    setPortfolios(getPortfolio());
-    setFaqs(getFAQs());
-    setTestimonials(getTestimonials());
-    setPricingPackages(getPricingPackages());
-    setPricingAddons(getPricingAddons());
-    setPricingComparisons(getPricingComparisons());
-    setPricingQuotes(getPricingQuotes());
-    setCurrencies(getCurrencies());
-    setCurrencySettingsState(getCurrencySettings());
-    setTestimonialVideos(getTestimonialVideos());
-    setSuccessStories(getSuccessStories());
-    setClientLogos(getClientLogos());
-    setTestimonialStatistics(getTestimonialStatistics());
-    setReviewSettings(getReviewSettings());
+  const loadAdminData = async () => {
+    const msgs = await adminDB.getAllMessages(); setMessages(msgs || []);
+    const subs = await adminDB.getAllSubscribers(); setSubscribers(subs || []);
+    const blgs = await adminDB.getAllBlogs(); setBlogs(blgs || []);
+    const svcs = await adminDB.getAllServices(); setServices(svcs || []);
+    const stgs = await adminDB.getSettings(); setSettings(stgs || {} as SiteSettings);
+    const pfs = await adminDB.getAllPortfolio(); setPortfolios(pfs || []);
+    const faqs = await adminDB.getAllFAQs(); setFaqs(faqs || []);
+    const tsts = await adminDB.getAllTestimonials(); setTestimonials(tsts || []);
+    const pkgs = await adminDB.getAllPricingPackages(); setPricingPackages(pkgs || []);
+    const adns = await adminDB.getAllPricingAddons(); setPricingAddons(adns || []);
+    const cmps = await adminDB.getAllPricingComparisons(); setPricingComparisons(cmps || []);
+    const pqs = await adminDB.getAllPricingQuotes(); setPricingQuotes(pqs || []);
+    const curs = await adminDB.getAllCurrencies(); setCurrencies(curs || []);
+    const currSets = await adminDB.getCurrencySettings(); if (currSets) setCurrencySettingsState(currSets);
+    const vids = await adminDB.getAllTestimonialVideos(); setTestimonialVideos(vids || []);
+    const strs = await adminDB.getAllSuccessStories(); setSuccessStories(strs || []);
+    const clogs = await adminDB.getAllClientLogos(); setClientLogos(clogs || []);
+    const tstsStats = await adminDB.getTestimonialStatistics(); setTestimonialStatistics(tstsStats || null);
+    const rvw = await adminDB.getReviewSettings(); setReviewSettings(rvw || null);
 
     // Auxiliary collections with local persistence
     if (!getLocalItem('next_solution_pricing_plans')) {
@@ -418,26 +395,26 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
     setAdminUsers(JSON.parse(getLocalItem('next_solution_admin_users') || '[]'));
 
     // Load Why Choose Us data
-    setWhyChooseUsCardsState(getWhyChooseUsCards());
-    setWhyChooseUsStatsState(getWhyChooseUsStats());
-    setWhyChooseUsBadgesState(getWhyChooseUsBadges());
-    setWhyChooseUsTechsState(getWhyChooseUsTechs());
-    const ctaData = getWhyChooseUsCTA();
+    const wcuC = await adminDB.getAllWhyChooseUsCards(); setWhyChooseUsCardsState(wcuC || []);
+    const wcuS = await adminDB.getAllWhyChooseUsStats(); setWhyChooseUsStatsState(wcuS || []);
+    const wcuB = await adminDB.getAllWhyChooseUsBadges(); setWhyChooseUsBadgesState(wcuB || []);
+    const wcuT = await adminDB.getAllWhyChooseUsTechs(); setWhyChooseUsTechsState(wcuT || []);
+    const ctaData = await adminDB.getWhyChooseUsCTA();
     setWhyChooseUsCTAState(ctaData);
     setWhyCTAForm(ctaData || {
       taglineEn: '', taglineBn: '', headlineEn: '', headlineBn: '', descriptionEn: '', descriptionBn: '', primaryButtonTextEn: '', primaryButtonTextBn: '', secondaryButtonTextEn: '', secondaryButtonTextBn: ''
     });
 
     // Load Process Workflow data
-    setProcessStepsState(getProcessSteps());
-    const pctData = getProcessCTA();
+    const pSteps = await adminDB.getAllProcessSteps(); setProcessStepsState(pSteps || []);
+    const pctData = await adminDB.getProcessCTA();
     setProcessCTAState(pctData);
     setProcessCTAForm(pctData || {
       titleEn: '', titleBn: '', highlightEn: '', highlightBn: '', subtitleEn: '', subtitleBn: '', ctaHeadlineEn: '', ctaHeadlineBn: '', ctaSubtitleEn: '', ctaSubtitleBn: '', ctaPrimaryTextEn: '', ctaPrimaryTextBn: '', ctaSecondaryTextEn: '', ctaSecondaryTextBn: ''
     });
 
     // Load Tech Service Cards
-    setTechServiceCardsState(getTechServiceCards());
+    const tsCards = await adminDB.getAllTechServiceCards(); setTechServiceCardsState(tsCards || []);
   };
 
   useEffect(() => {
@@ -458,31 +435,31 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
   };
 
   // Messages operations
-  const handleToggleMessageStatus = (id: string, currentStatus: 'unread' | 'read' | 'replied') => {
+  const handleToggleMessageStatus = async (id: string, currentStatus: 'unread' | 'read' | 'replied') => {
     let nextStatus: 'unread' | 'read' | 'replied' = 'read';
     if (currentStatus === 'read') nextStatus = 'replied';
     else if (currentStatus === 'replied') nextStatus = 'unread';
 
-    updateMessageStatus(id, nextStatus);
-    setMessages(getMessages());
+    await adminDB.updateMessage(id, { status: nextStatus });
+    const msgs = await adminDB.getAllMessages(); setMessages(msgs || []);
     triggerNotice(currentLang === 'en' ? 'Message state updated!' : 'বার্তার স্ট্যাটাস আপডেট করা হয়েছে!');
   };
 
-  const handleDeleteMessage = (id: string) => {
-    deleteMessage(id);
-    setMessages(getMessages());
+  const handleDeleteMessage = async (id: string) => {
+    await adminDB.deleteMessage(id);
+    const msgs = await adminDB.getAllMessages(); setMessages(msgs || []);
     triggerNotice(currentLang === 'en' ? 'Message permanently deleted.' : 'বার্তাটি স্থায়ীভাবে মুছে ফেলা হয়েছে।');
   };
 
   // Subscribers operations
-  const handleDeleteSub = (id: string) => {
-    deleteSubscriber(id);
-    setSubscribers(getSubscribers());
+  const handleDeleteSub = async (id: string) => {
+    await adminDB.deleteSubscriber(id);
+    const subs = await adminDB.getAllSubscribers(); setSubscribers(subs || []);
     triggerNotice(currentLang === 'en' ? 'Subscriber removed.' : 'সাবস্ক্রাইবার মুছে ফেলা হয়েছে।');
   };
 
   // Blog operations (Publish, Save, Delete)
-  const handleSaveBlog = (e: React.FormEvent) => {
+  const handleSaveBlog = async (e: React.FormEvent) => {
     e.preventDefault();
     const blogId = editingBlog ? editingBlog.id : `blog-${Date.now()}`;
     const publishedDate = editingBlog ? editingBlog.publishedAt : new Date().toISOString().split('T')[0];
@@ -505,8 +482,8 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
       status: blogForm.status || 'draft'
     };
 
-    saveBlogPost(completedPost);
-    setBlogs(getBlogs());
+    await adminDB.saveBlog(completedPost);
+    const blgs = await adminDB.getAllBlogs(); setBlogs(blgs || []);
     setIsCreatingBlog(false);
     setEditingBlog(null);
     triggerNotice(currentLang === 'en' ? 'Article saved successfully!' : 'নিবন্ধটি সফলভাবে সংরক্ষণ করা হয়েছে!');
@@ -518,14 +495,14 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
     setIsCreatingBlog(true);
   };
 
-  const handleDeleteBlog = (id: string) => {
-    deleteBlogPost(id);
-    setBlogs(getBlogs());
+  const handleDeleteBlog = async (id: string) => {
+    await adminDB.deleteBlog(id);
+    const blgs = await adminDB.getAllBlogs(); setBlogs(blgs || []);
     triggerNotice(currentLang === 'en' ? 'Article deleted.' : 'নিবন্ধটি মুছে ফেলা হয়েছে।');
   };
 
   // Service Edit Save
-  const handleSaveServiceEdit = (e: React.FormEvent) => {
+  const handleSaveServiceEdit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!editingService) return;
 
@@ -540,8 +517,8 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
         .replace(/(^-|-$)+/g, '');
     }
 
-    saveService(serviceToSave);
-    setServices(getServices());
+    await adminDB.saveService(serviceToSave);
+    const svcs = await adminDB.getAllServices(); setServices(svcs || []);
     setEditingService(null);
     triggerNotice(
       currentLang === 'en' 
@@ -551,24 +528,24 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
   };
 
   // Service Delete
-  const handleDeleteService = (id: string) => {
+  const handleDeleteService = async (id: string) => {
     if (confirm(currentLang === 'en' ? 'Are you sure you want to delete this service?' : 'আপনি কি সত্যিই এই সার্ভিসটি মুছে ফেলতে চান?')) {
-      deleteService(id);
-      setServices(getServices());
+      await adminDB.deleteService(id);
+      const svcs = await adminDB.getAllServices(); setServices(svcs || []);
       triggerNotice(currentLang === 'en' ? 'Service permanently deleted.' : 'সার্ভিসটি স্থায়ীভাবে মুছে ফেলা হয়েছে।');
     }
   };
 
   // System Config Settings save
-  const handleSaveSettings = (e: React.FormEvent) => {
+  const handleSaveSettings = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!settings) return;
-    saveSettings(settings);
+    await adminDB.saveSettings(settings);
     triggerNotice(currentLang === 'en' ? 'Site configuration updated.' : 'সাইটের কনফিগারেশন আপডেট করা হয়েছে।');
   };
 
   // Portfolio CRUD operations
-  const handleSavePortfolio = (e: React.FormEvent) => {
+  const handleSavePortfolio = async (e: React.FormEvent) => {
     e.preventDefault();
     const itemId = editingPortfolio ? editingPortfolio.id : `portfolio-${Date.now()}`;
     
@@ -624,8 +601,8 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
       githubUrl: portfolioForm.githubUrl || ''
     };
 
-    savePortfolioItem(completedItem);
-    setPortfolios(getPortfolio());
+    await adminDB.savePortfolio(completedItem);
+    const pfs = await adminDB.getAllPortfolio(); setPortfolios(pfs || []);
     setIsCreatingPortfolio(false);
     setEditingPortfolio(null);
     triggerNotice(currentLang === 'en' ? 'Portfolio item saved!' : 'পোর্টফোলিও প্রজেক্টটি সংরক্ষণ করা হয়েছে!');
@@ -637,14 +614,14 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
     setIsCreatingPortfolio(true);
   };
 
-  const handleDeletePortfolio = (id: string) => {
-    deletePortfolioItem(id);
-    setPortfolios(getPortfolio());
+  const handleDeletePortfolio = async (id: string) => {
+    await adminDB.deletePortfolio(id);
+    const pfs = await adminDB.getAllPortfolio(); setPortfolios(pfs || []);
     triggerNotice(currentLang === 'en' ? 'Portfolio item deleted.' : 'পোর্টফোলিও প্রজেক্টটি মুছে ফেলা হয়েছে।');
   };
 
   // FAQ CRUD operations
-  const handleSaveFAQ = (e: React.FormEvent) => {
+  const handleSaveFAQ = async (e: React.FormEvent) => {
     e.preventDefault();
     const faqId = editingFAQ ? editingFAQ.id : `faq-${Date.now()}`;
     const completedFAQ: FAQ = {
@@ -658,8 +635,8 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
       helpfulCount: faqForm.helpfulCount || 0
     };
 
-    saveFAQ(completedFAQ);
-    setFaqs(getFAQs());
+    await adminDB.saveFAQ(completedFAQ);
+    const faqs = await adminDB.getAllFAQs(); setFaqs(faqs || []);
     setIsCreatingFAQ(false);
     setEditingFAQ(null);
     triggerNotice(currentLang === 'en' ? 'FAQ successfully saved!' : 'প্রশ্নোত্তরটি সংরক্ষণ করা হয়েছে!');
@@ -671,14 +648,14 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
     setIsCreatingFAQ(true);
   };
 
-  const handleDeleteFAQ = (id: string) => {
-    deleteFAQ(id);
-    setFaqs(getFAQs());
+  const handleDeleteFAQ = async (id: string) => {
+    await adminDB.deleteFAQ(id);
+    const faqs = await adminDB.getAllFAQs(); setFaqs(faqs || []);
     triggerNotice(currentLang === 'en' ? 'FAQ entry removed.' : 'প্রশ্নোত্তরটি মুছে ফেলা হয়েছে।');
   };
 
   // Testimonials CRUD operations
-  const handleSaveTestimonial = (e: React.FormEvent) => {
+  const handleSaveTestimonial = async (e: React.FormEvent) => {
     e.preventDefault();
     const testimonialId = editingTestimonial ? editingTestimonial.id : `testimonial-${Date.now()}`;
     const completedTestimonial: Testimonial = {
@@ -693,8 +670,8 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
       avatar: testimonialForm.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=150'
     };
 
-    saveTestimonial(completedTestimonial);
-    setTestimonials(getTestimonials());
+    await adminDB.saveTestimonial(completedTestimonial);
+    const tsts = await adminDB.getAllTestimonials(); setTestimonials(tsts || []);
     setIsCreatingTestimonial(false);
     setEditingTestimonial(null);
     triggerNotice(currentLang === 'en' ? 'Testimonial successfully saved!' : 'টেস্টিমোনিয়ালটি সংরক্ষণ করা হয়েছে!');
@@ -706,14 +683,14 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
     setIsCreatingTestimonial(true);
   };
 
-  const handleDeleteTestimonial = (id: string) => {
-    deleteTestimonial(id);
-    setTestimonials(getTestimonials());
+  const handleDeleteTestimonial = async (id: string) => {
+    await adminDB.deleteTestimonial(id);
+    const tsts = await adminDB.getAllTestimonials(); setTestimonials(tsts || []);
     triggerNotice(currentLang === 'en' ? 'Testimonial removed.' : 'টেস্টিমোনিয়ালটি মুছে ফেলা হয়েছে।');
   };
 
   // Testimonial Videos operations
-  const handleSaveTestimonialVideo = (e: React.FormEvent) => {
+  const handleSaveTestimonialVideo = async (e: React.FormEvent) => {
     e.preventDefault();
     const videoId = editingVideo ? editingVideo.id : `video-${Date.now()}`;
     const completedVideo: TestimonialVideo = {
@@ -731,8 +708,8 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
       featured: videoForm.featured ?? true,
       displayOrder: Number(videoForm.displayOrder) || 1
     };
-    saveTestimonialVideo(completedVideo);
-    setTestimonialVideos(getTestimonialVideos());
+    await adminDB.saveTestimonialVideo(completedVideo);
+    const vids = await adminDB.getAllTestimonialVideos(); setTestimonialVideos(vids || []);
     setIsCreatingVideo(false);
     setEditingVideo(null);
     triggerNotice(currentLang === 'en' ? 'Testimonial video successfully saved!' : 'ভিডিও টেস্টিমোনিয়ালটি সংরক্ষণ করা হয়েছে!');
@@ -744,14 +721,14 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
     setIsCreatingVideo(true);
   };
 
-  const handleDeleteVideo = (id: string) => {
-    deleteTestimonialVideo(id);
-    setTestimonialVideos(getTestimonialVideos());
+  const handleDeleteVideo = async (id: string) => {
+    await adminDB.deleteTestimonialVideo(id);
+    const vids = await adminDB.getAllTestimonialVideos(); setTestimonialVideos(vids || []);
     triggerNotice(currentLang === 'en' ? 'Testimonial video removed.' : 'ভিডিও টেস্টিমোনিয়ালটি মুছে ফেলা হয়েছে।');
   };
 
   // Success Stories operations
-  const handleSaveSuccessStory = (e: React.FormEvent) => {
+  const handleSaveSuccessStory = async (e: React.FormEvent) => {
     e.preventDefault();
     const storyId = editingSuccessStory ? editingSuccessStory.id : `story-${Date.now()}`;
     const completedStory: SuccessStory = {
@@ -783,8 +760,8 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
       featured: successStoryForm.featured ?? true,
       displayOrder: Number(successStoryForm.displayOrder) || 1
     };
-    saveSuccessStory(completedStory);
-    setSuccessStories(getSuccessStories());
+    await adminDB.saveSuccessStory(completedStory);
+    const strs = await adminDB.getAllSuccessStories(); setSuccessStories(strs || []);
     setIsCreatingSuccessStory(false);
     setEditingSuccessStory(null);
     triggerNotice(currentLang === 'en' ? 'Success story successfully saved!' : 'সফলতার গল্পটি সংরক্ষণ করা হয়েছে!');
@@ -796,14 +773,14 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
     setIsCreatingSuccessStory(true);
   };
 
-  const handleDeleteSuccessStory = (id: string) => {
-    deleteSuccessStory(id);
-    setSuccessStories(getSuccessStories());
+  const handleDeleteSuccessStory = async (id: string) => {
+    await adminDB.deleteSuccessStory(id);
+    const strs = await adminDB.getAllSuccessStories(); setSuccessStories(strs || []);
     triggerNotice(currentLang === 'en' ? 'Success story removed.' : 'সফলতার গল্পটি মুছে ফেলা হয়েছে।');
   };
 
   // Client Logos operations
-  const handleSaveClientLogo = (e: React.FormEvent) => {
+  const handleSaveClientLogo = async (e: React.FormEvent) => {
     e.preventDefault();
     const logoId = editingClientLogo ? editingClientLogo.id : `logo-${Date.now()}`;
     const completedLogo: ClientLogo = {
@@ -813,8 +790,8 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
       featured: clientLogoForm.featured ?? true,
       displayOrder: Number(clientLogoForm.displayOrder) || 1
     };
-    saveClientLogo(completedLogo);
-    setClientLogos(getClientLogos());
+    await adminDB.saveClientLogo(completedLogo);
+    const clogs = await adminDB.getAllClientLogos(); setClientLogos(clogs || []);
     setIsCreatingClientLogo(false);
     setEditingClientLogo(null);
     triggerNotice(currentLang === 'en' ? 'Client logo successfully saved!' : 'ক্লায়েন্ট লোগোটি সংরক্ষণ করা হয়েছে!');
@@ -826,24 +803,24 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
     setIsCreatingClientLogo(true);
   };
 
-  const handleDeleteClientLogo = (id: string) => {
-    deleteClientLogo(id);
-    setClientLogos(getClientLogos());
+  const handleDeleteClientLogo = async (id: string) => {
+    await adminDB.deleteClientLogo(id);
+    const clogs = await adminDB.getAllClientLogos(); setClientLogos(clogs || []);
     triggerNotice(currentLang === 'en' ? 'Client logo removed.' : 'ক্লায়েন্ট লোগোটি মুছে ফেলা হয়েছে।');
   };
 
   // Statistics and Settings operations
-  const handleSaveTestimonialStatistics = (e: React.FormEvent) => {
+  const handleSaveTestimonialStatistics = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!testimonialStatistics) return;
-    saveTestimonialStatistics(testimonialStatistics);
+    await adminDB.saveTestimonialStatistics(testimonialStatistics);
     triggerNotice(currentLang === 'en' ? 'Statistics successfully updated!' : 'পরিসংখ্যান সফলভাবে আপডেট করা হয়েছে!');
   };
 
-  const handleSaveReviewSettings = (e: React.FormEvent) => {
+  const handleSaveReviewSettings = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!reviewSettings) return;
-    saveReviewSettings(reviewSettings);
+    await adminDB.saveReviewSettings(reviewSettings);
     triggerNotice(currentLang === 'en' ? 'Settings successfully updated!' : 'সেটিংস সফলভাবে আপডেট করা হয়েছে!');
   };
 
@@ -896,7 +873,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
   };
 
   // 1. Pricing Packages CRUD
-  const handleSavePricingPackage = (e: React.FormEvent) => {
+  const handleSavePricingPackage = async (e: React.FormEvent) => {
     e.preventDefault();
     const pkgId = editingPricingPackage ? editingPricingPackage.id : `pkg-${Date.now()}`;
     const completedPkg: PricingPackage = {
@@ -919,11 +896,17 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
       sortOrder: Number(pricingPackageForm.sortOrder) || 0,
       badgeEn: pricingPackageForm.badgeEn || '',
       badgeBn: pricingPackageForm.badgeBn || '',
-      techEn: pricingPackageForm.techEn || ''
+      techEn: pricingPackageForm.techEn || '',
+      deliveryTimeEn: pricingPackageForm.deliveryTimeEn || '',
+      deliveryTimeBn: pricingPackageForm.deliveryTimeBn || '',
+      supportPeriodEn: pricingPackageForm.supportPeriodEn || '',
+      supportPeriodBn: pricingPackageForm.supportPeriodBn || '',
+      perfectForEn: pricingPackageForm.perfectForEn || '',
+      perfectForBn: pricingPackageForm.perfectForBn || ''
     };
 
-    savePricingPackage(completedPkg);
-    setPricingPackages(getPricingPackages());
+    await adminDB.savePricingPackage(completedPkg);
+    const pkgs = await adminDB.getAllPricingPackages(); setPricingPackages(pkgs || []);
     setIsCreatingPricingPackage(false);
     setEditingPricingPackage(null);
     triggerNotice(currentLang === 'en' ? 'Pricing package saved successfully!' : 'প্রাইসিং প্যাকেজটি সফলভাবে সংরক্ষণ করা হয়েছে!');
@@ -935,14 +918,14 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
     setIsCreatingPricingPackage(true);
   };
 
-  const handleDeletePricingPackage = (id: string) => {
-    deletePricingPackage(id);
-    setPricingPackages(getPricingPackages());
+  const handleDeletePricingPackage = async (id: string) => {
+    await adminDB.deletePricingPackage(id);
+    const pkgs = await adminDB.getAllPricingPackages(); setPricingPackages(pkgs || []);
     triggerNotice(currentLang === 'en' ? 'Pricing package removed.' : 'প্রাইসিং প্যাকেজটি মুছে ফেলা হয়েছে।');
   };
 
   // 2. Pricing Addons CRUD
-  const handleSavePricingAddon = (e: React.FormEvent) => {
+  const handleSavePricingAddon = async (e: React.FormEvent) => {
     e.preventDefault();
     const addonId = editingPricingAddon ? editingPricingAddon.id : `addon-${Date.now()}`;
     const completedAddon: PricingAddon = {
@@ -956,8 +939,8 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
       enabled: !!pricingAddonForm.enabled
     };
 
-    savePricingAddon(completedAddon);
-    setPricingAddons(getPricingAddons());
+    await adminDB.savePricingAddon(completedAddon);
+    const adns = await adminDB.getAllPricingAddons(); setPricingAddons(adns || []);
     setIsCreatingPricingAddon(false);
     setEditingPricingAddon(null);
     triggerNotice(currentLang === 'en' ? 'Add-on service saved successfully!' : 'অ্যাড-অন সার্ভিসটি সফলভাবে সংরক্ষণ করা হয়েছে!');
@@ -969,14 +952,14 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
     setIsCreatingPricingAddon(true);
   };
 
-  const handleDeletePricingAddon = (id: string) => {
-    deletePricingAddon(id);
-    setPricingAddons(getPricingAddons());
+  const handleDeletePricingAddon = async (id: string) => {
+    await adminDB.deletePricingAddon(id);
+    const adns = await adminDB.getAllPricingAddons(); setPricingAddons(adns || []);
     triggerNotice(currentLang === 'en' ? 'Add-on service removed.' : 'অ্যাড-অন সার্ভিসটি মুছে ফেলা হয়েছে।');
   };
 
   // 3. Pricing Comparisons CRUD
-  const handleSavePricingComparison = (e: React.FormEvent) => {
+  const handleSavePricingComparison = async (e: React.FormEvent) => {
     e.preventDefault();
     const compId = editingPricingComparison ? editingPricingComparison.id : `comp-${Date.now()}`;
     const completedComp: PricingComparison = {
@@ -994,8 +977,8 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
       sortOrder: Number(pricingComparisonForm.sortOrder) || 0
     };
 
-    savePricingComparison(completedComp);
-    setPricingComparisons(getPricingComparisons());
+    await adminDB.savePricingComparison(completedComp);
+    const cmps = await adminDB.getAllPricingComparisons(); setPricingComparisons(cmps || []);
     setIsCreatingPricingComparison(false);
     setEditingPricingComparison(null);
     triggerNotice(currentLang === 'en' ? 'Comparison feature saved successfully!' : 'ফিচার তুলনা ম্যাট্রিক্স সফলভাবে সংরক্ষণ করা হয়েছে!');
@@ -1007,34 +990,34 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
     setIsCreatingPricingComparison(true);
   };
 
-  const handleDeletePricingComparison = (id: string) => {
-    deletePricingComparison(id);
-    setPricingComparisons(getPricingComparisons());
+  const handleDeletePricingComparison = async (id: string) => {
+    await adminDB.deletePricingComparison(id);
+    const cmps = await adminDB.getAllPricingComparisons(); setPricingComparisons(cmps || []);
     triggerNotice(currentLang === 'en' ? 'Comparison feature removed.' : 'ফিচার তুলনা ম্যাট্রিক্স মুছে ফেলা হয়েছে।');
   };
 
   // 4. Quotes Operations
-  const handleUpdateQuoteStatus = (id: string, status: 'pending' | 'reviewed' | 'contacted') => {
-    updatePricingQuoteStatus(id, status);
-    setPricingQuotes(getPricingQuotes());
+  const handleUpdateQuoteStatus = async (id: string, status: 'pending' | 'reviewed' | 'contacted') => {
+    await adminDB.updatePricingQuote(id, { status: status });
+    const pqs = await adminDB.getAllPricingQuotes(); setPricingQuotes(pqs || []);
     triggerNotice(currentLang === 'en' ? 'Inbound quote status updated!' : 'কোড রিকোয়েস্ট স্ট্যাটাস আপডেট করা হয়েছে!');
   };
 
-  const handleDeleteQuote = (id: string) => {
-    deletePricingQuote(id);
-    setPricingQuotes(getPricingQuotes());
+  const handleDeleteQuote = async (id: string) => {
+    await adminDB.deletePricingQuote(id);
+    const pqs = await adminDB.getAllPricingQuotes(); setPricingQuotes(pqs || []);
     triggerNotice(currentLang === 'en' ? 'Inbound quote request removed.' : 'কোড রিকোয়েস্টটি মুছে ফেলা হয়েছে।');
   };
 
   // Currency & Rate operations
-  const handleSaveCurrencySettings = (e: React.FormEvent) => {
+  const handleSaveCurrencySettings = async (e: React.FormEvent) => {
     e.preventDefault();
-    saveCurrencySettings(currencySettings);
+    await adminDB.saveCurrencySettings(currencySettings);
     triggerNotice(currentLang === 'en' ? 'Currency configurations updated!' : 'কারেন্সি কনফিগারেশন সফলভাবে আপডেট করা হয়েছে!');
-    setCurrencySettingsState(getCurrencySettings());
+    const currSets = await adminDB.getCurrencySettings(); if (currSets) setCurrencySettingsState(currSets);
   };
 
-  const handleSaveCurrency = (e: React.FormEvent) => {
+  const handleSaveCurrency = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!currencyForm.name || !currencyForm.code || !currencyForm.symbol) {
       alert('Please fill out all required fields');
@@ -1057,19 +1040,19 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
 
     // If making this currency default, disable other defaults
     if (currToSave.isDefault) {
-      const all = getCurrencies();
-      all.forEach(c => {
+      const all = currencies;
+      for (const c of all) {
         if (c.id !== currToSave.id && c.isDefault) {
           c.isDefault = false;
           c.updatedAt = new Date().toISOString();
-          saveCurrency(c);
+          await adminDB.saveCurrency(c);
         }
-      });
+      }
     }
 
-    saveCurrency(currToSave);
+    await adminDB.saveCurrency(currToSave);
     triggerNotice(currentLang === 'en' ? 'Currency successfully saved!' : 'কারেন্সি সফলভাবে সংরক্ষণ করা হয়েছে!');
-    setCurrencies(getCurrencies());
+    const curs = await adminDB.getAllCurrencies(); setCurrencies(curs || []);
     setEditingCurrency(null);
     setIsCreatingCurrency(false);
     setCurrencyForm({
@@ -1077,21 +1060,21 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
     });
   };
 
-  const handleDeleteCurrency = (id: string) => {
+  const handleDeleteCurrency = async (id: string) => {
     const toDel = currencies.find(c => c.id === id);
     if (toDel?.isDefault) {
       alert(currentLang === 'en' ? 'Cannot delete the default currency.' : 'ডিফল্ট কারেন্সি মুছে ফেলা যাবে না।');
       return;
     }
     if (confirm(currentLang === 'en' ? 'Are you sure you want to delete this currency?' : 'আপনি কি সত্যিই এই কারেন্সিটি মুছে ফেলতে চান?')) {
-      deleteCurrency(id);
+      await adminDB.deleteCurrency(id);
       triggerNotice(currentLang === 'en' ? 'Currency deleted.' : 'কারেন্সি মুছে ফেলা হয়েছে।');
-      setCurrencies(getCurrencies());
+      const curs = await adminDB.getAllCurrencies(); setCurrencies(curs || []);
     }
   };
 
-  const handleToggleCurrencyEnabled = (id: string) => {
-    const list = getCurrencies();
+  const handleToggleCurrencyEnabled = async (id: string) => {
+    const list = currencies;
     const found = list.find(c => c.id === id);
     if (found) {
       if (found.isDefault) {
@@ -1099,13 +1082,13 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
         return;
       }
       found.enabled = !found.enabled;
-      saveCurrency(found);
-      setCurrencies(getCurrencies());
+      await adminDB.saveCurrency(found);
+      const curs = await adminDB.getAllCurrencies(); setCurrencies(curs || []);
       triggerNotice(currentLang === 'en' ? 'Currency status updated.' : 'কারেন্সির অবস্থা আপডেট করা হয়েছে।');
     }
   };
 
-  const handleMoveCurrency = (index: number, direction: 'up' | 'down') => {
+  const handleMoveCurrency = async (index: number, direction: 'up' | 'down') => {
     const sorted = [...currencies].sort((a, b) => a.sortOrder - b.sortOrder);
     if (direction === 'up' && index === 0) return;
     if (direction === 'down' && index === sorted.length - 1) return;
@@ -1115,9 +1098,9 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
     sorted[index].sortOrder = sorted[swapIndex].sortOrder;
     sorted[swapIndex].sortOrder = tempSort;
 
-    saveCurrency(sorted[index]);
-    saveCurrency(sorted[swapIndex]);
-    setCurrencies(getCurrencies());
+    await adminDB.saveCurrency(sorted[index]);
+    await adminDB.saveCurrency(sorted[swapIndex]);
+    const curs = await adminDB.getAllCurrencies(); setCurrencies(curs || []);
     triggerNotice(currentLang === 'en' ? 'Order updated.' : 'ক্রমবিন্যাস আপডেট করা হয়েছে।');
   };
 
@@ -1214,7 +1197,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
   };
 
   // Why Choose Us operations
-  const handleSaveWhyCard = (e: React.FormEvent) => {
+  const handleSaveWhyCard = async (e: React.FormEvent) => {
     e.preventDefault();
     const id = editingWhyCard ? editingWhyCard.id : `why-card-${Date.now()}`;
     const card: WhyChooseUsCard = {
@@ -1231,8 +1214,8 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
       displayOrder: Number(whyCardForm.displayOrder) || 1,
       visible: whyCardForm.visible !== false
     };
-    saveWhyChooseUsCard(card);
-    setWhyChooseUsCardsState(getWhyChooseUsCards());
+    await adminDB.saveWhyChooseUsCard(card);
+    const wcuC = await adminDB.getAllWhyChooseUsCards(); setWhyChooseUsCardsState(wcuC || []);
     setEditingWhyCard(null);
     setIsCreatingWhyCard(false);
     setWhyCardForm({
@@ -1241,15 +1224,15 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
     triggerNotice(currentLang === 'en' ? 'Card saved successfully!' : 'কার্ড সফলভাবে সংরক্ষণ করা হয়েছে!');
   };
 
-  const handleDeleteWhyCard = (id: string) => {
+  const handleDeleteWhyCard = async (id: string) => {
     if (confirm(currentLang === 'en' ? 'Are you sure you want to delete this card?' : 'আপনি কি নিশ্চিত যে এই কার্ডটি মুছে ফেলতে চান?')) {
-      deleteWhyChooseUsCard(id);
-      setWhyChooseUsCardsState(getWhyChooseUsCards());
+      await adminDB.deleteWhyChooseUsCard(id);
+      const wcuC = await adminDB.getAllWhyChooseUsCards(); setWhyChooseUsCardsState(wcuC || []);
       triggerNotice(currentLang === 'en' ? 'Card deleted.' : 'কার্ড মুছে ফেলা হয়েছে।');
     }
   };
 
-  const handleSaveWhyStat = (e: React.FormEvent) => {
+  const handleSaveWhyStat = async (e: React.FormEvent) => {
     e.preventDefault();
     const id = editingWhyStat ? editingWhyStat.id : `why-stat-${Date.now()}`;
     const stat: WhyChooseUsStat = {
@@ -1260,23 +1243,23 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
       displayOrder: Number(whyStatForm.displayOrder) || 1,
       visible: whyStatForm.visible !== false
     };
-    saveWhyChooseUsStat(stat);
-    setWhyChooseUsStatsState(getWhyChooseUsStats());
+    await adminDB.saveWhyChooseUsStat(stat);
+    const wcuS = await adminDB.getAllWhyChooseUsStats(); setWhyChooseUsStatsState(wcuS || []);
     setEditingWhyStat(null);
     setIsCreatingWhyStat(false);
     setWhyStatForm({ value: '', labelEn: '', labelBn: '', displayOrder: 1, visible: true });
     triggerNotice(currentLang === 'en' ? 'Stat saved successfully!' : 'পরিসংখ্যান সফলভাবে সংরক্ষণ করা হয়েছে!');
   };
 
-  const handleDeleteWhyStat = (id: string) => {
+  const handleDeleteWhyStat = async (id: string) => {
     if (confirm(currentLang === 'en' ? 'Are you sure you want to delete this stat?' : 'আপনি কি নিশ্চিত যে এই পরিসংখ্যানটি মুছে ফেলতে চান?')) {
-      deleteWhyChooseUsStat(id);
-      setWhyChooseUsStatsState(getWhyChooseUsStats());
+      await adminDB.deleteWhyChooseUsStat(id);
+      const wcuS = await adminDB.getAllWhyChooseUsStats(); setWhyChooseUsStatsState(wcuS || []);
       triggerNotice(currentLang === 'en' ? 'Stat deleted.' : 'পরিসংখ্যান মুছে ফেলা হয়েছে।');
     }
   };
 
-  const handleSaveWhyBadge = (e: React.FormEvent) => {
+  const handleSaveWhyBadge = async (e: React.FormEvent) => {
     e.preventDefault();
     const id = editingWhyBadge ? editingWhyBadge.id : `why-badge-${Date.now()}`;
     const badge: WhyChooseUsBadge = {
@@ -1286,23 +1269,23 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
       displayOrder: Number(whyBadgeForm.displayOrder) || 1,
       visible: whyBadgeForm.visible !== false
     };
-    saveWhyChooseUsBadge(badge);
-    setWhyChooseUsBadgesState(getWhyChooseUsBadges());
+    await adminDB.saveWhyChooseUsBadge(badge);
+    const wcuB = await adminDB.getAllWhyChooseUsBadges(); setWhyChooseUsBadgesState(wcuB || []);
     setEditingWhyBadge(null);
     setIsCreatingWhyBadge(false);
     setWhyBadgeForm({ labelEn: '', labelBn: '', displayOrder: 1, visible: true });
     triggerNotice(currentLang === 'en' ? 'Badge saved successfully!' : 'ব্যাজ সফলভাবে সংরক্ষণ করা হয়েছে!');
   };
 
-  const handleDeleteWhyBadge = (id: string) => {
+  const handleDeleteWhyBadge = async (id: string) => {
     if (confirm(currentLang === 'en' ? 'Are you sure you want to delete this badge?' : 'আপনি কি নিশ্চিত যে এই ব্যাজটি মুছে ফেলতে চান?')) {
-      deleteWhyChooseUsBadge(id);
-      setWhyChooseUsBadgesState(getWhyChooseUsBadges());
+      await adminDB.deleteWhyChooseUsBadge(id);
+      const wcuB = await adminDB.getAllWhyChooseUsBadges(); setWhyChooseUsBadgesState(wcuB || []);
       triggerNotice(currentLang === 'en' ? 'Badge deleted.' : 'ব্যাজ মুছে ফেলা হয়েছে।');
     }
   };
 
-  const handleSaveWhyTech = (e: React.FormEvent) => {
+  const handleSaveWhyTech = async (e: React.FormEvent) => {
     e.preventDefault();
     const id = editingWhyTech ? editingWhyTech.id : `why-tech-${Date.now()}`;
     const tech: WhyChooseUsTech = {
@@ -1312,23 +1295,23 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
       displayOrder: Number(whyTechForm.displayOrder) || 1,
       visible: whyTechForm.visible !== false
     };
-    saveWhyChooseUsTech(tech);
-    setWhyChooseUsTechsState(getWhyChooseUsTechs());
+    await adminDB.saveWhyChooseUsTech(tech);
+    const wcuT = await adminDB.getAllWhyChooseUsTechs(); setWhyChooseUsTechsState(wcuT || []);
     setEditingWhyTech(null);
     setIsCreatingWhyTech(false);
     setWhyTechForm({ name: '', logoUrl: '', displayOrder: 1, visible: true });
     triggerNotice(currentLang === 'en' ? 'Technology saved successfully!' : 'প্রযুক্তি সফলভাবে সংরক্ষণ করা হয়েছে!');
   };
 
-  const handleDeleteWhyTech = (id: string) => {
+  const handleDeleteWhyTech = async (id: string) => {
     if (confirm(currentLang === 'en' ? 'Are you sure you want to delete this technology?' : 'আপনি কি নিশ্চিত যে এই প্রযুক্তিটি মুছে ফেলতে চান?')) {
-      deleteWhyChooseUsTech(id);
-      setWhyChooseUsTechsState(getWhyChooseUsTechs());
+      await adminDB.deleteWhyChooseUsTech(id);
+      const wcuT = await adminDB.getAllWhyChooseUsTechs(); setWhyChooseUsTechsState(wcuT || []);
       triggerNotice(currentLang === 'en' ? 'Technology deleted.' : 'প্রযুক্তি মুছে ফেলা হয়েছে।');
     }
   };
 
-  const handleSaveWhyCTA = (e: React.FormEvent) => {
+  const handleSaveWhyCTA = async (e: React.FormEvent) => {
     e.preventDefault();
     const cta: WhyChooseUsCTA = {
       taglineEn: whyCTAForm.taglineEn || '',
@@ -1342,7 +1325,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
       secondaryButtonTextEn: whyCTAForm.secondaryButtonTextEn || '',
       secondaryButtonTextBn: whyCTAForm.secondaryButtonTextBn || ''
     };
-    saveWhyChooseUsCTA(cta);
+    await adminDB.saveWhyChooseUsCTA(cta);
     setWhyChooseUsCTAState(cta);
     triggerNotice(currentLang === 'en' ? 'CTA saved successfully!' : 'কল-টু-অ্যাকশন সফলভাবে সংরক্ষণ করা হয়েছে!');
   };
@@ -1373,7 +1356,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
   };
 
   // PROCESS WORKFLOW ACTIONS
-  const handleSaveProcessStep = (e: React.FormEvent) => {
+  const handleSaveProcessStep = async (e: React.FormEvent) => {
     e.preventDefault();
     const step: ProcessStep = {
       id: editingProcessStep?.id || `process-step-${Date.now()}`,
@@ -1394,8 +1377,8 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
       displayOrder: Number(processStepForm.displayOrder) || 1,
       visible: processStepForm.visible !== false
     };
-    saveProcessStep(step);
-    setProcessStepsState(getProcessSteps());
+    await adminDB.saveProcessStep(step);
+    const pSteps = await adminDB.getAllProcessSteps(); setProcessStepsState(pSteps || []);
     setEditingProcessStep(null);
     setIsCreatingProcessStep(false);
     setProcessStepForm({
@@ -1404,16 +1387,16 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
     triggerNotice(currentLang === 'en' ? 'Process step saved successfully!' : 'প্রসেস ধাপ সফলভাবে সংরক্ষণ করা হয়েছে!');
   };
 
-  const handleDeleteProcessStep = (id: string) => {
+  const handleDeleteProcessStep = async (id: string) => {
     if (confirm(currentLang === 'en' ? 'Are you sure you want to delete this process step?' : 'আপনি কি নিশ্চিত যে এই প্রসেস ধাপটি মুছে ফেলতে চান?')) {
-      deleteProcessStep(id);
-      setProcessStepsState(getProcessSteps());
+      await adminDB.deleteProcessStep(id);
+      const pSteps = await adminDB.getAllProcessSteps(); setProcessStepsState(pSteps || []);
       triggerNotice(currentLang === 'en' ? 'Process step deleted.' : 'প্রসেস ধাপ মুছে ফেলা হয়েছে।');
     }
   };
 
   // TECH STACK CMS ACTIONS
-  const handleSaveTechServiceCard = (e: React.FormEvent) => {
+  const handleSaveTechServiceCard = async (e: React.FormEvent) => {
     e.preventDefault();
     const card: TechServiceCard = {
       id: editingTechServiceCard?.id || `tech-card-${Date.now()}`,
@@ -1437,8 +1420,8 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
       animationType: techServiceCardForm.animationType || 'fade'
     };
 
-    saveTechServiceCard(card);
-    setTechServiceCardsState(getTechServiceCards());
+    await adminDB.saveTechServiceCard(card);
+    const tsCards = await adminDB.getAllTechServiceCards(); setTechServiceCardsState(tsCards || []);
     setEditingTechServiceCard(null);
     setIsCreatingTechServiceCard(false);
     setTechServiceCardForm({
@@ -1447,23 +1430,23 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
     triggerNotice(currentLang === 'en' ? 'Technology Service Card saved successfully!' : 'টেকনোলজি সার্ভিস কার্ড সফলভাবে সংরক্ষণ করা হয়েছে!');
   };
 
-  const handleDeleteTechServiceCard = (id: string) => {
+  const handleDeleteTechServiceCard = async (id: string) => {
     if (confirm(currentLang === 'en' ? 'Are you sure you want to delete this card?' : 'আপনি কি নিশ্চিত যে এই কার্ডটি মুছে ফেলতে চান?')) {
-      deleteTechServiceCard(id);
-      setTechServiceCardsState(getTechServiceCards());
+      await adminDB.deleteTechServiceCard(id);
+      const tsCards = await adminDB.getAllTechServiceCards(); setTechServiceCardsState(tsCards || []);
       triggerNotice(currentLang === 'en' ? 'Technology Service Card deleted.' : 'টেকনোলজি সার্ভিস কার্ড মুছে ফেলা হয়েছে।');
     }
   };
 
-  const handleRestoreTechServiceCards = () => {
+  const handleRestoreTechServiceCards = async () => {
     if (confirm(currentLang === 'en' ? 'Are you sure you want to restore default technology cards?' : 'আপনি কি নিশ্চিত যে ডিফল্ট টেকনোলজি কার্ডগুলো পুনরুদ্ধার করতে চান?')) {
-      restoreTechServiceCards();
-      setTechServiceCardsState(getTechServiceCards());
+      const { initialTechServiceCards } = await import('@/data/initialData'); for (const card of initialTechServiceCards) { await adminDB.saveTechServiceCard(card); }
+      const tsCards = await adminDB.getAllTechServiceCards(); setTechServiceCardsState(tsCards || []);
       triggerNotice(currentLang === 'en' ? 'Technology Service Cards restored to default.' : 'টেকনোলজি সার্ভিস কার্ডগুলো ডিফল্ট অবস্থায় ফিরিয়ে আনা হয়েছে।');
     }
   };
 
-  const handleSaveProcessCTA = (e: React.FormEvent) => {
+  const handleSaveProcessCTA = async (e: React.FormEvent) => {
     e.preventDefault();
     const cta: ProcessCTA = {
       id: 'process-cta',
@@ -1482,16 +1465,16 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
       ctaSecondaryTextEn: processCTAForm.ctaSecondaryTextEn || '',
       ctaSecondaryTextBn: processCTAForm.ctaSecondaryTextBn || ''
     };
-    saveProcessCTA(cta);
+    await adminDB.saveProcessCTA(cta);
     setProcessCTAState(cta);
     triggerNotice(currentLang === 'en' ? 'Process CTA saved successfully!' : 'প্রসেস কল-টু-অ্যাকশন সফলভাবে সংরক্ষণ করা হয়েছে!');
   };
 
   // Reset database callback
-  const handleResetDB = () => {
+  const handleResetDB = async () => {
     if (confirm(currentLang === 'en' ? 'Are you sure you want to reset all database entries? This deletes custom submissions.' : 'আপনি কি সত্যিই সম্পূর্ণ ডাটাবেস রিসেট করতে চান?')) {
-      resetDatabaseToDefault();
-      loadAdminData();
+      await fetch('/api/seed', { method: 'GET' });
+      await loadAdminData();
       triggerNotice(currentLang === 'en' ? 'Database restored to high-end seeds!' : 'ডাটাবেস সফলভাবে আদি ফ্যাক্টরি সেটিংসে রিসেট করা হয়েছে!');
     }
   };
@@ -1504,8 +1487,8 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
   // Authentication Screen Layout
   if (!isAuthenticated) {
     return (
-      <section id="admin-auth-screen" className="flex items-center justify-center min-h-[70vh] bg-white dark:bg-[#141414] dark:bg-[#141414] px-4 py-16">
-        <div className="w-full max-w-md rounded-2xl border border-gray-100 dark:border-neutral-800 bg-white dark:bg-[#141414] dark:bg-[#141414] p-6 md:p-8 shadow-xl text-center space-y-6">
+      <section id="admin-auth-screen" className="flex items-center justify-center min-h-[70vh] bg-white dark:bg-[#141414] px-4 py-16">
+        <div className="w-full max-w-md rounded-2xl border border-gray-100 dark:border-neutral-800 bg-white dark:bg-[#141414] p-6 md:p-8 shadow-xl text-center space-y-6">
           <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-blue-50 dark:bg-orange-500/10 text-blue-600 dark:text-orange-400">
             <LockIcon className="h-6 w-6" />
           </div>
@@ -1530,7 +1513,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder={currentLang === 'en' ? 'Enter admin to access' : 'প্রবেশ করতে admin লিখুন'}
-                className="w-full rounded-lg border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-3 py-2.5 text-sm text-gray-800 dark:text-neutral-100 placeholder-gray-400 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500 transition"
+                className="w-full rounded-lg border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-3 py-2.5 text-sm text-gray-800 dark:text-neutral-100 placeholder-gray-400 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500 transition"
               />
             </div>
 
@@ -1547,7 +1530,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
             </button>
           </form>
 
-          <div className="rounded bg-blue-50/50 border border-blue-100 dark:border-orange-500/20 p-3 text-[10px] text-gray-500 dark:text-neutral-400 dark:text-neutral-500 max-w-xs mx-auto">
+          <div className="rounded bg-blue-50/50 border border-blue-100 dark:border-orange-500/20 p-3 text-[10px] text-gray-500 dark:text-neutral-400 max-w-xs mx-auto">
             💡 {currentLang === 'en' ? 'Security Notice: Input passcode "admin" to explore complete database controls.' : 'নিরাপত্তা বিজ্ঞপ্তি: সম্পূর্ণ ডাটাবেস নিয়ন্ত্রণ করতে পাসকোড "admin" লিখুন।'}
           </div>
         </div>
@@ -1557,11 +1540,11 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
 
   // Primary Authenticated Admin Console Layout
   return (
-    <section id="admin-main-dashboard" className="bg-white dark:bg-[#141414] dark:bg-[#141414] py-12 min-h-screen">
+    <section id="admin-main-dashboard" className="bg-gray-50 dark:bg-[#0c0c0c] py-12 min-h-screen">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         
         {/* Header Block */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-gray-100 dark:border-neutral-800 pb-6 mb-8">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-gray-200 dark:border-neutral-700/80 pb-6 mb-8">
           <div>
             <h2 className="text-xl font-black text-gray-900 dark:text-white flex items-center gap-2">
               <SparklesIcon className="h-5.5 w-5.5 text-blue-500 dark:text-orange-400" />
@@ -1577,7 +1560,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
             <button
               id="admin-lock-btn"
               onClick={() => setIsAuthenticated(false)}
-              className="rounded-lg bg-gray-100 dark:bg-neutral-800 text-gray-600 dark:text-neutral-300 dark:text-neutral-600 hover:text-gray-900 dark:hover:text-white dark:text-white hover:bg-gray-200 dark:hover:bg-neutral-700 dark:bg-neutral-700 px-3 py-1.5 text-xs font-bold transition flex items-center gap-1.5"
+              className="rounded-lg bg-gray-100 dark:bg-neutral-800 text-gray-600 dark:text-neutral-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-200 dark:hover:bg-neutral-700 px-3 py-1.5 text-xs font-bold transition flex items-center gap-1.5"
             >
               <LockIcon className="h-3.5 w-3.5" />
               <span>{currentLang === 'en' ? 'Lock Console' : 'লক কনসোল'}</span>
@@ -1605,7 +1588,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
 
         {/* Console Overview indicators */}
         <div id="admin-metrics-grid" className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-          <div className="rounded-xl border border-gray-100 dark:border-neutral-800 bg-white dark:bg-[#141414] dark:bg-[#141414] p-4 shadow-sm">
+          <div className="rounded-xl border border-gray-200 dark:border-neutral-700/80 bg-white dark:bg-[#141414] p-4 shadow-sm">
             <span className="block text-[9px] font-bold text-gray-400 dark:text-neutral-500 uppercase tracking-widest flex items-center gap-1">
               <MailIcon className="h-3.5 w-3.5 text-blue-500 dark:text-orange-400" />
               <span>Inbound Leads</span>
@@ -1613,7 +1596,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
             <span className="text-lg font-bold text-gray-900 dark:text-white block mt-1.5">{messages.length} Total</span>
             <span className="text-[10px] text-gray-400 dark:text-neutral-500">{messages.filter(m => m.status === 'unread').length} Unread</span>
           </div>
-          <div className="rounded-xl border border-gray-100 dark:border-neutral-800 bg-white dark:bg-[#141414] dark:bg-[#141414] p-4 shadow-sm">
+          <div className="rounded-xl border border-gray-200 dark:border-neutral-700/80 bg-white dark:bg-[#141414] p-4 shadow-sm">
             <span className="block text-[9px] font-bold text-gray-400 dark:text-neutral-500 uppercase tracking-widest flex items-center gap-1">
               <UsersIcon className="h-3.5 w-3.5 text-blue-500 dark:text-orange-400" />
               <span>Intel Subscriptions</span>
@@ -1621,7 +1604,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
             <span className="text-lg font-bold text-gray-900 dark:text-white block mt-1.5">{subscribers.length} Members</span>
             <span className="text-[10px] text-gray-400 dark:text-neutral-500">Live persistence</span>
           </div>
-          <div className="rounded-xl border border-gray-100 dark:border-neutral-800 bg-white dark:bg-[#141414] dark:bg-[#141414] p-4 shadow-sm">
+          <div className="rounded-xl border border-gray-200 dark:border-neutral-700/80 bg-white dark:bg-[#141414] p-4 shadow-sm">
             <span className="block text-[9px] font-bold text-gray-400 dark:text-neutral-500 uppercase tracking-widest flex items-center gap-1">
               <BookOpenIcon className="h-3.5 w-3.5 text-blue-500 dark:text-orange-400" />
               <span>Published Blogs</span>
@@ -1629,7 +1612,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
             <span className="text-lg font-bold text-gray-900 dark:text-white block mt-1.5">{blogs.filter(b => b.status === 'published').length} Live</span>
             <span className="text-[10px] text-gray-400 dark:text-neutral-500">{blogs.filter(b => b.status === 'draft').length} Drafts</span>
           </div>
-          <div className="rounded-xl border border-gray-100 dark:border-neutral-800 bg-white dark:bg-[#141414] dark:bg-[#141414] p-4 shadow-sm">
+          <div className="rounded-xl border border-gray-200 dark:border-neutral-700/80 bg-white dark:bg-[#141414] p-4 shadow-sm">
             <span className="block text-[9px] font-bold text-gray-400 dark:text-neutral-500 uppercase tracking-widest flex items-center gap-1">
               <SettingsIcon className="h-3.5 w-3.5 text-blue-500 dark:text-orange-400" />
               <span>Core Services</span>
@@ -1643,7 +1626,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           
           {/* Sub Tab selection (Sidebar left) */}
-          <div className="lg:col-span-3 rounded-xl border border-gray-100 dark:border-neutral-800 bg-white dark:bg-[#141414] dark:bg-[#141414] p-3 flex flex-row lg:flex-col gap-1 overflow-x-auto lg:overflow-x-visible shadow-sm">
+          <div className="lg:col-span-3 rounded-xl border border-gray-200 dark:border-neutral-700/80 bg-white dark:bg-[#141414] p-3 flex flex-row lg:flex-col gap-1 overflow-x-auto lg:overflow-x-visible shadow-sm">
             {[
               { id: 'overview', label: currentLang === 'en' ? 'Dashboard Overview' : 'ড্যাশবোর্ড ওভারভিউ', icon: BarChart3Icon },
               { id: 'messages', label: currentLang === 'en' ? 'Inbound Leads' : 'প্রাপ্ত বার্তা সমূহ', icon: MailIcon },
@@ -1700,7 +1683,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                 className={`flex items-center space-x-2 w-full text-left px-3.5 py-2 rounded-lg text-xs font-bold transition duration-150 shrink-0 lg:shrink-1 ${
                   activeSubTab === tab.id
                     ? 'bg-blue-600 dark:bg-orange-500 text-white shadow-sm shadow-blue-600/10'
-                    : 'text-gray-600 dark:text-neutral-300 dark:text-neutral-600 hover:bg-gray-50 dark:hover:bg-neutral-800/70 dark:bg-neutral-900'
+                    : 'text-gray-600 dark:text-neutral-300 hover:bg-gray-100 dark:hover:bg-neutral-800 dark:bg-[#1a1a1a]'
                 }`}
               >
                 <tab.icon className="h-4 w-4" />
@@ -1710,12 +1693,12 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
           </div>
 
           {/* Tab Work Desk (Right panel) */}
-          <div className="lg:col-span-9 bg-white dark:bg-[#141414] dark:bg-[#141414] border border-gray-100 dark:border-neutral-800 rounded-2xl p-5 md:p-6 shadow-sm overflow-hidden">
+          <div className="lg:col-span-9 bg-white dark:bg-[#141414] border border-gray-200 dark:border-neutral-700/80 rounded-2xl p-5 md:p-6 shadow-sm overflow-hidden">
             
             {/* T0: DASHBOARD OVERVIEW & ANALYTICS */}
             {activeSubTab === 'overview' && (
               <div id="panel-overview-desk" className="space-y-6">
-                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-gray-100 dark:border-neutral-800 pb-3">
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-gray-200 dark:border-neutral-700/80 pb-3">
                   <h3 className="text-sm font-bold text-gray-900 dark:text-white">
                     {currentLang === 'en' ? 'Enterprise Operations Hub' : 'এন্টারপ্রাইজ অপারেশনস হাব'}
                   </h3>
@@ -1727,22 +1710,22 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
 
                 {/* KPI Metrics row */}
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                  <div className="rounded-xl border border-gray-100 dark:border-neutral-800 bg-white dark:bg-[#141414] dark:bg-[#141414] p-4 space-y-1 shadow-sm">
+                  <div className="rounded-xl border border-gray-200 dark:border-neutral-700/80 bg-white dark:bg-[#141414] p-4 space-y-1 shadow-sm">
                     <span className="text-[10px] text-gray-400 dark:text-neutral-500 font-bold uppercase block">Monthly Revenue</span>
                     <span className="text-xl font-bold text-gray-900 dark:text-white font-mono">$24,500</span>
                     <span className="text-[9px] text-emerald-500 dark:text-emerald-400 font-bold flex items-center">↑ 12.4% vs last month</span>
                   </div>
-                  <div className="rounded-xl border border-gray-100 dark:border-neutral-800 bg-white dark:bg-[#141414] dark:bg-[#141414] p-4 space-y-1 shadow-sm">
+                  <div className="rounded-xl border border-gray-200 dark:border-neutral-700/80 bg-white dark:bg-[#141414] p-4 space-y-1 shadow-sm">
                     <span className="text-[10px] text-gray-400 dark:text-neutral-500 font-bold uppercase block">Lead Conversion</span>
                     <span className="text-xl font-bold text-gray-900 dark:text-white font-mono">8.42%</span>
                     <span className="text-[9px] text-emerald-500 dark:text-emerald-400 font-bold flex items-center">↑ 2.1% conversion rate</span>
                   </div>
-                  <div className="rounded-xl border border-gray-100 dark:border-neutral-800 bg-white dark:bg-[#141414] dark:bg-[#141414] p-4 space-y-1 shadow-sm">
+                  <div className="rounded-xl border border-gray-200 dark:border-neutral-700/80 bg-white dark:bg-[#141414] p-4 space-y-1 shadow-sm">
                     <span className="text-[10px] text-gray-400 dark:text-neutral-500 font-bold uppercase block">Total Leads Logged</span>
                     <span className="text-xl font-bold text-gray-900 dark:text-white font-mono">{messages.length}</span>
                     <span className="text-[9px] text-blue-500 dark:text-orange-400 font-semibold block">Real-time DB synced</span>
                   </div>
-                  <div className="rounded-xl border border-gray-100 dark:border-neutral-800 bg-white dark:bg-[#141414] dark:bg-[#141414] p-4 space-y-1 shadow-sm">
+                  <div className="rounded-xl border border-gray-200 dark:border-neutral-700/80 bg-white dark:bg-[#141414] p-4 space-y-1 shadow-sm">
                     <span className="text-[10px] text-gray-400 dark:text-neutral-500 font-bold uppercase block">Subscriber Intel</span>
                     <span className="text-xl font-bold text-gray-900 dark:text-white font-mono">{subscribers.length}</span>
                     <span className="text-[9px] text-purple-500 font-semibold block">Active newsletters</span>
@@ -1751,13 +1734,13 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
 
                 {/* Analytic Graphs mock dashboard using SVG */}
                 <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
-                  <div className="md:col-span-8 rounded-xl border border-gray-100 dark:border-neutral-800 bg-white dark:bg-[#141414] dark:bg-[#141414] p-4 md:p-5 space-y-4 shadow-sm">
+                  <div className="md:col-span-8 rounded-xl border border-gray-100 dark:border-neutral-800 bg-white dark:bg-[#141414] p-4 md:p-5 space-y-4 shadow-sm">
                     <div className="flex items-center justify-between">
                       <div>
                         <h4 className="text-xs font-bold text-gray-900 dark:text-white uppercase tracking-wide">Client Traffic & Lead Volume</h4>
                         <p className="text-[10px] text-gray-400 dark:text-neutral-500 mt-0.5">Bi-weekly analytics aggregation</p>
                       </div>
-                      <select className="text-[10px] bg-gray-50 dark:bg-neutral-900 border border-gray-100 dark:border-neutral-800 rounded px-2 py-1 font-bold">
+                      <select className="text-[10px] bg-gray-50 dark:bg-[#141414] border border-gray-100 dark:border-neutral-800 rounded px-2 py-1 font-bold">
                         <option>7 Days (Interval)</option>
                         <option>30 Days (Rolling)</option>
                         <option>Year to Date</option>
@@ -1796,7 +1779,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                     </div>
                   </div>
 
-                  <div className="md:col-span-4 rounded-xl border border-gray-100 dark:border-neutral-800 bg-white dark:bg-[#141414] dark:bg-[#141414] p-4 space-y-4 shadow-sm">
+                  <div className="md:col-span-4 rounded-xl border border-gray-100 dark:border-neutral-800 bg-white dark:bg-[#141414] p-4 space-y-4 shadow-sm">
                     <div>
                       <h4 className="text-xs font-bold text-gray-900 dark:text-white uppercase tracking-wide">Acquisition Channels</h4>
                       <p className="text-[10px] text-gray-400 dark:text-neutral-500 mt-0.5">Where inbound leads originate</p>
@@ -1810,7 +1793,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                         { label: 'Direct / Word of Mouth', pct: '9%', color: 'bg-purple-600' },
                       ].map((item, idx) => (
                         <div key={idx} className="space-y-1">
-                          <div className="flex justify-between text-[10px] font-bold text-gray-600 dark:text-neutral-300 dark:text-neutral-600">
+                          <div className="flex justify-between text-[10px] font-bold text-gray-600 dark:text-neutral-300">
                             <span>{item.label}</span>
                             <span className="font-mono">{item.pct}</span>
                           </div>
@@ -1824,18 +1807,18 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                 </div>
 
                 {/* Operations checklist and system logs */}
-                <div className="rounded-xl border border-gray-100 dark:border-neutral-800 bg-white dark:bg-[#141414] dark:bg-[#141414] p-4 space-y-3 shadow-sm">
+                <div className="rounded-xl border border-gray-100 dark:border-neutral-800 bg-white dark:bg-[#141414] p-4 space-y-3 shadow-sm">
                   <h4 className="text-xs font-bold text-gray-900 dark:text-white uppercase tracking-wide">System Audit & Status Log</h4>
                   <div className="divide-y divide-gray-50 text-[10px]">
-                    <div className="py-2.5 flex items-center justify-between text-gray-600 dark:text-neutral-300 dark:text-neutral-600">
+                    <div className="py-2.5 flex items-center justify-between text-gray-600 dark:text-neutral-300">
                       <span>Database initialized successfully (seeded default records)</span>
                       <span className="font-mono text-gray-400 dark:text-neutral-500">July 10, 2026</span>
                     </div>
-                    <div className="py-2.5 flex items-center justify-between text-gray-600 dark:text-neutral-300 dark:text-neutral-600">
+                    <div className="py-2.5 flex items-center justify-between text-gray-600 dark:text-neutral-300">
                       <span>Services module string integrity confirmed and secured</span>
                       <span className="font-mono text-emerald-500 dark:text-emerald-400 font-bold">Passed</span>
                     </div>
-                    <div className="py-2.5 flex items-center justify-between text-gray-600 dark:text-neutral-300 dark:text-neutral-600">
+                    <div className="py-2.5 flex items-center justify-between text-gray-600 dark:text-neutral-300">
                       <span>Supabase storage container connection emulation</span>
                       <span className="font-mono text-blue-500 dark:text-orange-400 font-semibold">Active</span>
                     </div>
@@ -1875,7 +1858,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                               msg.status === 'unread'
                                 ? 'bg-blue-600 dark:bg-orange-500 text-white'
                                 : msg.status === 'read'
-                                ? 'bg-gray-100 dark:bg-neutral-800 text-gray-600 dark:text-neutral-300 dark:text-neutral-600 border border-gray-200 dark:border-neutral-700'
+                                ? 'bg-gray-100 dark:bg-neutral-800 text-gray-600 dark:text-neutral-300 border border-gray-200 dark:border-neutral-700'
                                 : 'bg-emerald-100 text-emerald-700 dark:text-emerald-300'
                             }`}
                           >
@@ -1892,12 +1875,12 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                         </div>
                       </div>
 
-                      <div className="grid grid-cols-2 gap-4 text-[11px] font-semibold text-gray-500 dark:text-neutral-400 dark:text-neutral-500 bg-gray-50 dark:bg-neutral-900 p-2.5 rounded-lg">
+                      <div className="grid grid-cols-2 gap-4 text-[11px] font-semibold text-gray-500 dark:text-neutral-400 bg-gray-50 dark:bg-[#141414] p-2.5 rounded-lg">
                         <div>Desired Service: <span className="text-gray-800 dark:text-neutral-100">{msg.service}</span></div>
                         <div>Estimated Budget: <span className="text-gray-800 dark:text-neutral-100">{msg.budget}</span></div>
                       </div>
 
-                      <p className="text-gray-700 dark:text-neutral-200 leading-relaxed text-[11px] whitespace-pre-line bg-gray-50 dark:bg-neutral-900 p-2.5 rounded-lg">
+                      <p className="text-gray-700 dark:text-neutral-200 leading-relaxed text-[11px] whitespace-pre-line bg-gray-50 dark:bg-[#141414] p-2.5 rounded-lg">
                         {msg.message}
                       </p>
                       
@@ -1926,15 +1909,15 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                 <div className="overflow-x-auto border border-gray-100 dark:border-neutral-800 rounded-xl">
                   <table className="w-full text-left text-xs border-collapse">
                      <thead>
-                       <tr className="bg-gray-50 dark:bg-neutral-900 border-b border-gray-100 dark:border-neutral-800 font-bold uppercase tracking-wider text-gray-400 dark:text-neutral-500">
+                       <tr className="bg-gray-50 dark:bg-[#141414] border-b border-gray-100 dark:border-neutral-800 font-bold uppercase tracking-wider text-gray-400 dark:text-neutral-500">
                         <th className="p-4">Email Address</th>
                         <th className="p-4">Subscribed Date</th>
                         <th className="p-4 text-right">Actions</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-gray-100 dark:divide-neutral-800 text-gray-600 dark:text-neutral-300 dark:text-neutral-600">
+                    <tbody className="divide-y divide-gray-100 dark:divide-neutral-800 text-gray-600 dark:text-neutral-300">
                       {subscribers.map((sub) => (
-                        <tr key={sub.id} className="hover:bg-gray-50 dark:hover:bg-neutral-800/70 dark:bg-neutral-900">
+                        <tr key={sub.id} className="hover:bg-gray-50 dark:hover:bg-neutral-800/70 dark:bg-[#141414]">
                           <td className="p-4 font-semibold text-gray-900 dark:text-white">{sub.email}</td>
                           <td className="p-4">{new Date(sub.createdAt).toLocaleDateString()}</td>
                           <td className="p-4 text-right">
@@ -1993,14 +1976,14 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                   <form onSubmit={handleSaveBlog} className="space-y-4 text-xs">
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div className="space-y-1.5">
-                        <label className="font-semibold text-gray-500 dark:text-neutral-400 dark:text-neutral-500">Title (English)</label>
+                        <label className="font-semibold text-gray-500 dark:text-neutral-400">Title (English)</label>
                         <input
                           id="blog-form-titleEn"
                           type="text"
                           required
                           value={blogForm.titleEn}
                           onChange={(e) => setBlogForm({ ...blogForm, titleEn: e.target.value })}
-                          className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none"
+                          className="w-full rounded border border-gray-200 dark:border-neutral-600 bg-white dark:bg-neutral-900 px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:ring-2 focus:ring-orange-500/30 dark:border-neutral-600"
                         />
                       </div>
                       
@@ -2008,14 +1991,14 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div className="space-y-1.5">
-                        <label className="font-semibold text-gray-500 dark:text-neutral-400 dark:text-neutral-500">Category (English)</label>
+                        <label className="font-semibold text-gray-500 dark:text-neutral-400">Category (English)</label>
                         <input
                           id="blog-form-catEn"
                           type="text"
                           required
                           value={blogForm.categoryEn}
                           onChange={(e) => setBlogForm({ ...blogForm, categoryEn: e.target.value })}
-                          className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none"
+                          className="w-full rounded border border-gray-200 dark:border-neutral-600 bg-white dark:bg-neutral-900 px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:ring-2 focus:ring-orange-500/30 dark:border-neutral-600"
                         />
                       </div>
                       
@@ -2023,14 +2006,14 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div className="space-y-1.5">
-                        <label className="font-semibold text-gray-500 dark:text-neutral-400 dark:text-neutral-500">Excerpt (English)</label>
+                        <label className="font-semibold text-gray-500 dark:text-neutral-400">Excerpt (English)</label>
                         <textarea
                           id="blog-form-exEn"
                           rows={2}
                           required
                           value={blogForm.excerptEn}
                           onChange={(e) => setBlogForm({ ...blogForm, excerptEn: e.target.value })}
-                          className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none"
+                          className="w-full rounded border border-gray-200 dark:border-neutral-600 bg-white dark:bg-neutral-900 px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:ring-2 focus:ring-orange-500/30 dark:border-neutral-600"
                         ></textarea>
                       </div>
                       
@@ -2038,14 +2021,14 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div className="space-y-1.5">
-                        <label className="font-semibold text-gray-500 dark:text-neutral-400 dark:text-neutral-500">Content (English)</label>
+                        <label className="font-semibold text-gray-500 dark:text-neutral-400">Content (English)</label>
                         <textarea
                           id="blog-form-conEn"
                           rows={6}
                           required
                           value={blogForm.contentEn}
                           onChange={(e) => setBlogForm({ ...blogForm, contentEn: e.target.value })}
-                          className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none"
+                          className="w-full rounded border border-gray-200 dark:border-neutral-600 bg-white dark:bg-neutral-900 px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:ring-2 focus:ring-orange-500/30 dark:border-neutral-600"
                         ></textarea>
                       </div>
                       
@@ -2053,34 +2036,34 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
 
                     <div className="grid grid-cols-3 gap-4">
                       <div className="space-y-1.5">
-                        <label className="font-semibold text-gray-500 dark:text-neutral-400 dark:text-neutral-500">Author</label>
+                        <label className="font-semibold text-gray-500 dark:text-neutral-400">Author</label>
                         <input
                           id="blog-form-author"
                           type="text"
                           required
                           value={blogForm.author}
                           onChange={(e) => setBlogForm({ ...blogForm, author: e.target.value })}
-                          className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none"
+                          className="w-full rounded border border-gray-200 dark:border-neutral-600 bg-white dark:bg-neutral-900 px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:ring-2 focus:ring-orange-500/30 dark:border-neutral-600"
                         />
                       </div>
                       <div className="space-y-1.5">
-                        <label className="font-semibold text-gray-500 dark:text-neutral-400 dark:text-neutral-500">Image URL</label>
+                        <label className="font-semibold text-gray-500 dark:text-neutral-400">Image URL</label>
                         <input
                           id="blog-form-image"
                           type="text"
                           required
                           value={blogForm.image}
                           onChange={(e) => setBlogForm({ ...blogForm, image: e.target.value })}
-                          className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none"
+                          className="w-full rounded border border-gray-200 dark:border-neutral-600 bg-white dark:bg-neutral-900 px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:ring-2 focus:ring-orange-500/30 dark:border-neutral-600"
                         />
                       </div>
                       <div className="space-y-1.5">
-                        <label className="font-semibold text-gray-500 dark:text-neutral-400 dark:text-neutral-500">Publication Status</label>
+                        <label className="font-semibold text-gray-500 dark:text-neutral-400">Publication Status</label>
                         <select
                           id="blog-form-status"
                           value={blogForm.status}
                           onChange={(e) => setBlogForm({ ...blogForm, status: e.target.value as any })}
-                          className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none"
+                          className="w-full rounded border border-gray-200 dark:border-neutral-600 bg-white dark:bg-neutral-900 px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:ring-2 focus:ring-orange-500/30 dark:border-neutral-600"
                         >
                           <option value="draft">Draft (Private)</option>
                           <option value="published">Published (Live to blog tab)</option>
@@ -2096,7 +2079,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                           setIsCreatingBlog(false);
                           setEditingBlog(null);
                         }}
-                        className="rounded border border-gray-200 dark:border-neutral-700 px-4 py-2 hover:bg-gray-50 dark:hover:bg-neutral-800/70 dark:bg-neutral-900"
+                        className="rounded border border-gray-200 dark:border-neutral-700 px-4 py-2 hover:bg-gray-50 dark:hover:bg-neutral-800/70 dark:bg-[#141414]"
                       >
                         Cancel
                       </button>
@@ -2113,7 +2096,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                   <div className="overflow-x-auto border border-gray-100 dark:border-neutral-800 rounded-xl">
                     <table className="w-full text-left text-xs border-collapse">
                       <thead>
-                        <tr className="bg-gray-50 dark:bg-neutral-900 border-b border-gray-100 dark:border-neutral-800 font-bold uppercase tracking-wider text-gray-400 dark:text-neutral-500">
+                        <tr className="bg-gray-50 dark:bg-[#141414] border-b border-gray-100 dark:border-neutral-800 font-bold uppercase tracking-wider text-gray-400 dark:text-neutral-500">
                           <th className="p-4">Title (English)</th>
                           <th className="p-4">Author</th>
                           <th className="p-4">Category</th>
@@ -2121,9 +2104,9 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                           <th className="p-4 text-right">Actions</th>
                         </tr>
                       </thead>
-                      <tbody className="divide-y divide-gray-100 dark:divide-neutral-800 text-gray-600 dark:text-neutral-300 dark:text-neutral-600">
+                      <tbody className="divide-y divide-gray-100 dark:divide-neutral-800 text-gray-600 dark:text-neutral-300">
                         {blogs.map((b) => (
-                          <tr key={b.id} className="hover:bg-gray-50 dark:hover:bg-neutral-800/70 dark:bg-neutral-900">
+                          <tr key={b.id} className="hover:bg-gray-50 dark:hover:bg-neutral-800/70 dark:bg-[#141414]">
                             <td className="p-4 font-semibold text-gray-900 dark:text-white max-w-xs truncate">{b.titleEn}</td>
                             <td className="p-4">{b.author}</td>
                             <td className="p-4">{b.categoryEn}</td>
@@ -2208,7 +2191,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
 
                 {editingService ? (
                   <form onSubmit={handleSaveServiceEdit} className="space-y-6 text-xs bg-gray-50/50 p-5 rounded-2xl border border-gray-100 dark:border-neutral-800 max-h-[80vh] overflow-y-auto">
-                    <div className="flex items-center justify-between border-b border-gray-100 dark:border-neutral-800 pb-3">
+                    <div className="flex items-center justify-between border-b border-gray-200 dark:border-neutral-700/80 pb-3">
                       <h4 className="text-sm font-bold text-blue-600 dark:text-orange-400">Editing: {editingService.titleEn}</h4>
                       <span className="text-[10px] font-mono text-gray-400 dark:text-neutral-500">ID: {editingService.id}</span>
                     </div>
@@ -2218,64 +2201,64 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                       <h5 className="font-extrabold text-blue-600 dark:text-orange-400 uppercase tracking-wider text-[10px]">1. Core Details</h5>
                       <div className="grid grid-cols-2 gap-4">
                         <div className="space-y-1.5">
-                          <label className="font-semibold text-gray-500 dark:text-neutral-400 dark:text-neutral-500">Starting Price</label>
+                          <label className="font-semibold text-gray-500 dark:text-neutral-400">Starting Price</label>
                           <input
                             id="service-form-price"
                             type="text"
                             required
                             value={editingService.price}
                             onChange={(e) => setEditingService({ ...editingService, price: e.target.value })}
-                            className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
+                            className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
                           />
                         </div>
                         <div className="space-y-1.5">
-                          <label className="font-semibold text-gray-500 dark:text-neutral-400 dark:text-neutral-500">Category Group</label>
+                          <label className="font-semibold text-gray-500 dark:text-neutral-400">Category Group</label>
                           <input
                             id="service-form-cat"
                             type="text"
                             required
                             value={editingService.category}
                             onChange={(e) => setEditingService({ ...editingService, category: e.target.value })}
-                            className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
+                            className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
                           />
                         </div>
                       </div>
 
                       <div className="grid grid-cols-2 gap-4">
                         <div className="space-y-1.5">
-                          <label className="font-semibold text-gray-500 dark:text-neutral-400 dark:text-neutral-500">Slug (e.g. web-development)</label>
+                          <label className="font-semibold text-gray-500 dark:text-neutral-400">Slug (e.g. web-development)</label>
                           <input
                             id="service-form-slug"
                             type="text"
                             value={editingService.slug || ''}
                             onChange={(e) => setEditingService({ ...editingService, slug: e.target.value })}
                             placeholder="Leave blank to auto-generate from English Title"
-                            className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
+                            className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
                           />
                         </div>
                         <div className="space-y-1.5">
-                          <label className="font-semibold text-gray-500 dark:text-neutral-400 dark:text-neutral-500">Lucide Icon Name (e.g. Sparkles, Laptop, Smartphone)</label>
+                          <label className="font-semibold text-gray-500 dark:text-neutral-400">Lucide Icon Name (e.g. Sparkles, Laptop, Smartphone)</label>
                           <input
                             id="service-form-icon"
                             type="text"
                             required
                             value={editingService.icon || ''}
                             onChange={(e) => setEditingService({ ...editingService, icon: e.target.value })}
-                            className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
+                            className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
                           />
                         </div>
                       </div>
 
                       <div className="grid grid-cols-2 gap-4">
                         <div className="space-y-1.5">
-                          <label className="font-semibold text-gray-500 dark:text-neutral-400 dark:text-neutral-500">Title (English)</label>
+                          <label className="font-semibold text-gray-500 dark:text-neutral-400">Title (English)</label>
                           <input
                             id="service-form-titleEn"
                             type="text"
                             required
                             value={editingService.titleEn}
                             onChange={(e) => setEditingService({ ...editingService, titleEn: e.target.value })}
-                            className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
+                            className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
                           />
                         </div>
                         
@@ -2283,13 +2266,13 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
 
                       <div className="grid grid-cols-2 gap-4">
                         <div className="space-y-1.5">
-                          <label className="font-semibold text-gray-500 dark:text-neutral-400 dark:text-neutral-500">Description (English)</label>
+                          <label className="font-semibold text-gray-500 dark:text-neutral-400">Description (English)</label>
                           <textarea
                             id="service-form-descEn"
                             rows={3}
                             value={editingService.descriptionEn}
                             onChange={(e) => setEditingService({ ...editingService, descriptionEn: e.target.value })}
-                            className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
+                            className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
                           ></textarea>
                         </div>
                         
@@ -2302,13 +2285,13 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                       
                       <div className="grid grid-cols-2 gap-4">
                         <div className="space-y-1.5">
-                          <label className="font-semibold text-gray-500 dark:text-neutral-400 dark:text-neutral-500">Subtitle (English)</label>
+                          <label className="font-semibold text-gray-500 dark:text-neutral-400">Subtitle (English)</label>
                           <input
                             id="service-form-subEn"
                             type="text"
                             value={editingService.subtitleEn || ''}
                             onChange={(e) => setEditingService({ ...editingService, subtitleEn: e.target.value })}
-                            className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
+                            className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
                             placeholder="Hook line"
                           />
                         </div>
@@ -2317,13 +2300,13 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
 
                       <div className="grid grid-cols-2 gap-4">
                         <div className="space-y-1.5">
-                          <label className="font-semibold text-gray-500 dark:text-neutral-400 dark:text-neutral-500">Why You Need This (English)</label>
+                          <label className="font-semibold text-gray-500 dark:text-neutral-400">Why You Need This (English)</label>
                           <textarea
                             id="service-form-whyEn"
                             rows={2}
                             value={editingService.whyNeedEn || ''}
                             onChange={(e) => setEditingService({ ...editingService, whyNeedEn: e.target.value })}
-                            className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
+                            className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
                             placeholder="Core business pain point"
                           ></textarea>
                         </div>
@@ -2332,13 +2315,13 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
 
                       <div className="grid grid-cols-2 gap-4">
                         <div className="space-y-1.5">
-                          <label className="font-semibold text-gray-500 dark:text-neutral-400 dark:text-neutral-500">Who Is This For? (English)</label>
+                          <label className="font-semibold text-gray-500 dark:text-neutral-400">Who Is This For? (English)</label>
                           <textarea
                             id="service-form-forEn"
                             rows={2}
                             value={editingService.whoForEn || ''}
                             onChange={(e) => setEditingService({ ...editingService, whoForEn: e.target.value })}
-                            className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
+                            className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
                             placeholder="Target audience"
                           ></textarea>
                         </div>
@@ -2347,13 +2330,13 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
 
                       <div className="grid grid-cols-2 gap-4">
                         <div className="space-y-1.5">
-                          <label className="font-semibold text-gray-500 dark:text-neutral-400 dark:text-neutral-500">Business Impact (English)</label>
+                          <label className="font-semibold text-gray-500 dark:text-neutral-400">Business Impact (English)</label>
                           <textarea
                             id="service-form-impactEn"
                             rows={2}
                             value={editingService.businessImpactEn || ''}
                             onChange={(e) => setEditingService({ ...editingService, businessImpactEn: e.target.value })}
-                            className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
+                            className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
                             placeholder="ROI outcome"
                           ></textarea>
                         </div>
@@ -2366,26 +2349,26 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                       <h5 className="font-extrabold text-blue-600 dark:text-orange-400 uppercase tracking-wider text-[10px]">3. Arrays & Technology Stack</h5>
                       
                       <div className="space-y-1.5">
-                        <label className="font-semibold text-gray-500 dark:text-neutral-400 dark:text-neutral-500">Technology Ecosystem (Comma-separated)</label>
+                        <label className="font-semibold text-gray-500 dark:text-neutral-400">Technology Ecosystem (Comma-separated)</label>
                         <input
                           id="service-form-tech"
                           type="text"
                           value={editingService.techUsed ? editingService.techUsed.join(', ') : ''}
                           onChange={(e) => setEditingService({ ...editingService, techUsed: e.target.value.split(',').map(s => s.trim()).filter(Boolean) })}
-                          className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
+                          className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
                           placeholder="e.g. React, Node.js, Tailwind, Postgres"
                         />
                       </div>
 
                       <div className="grid grid-cols-2 gap-4">
                         <div className="space-y-1.5">
-                          <label className="font-semibold text-gray-500 dark:text-neutral-400 dark:text-neutral-500">Core Deliverables (En, Comma-separated)</label>
+                          <label className="font-semibold text-gray-500 dark:text-neutral-400">Core Deliverables (En, Comma-separated)</label>
                           <textarea
                             id="service-form-featEn"
                             rows={2}
                             value={editingService.featuresEn ? editingService.featuresEn.join(', ') : ''}
                             onChange={(e) => setEditingService({ ...editingService, featuresEn: e.target.value.split(',').map(s => s.trim()).filter(Boolean) })}
-                            className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
+                            className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
                             placeholder="Deliverable A, Deliverable B"
                           />
                         </div>
@@ -2394,13 +2377,13 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
 
                       <div className="grid grid-cols-2 gap-4">
                         <div className="space-y-1.5">
-                          <label className="font-semibold text-gray-500 dark:text-neutral-400 dark:text-neutral-500">Strategic Benefits (En, Comma-separated)</label>
+                          <label className="font-semibold text-gray-500 dark:text-neutral-400">Strategic Benefits (En, Comma-separated)</label>
                           <textarea
                             id="service-form-benEn"
                             rows={2}
                             value={editingService.benefitsEn ? editingService.benefitsEn.join(', ') : ''}
                             onChange={(e) => setEditingService({ ...editingService, benefitsEn: e.target.value.split(',').map(s => s.trim()).filter(Boolean) })}
-                            className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
+                            className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
                             placeholder="Benefit A, Benefit B"
                           />
                         </div>
@@ -2409,13 +2392,13 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
 
                       <div className="grid grid-cols-2 gap-4">
                         <div className="space-y-1.5">
-                          <label className="font-semibold text-gray-500 dark:text-neutral-400 dark:text-neutral-500">Execution Framework (En, One step per line)</label>
+                          <label className="font-semibold text-gray-500 dark:text-neutral-400">Execution Framework (En, One step per line)</label>
                           <textarea
                             id="service-form-procEn"
                             rows={3}
                             value={editingService.processEn ? editingService.processEn.join('\n') : ''}
                             onChange={(e) => setEditingService({ ...editingService, processEn: e.target.value.split('\n').map(s => s.trim()).filter(Boolean) })}
-                            className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 font-mono text-[10px] focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
+                            className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 font-mono text-[10px] focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
                             placeholder="Step 1&#10;Step 2&#10;Step 3"
                           />
                         </div>
@@ -2428,37 +2411,37 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                       <h5 className="font-extrabold text-blue-600 dark:text-orange-400 uppercase tracking-wider text-[10px]">4. Structured JSON Modules (Dynamic Lists)</h5>
                       
                       <div className="space-y-1.5">
-                        <label className="font-semibold text-gray-500 dark:text-neutral-400 dark:text-neutral-500">Sub-Services List JSON</label>
+                        <label className="font-semibold text-gray-500 dark:text-neutral-400">Sub-Services List JSON</label>
                         <textarea
                           id="service-form-subjson"
                           rows={3}
                           value={editingService.subServicesJson || '[]'}
                           onChange={(e) => setEditingService({ ...editingService, subServicesJson: e.target.value })}
-                          className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 font-mono text-[10px] focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
+                          className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 font-mono text-[10px] focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
                         />
                         <span className="text-[9px] text-gray-400 dark:text-neutral-500 block font-mono">{'Format: [{"titleEn": "...", "titleBn": "...", "descEn": "...", "descBn": "..."}]'}</span>
                       </div>
 
                       <div className="space-y-1.5">
-                        <label className="font-semibold text-gray-500 dark:text-neutral-400 dark:text-neutral-500">Pricing Tiers JSON</label>
+                        <label className="font-semibold text-gray-500 dark:text-neutral-400">Pricing Tiers JSON</label>
                         <textarea
                           id="service-form-pricejson"
                           rows={4}
                           value={editingService.pricingJson || '[]'}
                           onChange={(e) => setEditingService({ ...editingService, pricingJson: e.target.value })}
-                          className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 font-mono text-[10px] focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
+                          className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 font-mono text-[10px] focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
                         />
                         <span className="text-[9px] text-gray-400 dark:text-neutral-500 block font-mono">{'Format: [{"nameEn": "...", "nameBn": "...", "price": "...", "periodEn": "...", "periodBn": "...", "featuresEn": ["A"], "featuresBn": ["১"]}]'}</span>
                       </div>
 
                       <div className="space-y-1.5">
-                        <label className="font-semibold text-gray-500 dark:text-neutral-400 dark:text-neutral-500">Service FAQs JSON</label>
+                        <label className="font-semibold text-gray-500 dark:text-neutral-400">Service FAQs JSON</label>
                         <textarea
                           id="service-form-faqjson"
                           rows={3}
                           value={editingService.faqsJson || '[]'}
                           onChange={(e) => setEditingService({ ...editingService, faqsJson: e.target.value })}
-                          className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 font-mono text-[10px] focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
+                          className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 font-mono text-[10px] focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
                         />
                         <span className="text-[9px] text-gray-400 dark:text-neutral-500 block font-mono">{'Format: [{"questionEn": "...", "questionBn": "...", "answerEn": "...", "answerBn": "..."}]'}</span>
                       </div>
@@ -2469,7 +2452,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                         id="service-cancel-btn"
                         type="button"
                         onClick={() => setEditingService(null)}
-                        className="rounded border border-gray-200 dark:border-neutral-700 px-4 py-2 hover:bg-gray-50 dark:hover:bg-neutral-800/70 dark:bg-neutral-900 font-bold"
+                        className="rounded border border-gray-200 dark:border-neutral-700 px-4 py-2 hover:bg-gray-50 dark:hover:bg-neutral-800/70 dark:bg-[#141414] font-bold"
                       >
                         Cancel
                       </button>
@@ -2485,7 +2468,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                 ) : (
                   <div className="grid grid-cols-1 gap-4">
                     {services.map((srv) => (
-                      <div key={srv.id} className="rounded-xl border border-gray-100 dark:border-neutral-800 p-4 flex items-center justify-between text-xs hover:border-blue-500 dark:border-orange-500 transition shadow-sm bg-white dark:bg-[#141414] dark:bg-[#141414]">
+                      <div key={srv.id} className="rounded-xl border border-gray-100 dark:border-neutral-800 p-4 flex items-center justify-between text-xs hover:border-blue-500 dark:border-orange-500 transition shadow-sm bg-white dark:bg-[#141414]">
                         <div>
                           <span className="font-bold text-sm text-gray-900 dark:text-white">{srv.titleEn}</span>
                           <span className="block text-gray-400 dark:text-neutral-500 font-mono mt-1">{srv.category} • Budget starting at: <span className="text-blue-600 dark:text-orange-400 font-bold">{srv.price}</span></span>
@@ -2494,7 +2477,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                           <button
                             id={`edit-service-btn-${srv.id}`}
                             onClick={() => setEditingService(srv)}
-                            className="rounded bg-gray-50 dark:bg-neutral-900 hover:bg-gray-100 dark:hover:bg-neutral-800 dark:bg-neutral-800 px-3 py-1.5 font-semibold text-gray-700 dark:text-neutral-200 transition border border-gray-100 dark:border-neutral-800"
+                            className="rounded bg-gray-50 dark:bg-[#141414] hover:bg-gray-100 dark:hover:bg-neutral-800 dark:bg-neutral-800 px-3 py-1.5 font-semibold text-gray-700 dark:text-neutral-200 transition border border-gray-100 dark:border-neutral-800"
                           >
                             Modify details
                           </button>
@@ -2527,50 +2510,50 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                   <h4 className="font-extrabold text-blue-600 dark:text-orange-400 uppercase tracking-wider text-[10px]">A. Core Contacts</h4>
                   <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-1.5">
-                      <label className="font-semibold text-gray-500 dark:text-neutral-400 dark:text-neutral-500">Agency Name</label>
+                      <label className="font-semibold text-gray-500 dark:text-neutral-400">Agency Name</label>
                       <input
                         id="settings-form-name"
                         type="text"
                         required
                         value={settings.agencyName}
                         onChange={(e) => setSettings({ ...settings, agencyName: e.target.value })}
-                        className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
+                        className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
                       />
                     </div>
                     <div className="space-y-1.5">
-                      <label className="font-semibold text-gray-500 dark:text-neutral-400 dark:text-neutral-500">Support Corporate Email</label>
+                      <label className="font-semibold text-gray-500 dark:text-neutral-400">Support Corporate Email</label>
                       <input
                         id="settings-form-email"
                         type="email"
                         required
                         value={settings.email}
                         onChange={(e) => setSettings({ ...settings, email: e.target.value })}
-                        className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
+                        className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
                       />
                     </div>
                   </div>
 
                   <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-1.5">
-                      <label className="font-semibold text-gray-500 dark:text-neutral-400 dark:text-neutral-500">Hotline Phone</label>
+                      <label className="font-semibold text-gray-500 dark:text-neutral-400">Hotline Phone</label>
                       <input
                         id="settings-form-phone"
                         type="text"
                         required
                         value={settings.phone}
                         onChange={(e) => setSettings({ ...settings, phone: e.target.value })}
-                        className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
+                        className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
                       />
                     </div>
                     <div className="space-y-1.5">
-                      <label className="font-semibold text-gray-500 dark:text-neutral-400 dark:text-neutral-500">GPS Office Address (English)</label>
+                      <label className="font-semibold text-gray-500 dark:text-neutral-400">GPS Office Address (English)</label>
                       <input
                         id="settings-form-addressEn"
                         type="text"
                         required
                         value={settings.addressEn}
                         onChange={(e) => setSettings({ ...settings, addressEn: e.target.value })}
-                        className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
+                        className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
                       />
                     </div>
                   </div>
@@ -2581,13 +2564,13 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                   <h4 className="font-extrabold text-blue-600 dark:text-orange-400 uppercase tracking-wider text-[10px]">B. Mission & Vision Statements</h4>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="space-y-1.5">
-                      <label className="font-semibold text-gray-500 dark:text-neutral-400 dark:text-neutral-500">Core Mission (English)</label>
+                      <label className="font-semibold text-gray-500 dark:text-neutral-400">Core Mission (English)</label>
                       <textarea
                         id="settings-form-missionEn"
                         rows={3}
                         value={settings.aboutMissionEn || ''}
                         onChange={(e) => setSettings({ ...settings, aboutMissionEn: e.target.value })}
-                        className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
+                        className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
                         placeholder="Define company mission in English"
                       />
                     </div>
@@ -2596,13 +2579,13 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="space-y-1.5">
-                      <label className="font-semibold text-gray-500 dark:text-neutral-400 dark:text-neutral-500">Long-term Vision (English)</label>
+                      <label className="font-semibold text-gray-500 dark:text-neutral-400">Long-term Vision (English)</label>
                       <textarea
                         id="settings-form-visionEn"
                         rows={3}
                         value={settings.aboutVisionEn || ''}
                         onChange={(e) => setSettings({ ...settings, aboutVisionEn: e.target.value })}
-                        className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
+                        className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
                         placeholder="Define company vision in English"
                       />
                     </div>
@@ -2615,83 +2598,83 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                   <h4 className="font-extrabold text-blue-600 dark:text-orange-400 uppercase tracking-wider text-[10px]">C. Statistics Counters</h4>
                   <div className="grid grid-cols-2 md:grid-cols-6 gap-3">
                     <div className="space-y-1.5">
-                      <label className="font-semibold text-gray-500 dark:text-neutral-400 dark:text-neutral-500">Projects Done</label>
+                      <label className="font-semibold text-gray-500 dark:text-neutral-400">Projects Done</label>
                       <input
                         id="settings-form-stat-projects"
                         type="number"
                         value={settings.statsProjects || 0}
                         onChange={(e) => setSettings({ ...settings, statsProjects: parseInt(e.target.value) || 0 })}
-                        className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500 font-bold"
+                        className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500 font-bold"
                       />
                     </div>
                     <div className="space-y-1.5">
-                      <label className="font-semibold text-gray-500 dark:text-neutral-400 dark:text-neutral-500">Happy Clients</label>
+                      <label className="font-semibold text-gray-500 dark:text-neutral-400">Happy Clients</label>
                       <input
                         id="settings-form-stat-clients"
                         type="number"
                         value={settings.statsClients || 0}
                         onChange={(e) => setSettings({ ...settings, statsClients: parseInt(e.target.value) || 0 })}
-                        className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500 font-bold"
+                        className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500 font-bold"
                       />
                     </div>
                     <div className="space-y-1.5">
-                      <label className="font-semibold text-gray-500 dark:text-neutral-400 dark:text-neutral-500">Team Size</label>
+                      <label className="font-semibold text-gray-500 dark:text-neutral-400">Team Size</label>
                       <input
                         id="settings-form-stat-team"
                         type="number"
                         value={settings.statsTeam || 0}
                         onChange={(e) => setSettings({ ...settings, statsTeam: parseInt(e.target.value) || 0 })}
-                        className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500 font-bold"
+                        className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500 font-bold"
                       />
                     </div>
                     <div className="space-y-1.5">
-                      <label className="font-semibold text-gray-500 dark:text-neutral-400 dark:text-neutral-500">Experience Yrs</label>
+                      <label className="font-semibold text-gray-500 dark:text-neutral-400">Experience Yrs</label>
                       <input
                         id="settings-form-stat-exp"
                         type="number"
                         value={settings.statsExperience || 0}
                         onChange={(e) => setSettings({ ...settings, statsExperience: parseInt(e.target.value) || 0 })}
-                        className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500 font-bold"
+                        className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500 font-bold"
                       />
                     </div>
                     <div className="space-y-1.5">
-                      <label className="font-semibold text-gray-500 dark:text-neutral-400 dark:text-neutral-500">Countries Served</label>
+                      <label className="font-semibold text-gray-500 dark:text-neutral-400">Countries Served</label>
                       <input
                         id="settings-form-stat-countries"
                         type="number"
                         value={settings.statsCountries || 0}
                         onChange={(e) => setSettings({ ...settings, statsCountries: parseInt(e.target.value) || 0 })}
-                        className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500 font-bold"
+                        className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500 font-bold"
                       />
                     </div>
                     <div className="space-y-1.5">
-                      <label className="font-semibold text-gray-500 dark:text-neutral-400 dark:text-neutral-500">Satisfaction %</label>
+                      <label className="font-semibold text-gray-500 dark:text-neutral-400">Satisfaction %</label>
                       <input
                         id="settings-form-stat-satisfy"
                         type="number"
                         value={settings.statsSatisfaction || 0}
                         onChange={(e) => setSettings({ ...settings, statsSatisfaction: parseInt(e.target.value) || 0 })}
-                        className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500 font-bold"
+                        className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500 font-bold"
                       />
                     </div>
                     <div className="space-y-1.5">
-                      <label className="font-semibold text-gray-500 dark:text-neutral-400 dark:text-neutral-500">Industries Served</label>
+                      <label className="font-semibold text-gray-500 dark:text-neutral-400">Industries Served</label>
                       <input
                         id="settings-form-stat-industries"
                         type="number"
                         value={settings.statsIndustries || 0}
                         onChange={(e) => setSettings({ ...settings, statsIndustries: parseInt(e.target.value) || 0 })}
-                        className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500 font-bold"
+                        className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500 font-bold"
                       />
                     </div>
                     <div className="space-y-1.5">
-                      <label className="font-semibold text-gray-500 dark:text-neutral-400 dark:text-neutral-500">Techs Used</label>
+                      <label className="font-semibold text-gray-500 dark:text-neutral-400">Techs Used</label>
                       <input
                         id="settings-form-stat-techs"
                         type="number"
                         value={settings.statsTechs || 0}
                         onChange={(e) => setSettings({ ...settings, statsTechs: parseInt(e.target.value) || 0 })}
-                        className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500 font-bold"
+                        className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500 font-bold"
                       />
                     </div>
                   </div>
@@ -2708,8 +2691,8 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                     {/* Team squad JSON */}
                     <div className="space-y-1.5">
                       <div className="flex items-center justify-between">
-                        <label className="font-semibold text-gray-500 dark:text-neutral-400 dark:text-neutral-500">Team Members List JSON</label>
-                        <span className="text-[9px] bg-gray-50 dark:bg-neutral-900 px-1.5 py-0.5 rounded text-gray-400 dark:text-neutral-500 font-mono">
+                        <label className="font-semibold text-gray-500 dark:text-neutral-400">Team Members List JSON</label>
+                        <span className="text-[9px] bg-gray-50 dark:bg-[#141414] px-1.5 py-0.5 rounded text-gray-400 dark:text-neutral-500 font-mono">
                           Array of Name, Role, Image, Bio, Skills
                         </span>
                       </div>
@@ -2718,15 +2701,15 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                         rows={4}
                         value={settings.aboutTeamJson || '[]'}
                         onChange={(e) => setSettings({ ...settings, aboutTeamJson: e.target.value })}
-                        className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500 font-mono text-[10px]"
+                        className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500 font-mono text-[10px]"
                       />
                     </div>
 
                     {/* Timeline JSON */}
                     <div className="space-y-1.5">
                       <div className="flex items-center justify-between">
-                        <label className="font-semibold text-gray-500 dark:text-neutral-400 dark:text-neutral-500">Milestones Timeline JSON</label>
-                        <span className="text-[9px] bg-gray-50 dark:bg-neutral-900 px-1.5 py-0.5 rounded text-gray-400 dark:text-neutral-500 font-mono">
+                        <label className="font-semibold text-gray-500 dark:text-neutral-400">Milestones Timeline JSON</label>
+                        <span className="text-[9px] bg-gray-50 dark:bg-[#141414] px-1.5 py-0.5 rounded text-gray-400 dark:text-neutral-500 font-mono">
                           Array of Year, titleEn, titleBn, descEn, descBn
                         </span>
                       </div>
@@ -2735,15 +2718,15 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                         rows={4}
                         value={settings.aboutTimelineJson || '[]'}
                         onChange={(e) => setSettings({ ...settings, aboutTimelineJson: e.target.value })}
-                        className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500 font-mono text-[10px]"
+                        className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500 font-mono text-[10px]"
                       />
                     </div>
 
                     {/* Tech Stack JSON */}
                     <div className="space-y-1.5">
                       <div className="flex items-center justify-between">
-                        <label className="font-semibold text-gray-500 dark:text-neutral-400 dark:text-neutral-500">Technologies Stack JSON</label>
-                        <span className="text-[9px] bg-gray-50 dark:bg-neutral-900 px-1.5 py-0.5 rounded text-gray-400 dark:text-neutral-500 font-mono">
+                        <label className="font-semibold text-gray-500 dark:text-neutral-400">Technologies Stack JSON</label>
+                        <span className="text-[9px] bg-gray-50 dark:bg-[#141414] px-1.5 py-0.5 rounded text-gray-400 dark:text-neutral-500 font-mono">
                           Array of Name, descEn, descBn, color
                         </span>
                       </div>
@@ -2752,7 +2735,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                         rows={4}
                         value={settings.aboutTechsJson || '[]'}
                         onChange={(e) => setSettings({ ...settings, aboutTechsJson: e.target.value })}
-                        className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500 font-mono text-[10px]"
+                        className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500 font-mono text-[10px]"
                       />
                     </div>
                   </div>
@@ -2773,7 +2756,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
             {/* T6: PORTFOLIO MANAGEMENT */}
             {activeSubTab === 'portfolio' && (
               <div id="panel-portfolio-desk" className="space-y-6 text-xs">
-                <div className="flex items-center justify-between border-b border-gray-100 dark:border-neutral-800 pb-3">
+                <div className="flex items-center justify-between border-b border-gray-200 dark:border-neutral-700/80 pb-3">
                   <h3 className="text-sm font-bold text-gray-900 dark:text-white">
                     {currentLang === 'en' ? 'Manage Portfolio Items' : 'পোর্টফোলিও কেস স্টাডি পরিচালনা'}
                   </h3>
@@ -2796,19 +2779,19 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                 </div>
 
                 {isCreatingPortfolio ? (
-                  <form onSubmit={handleSavePortfolio} className="space-y-6 bg-gray-50/50 rounded-xl p-4 md:p-6 border border-gray-100 dark:border-neutral-800 max-h-[80vh] overflow-y-auto text-xs">
+                  <form onSubmit={handleSavePortfolio} className="space-y-6 bg-gray-50/50 dark:bg-neutral-800/40 rounded-xl p-4 md:p-6 border border-gray-200 dark:border-neutral-700 max-h-[80vh] overflow-y-auto text-xs">
                     
                     {/* Part 1: Project Metadata & Identity */}
-                    <div className="space-y-3 p-4 rounded-xl border border-gray-100 dark:border-neutral-800 bg-white dark:bg-[#141414] dark:bg-[#141414]">
+                    <div className="space-y-3 p-4 rounded-xl border border-gray-100 dark:border-neutral-800 bg-white dark:bg-[#141414]">
                       <h4 className="font-extrabold text-blue-600 dark:text-orange-400 uppercase tracking-wider text-[10px] mb-2 border-b border-gray-50 pb-1.5">1. Project Identity & Metadata</h4>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div className="space-y-1.5">
-                          <label className="font-semibold text-gray-500 dark:text-neutral-400 dark:text-neutral-500">Project Title (English)</label>
+                          <label className="font-semibold text-gray-500 dark:text-neutral-400">Project Title (English)</label>
                           <input
                             type="text" required
                             value={portfolioForm.titleEn || ''}
                             onChange={(e) => setPortfolioForm({ ...portfolioForm, titleEn: e.target.value })}
-                            className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
+                            className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
                           />
                         </div>
                         
@@ -2816,11 +2799,11 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
 
                       <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
                         <div className="space-y-1.5">
-                          <label className="font-semibold text-gray-500 dark:text-neutral-400 dark:text-neutral-500">Category</label>
+                          <label className="font-semibold text-gray-500 dark:text-neutral-400">Category</label>
                           <select
                             value={portfolioForm.category || 'Web Development'}
                             onChange={(e) => setPortfolioForm({ ...portfolioForm, category: e.target.value })}
-                            className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
+                            className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
                           >
                             <option>Web Development</option>
                             <option>Web App</option>
@@ -2833,69 +2816,69 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                           </select>
                         </div>
                         <div className="space-y-1.5">
-                          <label className="font-semibold text-gray-500 dark:text-neutral-400 dark:text-neutral-500">Client Name</label>
+                          <label className="font-semibold text-gray-500 dark:text-neutral-400">Client Name</label>
                           <input
                             type="text" required
                             value={portfolioForm.client || ''}
                             onChange={(e) => setPortfolioForm({ ...portfolioForm, client: e.target.value })}
-                            className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
+                            className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
                           />
                         </div>
                         <div className="space-y-1.5">
-                          <label className="font-semibold text-gray-500 dark:text-neutral-400 dark:text-neutral-500">Duration (e.g. 3 Months)</label>
+                          <label className="font-semibold text-gray-500 dark:text-neutral-400">Duration (e.g. 3 Months)</label>
                           <input
                             type="text" required
                             value={portfolioForm.duration || ''}
                             onChange={(e) => setPortfolioForm({ ...portfolioForm, duration: e.target.value })}
-                            className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
+                            className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
                           />
                         </div>
                         <div className="space-y-1.5">
-                          <label className="font-semibold text-gray-500 dark:text-neutral-400 dark:text-neutral-500">Budget (e.g. $15,000)</label>
+                          <label className="font-semibold text-gray-500 dark:text-neutral-400">Budget (e.g. $15,000)</label>
                           <input
                             type="text" required
                             value={portfolioForm.budget || ''}
                             onChange={(e) => setPortfolioForm({ ...portfolioForm, budget: e.target.value })}
-                            className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
+                            className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
                           />
                         </div>
                         <div className="space-y-1.5">
-                          <label className="font-semibold text-gray-500 dark:text-neutral-400 dark:text-neutral-500">Completion Year</label>
+                          <label className="font-semibold text-gray-500 dark:text-neutral-400">Completion Year</label>
                           <input
                             type="text" placeholder="e.g. 2026"
                             value={portfolioForm.completionYear || ''}
                             onChange={(e) => setPortfolioForm({ ...portfolioForm, completionYear: e.target.value })}
-                            className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
+                            className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
                           />
                         </div>
                       </div>
 
                       <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
                         <div className="space-y-1.5 col-span-2">
-                          <label className="font-semibold text-gray-500 dark:text-neutral-400 dark:text-neutral-500">Custom URL Slug (leave empty for automatic)</label>
+                          <label className="font-semibold text-gray-500 dark:text-neutral-400">Custom URL Slug (leave empty for automatic)</label>
                           <input
                             type="text" placeholder="e.g. aerobank-neobank-solution"
                             value={portfolioForm.slug || ''}
                             onChange={(e) => setPortfolioForm({ ...portfolioForm, slug: e.target.value })}
-                            className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
+                            className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
                           />
                         </div>
                         <div className="space-y-1.5">
-                          <label className="font-semibold text-gray-500 dark:text-neutral-400 dark:text-neutral-500">Industry (En)</label>
+                          <label className="font-semibold text-gray-500 dark:text-neutral-400">Industry (En)</label>
                           <input
                             type="text" placeholder="FinTech"
                             value={portfolioForm.industryEn || ''}
                             onChange={(e) => setPortfolioForm({ ...portfolioForm, industryEn: e.target.value })}
-                            className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
+                            className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
                           />
                         </div>
                         
                         <div className="space-y-1.5">
-                          <label className="font-semibold text-gray-500 dark:text-neutral-400 dark:text-neutral-500">Project Status</label>
+                          <label className="font-semibold text-gray-500 dark:text-neutral-400">Project Status</label>
                           <select
                             value={portfolioForm.status || 'published'}
                             onChange={(e) => setPortfolioForm({ ...portfolioForm, status: e.target.value as any })}
-                            className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500 font-bold"
+                            className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500 font-bold"
                           >
                             <option value="published">Published</option>
                             <option value="draft">Draft</option>
@@ -2905,21 +2888,21 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
 
                       <div className="grid grid-cols-2 md:grid-cols-4 gap-3 pt-2">
                         <div className="space-y-1.5 col-span-2">
-                          <label className="font-semibold text-gray-500 dark:text-neutral-400 dark:text-neutral-500">Featured Image URL</label>
+                          <label className="font-semibold text-gray-500 dark:text-neutral-400">Featured Image URL</label>
                           <input
                             type="text" required
                             value={portfolioForm.image || ''}
                             onChange={(e) => setPortfolioForm({ ...portfolioForm, image: e.target.value })}
-                            className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
+                            className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
                           />
                         </div>
                         <div className="space-y-1.5">
-                          <label className="font-semibold text-gray-500 dark:text-neutral-400 dark:text-neutral-500">Sort Order</label>
+                          <label className="font-semibold text-gray-500 dark:text-neutral-400">Sort Order</label>
                           <input
                             type="number"
                             value={portfolioForm.sortOrder || 0}
                             onChange={(e) => setPortfolioForm({ ...portfolioForm, sortOrder: parseInt(e.target.value) || 0 })}
-                            className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
+                            className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
                           />
                         </div>
                         <div className="flex items-center space-x-2 h-full pt-6">
@@ -2936,16 +2919,16 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                     </div>
 
                     {/* Part 2: Brief & Challenge Description */}
-                    <div className="space-y-3 p-4 rounded-xl border border-gray-100 dark:border-neutral-800 bg-white dark:bg-[#141414] dark:bg-[#141414]">
+                    <div className="space-y-3 p-4 rounded-xl border border-gray-100 dark:border-neutral-800 bg-white dark:bg-[#141414]">
                       <h4 className="font-extrabold text-blue-600 dark:text-orange-400 uppercase tracking-wider text-[10px] mb-2 border-b border-gray-50 pb-1.5">2. Deep Case Study Content</h4>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div className="space-y-1.5">
-                          <label className="font-semibold text-gray-500 dark:text-neutral-400 dark:text-neutral-500">Short Summary (English)</label>
+                          <label className="font-semibold text-gray-500 dark:text-neutral-400">Short Summary (English)</label>
                           <textarea
                             rows={2} required
                             value={portfolioForm.descriptionEn || ''}
                             onChange={(e) => setPortfolioForm({ ...portfolioForm, descriptionEn: e.target.value })}
-                            className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
+                            className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
                           />
                         </div>
                         
@@ -2953,12 +2936,12 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
 
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div className="space-y-1.5">
-                          <label className="font-semibold text-gray-500 dark:text-neutral-400 dark:text-neutral-500">The Challenge (English)</label>
+                          <label className="font-semibold text-gray-500 dark:text-neutral-400">The Challenge (English)</label>
                           <textarea
                             rows={3} required
                             value={portfolioForm.challengeEn || ''}
                             onChange={(e) => setPortfolioForm({ ...portfolioForm, challengeEn: e.target.value })}
-                            className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
+                            className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
                           />
                         </div>
                         
@@ -2966,12 +2949,12 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
 
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div className="space-y-1.5">
-                          <label className="font-semibold text-gray-500 dark:text-neutral-400 dark:text-neutral-500">Our Solution (English)</label>
+                          <label className="font-semibold text-gray-500 dark:text-neutral-400">Our Solution (English)</label>
                           <textarea
                             rows={3} required
                             value={portfolioForm.solutionEn || ''}
                             onChange={(e) => setPortfolioForm({ ...portfolioForm, solutionEn: e.target.value })}
-                            className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
+                            className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
                           />
                         </div>
                         
@@ -2979,12 +2962,12 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
 
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div className="space-y-1.5">
-                          <label className="font-semibold text-gray-500 dark:text-neutral-400 dark:text-neutral-500">Measurable Results (English)</label>
+                          <label className="font-semibold text-gray-500 dark:text-neutral-400">Measurable Results (English)</label>
                           <textarea
                             rows={3} required
                             value={portfolioForm.resultEn || ''}
                             onChange={(e) => setPortfolioForm({ ...portfolioForm, resultEn: e.target.value })}
-                            className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
+                            className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
                           />
                         </div>
                         
@@ -2992,13 +2975,13 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
 
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 border-t border-gray-50 pt-2">
                         <div className="space-y-1.5">
-                          <label className="font-semibold text-gray-500 dark:text-neutral-400 dark:text-neutral-500">Delivered Features (English, Comma Separated)</label>
+                          <label className="font-semibold text-gray-500 dark:text-neutral-400">Delivered Features (English, Comma Separated)</label>
                           <textarea
                             rows={2}
                             placeholder="Responsive Dashboard, Biometric Gateway, Data Pipeline"
                             value={portfolioForm.featuresEn ? portfolioForm.featuresEn.join(', ') : ''}
                             onChange={(e) => setPortfolioForm({ ...portfolioForm, featuresEn: e.target.value.split(',').map(s => s.trim()).filter(Boolean) })}
-                            className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
+                            className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
                           />
                         </div>
                         
@@ -3006,31 +2989,31 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
 
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div className="space-y-1.5">
-                          <label className="font-semibold text-gray-500 dark:text-neutral-400 dark:text-neutral-500">Image Gallery (JSON List of URLs, e.g. ["url1", "url2"])</label>
+                          <label className="font-semibold text-gray-500 dark:text-neutral-400">Image Gallery (JSON List of URLs, e.g. ["url1", "url2"])</label>
                           <textarea
                             rows={2}
                             value={portfolioForm.galleryJson || '[]'}
                             onChange={(e) => setPortfolioForm({ ...portfolioForm, galleryJson: e.target.value })}
-                            className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500 font-mono"
+                            className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500 font-mono"
                           />
                         </div>
                         <div className="grid grid-cols-2 gap-2">
                           <div className="space-y-1.5">
-                            <label className="font-semibold text-gray-500 dark:text-neutral-400 dark:text-neutral-500">Before Image (URL)</label>
+                            <label className="font-semibold text-gray-500 dark:text-neutral-400">Before Image (URL)</label>
                             <input
                               type="text"
                               value={portfolioForm.beforeImage || ''}
                               onChange={(e) => setPortfolioForm({ ...portfolioForm, beforeImage: e.target.value })}
-                              className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
+                              className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
                             />
                           </div>
                           <div className="space-y-1.5">
-                            <label className="font-semibold text-gray-500 dark:text-neutral-400 dark:text-neutral-500">After Image (URL)</label>
+                            <label className="font-semibold text-gray-500 dark:text-neutral-400">After Image (URL)</label>
                             <input
                               type="text"
                               value={portfolioForm.afterImage || ''}
                               onChange={(e) => setPortfolioForm({ ...portfolioForm, afterImage: e.target.value })}
-                              className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
+                              className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
                             />
                           </div>
                         </div>
@@ -3038,25 +3021,25 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                     </div>
 
                     {/* Part 3: Client Testimonial */}
-                    <div className="space-y-3 p-4 rounded-xl border border-gray-100 dark:border-neutral-800 bg-white dark:bg-[#141414] dark:bg-[#141414]">
+                    <div className="space-y-3 p-4 rounded-xl border border-gray-100 dark:border-neutral-800 bg-white dark:bg-[#141414]">
                       <h4 className="font-extrabold text-blue-600 dark:text-orange-400 uppercase tracking-wider text-[10px] mb-2 border-b border-gray-50 pb-1.5">3. Project-Specific Client Testimonial</h4>
                       <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
                         <div className="space-y-1.5 col-span-2">
-                          <label className="font-semibold text-gray-500 dark:text-neutral-400 dark:text-neutral-500">Client Contact Person Photo URL</label>
+                          <label className="font-semibold text-gray-500 dark:text-neutral-400">Client Contact Person Photo URL</label>
                           <input
                             type="text"
                             value={portfolioForm.clientPhoto || ''}
                             onChange={(e) => setPortfolioForm({ ...portfolioForm, clientPhoto: e.target.value })}
-                            className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
+                            className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
                           />
                         </div>
                         <div className="space-y-1.5">
-                          <label className="font-semibold text-gray-500 dark:text-neutral-400 dark:text-neutral-500">Client Role (English)</label>
+                          <label className="font-semibold text-gray-500 dark:text-neutral-400">Client Role (English)</label>
                           <input
                             type="text" placeholder="e.g. CEO of AeroBank"
                             value={portfolioForm.clientRoleEn || ''}
                             onChange={(e) => setPortfolioForm({ ...portfolioForm, clientRoleEn: e.target.value })}
-                            className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
+                            className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
                           />
                         </div>
                         
@@ -3064,12 +3047,12 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
 
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div className="space-y-1.5">
-                          <label className="font-semibold text-gray-500 dark:text-neutral-400 dark:text-neutral-500">Testimonial Feedback (English)</label>
+                          <label className="font-semibold text-gray-500 dark:text-neutral-400">Testimonial Feedback (English)</label>
                           <textarea
                             rows={2}
                             value={portfolioForm.reviewEn || ''}
                             onChange={(e) => setPortfolioForm({ ...portfolioForm, reviewEn: e.target.value })}
-                            className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
+                            className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
                           />
                         </div>
                         
@@ -3077,48 +3060,48 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
 
                       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                         <div className="space-y-1.5">
-                          <label className="font-semibold text-gray-500 dark:text-neutral-400 dark:text-neutral-500">Rating (1 to 5 Stars)</label>
+                          <label className="font-semibold text-gray-500 dark:text-neutral-400">Rating (1 to 5 Stars)</label>
                           <input
                             type="number" min="1" max="5"
                             value={portfolioForm.rating || 5}
                             onChange={(e) => setPortfolioForm({ ...portfolioForm, rating: parseInt(e.target.value) || 5 })}
-                            className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
+                            className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
                           />
                         </div>
                       </div>
                     </div>
 
                     {/* Part 4: Links, Techs & SEO */}
-                    <div className="space-y-3 p-4 rounded-xl border border-gray-100 dark:border-neutral-800 bg-white dark:bg-[#141414] dark:bg-[#141414]">
+                    <div className="space-y-3 p-4 rounded-xl border border-gray-100 dark:border-neutral-800 bg-white dark:bg-[#141414]">
                       <h4 className="font-extrabold text-blue-600 dark:text-orange-400 uppercase tracking-wider text-[10px] mb-2 border-b border-gray-50 pb-1.5">4. Integration, Links & SEO</h4>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div className="space-y-1.5">
-                          <label className="font-semibold text-gray-500 dark:text-neutral-400 dark:text-neutral-500">Technologies (Comma Separated)</label>
+                          <label className="font-semibold text-gray-500 dark:text-neutral-400">Technologies (Comma Separated)</label>
                           <input
                             type="text" required
                             placeholder="React, Next.js, Tailwind CSS, TypeScript"
                             value={portfolioForm.technologies ? portfolioForm.technologies.join(', ') : ''}
                             onChange={(e) => setPortfolioForm({ ...portfolioForm, technologies: e.target.value.split(',').map(t => t.trim()).filter(Boolean) })}
-                            className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
+                            className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
                           />
                         </div>
                         <div className="grid grid-cols-2 gap-2">
                           <div className="space-y-1.5">
-                            <label className="font-semibold text-gray-500 dark:text-neutral-400 dark:text-neutral-500">Live Project URL</label>
+                            <label className="font-semibold text-gray-500 dark:text-neutral-400">Live Project URL</label>
                             <input
                               type="text" placeholder="https://..."
                               value={portfolioForm.liveUrl || ''}
                               onChange={(e) => setPortfolioForm({ ...portfolioForm, liveUrl: e.target.value })}
-                              className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
+                              className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
                             />
                           </div>
                           <div className="space-y-1.5">
-                            <label className="font-semibold text-gray-500 dark:text-neutral-400 dark:text-neutral-500">GitHub Repository URL</label>
+                            <label className="font-semibold text-gray-500 dark:text-neutral-400">GitHub Repository URL</label>
                             <input
                               type="text" placeholder="https://github.com/..."
                               value={portfolioForm.githubUrl || ''}
                               onChange={(e) => setPortfolioForm({ ...portfolioForm, githubUrl: e.target.value })}
-                              className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
+                              className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
                             />
                           </div>
                         </div>
@@ -3126,12 +3109,12 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
 
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 border-t border-gray-50 pt-2">
                         <div className="space-y-1.5">
-                          <label className="font-semibold text-gray-500 dark:text-neutral-400 dark:text-neutral-500">SEO Title (English)</label>
+                          <label className="font-semibold text-gray-500 dark:text-neutral-400">SEO Title (English)</label>
                           <input
                             type="text" placeholder="Optimal Google title length is under 60 chars"
                             value={portfolioForm.seoTitleEn || ''}
                             onChange={(e) => setPortfolioForm({ ...portfolioForm, seoTitleEn: e.target.value })}
-                            className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
+                            className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
                           />
                         </div>
                         
@@ -3139,12 +3122,12 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
 
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div className="space-y-1.5">
-                          <label className="font-semibold text-gray-500 dark:text-neutral-400 dark:text-neutral-500">SEO Meta Description (English)</label>
+                          <label className="font-semibold text-gray-500 dark:text-neutral-400">SEO Meta Description (English)</label>
                           <textarea
                             rows={2} placeholder="Optimal Google meta description length is under 160 chars"
                             value={portfolioForm.seoDescEn || ''}
                             onChange={(e) => setPortfolioForm({ ...portfolioForm, seoDescEn: e.target.value })}
-                            className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
+                            className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
                           />
                         </div>
                         
@@ -3155,7 +3138,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                       <button
                         type="button"
                         onClick={() => setIsCreatingPortfolio(false)}
-                        className="rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-4 py-2 font-bold text-gray-600 dark:text-neutral-300 dark:text-neutral-600 hover:bg-gray-50 dark:hover:bg-neutral-800/70 dark:bg-neutral-900"
+                        className="rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-4 py-2 font-bold text-gray-600 dark:text-neutral-300 hover:bg-gray-50 dark:hover:bg-neutral-800/70 dark:bg-[#141414]"
                       >
                         Cancel
                       </button>
@@ -3170,9 +3153,9 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                 ) : (
                   <div className="grid grid-cols-1 gap-4">
                     {portfolios.map((item) => (
-                      <div key={item.id} className="rounded-xl border border-gray-100 dark:border-neutral-800 p-4 flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-sm bg-white dark:bg-[#141414] dark:bg-[#141414] hover:border-blue-500 dark:border-orange-500 transition">
+                      <div key={item.id} className="rounded-xl border border-gray-100 dark:border-neutral-800 p-4 flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-sm bg-white dark:bg-[#141414] hover:border-blue-500 dark:border-orange-500 transition">
                         <div className="flex items-center space-x-4">
-                          <img src={item.image} alt="" className="h-12 w-16 object-cover rounded bg-gray-50 dark:bg-neutral-900 border border-gray-100 dark:border-neutral-800" referrerPolicy="no-referrer" />
+                          <img src={item.image} alt="" className="h-12 w-16 object-cover rounded bg-gray-50 dark:bg-[#141414] border border-gray-100 dark:border-neutral-800" referrerPolicy="no-referrer" />
                           <div>
                             <span className="font-bold text-sm text-gray-900 dark:text-white block">{item.titleEn}</span>
                             <span className="text-gray-400 dark:text-neutral-500 font-mono text-[10px] block mt-0.5">{item.category} • Client: {item.client} • Budget: {item.budget}</span>
@@ -3181,7 +3164,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                         <div className="flex items-center space-x-2">
                           <button
                             onClick={() => handleEditPortfolioTrigger(item)}
-                            className="rounded bg-gray-50 dark:bg-neutral-900 hover:bg-gray-100 dark:hover:bg-neutral-800 dark:bg-neutral-800 px-3 py-1.5 font-semibold text-gray-700 dark:text-neutral-200 border border-gray-100 dark:border-neutral-800 transition"
+                            className="rounded bg-gray-50 dark:bg-[#141414] hover:bg-gray-100 dark:hover:bg-neutral-800 dark:bg-neutral-800 px-3 py-1.5 font-semibold text-gray-700 dark:text-neutral-200 border border-gray-100 dark:border-neutral-800 transition"
                           >
                             Edit
                           </button>
@@ -3207,7 +3190,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
               <div id="panel-pricing-desk" className="space-y-6 text-xs">
                 
                 {/* Secondary navigation for pricing entities */}
-                <div className="flex flex-wrap items-center gap-2 border-b border-gray-100 dark:border-neutral-800 pb-3">
+                <div className="flex flex-wrap items-center gap-2 border-b border-gray-200 dark:border-neutral-700/80 pb-3">
                   {[
                     { id: 'packages', label: currentLang === 'en' ? 'Core Packages' : 'মূল প্যাকেজসমূহ', count: pricingPackages.length },
                     { id: 'addons', label: currentLang === 'en' ? 'Budget Add-ons' : 'বাজেট অ্যাড-অন', count: pricingAddons.length },
@@ -3230,12 +3213,12 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                       className={`px-3.5 py-2 rounded-lg font-bold transition flex items-center space-x-1.5 ${
                         pricingSubTab === subTab.id
                           ? 'bg-blue-50 dark:bg-orange-500/10 text-blue-600 dark:text-orange-400 border border-blue-100 dark:border-orange-500/20'
-                          : 'text-gray-500 dark:text-neutral-400 dark:text-neutral-500 hover:bg-gray-50 dark:hover:bg-neutral-800/70 dark:bg-neutral-900'
+                          : 'text-gray-500 dark:text-neutral-400 hover:bg-gray-50 dark:hover:bg-neutral-800/70 dark:bg-[#141414]'
                       }`}
                     >
                       <span>{subTab.label}</span>
                       {subTab.count !== undefined && (
-                        <span className={`text-[9px] px-1.5 py-0.5 rounded-full font-bold ${subTab.badgeColor || 'bg-gray-100 dark:bg-neutral-800 text-gray-600 dark:text-neutral-300 dark:text-neutral-600'}`}>
+                        <span className={`text-[9px] px-1.5 py-0.5 rounded-full font-bold ${subTab.badgeColor || 'bg-gray-100 dark:bg-neutral-800 text-gray-600 dark:text-neutral-300'}`}>
                           {subTab.count}
                         </span>
                       )}
@@ -3276,7 +3259,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                     </div>
 
                     {isCreatingPricingPackage ? (
-                      <form onSubmit={handleSavePricingPackage} className="space-y-4 bg-gray-50/50 rounded-xl p-4 md:p-5 border border-gray-100 dark:border-neutral-800 max-h-[75vh] overflow-y-auto">
+                      <form onSubmit={handleSavePricingPackage} className="space-y-4 bg-gray-50/50 dark:bg-neutral-800/40 rounded-xl p-4 md:p-5 border border-gray-200 dark:border-neutral-700 max-h-[75vh] overflow-y-auto">
                         <div className="flex items-center justify-between border-b border-gray-100 dark:border-neutral-800 pb-2">
                           <span className="font-extrabold text-blue-600 dark:text-orange-400 uppercase tracking-wider text-[10px]">
                             {editingPricingPackage ? 'Modify Package Details' : 'Create New Service Package'}
@@ -3285,12 +3268,12 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                           <div className="space-y-1.5">
-                            <label className="font-semibold text-gray-500 dark:text-neutral-400 dark:text-neutral-500">Package Name (English)</label>
+                            <label className="font-semibold text-gray-500 dark:text-neutral-400">Package Name (English)</label>
                             <input
                               type="text" required
                               value={pricingPackageForm.nameEn || ''}
                               onChange={(e) => setPricingPackageForm({ ...pricingPackageForm, nameEn: e.target.value })}
-                              className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none"
+                              className="w-full rounded border border-gray-200 dark:border-neutral-600 bg-white dark:bg-neutral-900 px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:ring-2 focus:ring-orange-500/30 dark:border-neutral-600"
                               placeholder="e.g. Startup Launchpad"
                             />
                           </div>
@@ -3299,60 +3282,60 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
 
                         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                           <div className="space-y-1.5">
-                            <label className="font-semibold text-gray-500 dark:text-neutral-400 dark:text-neutral-500">Price (Monthly USD/BDT)</label>
+                            <label className="font-semibold text-gray-500 dark:text-neutral-400">Price (Monthly USD/BDT)</label>
                             <input
                               type="number" required
                               value={pricingPackageForm.priceMonthly || 0}
                               onChange={(e) => setPricingPackageForm({ ...pricingPackageForm, priceMonthly: Number(e.target.value) || 0 })}
-                              className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none"
+                              className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none"
                             />
                           </div>
                           <div className="space-y-1.5">
-                            <label className="font-semibold text-gray-500 dark:text-neutral-400 dark:text-neutral-500">Price (Yearly USD/BDT)</label>
+                            <label className="font-semibold text-gray-500 dark:text-neutral-400">Price (Yearly USD/BDT)</label>
                             <input
                               type="number" required
                               value={pricingPackageForm.priceYearly || 0}
                               onChange={(e) => setPricingPackageForm({ ...pricingPackageForm, priceYearly: Number(e.target.value) || 0 })}
-                              className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none"
+                              className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none"
                             />
                           </div>
                           <div className="space-y-1.5">
-                            <label className="font-semibold text-gray-500 dark:text-neutral-400 dark:text-neutral-500">Package Category</label>
+                            <label className="font-semibold text-gray-500 dark:text-neutral-400">Package Category</label>
                             <select
                               value={pricingPackageForm.category || 'Agency Packages'}
                               onChange={(e) => setPricingPackageForm({ ...pricingPackageForm, category: e.target.value })}
-                              className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none"
+                              className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none"
                             >
                               <option>Agency Packages</option>
                               <option>Web Development</option>
-                              <option>Web App</option>
+                              <option>Mobile App</option>
                               <option>UI/UX Design</option>
                               <option>Graphic Design</option>
                               <option>Video Editing</option>
                               <option>Digital Marketing</option>
-                              <option>AI Automation & Agent</option>
+                              <option>AI Automation</option>
                               <option>SEO</option>
                             </select>
                           </div>
                           <div className="space-y-1.5">
-                            <label className="font-semibold text-gray-500 dark:text-neutral-400 dark:text-neutral-500">Sort Order</label>
+                            <label className="font-semibold text-gray-500 dark:text-neutral-400">Sort Order</label>
                             <input
                               type="number"
                               value={pricingPackageForm.sortOrder || 0}
                               onChange={(e) => setPricingPackageForm({ ...pricingPackageForm, sortOrder: Number(e.target.value) || 0 })}
-                              className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none"
+                              className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none"
                             />
                           </div>
                         </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                           <div className="space-y-1.5">
-                            <label className="font-semibold text-gray-500 dark:text-neutral-400 dark:text-neutral-500">Description (English)</label>
+                            <label className="font-semibold text-gray-500 dark:text-neutral-400">Description (English)</label>
                             <textarea
                               rows={2} required
                               value={pricingPackageForm.descriptionEn || ''}
                               onChange={(e) => setPricingPackageForm({ ...pricingPackageForm, descriptionEn: e.target.value })}
-                              className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none"
+                              className="w-full rounded border border-gray-200 dark:border-neutral-600 bg-white dark:bg-neutral-900 px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:ring-2 focus:ring-orange-500/30 dark:border-neutral-600"
                               placeholder="Describe core target demographic and value"
                             />
                           </div>
@@ -3361,12 +3344,12 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                           <div className="space-y-1.5">
-                            <label className="font-semibold text-gray-500 dark:text-neutral-400 dark:text-neutral-500">Included Features (English - Comma Separated)</label>
+                            <label className="font-semibold text-gray-500 dark:text-neutral-400">Included Features (English - Comma Separated)</label>
                             <textarea
                               rows={3} required
                               value={pricingPackageForm.featuresEn ? pricingPackageForm.featuresEn.join(', ') : ''}
                               onChange={(e) => setPricingPackageForm({ ...pricingPackageForm, featuresEn: e.target.value.split(',').map(f => f.trim()).filter(Boolean) })}
-                              className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none"
+                              className="w-full rounded border border-gray-200 dark:border-neutral-600 bg-white dark:bg-neutral-900 px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:ring-2 focus:ring-orange-500/30 dark:border-neutral-600"
                               placeholder="Dynamic Dashboard, 3 Figma Prototypes, API Gateway Setup"
                             />
                           </div>
@@ -3375,12 +3358,12 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                           <div className="space-y-1.5">
-                            <label className="font-semibold text-gray-500 dark:text-neutral-400 dark:text-neutral-500">NOT Included Features (English - Comma Separated)</label>
+                            <label className="font-semibold text-gray-500 dark:text-neutral-400">NOT Included Features (English - Comma Separated)</label>
                             <textarea
                               rows={2}
                               value={pricingPackageForm.notIncludedEn ? pricingPackageForm.notIncludedEn.join(', ') : ''}
                               onChange={(e) => setPricingPackageForm({ ...pricingPackageForm, notIncludedEn: e.target.value.split(',').map(f => f.trim()).filter(Boolean) })}
-                              className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none"
+                              className="w-full rounded border border-gray-200 dark:border-neutral-600 bg-white dark:bg-neutral-900 px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:ring-2 focus:ring-orange-500/30 dark:border-neutral-600"
                               placeholder="Custom CMS, Native Apps integration"
                             />
                           </div>
@@ -3389,23 +3372,23 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
 
                         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                           <div className="space-y-1.5">
-                            <label className="font-semibold text-gray-500 dark:text-neutral-400 dark:text-neutral-500">CTA Text (English)</label>
+                            <label className="font-semibold text-gray-500 dark:text-neutral-400">CTA Text (English)</label>
                             <input
                               type="text" required
                               value={pricingPackageForm.ctaEn || 'Get Started'}
                               onChange={(e) => setPricingPackageForm({ ...pricingPackageForm, ctaEn: e.target.value })}
-                              className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none"
+                              className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none"
                             />
                           </div>
                           
                           <div className="space-y-1.5">
-                            <label className="font-semibold text-gray-500 dark:text-neutral-400 dark:text-neutral-500">Promo Badge (English)</label>
+                            <label className="font-semibold text-gray-500 dark:text-neutral-400">Promo Badge (English)</label>
                             <input
                               type="text"
                               placeholder="e.g. Popular"
                               value={pricingPackageForm.badgeEn || ''}
                               onChange={(e) => setPricingPackageForm({ ...pricingPackageForm, badgeEn: e.target.value })}
-                              className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none"
+                              className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none"
                             />
                           </div>
                           
@@ -3419,7 +3402,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                               onChange={(e) => setPricingPackageForm({ ...pricingPackageForm, popular: e.target.checked })}
                               className="h-4 w-4 rounded border-gray-300 dark:border-neutral-600 text-blue-600 dark:text-orange-400 focus:ring-blue-500 dark:focus:ring-orange-500"
                             />
-                            <label htmlFor="pkg-popular" className="font-bold text-gray-600 dark:text-neutral-300 dark:text-neutral-600">Mark as Popular (Visual Highlight)</label>
+                            <label htmlFor="pkg-popular" className="font-bold text-gray-600 dark:text-neutral-300">Mark as Popular (Visual Highlight)</label>
                           </div>
                           <div className="flex items-center space-x-2">
                             <input
@@ -3428,7 +3411,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                               onChange={(e) => setPricingPackageForm({ ...pricingPackageForm, enabled: e.target.checked })}
                               className="h-4 w-4 rounded border-gray-300 dark:border-neutral-600 text-blue-600 dark:text-orange-400 focus:ring-blue-500 dark:focus:ring-orange-500"
                             />
-                            <label htmlFor="pkg-enabled" className="font-bold text-gray-600 dark:text-neutral-300 dark:text-neutral-600">Publish/Enable Plan</label>
+                            <label htmlFor="pkg-enabled" className="font-bold text-gray-600 dark:text-neutral-300">Publish/Enable Plan</label>
                           </div>
                           <div className="space-y-1.5">
                             <input
@@ -3436,7 +3419,34 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                               placeholder="Supported Technologies comma separated"
                               value={pricingPackageForm.techEn || ''}
                               onChange={(e) => setPricingPackageForm({ ...pricingPackageForm, techEn: e.target.value })}
-                              className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2 py-1.5 text-gray-800 dark:text-neutral-100 focus:outline-none"
+                              className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2 py-1.5 text-gray-800 dark:text-neutral-100 focus:outline-none"
+                            />
+                          </div>
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                          <div className="space-y-1.5">
+                            <label className="font-semibold text-gray-500 dark:text-neutral-400 text-xs">Delivery Time (EN)</label>
+                            <input type="text" placeholder="e.g. 7 Days Delivery"
+                              value={pricingPackageForm.deliveryTimeEn || ''}
+                              onChange={(e) => setPricingPackageForm({ ...pricingPackageForm, deliveryTimeEn: e.target.value })}
+                              className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2 py-1.5 text-gray-800 dark:text-neutral-100 focus:outline-none text-xs"
+                            />
+                          </div>
+                          <div className="space-y-1.5">
+                            <label className="font-semibold text-gray-500 dark:text-neutral-400 text-xs">Support Period (EN)</label>
+                            <input type="text" placeholder="e.g. 3 Months Support"
+                              value={pricingPackageForm.supportPeriodEn || ''}
+                              onChange={(e) => setPricingPackageForm({ ...pricingPackageForm, supportPeriodEn: e.target.value })}
+                              className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2 py-1.5 text-gray-800 dark:text-neutral-100 focus:outline-none text-xs"
+                            />
+                          </div>
+                          <div className="space-y-1.5">
+                            <label className="font-semibold text-gray-500 dark:text-neutral-400 text-xs">Perfect For (EN)</label>
+                            <input type="text" placeholder="e.g. Startups & Personal Brands"
+                              value={pricingPackageForm.perfectForEn || ''}
+                              onChange={(e) => setPricingPackageForm({ ...pricingPackageForm, perfectForEn: e.target.value })}
+                              className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2 py-1.5 text-gray-800 dark:text-neutral-100 focus:outline-none text-xs"
                             />
                           </div>
                         </div>
@@ -3445,7 +3455,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                           <button
                             type="button"
                             onClick={() => setIsCreatingPricingPackage(false)}
-                            className="rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-3.5 py-1.5 font-bold text-gray-600 dark:text-neutral-300 dark:text-neutral-600 hover:bg-gray-50 dark:hover:bg-neutral-800/70 dark:bg-neutral-900"
+                            className="rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-3.5 py-1.5 font-bold text-gray-600 dark:text-neutral-300 hover:bg-gray-50 dark:hover:bg-neutral-800/70 dark:bg-[#141414]"
                           >
                             Cancel
                           </button>
@@ -3460,7 +3470,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                     ) : (
                       <div className="grid grid-cols-1 gap-3">
                         {pricingPackages.map((pkg) => (
-                          <div key={pkg.id} className="rounded-xl border border-gray-100 dark:border-neutral-800 p-4 flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-sm bg-white dark:bg-[#141414] dark:bg-[#141414] hover:border-blue-500 dark:border-orange-500 transition">
+                          <div key={pkg.id} className="rounded-xl border border-gray-100 dark:border-neutral-800 p-4 flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-sm bg-white dark:bg-[#141414] hover:border-blue-500 dark:border-orange-500 transition">
                             <div>
                               <div className="flex items-center space-x-2">
                                 <span className="font-bold text-sm text-gray-900 dark:text-white">{pkg.nameEn}</span>
@@ -3475,7 +3485,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                             <div className="flex items-center space-x-2">
                               <button
                                 onClick={() => handleEditPricingPackageTrigger(pkg)}
-                                className="rounded bg-gray-50 dark:bg-neutral-900 hover:bg-gray-100 dark:hover:bg-neutral-800 dark:bg-neutral-800 px-3 py-1.5 font-semibold text-gray-700 dark:text-neutral-200 border border-gray-100 dark:border-neutral-800 transition"
+                                className="rounded bg-gray-50 dark:bg-[#141414] hover:bg-gray-100 dark:hover:bg-neutral-800 dark:bg-neutral-800 px-3 py-1.5 font-semibold text-gray-700 dark:text-neutral-200 border border-gray-100 dark:border-neutral-800 transition"
                               >
                                 Edit Details
                               </button>
@@ -3521,15 +3531,15 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                     </div>
 
                     {isCreatingPricingAddon ? (
-                      <form onSubmit={handleSavePricingAddon} className="space-y-4 bg-gray-50/50 rounded-xl p-4 border border-gray-100 dark:border-neutral-800">
+                      <form onSubmit={handleSavePricingAddon} className="space-y-4 bg-gray-50/50 dark:bg-neutral-800/40 rounded-xl p-4 border border-gray-200 dark:border-neutral-700">
                         <div className="grid grid-cols-2 gap-4">
                           <div className="space-y-1.5">
-                            <label className="font-semibold text-gray-500 dark:text-neutral-400 dark:text-neutral-500">Add-on Name (English)</label>
+                            <label className="font-semibold text-gray-500 dark:text-neutral-400">Add-on Name (English)</label>
                             <input
                               type="text" required
                               value={pricingAddonForm.nameEn || ''}
                               onChange={(e) => setPricingAddonForm({ ...pricingAddonForm, nameEn: e.target.value })}
-                              className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none"
+                              className="w-full rounded border border-gray-200 dark:border-neutral-600 bg-white dark:bg-neutral-900 px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:ring-2 focus:ring-orange-500/30 dark:border-neutral-600"
                               placeholder="e.g. SEO Launch Campaign"
                             />
                           </div>
@@ -3538,22 +3548,22 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
 
                         <div className="grid grid-cols-2 gap-4">
                           <div className="space-y-1.5">
-                            <label className="font-semibold text-gray-500 dark:text-neutral-400 dark:text-neutral-500">Add-on Price Label (e.g. $499 or $100/hr)</label>
+                            <label className="font-semibold text-gray-500 dark:text-neutral-400">Add-on Price Label (e.g. $499 or $100/hr)</label>
                             <input
                               type="text" required
                               value={pricingAddonForm.price || ''}
                               onChange={(e) => setPricingAddonForm({ ...pricingAddonForm, price: e.target.value })}
-                              className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none"
+                              className="w-full rounded border border-gray-200 dark:border-neutral-600 bg-white dark:bg-neutral-900 px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:ring-2 focus:ring-orange-500/30 dark:border-neutral-600"
                               placeholder="e.g. $750 / launch"
                             />
                           </div>
                           <div className="space-y-1.5">
-                            <label className="font-semibold text-gray-500 dark:text-neutral-400 dark:text-neutral-500">Service Category Tag</label>
+                            <label className="font-semibold text-gray-500 dark:text-neutral-400">Service Category Tag</label>
                             <input
                               type="text" required
                               value={pricingAddonForm.category || 'Core Service'}
                               onChange={(e) => setPricingAddonForm({ ...pricingAddonForm, category: e.target.value })}
-                              className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none"
+                              className="w-full rounded border border-gray-200 dark:border-neutral-600 bg-white dark:bg-neutral-900 px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:ring-2 focus:ring-orange-500/30 dark:border-neutral-600"
                               placeholder="e.g. Marketing, Development, Security"
                             />
                           </div>
@@ -3561,12 +3571,12 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                           <div className="space-y-1.5">
-                            <label className="font-semibold text-gray-500 dark:text-neutral-400 dark:text-neutral-500">Description (English)</label>
+                            <label className="font-semibold text-gray-500 dark:text-neutral-400">Description (English)</label>
                             <textarea
                               rows={2} required
                               value={pricingAddonForm.descriptionEn || ''}
                               onChange={(e) => setPricingAddonForm({ ...pricingAddonForm, descriptionEn: e.target.value })}
-                              className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none"
+                              className="w-full rounded border border-gray-200 dark:border-neutral-600 bg-white dark:bg-neutral-900 px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:ring-2 focus:ring-orange-500/30 dark:border-neutral-600"
                               placeholder="Describe what the client receives upon adding this addon"
                             />
                           </div>
@@ -3580,14 +3590,14 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                             onChange={(e) => setPricingAddonForm({ ...pricingAddonForm, enabled: e.target.checked })}
                             className="h-4 w-4 rounded border-gray-300 dark:border-neutral-600 text-blue-600 dark:text-orange-400 focus:ring-blue-500 dark:focus:ring-orange-500"
                           />
-                          <label htmlFor="addon-enabled" className="font-bold text-gray-600 dark:text-neutral-300 dark:text-neutral-600">Add-on Active / Enabled for Estimator Calculator</label>
+                          <label htmlFor="addon-enabled" className="font-bold text-gray-600 dark:text-neutral-300">Add-on Active / Enabled for Estimator Calculator</label>
                         </div>
 
                         <div className="flex justify-end space-x-2 pt-2 border-t border-gray-100 dark:border-neutral-800">
                           <button
                             type="button"
                             onClick={() => setIsCreatingPricingAddon(false)}
-                            className="rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-3.5 py-1.5 font-bold text-gray-600 dark:text-neutral-300 dark:text-neutral-600 hover:bg-gray-50 dark:hover:bg-neutral-800/70 dark:bg-neutral-900"
+                            className="rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-3.5 py-1.5 font-bold text-gray-600 dark:text-neutral-300 hover:bg-gray-50 dark:hover:bg-neutral-800/70 dark:bg-[#141414]"
                           >
                             Cancel
                           </button>
@@ -3602,7 +3612,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                     ) : (
                       <div className="grid grid-cols-1 gap-3">
                         {pricingAddons.map((addon) => (
-                          <div key={addon.id} className="rounded-xl border border-gray-100 dark:border-neutral-800 p-4 flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-sm bg-white dark:bg-[#141414] dark:bg-[#141414] hover:border-blue-500 dark:border-orange-500 transition">
+                          <div key={addon.id} className="rounded-xl border border-gray-100 dark:border-neutral-800 p-4 flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-sm bg-white dark:bg-[#141414] hover:border-blue-500 dark:border-orange-500 transition">
                             <div>
                               <div className="flex items-center space-x-2">
                                 <span className="font-bold text-sm text-gray-900 dark:text-white">{addon.nameEn}</span>
@@ -3616,7 +3626,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                             <div className="flex items-center space-x-2">
                               <button
                                 onClick={() => handleEditPricingAddonTrigger(addon)}
-                                className="rounded bg-gray-50 dark:bg-neutral-900 hover:bg-gray-100 dark:hover:bg-neutral-800 dark:bg-neutral-800 px-3 py-1.5 font-semibold text-gray-700 dark:text-neutral-200 border border-gray-100 dark:border-neutral-800 transition"
+                                className="rounded bg-gray-50 dark:bg-[#141414] hover:bg-gray-100 dark:hover:bg-neutral-800 dark:bg-neutral-800 px-3 py-1.5 font-semibold text-gray-700 dark:text-neutral-200 border border-gray-100 dark:border-neutral-800 transition"
                               >
                                 Edit
                               </button>
@@ -3667,15 +3677,15 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                     </div>
 
                     {isCreatingPricingComparison ? (
-                      <form onSubmit={handleSavePricingComparison} className="space-y-4 bg-gray-50/50 rounded-xl p-4 border border-gray-100 dark:border-neutral-800 max-h-[75vh] overflow-y-auto">
+                      <form onSubmit={handleSavePricingComparison} className="space-y-4 bg-gray-50/50 dark:bg-neutral-800/40 rounded-xl p-4 border border-gray-200 dark:border-neutral-700 max-h-[75vh] overflow-y-auto">
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                           <div className="space-y-1.5">
-                            <label className="font-semibold text-gray-500 dark:text-neutral-400 dark:text-neutral-500">Group Category (English)</label>
+                            <label className="font-semibold text-gray-500 dark:text-neutral-400">Group Category (English)</label>
                             <input
                               type="text" required
                               value={pricingComparisonForm.categoryEn || ''}
                               onChange={(e) => setPricingComparisonForm({ ...pricingComparisonForm, categoryEn: e.target.value })}
-                              className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none"
+                              className="w-full rounded border border-gray-200 dark:border-neutral-600 bg-white dark:bg-neutral-900 px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:ring-2 focus:ring-orange-500/30 dark:border-neutral-600"
                               placeholder="e.g. Core Features, Support, Code Quality"
                             />
                           </div>
@@ -3684,26 +3694,26 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                           <div className="space-y-1.5">
-                            <label className="font-semibold text-gray-500 dark:text-neutral-400 dark:text-neutral-500">Feature Name (English)</label>
+                            <label className="font-semibold text-gray-500 dark:text-neutral-400">Feature Name (English)</label>
                             <input
                               type="text" required
                               value={pricingComparisonForm.featureEn || ''}
                               onChange={(e) => setPricingComparisonForm({ ...pricingComparisonForm, featureEn: e.target.value })}
-                              className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none"
+                              className="w-full rounded border border-gray-200 dark:border-neutral-600 bg-white dark:bg-neutral-900 px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:ring-2 focus:ring-orange-500/30 dark:border-neutral-600"
                               placeholder="e.g. Slack Direct Support"
                             />
                           </div>
                           
                         </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-3 bg-white dark:bg-[#141414] dark:bg-[#141414] p-3 rounded-xl border border-gray-100 dark:border-neutral-800">
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-3 bg-white dark:bg-[#141414] p-3 rounded-xl border border-gray-100 dark:border-neutral-800">
                           <div className="space-y-2 border-r border-gray-50 pr-2">
                             <h5 className="font-extrabold text-blue-600 dark:text-orange-400 text-[10px]">1. Starter Level Specs</h5>
                             <input
                               type="text" required placeholder="Starter En (e.g. Email Only)"
                               value={pricingComparisonForm.starterEn || ''}
                               onChange={(e) => setPricingComparisonForm({ ...pricingComparisonForm, starterEn: e.target.value })}
-                              className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-gray-50 dark:bg-neutral-900 px-2 py-1.5 text-gray-800 dark:text-neutral-100 focus:outline-none"
+                              className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-gray-50 dark:bg-[#141414] px-2 py-1.5 text-gray-800 dark:text-neutral-100 focus:outline-none"
                             />
                             
                           </div>
@@ -3714,7 +3724,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                               type="text" required placeholder="Business En (e.g. Next-day Reply)"
                               value={pricingComparisonForm.businessEn || ''}
                               onChange={(e) => setPricingComparisonForm({ ...pricingComparisonForm, businessEn: e.target.value })}
-                              className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-gray-50 dark:bg-neutral-900 px-2 py-1.5 text-gray-800 dark:text-neutral-100 focus:outline-none"
+                              className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-gray-50 dark:bg-[#141414] px-2 py-1.5 text-gray-800 dark:text-neutral-100 focus:outline-none"
                             />
                             
                           </div>
@@ -3725,7 +3735,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                               type="text" required placeholder="Enterprise En (e.g. Instant 24/7)"
                               value={pricingComparisonForm.enterpriseEn || ''}
                               onChange={(e) => setPricingComparisonForm({ ...pricingComparisonForm, enterpriseEn: e.target.value })}
-                              className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-gray-50 dark:bg-neutral-900 px-2 py-1.5 text-gray-800 dark:text-neutral-100 focus:outline-none"
+                              className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-gray-50 dark:bg-[#141414] px-2 py-1.5 text-gray-800 dark:text-neutral-100 focus:outline-none"
                             />
                             
                           </div>
@@ -3733,12 +3743,12 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
 
                         <div className="grid grid-cols-2 gap-4">
                           <div className="space-y-1.5">
-                            <label className="font-semibold text-gray-500 dark:text-neutral-400 dark:text-neutral-500">Global Sort Order</label>
+                            <label className="font-semibold text-gray-500 dark:text-neutral-400">Global Sort Order</label>
                             <input
                               type="number"
                               value={pricingComparisonForm.sortOrder || 0}
                               onChange={(e) => setPricingComparisonForm({ ...pricingComparisonForm, sortOrder: Number(e.target.value) || 0 })}
-                              className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none"
+                              className="w-full rounded border border-gray-200 dark:border-neutral-600 bg-white dark:bg-neutral-900 px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:ring-2 focus:ring-orange-500/30 dark:border-neutral-600"
                             />
                           </div>
                           <div className="pt-6 text-gray-400 dark:text-neutral-500 text-[10px]">
@@ -3750,7 +3760,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                           <button
                             type="button"
                             onClick={() => setIsCreatingPricingComparison(false)}
-                            className="rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-3.5 py-1.5 font-bold text-gray-600 dark:text-neutral-300 dark:text-neutral-600 hover:bg-gray-50 dark:hover:bg-neutral-800/70 dark:bg-neutral-900"
+                            className="rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-3.5 py-1.5 font-bold text-gray-600 dark:text-neutral-300 hover:bg-gray-50 dark:hover:bg-neutral-800/70 dark:bg-[#141414]"
                           >
                             Cancel
                           </button>
@@ -3765,20 +3775,20 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                     ) : (
                       <div className="grid grid-cols-1 gap-3">
                         {pricingComparisons.map((comp) => (
-                          <div key={comp.id} className="rounded-xl border border-gray-100 dark:border-neutral-800 p-4 flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-sm bg-white dark:bg-[#141414] dark:bg-[#141414] hover:border-blue-500 dark:border-orange-500 transition">
+                          <div key={comp.id} className="rounded-xl border border-gray-100 dark:border-neutral-800 p-4 flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-sm bg-white dark:bg-[#141414] hover:border-blue-500 dark:border-orange-500 transition">
                             <div>
                               <div className="flex items-center space-x-2">
                                 <span className="font-bold text-sm text-gray-900 dark:text-white">{comp.featureEn}</span>
                                 <span className="text-[9px] bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-neutral-200 px-2 py-0.5 rounded font-extrabold uppercase">{comp.categoryEn}</span>
                               </div>
                               <span className="text-gray-400 dark:text-neutral-500 font-mono text-[10px] block mt-1">
-                                Starter: <span className="text-gray-600 dark:text-neutral-300 dark:text-neutral-600 font-semibold">{comp.starterEn}</span> • Business: <span className="text-gray-600 dark:text-neutral-300 dark:text-neutral-600 font-semibold">{comp.businessEn}</span> • Enterprise: <span className="text-gray-600 dark:text-neutral-300 dark:text-neutral-600 font-semibold">{comp.enterpriseEn}</span>
+                                Starter: <span className="text-gray-600 dark:text-neutral-300 font-semibold">{comp.starterEn}</span> • Business: <span className="text-gray-600 dark:text-neutral-300 font-semibold">{comp.businessEn}</span> • Enterprise: <span className="text-gray-600 dark:text-neutral-300 font-semibold">{comp.enterpriseEn}</span>
                               </span>
                             </div>
                             <div className="flex items-center space-x-2">
                               <button
                                 onClick={() => handleEditPricingComparisonTrigger(comp)}
-                                className="rounded bg-gray-50 dark:bg-neutral-900 hover:bg-gray-100 dark:hover:bg-neutral-800 dark:bg-neutral-800 px-3 py-1.5 font-semibold text-gray-700 dark:text-neutral-200 border border-gray-100 dark:border-neutral-800 transition"
+                                className="rounded bg-gray-50 dark:bg-[#141414] hover:bg-gray-100 dark:hover:bg-neutral-800 dark:bg-neutral-800 px-3 py-1.5 font-semibold text-gray-700 dark:text-neutral-200 border border-gray-100 dark:border-neutral-800 transition"
                               >
                                 Edit Row
                               </button>
@@ -3808,7 +3818,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
 
                     <div className="grid grid-cols-1 gap-4">
                       {pricingQuotes.map((quote) => (
-                        <div key={quote.id} className="rounded-xl border border-gray-100 dark:border-neutral-800 p-5 shadow-sm bg-white dark:bg-[#141414] dark:bg-[#141414] hover:border-blue-500 dark:border-orange-500 transition space-y-4">
+                        <div key={quote.id} className="rounded-xl border border-gray-100 dark:border-neutral-800 p-5 shadow-sm bg-white dark:bg-[#141414] hover:border-blue-500 dark:border-orange-500 transition space-y-4">
                           <div className="flex flex-wrap items-center justify-between gap-2 border-b border-gray-50 pb-2.5">
                             <div>
                               <span className="text-sm font-bold text-gray-900 dark:text-white block">{quote.name}</span>
@@ -3828,7 +3838,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                               <select
                                 value={quote.status}
                                 onChange={(e) => handleUpdateQuoteStatus(quote.id, e.target.value as any)}
-                                className="text-[10px] bg-gray-50 dark:bg-neutral-900 border border-gray-200 dark:border-neutral-700 rounded px-2 py-1 font-bold"
+                                className="text-[10px] bg-gray-50 dark:bg-[#141414] border border-gray-200 dark:border-neutral-700 rounded px-2 py-1 font-bold"
                               >
                                 <option value="pending">Mark Pending</option>
                                 <option value="reviewed">Mark Reviewed</option>
@@ -3932,19 +3942,19 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                       <div className="lg:col-span-5 space-y-6">
                         
                         {/* 1. General Preferences Settings */}
-                        <div className="bg-white dark:bg-[#141414] dark:bg-[#141414] rounded-xl border border-gray-100 dark:border-neutral-800 p-5 shadow-xs space-y-4">
+                        <div className="bg-white dark:bg-[#141414] rounded-xl border border-gray-100 dark:border-neutral-800 p-5 shadow-xs space-y-4">
                           <h5 className="font-bold text-gray-700 dark:text-neutral-200 border-b border-gray-50 pb-2 flex items-center space-x-1.5">
-                            <SettingsIcon className="h-4 w-4 text-gray-500 dark:text-neutral-400 dark:text-neutral-500" />
+                            <SettingsIcon className="h-4 w-4 text-gray-500 dark:text-neutral-400" />
                             <span>{currentLang === 'en' ? 'Global Preferences' : 'সাধারণ সেটিংস'}</span>
                           </h5>
 
                           <form onSubmit={handleSaveCurrencySettings} className="space-y-4">
                             <div className="space-y-1.5">
-                              <label className="font-semibold text-gray-500 dark:text-neutral-400 dark:text-neutral-500 block">{currentLang === 'en' ? 'Default Currency Code' : 'ডিফল্ট কারেন্সি কোড'}</label>
+                              <label className="font-semibold text-gray-500 dark:text-neutral-400 block">{currentLang === 'en' ? 'Default Currency Code' : 'ডিফল্ট কারেন্সি কোড'}</label>
                               <select
                                 value={currencySettings.defaultCurrencyCode}
                                 onChange={(e) => setCurrencySettingsState({ ...currencySettings, defaultCurrencyCode: e.target.value })}
-                                className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 font-bold focus:outline-none"
+                                className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 font-bold focus:outline-none"
                               >
                                 {currencies.map(c => (
                                   <option key={c.id} value={c.code}>{currFlag(c)} {c.code} ({c.name})</option>
@@ -3953,11 +3963,11 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                             </div>
 
                             <div className="space-y-1.5">
-                              <label className="font-semibold text-gray-500 dark:text-neutral-400 dark:text-neutral-500 block">{currentLang === 'en' ? 'Price Decimal Precision' : 'দশমিকের পর সংখ্যা'}</label>
+                              <label className="font-semibold text-gray-500 dark:text-neutral-400 block">{currentLang === 'en' ? 'Price Decimal Precision' : 'দশমিকের পর সংখ্যা'}</label>
                               <select
                                 value={currencySettings.decimalPrecision}
                                 onChange={(e) => setCurrencySettingsState({ ...currencySettings, decimalPrecision: Number(e.target.value) })}
-                                className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 font-bold focus:outline-none"
+                                className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 font-bold focus:outline-none"
                               >
                                 <option value="0">0 (e.g., $150)</option>
                                 <option value="1">1 (e.g., $150.0)</option>
@@ -3991,7 +4001,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
 
                         {/* 2. Add/Edit Currency Form */}
                         {isCreatingCurrency && (
-                          <div className="bg-white dark:bg-[#141414] dark:bg-[#141414] rounded-xl border border-gray-100 dark:border-neutral-800 p-5 shadow-xs space-y-4">
+                          <div className="bg-white dark:bg-[#141414] rounded-xl border border-gray-100 dark:border-neutral-800 p-5 shadow-xs space-y-4">
                             <h5 className="font-bold text-gray-700 dark:text-neutral-200 border-b border-gray-50 pb-2 flex items-center justify-between">
                               <span>{editingCurrency ? (currentLang === 'en' ? 'Edit Currency' : 'কারেন্সি সম্পাদনা') : (currentLang === 'en' ? 'New Currency Details' : 'নতুন কারেন্সি বিবরণ')}</span>
                               <button
@@ -4000,7 +4010,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                                   setIsCreatingCurrency(false);
                                   setEditingCurrency(null);
                                 }}
-                                className="text-gray-400 dark:text-neutral-500 hover:text-gray-600 dark:hover:text-neutral-300 dark:text-neutral-300 dark:text-neutral-600 text-xs font-bold"
+                                className="text-gray-400 dark:text-neutral-500 hover:text-gray-600 dark:hover:text-neutral-300 dark:text-neutral-300 text-xs font-bold"
                               >
                                 {currentLang === 'en' ? 'Cancel' : 'বাতিল'}
                               </button>
@@ -4008,53 +4018,53 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
 
                             <form onSubmit={handleSaveCurrency} className="space-y-3">
                               <div className="space-y-1">
-                                <label className="font-semibold text-gray-500 dark:text-neutral-400 dark:text-neutral-500 block">{currentLang === 'en' ? 'Currency Name' : 'কারেন্সির নাম'}</label>
+                                <label className="font-semibold text-gray-500 dark:text-neutral-400 block">{currentLang === 'en' ? 'Currency Name' : 'কারেন্সির নাম'}</label>
                                 <input
                                   type="text" required placeholder="e.g. US Dollar"
                                   value={currencyForm.name || ''}
                                   onChange={(e) => setCurrencyForm({ ...currencyForm, name: e.target.value })}
-                                  className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2.5 py-1.5 text-gray-800 dark:text-neutral-100 focus:outline-none"
+                                  className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-1.5 text-gray-800 dark:text-neutral-100 focus:outline-none"
                                 />
                               </div>
 
                               <div className="grid grid-cols-2 gap-3">
                                 <div className="space-y-1">
-                                  <label className="font-semibold text-gray-500 dark:text-neutral-400 dark:text-neutral-500 block">{currentLang === 'en' ? 'Currency Code' : 'কারেন্সি কোড'}</label>
+                                  <label className="font-semibold text-gray-500 dark:text-neutral-400 block">{currentLang === 'en' ? 'Currency Code' : 'কারেন্সি কোড'}</label>
                                   <input
                                     type="text" required placeholder="e.g. USD" maxLength={3}
                                     value={currencyForm.code || ''}
                                     onChange={(e) => setCurrencyForm({ ...currencyForm, code: e.target.value.toUpperCase() })}
-                                    className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2.5 py-1.5 text-gray-800 dark:text-neutral-100 uppercase focus:outline-none font-bold"
+                                    className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-1.5 text-gray-800 dark:text-neutral-100 uppercase focus:outline-none font-bold"
                                   />
                                 </div>
                                 <div className="space-y-1">
-                                  <label className="font-semibold text-gray-500 dark:text-neutral-400 dark:text-neutral-500 block">{currentLang === 'en' ? 'Currency Symbol' : 'কারেন্সি প্রতীক'}</label>
+                                  <label className="font-semibold text-gray-500 dark:text-neutral-400 block">{currentLang === 'en' ? 'Currency Symbol' : 'কারেন্সি প্রতীক'}</label>
                                   <input
                                     type="text" required placeholder="e.g. $"
                                     value={currencyForm.symbol || ''}
                                     onChange={(e) => setCurrencyForm({ ...currencyForm, symbol: e.target.value })}
-                                    className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2.5 py-1.5 text-gray-800 dark:text-neutral-100 focus:outline-none font-mono"
+                                    className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-1.5 text-gray-800 dark:text-neutral-100 focus:outline-none font-mono"
                                   />
                                 </div>
                               </div>
 
                               <div className="grid grid-cols-2 gap-3">
                                 <div className="space-y-1">
-                                  <label className="font-semibold text-gray-500 dark:text-neutral-400 dark:text-neutral-500 block">{currentLang === 'en' ? 'Flag Emoji' : 'পতাকা ইমোজি'}</label>
+                                  <label className="font-semibold text-gray-500 dark:text-neutral-400 block">{currentLang === 'en' ? 'Flag Emoji' : 'পতাকা ইমোজি'}</label>
                                   <input
                                     type="text" placeholder="e.g. 🇺🇸"
                                     value={currencyForm.flag || ''}
                                     onChange={(e) => setCurrencyForm({ ...currencyForm, flag: e.target.value })}
-                                    className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2.5 py-1.5 text-gray-800 dark:text-neutral-100 text-center text-lg focus:outline-none"
+                                    className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-1.5 text-gray-800 dark:text-neutral-100 text-center text-lg focus:outline-none"
                                   />
                                 </div>
                                 <div className="space-y-1">
-                                  <label className="font-semibold text-gray-500 dark:text-neutral-400 dark:text-neutral-500 block">{currentLang === 'en' ? 'USD Exchange Rate' : 'USD এক্সচেঞ্জ রেট'}</label>
+                                  <label className="font-semibold text-gray-500 dark:text-neutral-400 block">{currentLang === 'en' ? 'USD Exchange Rate' : 'USD এক্সচেঞ্জ রেট'}</label>
                                   <input
                                     type="number" required step="any" min="0.000001" placeholder="1.0"
                                     value={currencyForm.exchangeRate === undefined ? '' : currencyForm.exchangeRate}
                                     onChange={(e) => setCurrencyForm({ ...currencyForm, exchangeRate: Number(e.target.value) })}
-                                    className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2.5 py-1.5 text-gray-800 dark:text-neutral-100 focus:outline-none font-mono font-semibold"
+                                    className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-1.5 text-gray-800 dark:text-neutral-100 focus:outline-none font-mono font-semibold"
                                   />
                                 </div>
                               </div>
@@ -4094,7 +4104,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
 
                       {/* Right Side: Currencies List */}
                       <div className="lg:col-span-7 space-y-4">
-                        <div className="bg-white dark:bg-[#141414] dark:bg-[#141414] rounded-xl border border-gray-100 dark:border-neutral-800 p-5 shadow-xs space-y-4">
+                        <div className="bg-white dark:bg-[#141414] rounded-xl border border-gray-100 dark:border-neutral-800 p-5 shadow-xs space-y-4">
                           <h5 className="font-bold text-gray-700 dark:text-neutral-200 border-b border-gray-50 pb-2 flex items-center justify-between">
                             <span>{currentLang === 'en' ? 'Configured Currencies' : 'কনফিগারড কারেন্সিসমূহ'}</span>
                             <span className="text-[10px] text-gray-400 dark:text-neutral-500 font-normal">
@@ -4172,7 +4182,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                                           setCurrencyForm(curr);
                                           setIsCreatingCurrency(true);
                                         }}
-                                        className="rounded bg-gray-50 dark:bg-neutral-900 hover:bg-gray-100 dark:hover:bg-neutral-800 dark:bg-neutral-800 px-2 py-1 font-semibold text-gray-700 dark:text-neutral-200 border border-gray-100 dark:border-neutral-800 transition"
+                                        className="rounded bg-gray-50 dark:bg-[#141414] hover:bg-gray-100 dark:hover:bg-neutral-800 dark:bg-neutral-800 px-2 py-1 font-semibold text-gray-700 dark:text-neutral-200 border border-gray-100 dark:border-neutral-800 transition"
                                       >
                                         Edit
                                       </button>
@@ -4205,7 +4215,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
             {/* T8: FAQ MANAGEMENT */}
             {activeSubTab === 'faqs' && (
               <div id="panel-faqs-desk" className="space-y-6 text-xs">
-                <div className="flex items-center justify-between border-b border-gray-100 dark:border-neutral-800 pb-3">
+                <div className="flex items-center justify-between border-b border-gray-200 dark:border-neutral-700/80 pb-3">
                   <h3 className="text-sm font-bold text-gray-900 dark:text-white">
                     {currentLang === 'en' ? 'Manage Global FAQs' : 'সাধারণ জিজ্ঞাসাবলী পরিচালনা'}
                   </h3>
@@ -4225,15 +4235,15 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                 </div>
 
                 {isCreatingFAQ ? (
-                  <form onSubmit={handleSaveFAQ} className="space-y-4 bg-gray-50/50 rounded-xl p-4 md:p-5 border border-gray-100 dark:border-neutral-800">
+                  <form onSubmit={handleSaveFAQ} className="space-y-4 bg-gray-50/50 dark:bg-neutral-800/40 rounded-xl p-4 md:p-5 border border-gray-200 dark:border-neutral-700">
                     <div className="grid grid-cols-2 gap-4">
                       <div className="space-y-1.5">
-                        <label className="font-semibold text-gray-500 dark:text-neutral-400 dark:text-neutral-500">FAQ Group Category (English)</label>
+                        <label className="font-semibold text-gray-500 dark:text-neutral-400">FAQ Group Category (English)</label>
                         <input
                           type="text" required
                           value={faqForm.categoryEn || ''}
                           onChange={(e) => setFaqForm({ ...faqForm, categoryEn: e.target.value })}
-                          className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none"
+                          className="w-full rounded border border-gray-200 dark:border-neutral-600 bg-white dark:bg-neutral-900 px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:ring-2 focus:ring-orange-500/30 dark:border-neutral-600"
                         />
                       </div>
                       
@@ -4241,12 +4251,12 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
 
                     <div className="grid grid-cols-2 gap-4">
                       <div className="space-y-1.5">
-                        <label className="font-semibold text-gray-500 dark:text-neutral-400 dark:text-neutral-500">Question Statement (English)</label>
+                        <label className="font-semibold text-gray-500 dark:text-neutral-400">Question Statement (English)</label>
                         <input
                           type="text" required
                           value={faqForm.questionEn || ''}
                           onChange={(e) => setFaqForm({ ...faqForm, questionEn: e.target.value })}
-                          className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none"
+                          className="w-full rounded border border-gray-200 dark:border-neutral-600 bg-white dark:bg-neutral-900 px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:ring-2 focus:ring-orange-500/30 dark:border-neutral-600"
                         />
                       </div>
                       
@@ -4254,12 +4264,12 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
 
                     <div className="grid grid-cols-2 gap-4">
                       <div className="space-y-1.5">
-                        <label className="font-semibold text-gray-500 dark:text-neutral-400 dark:text-neutral-500">Answer Explanation (English)</label>
+                        <label className="font-semibold text-gray-500 dark:text-neutral-400">Answer Explanation (English)</label>
                         <textarea
                           rows={4} required
                           value={faqForm.answerEn || ''}
                           onChange={(e) => setFaqForm({ ...faqForm, answerEn: e.target.value })}
-                          className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none"
+                          className="w-full rounded border border-gray-200 dark:border-neutral-600 bg-white dark:bg-neutral-900 px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:ring-2 focus:ring-orange-500/30 dark:border-neutral-600"
                         />
                       </div>
                       
@@ -4269,7 +4279,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                       <button
                         type="button"
                         onClick={() => setIsCreatingFAQ(false)}
-                        className="rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-4 py-2 font-bold text-gray-600 dark:text-neutral-300 dark:text-neutral-600 hover:bg-gray-50 dark:hover:bg-neutral-800/70 dark:bg-neutral-900"
+                        className="rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-4 py-2 font-bold text-gray-600 dark:text-neutral-300 hover:bg-gray-50 dark:hover:bg-neutral-800/70 dark:bg-[#141414]"
                       >
                         Cancel
                       </button>
@@ -4284,13 +4294,13 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                 ) : (
                   <div className="grid grid-cols-1 gap-4">
                     {faqs.map((item) => (
-                      <div key={item.id} className="rounded-xl border border-gray-100 dark:border-neutral-800 p-4 shadow-sm bg-white dark:bg-[#141414] dark:bg-[#141414] hover:border-blue-500 dark:border-orange-500 transition space-y-2">
+                      <div key={item.id} className="rounded-xl border border-gray-100 dark:border-neutral-800 p-4 shadow-sm bg-white dark:bg-[#141414] hover:border-blue-500 dark:border-orange-500 transition space-y-2">
                         <div className="flex items-center justify-between">
                           <span className="bg-blue-50 dark:bg-orange-500/10 text-blue-600 dark:text-orange-400 px-2 py-0.5 rounded text-[10px] font-bold uppercase">{item.categoryEn}</span>
                           <div className="flex items-center space-x-2">
                             <button
                               onClick={() => handleEditFAQTrigger(item)}
-                              className="text-gray-500 dark:text-neutral-400 dark:text-neutral-500 hover:text-blue-600 dark:hover:text-orange-400 dark:text-orange-400 font-bold"
+                              className="text-gray-500 dark:text-neutral-400 hover:text-blue-600 dark:hover:text-orange-400 dark:text-orange-400 font-bold"
                             >
                               Edit
                             </button>
@@ -4303,7 +4313,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                           </div>
                         </div>
                         <p className="font-bold text-sm text-gray-900 dark:text-white font-sans">Q: {item.questionEn}</p>
-                        <p className="text-gray-500 dark:text-neutral-400 dark:text-neutral-500 text-[11px] leading-relaxed">A: {item.answerEn}</p>
+                        <p className="text-gray-500 dark:text-neutral-400 text-[11px] leading-relaxed">A: {item.answerEn}</p>
                       </div>
                     ))}
                   </div>
@@ -4321,7 +4331,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                     className={`px-4 py-2 font-bold border-b-2 text-xs transition duration-150 ${
                       testimonialsSubTab === 'reviews'
                         ? 'border-blue-600 text-blue-600 dark:text-orange-400'
-                        : 'border-transparent text-gray-500 dark:text-neutral-400 dark:text-neutral-500 hover:text-gray-800 dark:hover:text-white dark:text-neutral-100 hover:border-gray-200 dark:hover:border-neutral-700 dark:border-neutral-700'
+                        : 'border-transparent text-gray-500 dark:text-neutral-400 hover:text-gray-800 dark:hover:text-white dark:text-neutral-100 hover:border-gray-200 dark:hover:border-neutral-700 dark:border-neutral-700'
                     }`}
                   >
                     {currentLang === 'en' ? 'Reviews (Text)' : 'গ্রাহক রিভিউ'}
@@ -4331,7 +4341,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                     className={`px-4 py-2 font-bold border-b-2 text-xs transition duration-150 ${
                       testimonialsSubTab === 'videos'
                         ? 'border-blue-600 text-blue-600 dark:text-orange-400'
-                        : 'border-transparent text-gray-500 dark:text-neutral-400 dark:text-neutral-500 hover:text-gray-800 dark:hover:text-white dark:text-neutral-100 hover:border-gray-200 dark:hover:border-neutral-700 dark:border-neutral-700'
+                        : 'border-transparent text-gray-500 dark:text-neutral-400 hover:text-gray-800 dark:hover:text-white dark:text-neutral-100 hover:border-gray-200 dark:hover:border-neutral-700 dark:border-neutral-700'
                     }`}
                   >
                     {currentLang === 'en' ? 'Video Testimonials' : 'ভিডিও রিভিউ'}
@@ -4341,7 +4351,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                     className={`px-4 py-2 font-bold border-b-2 text-xs transition duration-150 ${
                       testimonialsSubTab === 'stories'
                         ? 'border-blue-600 text-blue-600 dark:text-orange-400'
-                        : 'border-transparent text-gray-500 dark:text-neutral-400 dark:text-neutral-500 hover:text-gray-800 dark:hover:text-white dark:text-neutral-100 hover:border-gray-200 dark:hover:border-neutral-700 dark:border-neutral-700'
+                        : 'border-transparent text-gray-500 dark:text-neutral-400 hover:text-gray-800 dark:hover:text-white dark:text-neutral-100 hover:border-gray-200 dark:hover:border-neutral-700 dark:border-neutral-700'
                     }`}
                   >
                     {currentLang === 'en' ? 'Success Stories' : 'সফলতার গল্প'}
@@ -4351,7 +4361,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                     className={`px-4 py-2 font-bold border-b-2 text-xs transition duration-150 ${
                       testimonialsSubTab === 'logos'
                         ? 'border-blue-600 text-blue-600 dark:text-orange-400'
-                        : 'border-transparent text-gray-500 dark:text-neutral-400 dark:text-neutral-500 hover:text-gray-800 dark:hover:text-white dark:text-neutral-100 hover:border-gray-200 dark:hover:border-neutral-700 dark:border-neutral-700'
+                        : 'border-transparent text-gray-500 dark:text-neutral-400 hover:text-gray-800 dark:hover:text-white dark:text-neutral-100 hover:border-gray-200 dark:hover:border-neutral-700 dark:border-neutral-700'
                     }`}
                   >
                     {currentLang === 'en' ? 'Client Logos' : 'ক্লায়েন্ট লোগো'}
@@ -4361,7 +4371,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                     className={`px-4 py-2 font-bold border-b-2 text-xs transition duration-150 ${
                       testimonialsSubTab === 'stats_settings'
                         ? 'border-blue-600 text-blue-600 dark:text-orange-400'
-                        : 'border-transparent text-gray-500 dark:text-neutral-400 dark:text-neutral-500 hover:text-gray-800 dark:hover:text-white dark:text-neutral-100 hover:border-gray-200 dark:hover:border-neutral-700 dark:border-neutral-700'
+                        : 'border-transparent text-gray-500 dark:text-neutral-400 hover:text-gray-800 dark:hover:text-white dark:text-neutral-100 hover:border-gray-200 dark:hover:border-neutral-700 dark:border-neutral-700'
                     }`}
                   >
                     {currentLang === 'en' ? 'Stats & Settings' : 'পরিসংখ্যান ও সেটিংস'}
@@ -4395,68 +4405,68 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                     </div>
 
                     {isCreatingTestimonial ? (
-                      <form onSubmit={handleSaveTestimonial} className="space-y-4 bg-gray-50/50 rounded-xl p-4 border border-gray-100 dark:border-neutral-800">
+                      <form onSubmit={handleSaveTestimonial} className="space-y-4 bg-gray-50/50 dark:bg-neutral-800/40 rounded-xl p-4 border border-gray-200 dark:border-neutral-700">
                         <div className="grid grid-cols-2 gap-4">
                           <div className="space-y-1">
-                            <label className="font-bold text-gray-500 dark:text-neutral-400 dark:text-neutral-500">Client Name</label>
+                            <label className="font-bold text-gray-500 dark:text-neutral-400">Client Name</label>
                             <input
                               type="text" required
                               value={testimonialForm.name || ''}
                               onChange={(e) => setTestimonialForm({ ...testimonialForm, name: e.target.value })}
-                              className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2.5 py-1.5 text-gray-800 dark:text-neutral-100 focus:outline-none"
+                              className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-1.5 text-gray-800 dark:text-neutral-100 focus:outline-none"
                             />
                           </div>
                           <div className="space-y-1">
-                            <label className="font-bold text-gray-500 dark:text-neutral-400 dark:text-neutral-500">Company Name</label>
+                            <label className="font-bold text-gray-500 dark:text-neutral-400">Company Name</label>
                             <input
                               type="text" required
                               value={testimonialForm.company || ''}
                               onChange={(e) => setTestimonialForm({ ...testimonialForm, company: e.target.value })}
-                              className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2.5 py-1.5 text-gray-800 dark:text-neutral-100 focus:outline-none"
+                              className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-1.5 text-gray-800 dark:text-neutral-100 focus:outline-none"
                             />
                           </div>
                         </div>
 
                         <div className="grid grid-cols-3 gap-3">
                           <div className="space-y-1">
-                            <label className="font-bold text-gray-500 dark:text-neutral-400 dark:text-neutral-500">Client Role (English)</label>
+                            <label className="font-bold text-gray-500 dark:text-neutral-400">Client Role (English)</label>
                             <input
                               type="text" required
                               value={testimonialForm.roleEn || ''}
                               onChange={(e) => setTestimonialForm({ ...testimonialForm, roleEn: e.target.value })}
-                              className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2 py-1.5 text-gray-800 dark:text-neutral-100 focus:outline-none"
+                              className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2 py-1.5 text-gray-800 dark:text-neutral-100 focus:outline-none"
                             />
                           </div>
                           
                           <div className="space-y-1">
-                            <label className="font-bold text-gray-500 dark:text-neutral-400 dark:text-neutral-500">Client Rating (Stars 1-5)</label>
+                            <label className="font-bold text-gray-500 dark:text-neutral-400">Client Rating (Stars 1-5)</label>
                             <input
                               type="number" min={1} max={5} required
                               value={testimonialForm.rating || 5}
                               onChange={(e) => setTestimonialForm({ ...testimonialForm, rating: parseInt(e.target.value) || 5 })}
-                              className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2 py-1.5 text-gray-800 dark:text-neutral-100 focus:outline-none font-bold"
+                              className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2 py-1.5 text-gray-800 dark:text-neutral-100 focus:outline-none font-bold"
                             />
                           </div>
                         </div>
 
                         <div className="grid grid-cols-2 gap-4">
                           <div className="space-y-1">
-                            <label className="font-bold text-gray-500 dark:text-neutral-400 dark:text-neutral-500">Avatar Image URL</label>
+                            <label className="font-bold text-gray-500 dark:text-neutral-400">Avatar Image URL</label>
                             <input
                               type="text" required
                               value={testimonialForm.avatar || ''}
                               onChange={(e) => setTestimonialForm({ ...testimonialForm, avatar: e.target.value })}
-                              className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2.5 py-1.5 text-gray-800 dark:text-neutral-100 focus:outline-none"
+                              className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-1.5 text-gray-800 dark:text-neutral-100 focus:outline-none"
                             />
                           </div>
                           <div className="grid grid-cols-2 gap-2">
                             <div className="space-y-1">
-                              <label className="font-bold text-gray-500 dark:text-neutral-400 dark:text-neutral-500">Industry (EN)</label>
+                              <label className="font-bold text-gray-500 dark:text-neutral-400">Industry (EN)</label>
                               <input
                                 type="text"
                                 value={testimonialForm.industryEn || ''}
                                 onChange={(e) => setTestimonialForm({ ...testimonialForm, industryEn: e.target.value })}
-                                className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2 py-1.5 text-gray-800 dark:text-neutral-100 focus:outline-none"
+                                className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2 py-1.5 text-gray-800 dark:text-neutral-100 focus:outline-none"
                                 placeholder="e.g. SaaS"
                               />
                             </div>
@@ -4466,11 +4476,11 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
 
                         <div className="grid grid-cols-2 gap-4">
                           <div className="space-y-1">
-                            <label className="font-bold text-gray-500 dark:text-neutral-400 dark:text-neutral-500">Status</label>
+                            <label className="font-bold text-gray-500 dark:text-neutral-400">Status</label>
                             <select
                               value={testimonialForm.status || 'approved'}
                               onChange={(e) => setTestimonialForm({ ...testimonialForm, status: e.target.value as any })}
-                              className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2.5 py-1.5 text-gray-800 dark:text-neutral-100 focus:outline-none"
+                              className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-1.5 text-gray-800 dark:text-neutral-100 focus:outline-none"
                             >
                               <option value="pending">Pending Review</option>
                               <option value="approved">Approved & Active</option>
@@ -4491,12 +4501,12 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
 
                         <div className="grid grid-cols-2 gap-4">
                           <div className="space-y-1">
-                            <label className="font-bold text-gray-500 dark:text-neutral-400 dark:text-neutral-500">Feedback Review (English)</label>
+                            <label className="font-bold text-gray-500 dark:text-neutral-400">Feedback Review (English)</label>
                             <textarea
                               rows={4} required
                               value={testimonialForm.feedbackEn || ''}
                               onChange={(e) => setTestimonialForm({ ...testimonialForm, feedbackEn: e.target.value })}
-                              className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2.5 py-1.5 text-gray-800 dark:text-neutral-100 focus:outline-none"
+                              className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-1.5 text-gray-800 dark:text-neutral-100 focus:outline-none"
                             />
                           </div>
                           
@@ -4506,7 +4516,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                           <button
                             type="button"
                             onClick={() => setIsCreatingTestimonial(false)}
-                            className="rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-3 py-1.5 font-bold text-gray-600 dark:text-neutral-300 dark:text-neutral-600 hover:bg-gray-50 dark:hover:bg-neutral-800/70 dark:bg-neutral-900"
+                            className="rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-3 py-1.5 font-bold text-gray-600 dark:text-neutral-300 hover:bg-gray-50 dark:hover:bg-neutral-800/70 dark:bg-[#141414]"
                           >
                             Cancel
                           </button>
@@ -4521,8 +4531,8 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                     ) : (
                       <div className="grid grid-cols-1 gap-3">
                         {testimonials.map((item) => (
-                          <div key={item.id} className="rounded-xl border border-gray-100 dark:border-neutral-800 p-4 flex items-start gap-4 bg-white dark:bg-[#141414] dark:bg-[#141414] hover:border-blue-500 dark:border-orange-500 hover:shadow-sm transition">
-                            <img src={item.avatar} alt="" className="h-10 w-10 rounded-full object-cover border border-gray-100 dark:border-neutral-800 bg-gray-50 dark:bg-neutral-900" referrerPolicy="no-referrer" />
+                          <div key={item.id} className="rounded-xl border border-gray-100 dark:border-neutral-800 p-4 flex items-start gap-4 bg-white dark:bg-[#141414] hover:border-blue-500 dark:border-orange-500 hover:shadow-sm transition">
+                            <img src={item.avatar} alt="" className="h-10 w-10 rounded-full object-cover border border-gray-100 dark:border-neutral-800 bg-gray-50 dark:bg-[#141414]" referrerPolicy="no-referrer" />
                             <div className="flex-1 space-y-1">
                               <div className="flex items-center justify-between">
                                 <div className="flex items-center space-x-2">
@@ -4550,8 +4560,8 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                                   </button>
                                 </div>
                               </div>
-                              <span className="block text-[10px] text-gray-500 dark:text-neutral-400 dark:text-neutral-500">{item.roleEn} ({item.industryEn || 'General'})</span>
-                              <p className="text-gray-600 dark:text-neutral-300 dark:text-neutral-600 leading-relaxed italic text-[11px] bg-gray-50/50 p-2 rounded mt-1 border border-gray-50">"{item.feedbackEn}"</p>
+                              <span className="block text-[10px] text-gray-500 dark:text-neutral-400">{item.roleEn} ({item.industryEn || 'General'})</span>
+                              <p className="text-gray-600 dark:text-neutral-300 leading-relaxed italic text-[11px] bg-gray-50/50 p-2 rounded mt-1 border border-gray-50">"{item.feedbackEn}"</p>
                               <div className="flex items-center space-x-0.5 text-amber-500 dark:text-amber-400 font-semibold pt-1">
                                 {'★'.repeat(item.rating)}
                               </div>
@@ -4592,36 +4602,36 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                     </div>
 
                     {isCreatingVideo ? (
-                      <form onSubmit={handleSaveTestimonialVideo} className="space-y-4 bg-gray-50/50 rounded-xl p-4 border border-gray-100 dark:border-neutral-800">
+                      <form onSubmit={handleSaveTestimonialVideo} className="space-y-4 bg-gray-50/50 dark:bg-neutral-800/40 rounded-xl p-4 border border-gray-200 dark:border-neutral-700">
                         <div className="grid grid-cols-2 gap-4">
                           <div className="space-y-1">
-                            <label className="font-bold text-gray-500 dark:text-neutral-400 dark:text-neutral-500">Client Name</label>
+                            <label className="font-bold text-gray-500 dark:text-neutral-400">Client Name</label>
                             <input
                               type="text" required
                               value={videoForm.clientName || ''}
                               onChange={(e) => setVideoForm({ ...videoForm, clientName: e.target.value })}
-                              className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2.5 py-1.5 text-gray-800 dark:text-neutral-100 focus:outline-none"
+                              className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-1.5 text-gray-800 dark:text-neutral-100 focus:outline-none"
                             />
                           </div>
                           <div className="space-y-1">
-                            <label className="font-bold text-gray-500 dark:text-neutral-400 dark:text-neutral-500">Company Name</label>
+                            <label className="font-bold text-gray-500 dark:text-neutral-400">Company Name</label>
                             <input
                               type="text" required
                               value={videoForm.company || ''}
                               onChange={(e) => setVideoForm({ ...videoForm, company: e.target.value })}
-                              className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2.5 py-1.5 text-gray-800 dark:text-neutral-100 focus:outline-none"
+                              className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-1.5 text-gray-800 dark:text-neutral-100 focus:outline-none"
                             />
                           </div>
                         </div>
 
                         <div className="grid grid-cols-2 gap-4">
                           <div className="space-y-1">
-                            <label className="font-bold text-gray-500 dark:text-neutral-400 dark:text-neutral-500">Video Title (English)</label>
+                            <label className="font-bold text-gray-500 dark:text-neutral-400">Video Title (English)</label>
                             <input
                               type="text" required
                               value={videoForm.titleEn || ''}
                               onChange={(e) => setVideoForm({ ...videoForm, titleEn: e.target.value })}
-                              className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2.5 py-1.5 text-gray-800 dark:text-neutral-100 focus:outline-none"
+                              className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-1.5 text-gray-800 dark:text-neutral-100 focus:outline-none"
                             />
                           </div>
                           
@@ -4629,55 +4639,55 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
 
                         <div className="grid grid-cols-3 gap-3">
                           <div className="space-y-1 col-span-2">
-                            <label className="font-bold text-gray-500 dark:text-neutral-400 dark:text-neutral-500">YouTube / Vimeo Embed URL</label>
+                            <label className="font-bold text-gray-500 dark:text-neutral-400">YouTube / Vimeo Embed URL</label>
                             <input
                               type="text" required
                               value={videoForm.videoUrl || ''}
                               onChange={(e) => setVideoForm({ ...videoForm, videoUrl: e.target.value })}
-                              className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2.5 py-1.5 text-gray-800 dark:text-neutral-100 focus:outline-none"
+                              className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-1.5 text-gray-800 dark:text-neutral-100 focus:outline-none"
                               placeholder="e.g. https://www.youtube.com/embed/dQw4w9WgXcQ"
                             />
                           </div>
                           <div className="space-y-1">
-                            <label className="font-bold text-gray-500 dark:text-neutral-400 dark:text-neutral-500">Client Rating (Stars)</label>
+                            <label className="font-bold text-gray-500 dark:text-neutral-400">Client Rating (Stars)</label>
                             <input
                               type="number" min={1} max={5} required
                               value={videoForm.rating || 5}
                               onChange={(e) => setVideoForm({ ...videoForm, rating: parseInt(e.target.value) || 5 })}
-                              className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2.5 py-1.5 text-gray-800 dark:text-neutral-100 focus:outline-none font-bold"
+                              className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-1.5 text-gray-800 dark:text-neutral-100 focus:outline-none font-bold"
                             />
                           </div>
                         </div>
 
                         <div className="grid grid-cols-2 gap-4">
                           <div className="space-y-1">
-                            <label className="font-bold text-gray-500 dark:text-neutral-400 dark:text-neutral-500">Video Thumbnail URL</label>
+                            <label className="font-bold text-gray-500 dark:text-neutral-400">Video Thumbnail URL</label>
                             <input
                               type="text" required
                               value={videoForm.thumbnailUrl || ''}
                               onChange={(e) => setVideoForm({ ...videoForm, thumbnailUrl: e.target.value })}
-                              className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2.5 py-1.5 text-gray-800 dark:text-neutral-100 focus:outline-none"
+                              className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-1.5 text-gray-800 dark:text-neutral-100 focus:outline-none"
                             />
                           </div>
                           <div className="space-y-1">
-                            <label className="font-bold text-gray-500 dark:text-neutral-400 dark:text-neutral-500">Avatar Photo URL</label>
+                            <label className="font-bold text-gray-500 dark:text-neutral-400">Avatar Photo URL</label>
                             <input
                               type="text" required
                               value={videoForm.avatar || ''}
                               onChange={(e) => setVideoForm({ ...videoForm, avatar: e.target.value })}
-                              className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2.5 py-1.5 text-gray-800 dark:text-neutral-100 focus:outline-none"
+                              className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-1.5 text-gray-800 dark:text-neutral-100 focus:outline-none"
                             />
                           </div>
                         </div>
 
                         <div className="grid grid-cols-2 gap-4">
                           <div className="space-y-1">
-                            <label className="font-bold text-gray-500 dark:text-neutral-400 dark:text-neutral-500">Short Summary (EN)</label>
+                            <label className="font-bold text-gray-500 dark:text-neutral-400">Short Summary (EN)</label>
                             <textarea
                               rows={2} required
                               value={videoForm.shortDescriptionEn || ''}
                               onChange={(e) => setVideoForm({ ...videoForm, shortDescriptionEn: e.target.value })}
-                              className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2.5 py-1.5 text-gray-800 dark:text-neutral-100 focus:outline-none"
+                              className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-1.5 text-gray-800 dark:text-neutral-100 focus:outline-none"
                             />
                           </div>
                           
@@ -4685,12 +4695,12 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
 
                         <div className="grid grid-cols-2 gap-4">
                           <div className="space-y-1">
-                            <label className="font-bold text-gray-500 dark:text-neutral-400 dark:text-neutral-500">Display Order</label>
+                            <label className="font-bold text-gray-500 dark:text-neutral-400">Display Order</label>
                             <input
                               type="number" required
                               value={videoForm.displayOrder || 1}
                               onChange={(e) => setVideoForm({ ...videoForm, displayOrder: parseInt(e.target.value) || 1 })}
-                              className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2.5 py-1.5 text-gray-800 dark:text-neutral-100 focus:outline-none"
+                              className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-1.5 text-gray-800 dark:text-neutral-100 focus:outline-none"
                             />
                           </div>
                           <div className="flex items-center space-x-2 pt-4">
@@ -4709,7 +4719,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                           <button
                             type="button"
                             onClick={() => setIsCreatingVideo(false)}
-                            className="rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-3 py-1.5 font-bold text-gray-600 dark:text-neutral-300 dark:text-neutral-600 hover:bg-gray-50 dark:hover:bg-neutral-800/70 dark:bg-neutral-900"
+                            className="rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-3 py-1.5 font-bold text-gray-600 dark:text-neutral-300 hover:bg-gray-50 dark:hover:bg-neutral-800/70 dark:bg-[#141414]"
                           >
                             Cancel
                           </button>
@@ -4724,11 +4734,11 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                     ) : (
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         {testimonialVideos.map((item) => (
-                          <div key={item.id} className="rounded-xl border border-gray-100 dark:border-neutral-800 p-3 bg-white dark:bg-[#141414] dark:bg-[#141414] flex flex-col justify-between hover:border-blue-500 dark:border-orange-500 transition">
+                          <div key={item.id} className="rounded-xl border border-gray-100 dark:border-neutral-800 p-3 bg-white dark:bg-[#141414] flex flex-col justify-between hover:border-blue-500 dark:border-orange-500 transition">
                             <div className="relative rounded-lg overflow-hidden border border-gray-100 dark:border-neutral-800 mb-2 aspect-video">
                               <img src={item.thumbnailUrl} alt="" className="w-full h-full object-cover" />
                               <div className="absolute inset-0 bg-black/30 flex items-center justify-center">
-                                <span className="bg-white/90 text-blue-600 dark:text-orange-400 hover:bg-white dark:bg-[#141414] dark:bg-[#141414] text-xs font-bold uppercase tracking-wider px-3 py-1.5 rounded-full shadow-lg">PLAY REEL</span>
+                                <span className="bg-white/90 text-blue-600 dark:text-orange-400 hover:bg-white dark:bg-[#141414] text-xs font-bold uppercase tracking-wider px-3 py-1.5 rounded-full shadow-lg">PLAY REEL</span>
                               </div>
                             </div>
                             <div className="space-y-1 flex-1">
@@ -4750,7 +4760,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                                 </div>
                               </div>
                               <h5 className="font-bold text-gray-800 dark:text-neutral-100 text-xs">{item.titleEn}</h5>
-                              <p className="text-gray-500 dark:text-neutral-400 dark:text-neutral-500 text-[10px] leading-relaxed line-clamp-2">"{item.shortDescriptionEn}"</p>
+                              <p className="text-gray-500 dark:text-neutral-400 text-[10px] leading-relaxed line-clamp-2">"{item.shortDescriptionEn}"</p>
                               <div className="flex items-center space-x-0.5 text-amber-500 dark:text-amber-400 pt-1">
                                 {'★'.repeat(item.rating)}
                               </div>
@@ -4794,36 +4804,36 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                     </div>
 
                     {isCreatingSuccessStory ? (
-                      <form onSubmit={handleSaveSuccessStory} className="space-y-4 bg-gray-50/50 rounded-xl p-4 border border-gray-100 dark:border-neutral-800 max-h-[70vh] overflow-y-auto">
+                      <form onSubmit={handleSaveSuccessStory} className="space-y-4 bg-gray-50/50 dark:bg-neutral-800/40 rounded-xl p-4 border border-gray-200 dark:border-neutral-700 max-h-[70vh] overflow-y-auto">
                         <div className="grid grid-cols-2 gap-4">
                           <div className="space-y-1">
-                            <label className="font-bold text-gray-500 dark:text-neutral-400 dark:text-neutral-500">Client Name</label>
+                            <label className="font-bold text-gray-500 dark:text-neutral-400">Client Name</label>
                             <input
                               type="text" required
                               value={successStoryForm.clientName || ''}
                               onChange={(e) => setSuccessStoryForm({ ...successStoryForm, clientName: e.target.value })}
-                              className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2.5 py-1.5 text-gray-800 dark:text-neutral-100 focus:outline-none"
+                              className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-1.5 text-gray-800 dark:text-neutral-100 focus:outline-none"
                             />
                           </div>
                           <div className="space-y-1">
-                            <label className="font-bold text-gray-500 dark:text-neutral-400 dark:text-neutral-500">Company Name</label>
+                            <label className="font-bold text-gray-500 dark:text-neutral-400">Company Name</label>
                             <input
                               type="text" required
                               value={successStoryForm.companyName || ''}
                               onChange={(e) => setSuccessStoryForm({ ...successStoryForm, companyName: e.target.value })}
-                              className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2.5 py-1.5 text-gray-800 dark:text-neutral-100 focus:outline-none"
+                              className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-1.5 text-gray-800 dark:text-neutral-100 focus:outline-none"
                             />
                           </div>
                         </div>
 
                         <div className="grid grid-cols-2 gap-4">
                           <div className="space-y-1">
-                            <label className="font-bold text-gray-500 dark:text-neutral-400 dark:text-neutral-500">Industry (EN)</label>
+                            <label className="font-bold text-gray-500 dark:text-neutral-400">Industry (EN)</label>
                             <input
                               type="text" required
                               value={successStoryForm.industryEn || ''}
                               onChange={(e) => setSuccessStoryForm({ ...successStoryForm, industryEn: e.target.value })}
-                              className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2.5 py-1.5 text-gray-800 dark:text-neutral-100 focus:outline-none"
+                              className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-1.5 text-gray-800 dark:text-neutral-100 focus:outline-none"
                             />
                           </div>
                           
@@ -4831,12 +4841,12 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
 
                         <div className="grid grid-cols-2 gap-4">
                           <div className="space-y-1">
-                            <label className="font-bold text-gray-500 dark:text-neutral-400 dark:text-neutral-500">Service Engaged (EN)</label>
+                            <label className="font-bold text-gray-500 dark:text-neutral-400">Service Engaged (EN)</label>
                             <input
                               type="text" required
                               value={successStoryForm.serviceEn || ''}
                               onChange={(e) => setSuccessStoryForm({ ...successStoryForm, serviceEn: e.target.value })}
-                              className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2.5 py-1.5 text-gray-800 dark:text-neutral-100 focus:outline-none"
+                              className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-1.5 text-gray-800 dark:text-neutral-100 focus:outline-none"
                             />
                           </div>
                           
@@ -4844,12 +4854,12 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
 
                         <div className="grid grid-cols-2 gap-4">
                           <div className="space-y-1">
-                            <label className="font-bold text-gray-500 dark:text-neutral-400 dark:text-neutral-500">Background (EN)</label>
+                            <label className="font-bold text-gray-500 dark:text-neutral-400">Background (EN)</label>
                             <textarea
                               rows={2} required
                               value={successStoryForm.backgroundEn || ''}
                               onChange={(e) => setSuccessStoryForm({ ...successStoryForm, backgroundEn: e.target.value })}
-                              className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2.5 py-1.5 text-gray-800 dark:text-neutral-100 focus:outline-none"
+                              className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-1.5 text-gray-800 dark:text-neutral-100 focus:outline-none"
                             />
                           </div>
                           
@@ -4857,12 +4867,12 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
 
                         <div className="grid grid-cols-2 gap-4">
                           <div className="space-y-1">
-                            <label className="font-bold text-gray-500 dark:text-neutral-400 dark:text-neutral-500">Challenge (EN)</label>
+                            <label className="font-bold text-gray-500 dark:text-neutral-400">Challenge (EN)</label>
                             <textarea
                               rows={3} required
                               value={successStoryForm.challengeEn || ''}
                               onChange={(e) => setSuccessStoryForm({ ...successStoryForm, challengeEn: e.target.value })}
-                              className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2.5 py-1.5 text-gray-800 dark:text-neutral-100 focus:outline-none"
+                              className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-1.5 text-gray-800 dark:text-neutral-100 focus:outline-none"
                             />
                           </div>
                           
@@ -4870,12 +4880,12 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
 
                         <div className="grid grid-cols-2 gap-4">
                           <div className="space-y-1">
-                            <label className="font-bold text-gray-500 dark:text-neutral-400 dark:text-neutral-500">Solution (EN)</label>
+                            <label className="font-bold text-gray-500 dark:text-neutral-400">Solution (EN)</label>
                             <textarea
                               rows={3} required
                               value={successStoryForm.solutionEn || ''}
                               onChange={(e) => setSuccessStoryForm({ ...successStoryForm, solutionEn: e.target.value })}
-                              className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2.5 py-1.5 text-gray-800 dark:text-neutral-100 focus:outline-none"
+                              className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-1.5 text-gray-800 dark:text-neutral-100 focus:outline-none"
                             />
                           </div>
                           
@@ -4883,12 +4893,12 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
 
                         <div className="grid grid-cols-2 gap-4">
                           <div className="space-y-1">
-                            <label className="font-bold text-gray-500 dark:text-neutral-400 dark:text-neutral-500">Results Description (EN)</label>
+                            <label className="font-bold text-gray-500 dark:text-neutral-400">Results Description (EN)</label>
                             <textarea
                               rows={2} required
                               value={successStoryForm.resultsEn || ''}
                               onChange={(e) => setSuccessStoryForm({ ...successStoryForm, resultsEn: e.target.value })}
-                              className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2.5 py-1.5 text-gray-800 dark:text-neutral-100 focus:outline-none"
+                              className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-1.5 text-gray-800 dark:text-neutral-100 focus:outline-none"
                               placeholder="e.g. 150% Increase in SEO traffic, 40% reduction in bounce rate"
                             />
                           </div>
@@ -4897,23 +4907,23 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
 
                         <div className="grid grid-cols-3 gap-3">
                           <div className="space-y-1">
-                            <label className="font-bold text-gray-500 dark:text-neutral-400 dark:text-neutral-500">Project Timeline (EN)</label>
+                            <label className="font-bold text-gray-500 dark:text-neutral-400">Project Timeline (EN)</label>
                             <input
                               type="text" required
                               value={successStoryForm.timelineEn || ''}
                               onChange={(e) => setSuccessStoryForm({ ...successStoryForm, timelineEn: e.target.value })}
-                              className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2 py-1.5 text-gray-800 dark:text-neutral-100 focus:outline-none"
+                              className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2 py-1.5 text-gray-800 dark:text-neutral-100 focus:outline-none"
                               placeholder="e.g. 3 Months"
                             />
                           </div>
                           
                           <div className="space-y-1">
-                            <label className="font-bold text-gray-500 dark:text-neutral-400 dark:text-neutral-500">Technologies (Comma Separated)</label>
+                            <label className="font-bold text-gray-500 dark:text-neutral-400">Technologies (Comma Separated)</label>
                             <input
                               type="text"
                               value={Array.isArray(successStoryForm.technologies) ? successStoryForm.technologies.join(', ') : successStoryForm.technologies || ''}
                               onChange={(e) => setSuccessStoryForm({ ...successStoryForm, technologies: e.target.value.split(',').map(s => s.trim()) })}
-                              className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2 py-1.5 text-gray-800 dark:text-neutral-100 focus:outline-none font-semibold text-blue-600 dark:text-orange-400"
+                              className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2 py-1.5 text-gray-800 dark:text-neutral-100 focus:outline-none font-semibold text-blue-600 dark:text-orange-400"
                               placeholder="Next.js, Tailwind, Supabase"
                             />
                           </div>
@@ -4921,42 +4931,42 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
 
                         <div className="grid grid-cols-3 gap-3">
                           <div className="space-y-1">
-                            <label className="font-bold text-gray-500 dark:text-neutral-400 dark:text-neutral-500">Before Image URL (Old Site)</label>
+                            <label className="font-bold text-gray-500 dark:text-neutral-400">Before Image URL (Old Site)</label>
                             <input
                               type="text" required
                               value={successStoryForm.beforeImage || ''}
                               onChange={(e) => setSuccessStoryForm({ ...successStoryForm, beforeImage: e.target.value })}
-                              className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2 py-1.5 text-gray-800 dark:text-neutral-100 focus:outline-none"
+                              className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2 py-1.5 text-gray-800 dark:text-neutral-100 focus:outline-none"
                             />
                           </div>
                           <div className="space-y-1">
-                            <label className="font-bold text-gray-500 dark:text-neutral-400 dark:text-neutral-500">After Image URL (New Site)</label>
+                            <label className="font-bold text-gray-500 dark:text-neutral-400">After Image URL (New Site)</label>
                             <input
                               type="text" required
                               value={successStoryForm.afterImage || ''}
                               onChange={(e) => setSuccessStoryForm({ ...successStoryForm, afterImage: e.target.value })}
-                              className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2 py-1.5 text-gray-800 dark:text-neutral-100 focus:outline-none"
+                              className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2 py-1.5 text-gray-800 dark:text-neutral-100 focus:outline-none"
                             />
                           </div>
                           <div className="space-y-1">
-                            <label className="font-bold text-gray-500 dark:text-neutral-400 dark:text-neutral-500">Client Rep Photo</label>
+                            <label className="font-bold text-gray-500 dark:text-neutral-400">Client Rep Photo</label>
                             <input
                               type="text" required
                               value={successStoryForm.clientPhoto || ''}
                               onChange={(e) => setSuccessStoryForm({ ...successStoryForm, clientPhoto: e.target.value })}
-                              className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2 py-1.5 text-gray-800 dark:text-neutral-100 focus:outline-none"
+                              className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2 py-1.5 text-gray-800 dark:text-neutral-100 focus:outline-none"
                             />
                           </div>
                         </div>
 
                         <div className="grid grid-cols-2 gap-4">
                           <div className="space-y-1">
-                            <label className="font-bold text-gray-500 dark:text-neutral-400 dark:text-neutral-500">Client Quote/Testimonial (EN)</label>
+                            <label className="font-bold text-gray-500 dark:text-neutral-400">Client Quote/Testimonial (EN)</label>
                             <textarea
                               rows={2} required
                               value={successStoryForm.clientQuoteEn || ''}
                               onChange={(e) => setSuccessStoryForm({ ...successStoryForm, clientQuoteEn: e.target.value })}
-                              className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2.5 py-1.5 text-gray-800 dark:text-neutral-100 focus:outline-none"
+                              className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-1.5 text-gray-800 dark:text-neutral-100 focus:outline-none"
                             />
                           </div>
                           
@@ -4964,12 +4974,12 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
 
                         <div className="grid grid-cols-2 gap-4">
                           <div className="space-y-1">
-                            <label className="font-bold text-gray-500 dark:text-neutral-400 dark:text-neutral-500">Client Design Role (EN)</label>
+                            <label className="font-bold text-gray-500 dark:text-neutral-400">Client Design Role (EN)</label>
                             <input
                               type="text" required
                               value={successStoryForm.clientRoleEn || ''}
                               onChange={(e) => setSuccessStoryForm({ ...successStoryForm, clientRoleEn: e.target.value })}
-                              className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2.5 py-1.5 text-gray-800 dark:text-neutral-100 focus:outline-none"
+                              className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-1.5 text-gray-800 dark:text-neutral-100 focus:outline-none"
                               placeholder="e.g. CTO & Co-Founder"
                             />
                           </div>
@@ -4978,12 +4988,12 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
 
                         <div className="grid grid-cols-2 gap-4">
                           <div className="space-y-1">
-                            <label className="font-bold text-gray-500 dark:text-neutral-400 dark:text-neutral-500">Display Order</label>
+                            <label className="font-bold text-gray-500 dark:text-neutral-400">Display Order</label>
                             <input
                               type="number" required
                               value={successStoryForm.displayOrder || 1}
                               onChange={(e) => setSuccessStoryForm({ ...successStoryForm, displayOrder: parseInt(e.target.value) || 1 })}
-                              className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2.5 py-1.5 text-gray-800 dark:text-neutral-100 focus:outline-none"
+                              className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-1.5 text-gray-800 dark:text-neutral-100 focus:outline-none"
                             />
                           </div>
                           <div className="flex items-center space-x-2 pt-4">
@@ -5002,7 +5012,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                           <button
                             type="button"
                             onClick={() => setIsCreatingSuccessStory(false)}
-                            className="rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-3 py-1.5 font-bold text-gray-600 dark:text-neutral-300 dark:text-neutral-600 hover:bg-gray-50 dark:hover:bg-neutral-800/70 dark:bg-neutral-900"
+                            className="rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-3 py-1.5 font-bold text-gray-600 dark:text-neutral-300 hover:bg-gray-50 dark:hover:bg-neutral-800/70 dark:bg-[#141414]"
                           >
                             Cancel
                           </button>
@@ -5017,13 +5027,13 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                     ) : (
                       <div className="grid grid-cols-1 gap-3">
                         {successStories.map((item) => (
-                          <div key={item.id} className="rounded-xl border border-gray-100 dark:border-neutral-800 p-4 bg-white dark:bg-[#141414] dark:bg-[#141414] flex items-center justify-between hover:border-blue-500 dark:border-orange-500 transition">
+                          <div key={item.id} className="rounded-xl border border-gray-100 dark:border-neutral-800 p-4 bg-white dark:bg-[#141414] flex items-center justify-between hover:border-blue-500 dark:border-orange-500 transition">
                             <div className="flex items-center space-x-4">
-                              <img src={item.afterImage} alt="" className="h-14 w-20 rounded-lg object-cover border border-gray-100 dark:border-neutral-800 bg-gray-50 dark:bg-neutral-900" referrerPolicy="no-referrer" />
+                              <img src={item.afterImage} alt="" className="h-14 w-20 rounded-lg object-cover border border-gray-100 dark:border-neutral-800 bg-gray-50 dark:bg-[#141414]" referrerPolicy="no-referrer" />
                               <div>
                                 <h5 className="font-bold text-gray-900 dark:text-white text-sm">{item.clientName} ({item.companyName})</h5>
                                 <span className="text-[10px] bg-blue-50 dark:bg-orange-500/10 text-blue-700 dark:text-orange-400 rounded px-1.5 py-0.5 font-bold uppercase tracking-wider">{item.serviceEn}</span>
-                                <p className="text-gray-500 dark:text-neutral-400 dark:text-neutral-500 text-[10px] mt-1">Results: <span className="font-semibold text-green-600 dark:text-emerald-400">{item.resultsEn}</span></p>
+                                <p className="text-gray-500 dark:text-neutral-400 text-[10px] mt-1">Results: <span className="font-semibold text-green-600 dark:text-emerald-400">{item.resultsEn}</span></p>
                               </div>
                             </div>
                             <div className="flex items-center space-x-2">
@@ -5070,25 +5080,25 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                     </div>
 
                     {isCreatingClientLogo ? (
-                      <form onSubmit={handleSaveClientLogo} className="space-y-4 bg-gray-50/50 rounded-xl p-4 border border-gray-100 dark:border-neutral-800">
+                      <form onSubmit={handleSaveClientLogo} className="space-y-4 bg-gray-50/50 dark:bg-neutral-800/40 rounded-xl p-4 border border-gray-200 dark:border-neutral-700">
                         <div className="grid grid-cols-2 gap-4">
                           <div className="space-y-1">
-                            <label className="font-bold text-gray-500 dark:text-neutral-400 dark:text-neutral-500">Partner / Brand Name</label>
+                            <label className="font-bold text-gray-500 dark:text-neutral-400">Partner / Brand Name</label>
                             <input
                               type="text" required
                               value={clientLogoForm.name || ''}
                               onChange={(e) => setClientLogoForm({ ...clientLogoForm, name: e.target.value })}
-                              className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2.5 py-1.5 text-gray-800 dark:text-neutral-100 focus:outline-none"
+                              className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-1.5 text-gray-800 dark:text-neutral-100 focus:outline-none"
                               placeholder="e.g. Stripe"
                             />
                           </div>
                           <div className="space-y-1">
-                            <label className="font-bold text-gray-500 dark:text-neutral-400 dark:text-neutral-500">Logo SVG / PNG URL</label>
+                            <label className="font-bold text-gray-500 dark:text-neutral-400">Logo SVG / PNG URL</label>
                             <input
                               type="text" required
                               value={clientLogoForm.logoUrl || ''}
                               onChange={(e) => setClientLogoForm({ ...clientLogoForm, logoUrl: e.target.value })}
-                              className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2.5 py-1.5 text-gray-800 dark:text-neutral-100 focus:outline-none font-mono text-[10px]"
+                              className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-1.5 text-gray-800 dark:text-neutral-100 focus:outline-none font-mono text-[10px]"
                               placeholder="https://cdn.worldvectorlogo.com/logos/stripe.svg"
                             />
                           </div>
@@ -5096,12 +5106,12 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
 
                         <div className="grid grid-cols-2 gap-4">
                           <div className="space-y-1">
-                            <label className="font-bold text-gray-500 dark:text-neutral-400 dark:text-neutral-500">Display Order</label>
+                            <label className="font-bold text-gray-500 dark:text-neutral-400">Display Order</label>
                             <input
                               type="number" required
                               value={clientLogoForm.displayOrder || 1}
                               onChange={(e) => setClientLogoForm({ ...clientLogoForm, displayOrder: parseInt(e.target.value) || 1 })}
-                              className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2.5 py-1.5 text-gray-800 dark:text-neutral-100 focus:outline-none"
+                              className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-1.5 text-gray-800 dark:text-neutral-100 focus:outline-none"
                             />
                           </div>
                           <div className="flex items-center space-x-2 pt-4">
@@ -5120,7 +5130,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                           <button
                             type="button"
                             onClick={() => setIsCreatingClientLogo(false)}
-                            className="rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-3 py-1.5 font-bold text-gray-600 dark:text-neutral-300 dark:text-neutral-600 hover:bg-gray-50 dark:hover:bg-neutral-800/70 dark:bg-neutral-900"
+                            className="rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-3 py-1.5 font-bold text-gray-600 dark:text-neutral-300 hover:bg-gray-50 dark:hover:bg-neutral-800/70 dark:bg-[#141414]"
                           >
                             Cancel
                           </button>
@@ -5135,8 +5145,8 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                     ) : (
                       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                         {clientLogos.map((item) => (
-                          <div key={item.id} className="rounded-xl border border-gray-100 dark:border-neutral-800 p-3 bg-white dark:bg-[#141414] dark:bg-[#141414] flex flex-col items-center justify-between hover:border-blue-500 dark:border-orange-500 transition">
-                            <div className="h-10 flex items-center justify-center p-2 mb-2 w-full bg-gray-50 dark:bg-neutral-900 rounded-lg">
+                          <div key={item.id} className="rounded-xl border border-gray-100 dark:border-neutral-800 p-3 bg-white dark:bg-[#141414] flex flex-col items-center justify-between hover:border-blue-500 dark:border-orange-500 transition">
+                            <div className="h-10 flex items-center justify-center p-2 mb-2 w-full bg-gray-50 dark:bg-[#141414] rounded-lg">
                               {item.logoUrl ? (
                                 <img src={item.logoUrl} alt={item.name} className="max-h-6 max-w-[80%] object-contain opacity-70" referrerPolicy="no-referrer" />
                               ) : (
@@ -5175,9 +5185,9 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                       <h4 className="font-bold text-gray-900 dark:text-white text-xs uppercase tracking-wider border-b border-gray-100 dark:border-neutral-800 pb-2">
                         {currentLang === 'en' ? 'Core Trust Statistics' : 'মূল বিশ্বাস পরিসংখ্যান'}
                       </h4>
-                      <form onSubmit={handleSaveTestimonialStatistics} className="space-y-3 bg-white dark:bg-[#141414] dark:bg-[#141414] rounded-xl p-4 border border-gray-100 dark:border-neutral-800 shadow-sm">
+                      <form onSubmit={handleSaveTestimonialStatistics} className="space-y-3 bg-white dark:bg-[#141414] rounded-xl p-4 border border-gray-100 dark:border-neutral-800 shadow-sm">
                         <div className="space-y-1">
-                          <label className="font-bold text-gray-500 dark:text-neutral-400 dark:text-neutral-500">Total Clients Served</label>
+                          <label className="font-bold text-gray-500 dark:text-neutral-400">Total Clients Served</label>
                           <input
                             type="number" required
                             value={testimonialStatistics?.totalClients ?? 150}
@@ -5185,11 +5195,11 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                               ...(testimonialStatistics || { totalClients: 150, satisfactionRate: 99, averageRating: 4.9, successStoryCount: 12 }),
                               totalClients: parseInt(e.target.value) || 150
                             })}
-                            className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2.5 py-1.5 text-gray-800 dark:text-neutral-100 focus:outline-none"
+                            className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-1.5 text-gray-800 dark:text-neutral-100 focus:outline-none"
                           />
                         </div>
                         <div className="space-y-1">
-                          <label className="font-bold text-gray-500 dark:text-neutral-400 dark:text-neutral-500">Satisfaction Rate (%)</label>
+                          <label className="font-bold text-gray-500 dark:text-neutral-400">Satisfaction Rate (%)</label>
                           <input
                             type="number" required min={1} max={100}
                             value={testimonialStatistics?.satisfactionRate ?? 99}
@@ -5197,11 +5207,11 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                               ...(testimonialStatistics || { totalClients: 150, satisfactionRate: 99, averageRating: 4.9, successStoryCount: 12 }),
                               satisfactionRate: parseInt(e.target.value) || 99
                             })}
-                            className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2.5 py-1.5 text-gray-800 dark:text-neutral-100 focus:outline-none"
+                            className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-1.5 text-gray-800 dark:text-neutral-100 focus:outline-none"
                           />
                         </div>
                         <div className="space-y-1">
-                          <label className="font-bold text-gray-500 dark:text-neutral-400 dark:text-neutral-500">Average Rating (Stars 1-5)</label>
+                          <label className="font-bold text-gray-500 dark:text-neutral-400">Average Rating (Stars 1-5)</label>
                           <input
                             type="number" step="0.1" required min={1} max={5}
                             value={testimonialStatistics?.averageRating ?? 4.9}
@@ -5209,11 +5219,11 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                               ...(testimonialStatistics || { totalClients: 150, satisfactionRate: 99, averageRating: 4.9, successStoryCount: 12 }),
                               averageRating: parseFloat(e.target.value) || 4.9
                             })}
-                            className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2.5 py-1.5 text-gray-800 dark:text-neutral-100 focus:outline-none"
+                            className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-1.5 text-gray-800 dark:text-neutral-100 focus:outline-none"
                           />
                         </div>
                         <div className="space-y-1">
-                          <label className="font-bold text-gray-500 dark:text-neutral-400 dark:text-neutral-500">Success Case Studies Count</label>
+                          <label className="font-bold text-gray-500 dark:text-neutral-400">Success Case Studies Count</label>
                           <input
                             type="number" required
                             value={testimonialStatistics?.successStoryCount ?? 12}
@@ -5221,7 +5231,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                               ...(testimonialStatistics || { totalClients: 150, satisfactionRate: 99, averageRating: 4.9, successStoryCount: 12 }),
                               successStoryCount: parseInt(e.target.value) || 12
                             })}
-                            className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2.5 py-1.5 text-gray-800 dark:text-neutral-100 focus:outline-none"
+                            className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-1.5 text-gray-800 dark:text-neutral-100 focus:outline-none"
                           />
                         </div>
                         <button
@@ -5238,7 +5248,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                       <h4 className="font-bold text-gray-900 dark:text-white text-xs uppercase tracking-wider border-b border-gray-100 dark:border-neutral-800 pb-2">
                         {currentLang === 'en' ? 'Review Submission Settings' : 'রিভিউ সাবমিশন সেটিংস'}
                       </h4>
-                      <form onSubmit={handleSaveReviewSettings} className="space-y-3 bg-white dark:bg-[#141414] dark:bg-[#141414] rounded-xl p-4 border border-gray-100 dark:border-neutral-800 shadow-sm">
+                      <form onSubmit={handleSaveReviewSettings} className="space-y-3 bg-white dark:bg-[#141414] rounded-xl p-4 border border-gray-100 dark:border-neutral-800 shadow-sm">
                         <div className="flex items-center justify-between py-1 border-b border-gray-50">
                           <div className="flex flex-col">
                             <span className="font-bold text-gray-700 dark:text-neutral-200">Require Approval</span>
@@ -5288,7 +5298,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                         </div>
 
                         <div className="space-y-1">
-                          <label className="font-bold text-gray-500 dark:text-neutral-400 dark:text-neutral-500">Moderator Notification Email</label>
+                          <label className="font-bold text-gray-500 dark:text-neutral-400">Moderator Notification Email</label>
                           <input
                             type="email" required
                             value={reviewSettings?.notificationEmail ?? 'admin@nextsolution.com'}
@@ -5296,12 +5306,12 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                               ...(reviewSettings || { requireApproval: true, enableRatings: true, allowVideoUploads: true, notificationEmail: 'admin@nextsolution.com', reviewsPerPage: 10 }),
                               notificationEmail: e.target.value
                             })}
-                            className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2.5 py-1.5 text-gray-800 dark:text-neutral-100 focus:outline-none"
+                            className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-1.5 text-gray-800 dark:text-neutral-100 focus:outline-none"
                           />
                         </div>
 
                         <div className="space-y-1">
-                          <label className="font-bold text-gray-500 dark:text-neutral-400 dark:text-neutral-500">Reviews Per Page</label>
+                          <label className="font-bold text-gray-500 dark:text-neutral-400">Reviews Per Page</label>
                           <input
                             type="number" required
                             value={reviewSettings?.reviewsPerPage ?? 10}
@@ -5309,7 +5319,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                               ...(reviewSettings || { requireApproval: true, enableRatings: true, allowVideoUploads: true, notificationEmail: 'admin@nextsolution.com', reviewsPerPage: 10 }),
                               reviewsPerPage: parseInt(e.target.value) || 10
                             })}
-                            className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2.5 py-1.5 text-gray-800 dark:text-neutral-100 focus:outline-none"
+                            className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-1.5 text-gray-800 dark:text-neutral-100 focus:outline-none"
                           />
                         </div>
 
@@ -5329,7 +5339,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
             {/* T10: TEAM MEMBERS MANAGEMENT */}
             {activeSubTab === 'team' && (
               <div id="panel-team-desk" className="space-y-6 text-xs">
-                <div className="flex items-center justify-between border-b border-gray-100 dark:border-neutral-800 pb-3">
+                <div className="flex items-center justify-between border-b border-gray-200 dark:border-neutral-700/80 pb-3">
                   <h3 className="text-sm font-bold text-gray-900 dark:text-white">
                     {currentLang === 'en' ? 'Manage Executive & Delivery Team' : 'টিম মেম্বার্স প্রোফাইল পরিচালনা'}
                   </h3>
@@ -5351,36 +5361,36 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                 </div>
 
                 {isCreatingTeamMember ? (
-                  <form onSubmit={handleSaveTeamMember} className="space-y-4 bg-gray-50/50 rounded-xl p-4 md:p-5 border border-gray-100 dark:border-neutral-800">
+                  <form onSubmit={handleSaveTeamMember} className="space-y-4 bg-gray-50/50 dark:bg-neutral-800/40 rounded-xl p-4 md:p-5 border border-gray-200 dark:border-neutral-700">
                     <div className="grid grid-cols-2 gap-4">
                       <div className="space-y-1.5">
-                        <label className="font-semibold text-gray-500 dark:text-neutral-400 dark:text-neutral-500">Full Name</label>
+                        <label className="font-semibold text-gray-500 dark:text-neutral-400">Full Name</label>
                         <input
                           type="text" required
                           value={teamMemberForm.name || ''}
                           onChange={(e) => setTeamMemberForm({ ...teamMemberForm, name: e.target.value })}
-                          className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none"
+                          className="w-full rounded border border-gray-200 dark:border-neutral-600 bg-white dark:bg-neutral-900 px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:ring-2 focus:ring-orange-500/30 dark:border-neutral-600"
                         />
                       </div>
                       <div className="space-y-1.5">
-                        <label className="font-semibold text-gray-500 dark:text-neutral-400 dark:text-neutral-500">Avatar Photo URL</label>
+                        <label className="font-semibold text-gray-500 dark:text-neutral-400">Avatar Photo URL</label>
                         <input
                           type="text" required
                           value={teamMemberForm.avatar || ''}
                           onChange={(e) => setTeamMemberForm({ ...teamMemberForm, avatar: e.target.value })}
-                          className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none"
+                          className="w-full rounded border border-gray-200 dark:border-neutral-600 bg-white dark:bg-neutral-900 px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:ring-2 focus:ring-orange-500/30 dark:border-neutral-600"
                         />
                       </div>
                     </div>
 
                     <div className="grid grid-cols-2 gap-4">
                       <div className="space-y-1.5">
-                        <label className="font-semibold text-gray-500 dark:text-neutral-400 dark:text-neutral-500">Corporate Role (English)</label>
+                        <label className="font-semibold text-gray-500 dark:text-neutral-400">Corporate Role (English)</label>
                         <input
                           type="text" required
                           value={teamMemberForm.roleEn || ''}
                           onChange={(e) => setTeamMemberForm({ ...teamMemberForm, roleEn: e.target.value })}
-                          className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none"
+                          className="w-full rounded border border-gray-200 dark:border-neutral-600 bg-white dark:bg-neutral-900 px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:ring-2 focus:ring-orange-500/30 dark:border-neutral-600"
                         />
                       </div>
                       
@@ -5388,20 +5398,20 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
 
                     <div className="grid grid-cols-4 gap-3">
                       <div className="space-y-1.5 col-span-2">
-                        <label className="font-semibold text-gray-500 dark:text-neutral-400 dark:text-neutral-500">LinkedIn Profile Link</label>
+                        <label className="font-semibold text-gray-500 dark:text-neutral-400">LinkedIn Profile Link</label>
                         <input
                           type="text"
                           value={teamMemberForm.linkedin || ''}
                           onChange={(e) => setTeamMemberForm({ ...teamMemberForm, linkedin: e.target.value })}
-                          className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none"
+                          className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none"
                         />
                       </div>
                       <div className="space-y-1.5">
-                        <label className="font-semibold text-gray-500 dark:text-neutral-400 dark:text-neutral-500">Department (English)</label>
+                        <label className="font-semibold text-gray-500 dark:text-neutral-400">Department (English)</label>
                         <select
                           value={teamMemberForm.departmentEn || 'Engineering'}
                           onChange={(e) => setTeamMemberForm({ ...teamMemberForm, departmentEn: e.target.value })}
-                          className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none"
+                          className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none"
                         >
                           <option>Executive</option>
                           <option>Engineering</option>
@@ -5414,12 +5424,12 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
 
                     <div className="grid grid-cols-2 gap-4">
                       <div className="space-y-1.5">
-                        <label className="font-semibold text-gray-500 dark:text-neutral-400 dark:text-neutral-500">Short Bio (English)</label>
+                        <label className="font-semibold text-gray-500 dark:text-neutral-400">Short Bio (English)</label>
                         <textarea
                           rows={3}
                           value={teamMemberForm.bioEn || ''}
                           onChange={(e) => setTeamMemberForm({ ...teamMemberForm, bioEn: e.target.value })}
-                          className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none"
+                          className="w-full rounded border border-gray-200 dark:border-neutral-600 bg-white dark:bg-neutral-900 px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:ring-2 focus:ring-orange-500/30 dark:border-neutral-600"
                         />
                       </div>
                       
@@ -5429,7 +5439,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                       <button
                         type="button"
                         onClick={() => setIsCreatingTeamMember(false)}
-                        className="rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-4 py-2 font-bold text-gray-600 dark:text-neutral-300 dark:text-neutral-600 hover:bg-gray-50 dark:hover:bg-neutral-800/70 dark:bg-neutral-900"
+                        className="rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-4 py-2 font-bold text-gray-600 dark:text-neutral-300 hover:bg-gray-50 dark:hover:bg-neutral-800/70 dark:bg-[#141414]"
                       >
                         Cancel
                       </button>
@@ -5444,9 +5454,9 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                 ) : (
                   <div className="grid grid-cols-1 gap-4">
                     {teamMembers.map((member) => (
-                      <div key={member.id} className="rounded-xl border border-gray-100 dark:border-neutral-800 p-4 flex items-center justify-between gap-4 shadow-sm bg-white dark:bg-[#141414] dark:bg-[#141414] hover:border-blue-500 dark:border-orange-500 transition">
+                      <div key={member.id} className="rounded-xl border border-gray-100 dark:border-neutral-800 p-4 flex items-center justify-between gap-4 shadow-sm bg-white dark:bg-[#141414] hover:border-blue-500 dark:border-orange-500 transition">
                         <div className="flex items-center space-x-4">
-                          <img src={member.avatar} alt="" className="h-10 w-10 object-cover rounded-full bg-gray-50 dark:bg-neutral-900 border border-gray-50" referrerPolicy="no-referrer" />
+                          <img src={member.avatar} alt="" className="h-10 w-10 object-cover rounded-full bg-gray-50 dark:bg-[#141414] border border-gray-50" referrerPolicy="no-referrer" />
                           <div>
                             <span className="font-bold text-sm text-gray-900 dark:text-white block">{member.name}</span>
                             <span className="text-gray-400 dark:text-neutral-500 font-mono text-[10px] block mt-0.5">{member.roleEn} • {member.departmentEn}</span>
@@ -5455,7 +5465,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                         <div className="flex items-center space-x-2">
                           <button
                             onClick={() => handleEditTeamMemberTrigger(member)}
-                            className="rounded bg-gray-50 dark:bg-neutral-900 hover:bg-gray-100 dark:hover:bg-neutral-800 dark:bg-neutral-800 px-3 py-1.5 font-semibold text-gray-700 dark:text-neutral-200 border border-gray-100 dark:border-neutral-800 transition"
+                            className="rounded bg-gray-50 dark:bg-[#141414] hover:bg-gray-100 dark:hover:bg-neutral-800 dark:bg-neutral-800 px-3 py-1.5 font-semibold text-gray-700 dark:text-neutral-200 border border-gray-100 dark:border-neutral-800 transition"
                           >
                             Edit
                           </button>
@@ -5476,7 +5486,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
             {/* T11: MEDIA LIBRARY */}
             {activeSubTab === 'media' && (
               <div id="panel-media-desk" className="space-y-6 text-xs">
-                <div className="flex items-center justify-between border-b border-gray-100 dark:border-neutral-800 pb-3">
+                <div className="flex items-center justify-between border-b border-gray-200 dark:border-neutral-700/80 pb-3">
                   <h3 className="text-sm font-bold text-gray-900 dark:text-white">
                     {currentLang === 'en' ? 'Asset & Media Reference Library' : 'মিডিয়া ও অ্যাসেট রেফারেন্স লাইব্রেরি'}
                   </h3>
@@ -5486,23 +5496,23 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                 {/* Add new media reference form */}
                 <form onSubmit={handleAddMedia} className="bg-gray-50/50 p-4 rounded-xl border border-gray-100 dark:border-neutral-800 grid grid-cols-1 md:grid-cols-4 gap-3 items-end">
                   <div className="space-y-1.5">
-                    <label className="font-semibold text-gray-500 dark:text-neutral-400 dark:text-neutral-500">Asset Title</label>
+                    <label className="font-semibold text-gray-500 dark:text-neutral-400">Asset Title</label>
                     <input
                       type="text" required
                       placeholder="e.g. Stripe Mockup"
                       value={newMediaTitle}
                       onChange={(e) => setNewMediaTitle(e.target.value)}
-                      className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2.5 py-1.5 text-gray-800 dark:text-neutral-100 focus:outline-none"
+                      className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-1.5 text-gray-800 dark:text-neutral-100 focus:outline-none"
                     />
                   </div>
                   <div className="space-y-1.5 col-span-2">
-                    <label className="font-semibold text-gray-500 dark:text-neutral-400 dark:text-neutral-500">Direct CDN / Unsplash URL</label>
+                    <label className="font-semibold text-gray-500 dark:text-neutral-400">Direct CDN / Unsplash URL</label>
                     <input
                       type="text" required
                       placeholder="https://images.unsplash.com/photo-..."
                       value={newMediaUrl}
                       onChange={(e) => setNewMediaUrl(e.target.value)}
-                      className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2.5 py-1.5 text-gray-800 dark:text-neutral-100 focus:outline-none"
+                      className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-1.5 text-gray-800 dark:text-neutral-100 focus:outline-none"
                     />
                   </div>
                   <button
@@ -5516,7 +5526,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                 {/* Media Search and Grid */}
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-2 bg-gray-50 dark:bg-neutral-900 border border-gray-100 dark:border-neutral-800 px-2.5 py-1 rounded-lg w-64 text-[11px]">
+                    <div className="flex items-center space-x-2 bg-gray-50 dark:bg-[#141414] border border-gray-100 dark:border-neutral-800 px-2.5 py-1 rounded-lg w-64 text-[11px]">
                       <SearchIcon className="h-3.5 w-3.5 text-gray-400 dark:text-neutral-500" />
                       <input
                         type="text"
@@ -5533,7 +5543,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                           key={cat}
                           onClick={() => setMediaCategory(cat)}
                           className={`px-2.5 py-1 rounded text-[10px] font-bold uppercase transition ${
-                            mediaCategory === cat ? 'bg-blue-600 dark:bg-orange-500 text-white' : 'bg-gray-100 dark:bg-neutral-800 text-gray-600 dark:text-neutral-300 dark:text-neutral-600'
+                            mediaCategory === cat ? 'bg-blue-600 dark:bg-orange-500 text-white' : 'bg-gray-100 dark:bg-neutral-800 text-gray-600 dark:text-neutral-300'
                           }`}
                         >
                           {cat}
@@ -5547,8 +5557,8 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                       .filter(m => mediaCategory === 'all' || m.group === mediaCategory)
                       .filter(m => !mediaSearch || m.title.toLowerCase().includes(mediaSearch.toLowerCase()))
                       .map((item) => (
-                        <div key={item.id} className="group relative rounded-xl border border-gray-100 dark:border-neutral-800 overflow-hidden shadow-sm bg-white dark:bg-[#141414] dark:bg-[#141414] flex flex-col justify-between">
-                          <img src={item.url} alt="" className="h-28 w-full object-cover bg-gray-50 dark:bg-neutral-900" referrerPolicy="no-referrer" />
+                        <div key={item.id} className="group relative rounded-xl border border-gray-100 dark:border-neutral-800 overflow-hidden shadow-sm bg-white dark:bg-[#141414] flex flex-col justify-between">
+                          <img src={item.url} alt="" className="h-28 w-full object-cover bg-gray-50 dark:bg-[#141414]" referrerPolicy="no-referrer" />
                           <div className="p-2.5 space-y-1 border-t border-gray-50">
                             <span className="font-bold text-gray-900 dark:text-white block truncate">{item.title}</span>
                             <span className="text-[9px] text-gray-400 dark:text-neutral-500 font-mono block truncate">{item.url}</span>
@@ -5582,7 +5592,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
             {/* T12: USER & ROLE MANAGEMENT */}
             {activeSubTab === 'users' && (
               <div id="panel-users-desk" className="space-y-6 text-xs">
-                <div className="flex items-center justify-between border-b border-gray-100 dark:border-neutral-800 pb-3">
+                <div className="flex items-center justify-between border-b border-gray-200 dark:border-neutral-700/80 pb-3">
                   <h3 className="text-sm font-bold text-gray-900 dark:text-white">
                     {currentLang === 'en' ? 'Administrative Accounts & Role Access' : 'প্রশাসনিক অ্যাকাউন্ট ও ভূমিকা নিয়ন্ত্রণ'}
                   </h3>
@@ -5602,35 +5612,35 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                 </div>
 
                 {isCreatingUser ? (
-                  <form onSubmit={handleSaveUser} className="space-y-4 bg-gray-50/50 rounded-xl p-4 md:p-5 border border-gray-100 dark:border-neutral-800">
+                  <form onSubmit={handleSaveUser} className="space-y-4 bg-gray-50/50 dark:bg-neutral-800/40 rounded-xl p-4 md:p-5 border border-gray-200 dark:border-neutral-700">
                     <div className="grid grid-cols-2 gap-4">
                       <div className="space-y-1.5">
-                        <label className="font-semibold text-gray-500 dark:text-neutral-400 dark:text-neutral-500">Username Identifier</label>
+                        <label className="font-semibold text-gray-500 dark:text-neutral-400">Username Identifier</label>
                         <input
                           type="text" required
                           value={userForm.username || ''}
                           onChange={(e) => setUserForm({ ...userForm, username: e.target.value })}
-                          className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none"
+                          className="w-full rounded border border-gray-200 dark:border-neutral-600 bg-white dark:bg-neutral-900 px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:ring-2 focus:ring-orange-500/30 dark:border-neutral-600"
                         />
                       </div>
                       <div className="space-y-1.5">
-                        <label className="font-semibold text-gray-500 dark:text-neutral-400 dark:text-neutral-500">Corporate Email</label>
+                        <label className="font-semibold text-gray-500 dark:text-neutral-400">Corporate Email</label>
                         <input
                           type="email" required
                           value={userForm.email || ''}
                           onChange={(e) => setUserForm({ ...userForm, email: e.target.value })}
-                          className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none"
+                          className="w-full rounded border border-gray-200 dark:border-neutral-600 bg-white dark:bg-neutral-900 px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:ring-2 focus:ring-orange-500/30 dark:border-neutral-600"
                         />
                       </div>
                     </div>
 
                     <div className="grid grid-cols-3 gap-3">
                       <div className="space-y-1.5">
-                        <label className="font-semibold text-gray-500 dark:text-neutral-400 dark:text-neutral-500">Role Permissions</label>
+                        <label className="font-semibold text-gray-500 dark:text-neutral-400">Role Permissions</label>
                         <select
                           value={userForm.role || 'Editor'}
                           onChange={(e) => setUserForm({ ...userForm, role: e.target.value })}
-                          className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none"
+                          className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none"
                         >
                           <option>SuperAdmin</option>
                           <option>Editor</option>
@@ -5638,23 +5648,23 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                         </select>
                       </div>
                       <div className="space-y-1.5">
-                        <label className="font-semibold text-gray-500 dark:text-neutral-400 dark:text-neutral-500">Account Status</label>
+                        <label className="font-semibold text-gray-500 dark:text-neutral-400">Account Status</label>
                         <select
                           value={userForm.status || 'active'}
                           onChange={(e) => setUserForm({ ...userForm, status: e.target.value })}
-                          className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none"
+                          className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none"
                         >
                           <option>active</option>
                           <option>locked</option>
                         </select>
                       </div>
                       <div className="space-y-1.5">
-                        <label className="font-semibold text-gray-500 dark:text-neutral-400 dark:text-neutral-500">Access Key Passcode</label>
+                        <label className="font-semibold text-gray-500 dark:text-neutral-400">Access Key Passcode</label>
                         <input
                           type="password" required
                           value={userForm.password || ''}
                           onChange={(e) => setUserForm({ ...userForm, password: e.target.value })}
-                          className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none"
+                          className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none"
                         />
                       </div>
                     </div>
@@ -5663,7 +5673,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                       <button
                         type="button"
                         onClick={() => setIsCreatingUser(false)}
-                        className="rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-4 py-2 font-bold text-gray-600 dark:text-neutral-300 dark:text-neutral-600 hover:bg-gray-50 dark:hover:bg-neutral-800/70 dark:bg-neutral-900"
+                        className="rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-4 py-2 font-bold text-gray-600 dark:text-neutral-300 hover:bg-gray-50 dark:hover:bg-neutral-800/70 dark:bg-[#141414]"
                       >
                         Cancel
                       </button>
@@ -5678,7 +5688,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                 ) : (
                   <div className="grid grid-cols-1 gap-4">
                     {adminUsers.map((u) => (
-                      <div key={u.id} className="rounded-xl border border-gray-100 dark:border-neutral-800 p-4 flex items-center justify-between gap-4 shadow-sm bg-white dark:bg-[#141414] dark:bg-[#141414] hover:border-blue-500 dark:border-orange-500 transition">
+                      <div key={u.id} className="rounded-xl border border-gray-100 dark:border-neutral-800 p-4 flex items-center justify-between gap-4 shadow-sm bg-white dark:bg-[#141414] hover:border-blue-500 dark:border-orange-500 transition">
                         <div className="flex items-center space-x-3">
                           <div className={`h-8 w-8 rounded-full flex items-center justify-center font-bold font-mono ${
                             u.role === 'SuperAdmin' ? 'bg-purple-100 text-purple-700 dark:text-purple-400 dark:text-purple-300' : 'bg-blue-100 dark:bg-orange-500/15 text-blue-700 dark:text-orange-400'
@@ -5686,14 +5696,14 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                             {u.username.slice(0, 2).toUpperCase()}
                           </div>
                           <div>
-                            <span className="font-bold text-sm text-gray-900 dark:text-white block">{u.username} • <span className="text-[10px] bg-gray-100 dark:bg-neutral-800 px-2 py-0.5 rounded text-gray-600 dark:text-neutral-300 dark:text-neutral-600 font-extrabold uppercase">{u.role}</span></span>
+                            <span className="font-bold text-sm text-gray-900 dark:text-white block">{u.username} • <span className="text-[10px] bg-gray-100 dark:bg-neutral-800 px-2 py-0.5 rounded text-gray-600 dark:text-neutral-300 font-extrabold uppercase">{u.role}</span></span>
                             <span className="text-gray-400 dark:text-neutral-500 font-mono text-[10px] block mt-0.5">{u.email} • Status: <span className={`font-bold uppercase ${u.status === 'active' ? 'text-emerald-500 dark:text-emerald-400' : 'text-red-500 dark:text-red-400'}`}>{u.status}</span></span>
                           </div>
                         </div>
                         <div className="flex items-center space-x-2">
                           <button
                             onClick={() => handleEditUserTrigger(u)}
-                            className="rounded bg-gray-50 dark:bg-neutral-900 hover:bg-gray-100 dark:hover:bg-neutral-800 dark:bg-neutral-800 px-3 py-1.5 font-semibold text-gray-700 dark:text-neutral-200 border border-gray-100 dark:border-neutral-800 transition"
+                            className="rounded bg-gray-50 dark:bg-[#141414] hover:bg-gray-100 dark:hover:bg-neutral-800 dark:bg-neutral-800 px-3 py-1.5 font-semibold text-gray-700 dark:text-neutral-200 border border-gray-100 dark:border-neutral-800 transition"
                           >
                             Edit
                           </button>
@@ -5745,7 +5755,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                       className={`border-b-2 py-2 px-4 text-xs font-bold transition-all duration-150 ${
                         whyChooseUsSubTab === tab
                           ? 'border-blue-600 text-blue-600 dark:text-orange-400'
-                          : 'border-transparent text-gray-500 dark:text-neutral-400 dark:text-neutral-500 hover:text-gray-900 dark:hover:text-white dark:text-white'
+                          : 'border-transparent text-gray-500 dark:text-neutral-400 hover:text-gray-900 dark:hover:text-white dark:text-white'
                       }`}
                     >
                       {tab === 'cards' && (currentLang === 'en' ? 'Ecosystem Cards' : 'ইকোসিস্টেম কার্ড')}
@@ -5787,7 +5797,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                           <button 
                             type="button" 
                             onClick={() => { setIsCreatingWhyCard(false); setEditingWhyCard(null); }}
-                            className="text-gray-400 dark:text-neutral-500 hover:text-gray-600 dark:hover:text-neutral-300 dark:text-neutral-300 dark:text-neutral-600"
+                            className="text-gray-400 dark:text-neutral-500 hover:text-gray-600 dark:hover:text-neutral-300 dark:text-neutral-300"
                           >
                             ✖
                           </button>
@@ -5795,33 +5805,33 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
                           <div className="space-y-1">
-                            <label className="font-bold text-gray-600 dark:text-neutral-300 dark:text-neutral-600 block">{currentLang === 'en' ? 'Title (English)' : 'শিরোনাম (ইংরেজী)'}</label>
+                            <label className="font-bold text-gray-600 dark:text-neutral-300 block">{currentLang === 'en' ? 'Title (English)' : 'শিরোনাম (ইংরেজী)'}</label>
                             <input
                               type="text" required
                               value={whyCardForm.titleEn || ''}
                               onChange={(e) => setWhyCardForm({ ...whyCardForm, titleEn: e.target.value })}
-                              className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none"
+                              className="w-full rounded border border-gray-200 dark:border-neutral-600 bg-white dark:bg-neutral-900 px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:ring-2 focus:ring-orange-500/30 dark:border-neutral-600"
                             />
                           </div>
                           
 
                           <div className="space-y-1">
-                            <label className="font-bold text-gray-600 dark:text-neutral-300 dark:text-neutral-600 block">{currentLang === 'en' ? 'Category/Spoke Key (English)' : 'ক্যাটাগরি/স্পোক কি (ইংরেজী)'}</label>
+                            <label className="font-bold text-gray-600 dark:text-neutral-300 block">{currentLang === 'en' ? 'Category/Spoke Key (English)' : 'ক্যাটাগরি/স্পোক কি (ইংরেজী)'}</label>
                             <input
                               type="text" placeholder="e.g. Design, Development, Marketing"
                               value={whyCardForm.categoryEn || ''}
                               onChange={(e) => setWhyCardForm({ ...whyCardForm, categoryEn: e.target.value })}
-                              className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none"
+                              className="w-full rounded border border-gray-200 dark:border-neutral-600 bg-white dark:bg-neutral-900 px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:ring-2 focus:ring-orange-500/30 dark:border-neutral-600"
                             />
                           </div>
                           
 
                           <div className="space-y-1">
-                            <label className="font-bold text-gray-600 dark:text-neutral-300 dark:text-neutral-600 block">{currentLang === 'en' ? 'Lucide Icon Name' : 'লুসিড আইকন নাম'}</label>
+                            <label className="font-bold text-gray-600 dark:text-neutral-300 block">{currentLang === 'en' ? 'Lucide Icon Name' : 'লুসিড আইকন নাম'}</label>
                             <select
                               value={whyCardForm.icon || 'Sparkles'}
                               onChange={(e) => setWhyCardForm({ ...whyCardForm, icon: e.target.value })}
-                              className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none"
+                              className="w-full rounded border border-gray-200 dark:border-neutral-600 bg-white dark:bg-neutral-900 px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:ring-2 focus:ring-orange-500/30 dark:border-neutral-600"
                             >
                               {['Sparkles', 'Cpu', 'Users', 'Trophy', 'TrendingUp', 'Activity', 'Shield', 'Layers', 'CheckCircle2', 'Flame', 'Compass', 'Lightbulb'].map((ic) => (
                                 <option key={ic} value={ic}>{ic}</option>
@@ -5830,24 +5840,24 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                           </div>
 
                           <div className="space-y-1">
-                            <label className="font-bold text-gray-600 dark:text-neutral-300 dark:text-neutral-600 block">{currentLang === 'en' ? 'Badge Overlap Text (English) - Optional' : 'ওভারল্যাপ ব্যাজ টেক্সট (ইংরেজী)'}</label>
+                            <label className="font-bold text-gray-600 dark:text-neutral-300 block">{currentLang === 'en' ? 'Badge Overlap Text (English) - Optional' : 'ওভারল্যাপ ব্যাজ টেক্সট (ইংরেজী)'}</label>
                             <input
                               type="text" placeholder="e.g. Speed 100%"
                               value={whyCardForm.badgeTextEn || ''}
                               onChange={(e) => setWhyCardForm({ ...whyCardForm, badgeTextEn: e.target.value })}
-                              className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none"
+                              className="w-full rounded border border-gray-200 dark:border-neutral-600 bg-white dark:bg-neutral-900 px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:ring-2 focus:ring-orange-500/30 dark:border-neutral-600"
                             />
                           </div>
 
                           
 
                           <div className="space-y-1">
-                            <label className="font-bold text-gray-600 dark:text-neutral-300 dark:text-neutral-600 block">{currentLang === 'en' ? 'Display Order' : 'প্রদর্শনের ক্রম'}</label>
+                            <label className="font-bold text-gray-600 dark:text-neutral-300 block">{currentLang === 'en' ? 'Display Order' : 'প্রদর্শনের ক্রম'}</label>
                             <input
                               type="number" required
                               value={whyCardForm.displayOrder || 1}
                               onChange={(e) => setWhyCardForm({ ...whyCardForm, displayOrder: Number(e.target.value) })}
-                              className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none"
+                              className="w-full rounded border border-gray-200 dark:border-neutral-600 bg-white dark:bg-neutral-900 px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:ring-2 focus:ring-orange-500/30 dark:border-neutral-600"
                             />
                           </div>
 
@@ -5858,18 +5868,18 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                               onChange={(e) => setWhyCardForm({ ...whyCardForm, visible: e.target.checked })}
                               className="rounded border-gray-300 dark:border-neutral-600 text-blue-600 dark:text-orange-400 focus:ring-blue-500 dark:focus:ring-orange-500 mr-2 h-4 w-4"
                             />
-                            <label htmlFor="whycard-visible" className="font-bold text-gray-600 dark:text-neutral-300 dark:text-neutral-600 select-none">{currentLang === 'en' ? 'Card is Visible' : 'কার্ডটি দৃশ্যমান হবে'}</label>
+                            <label htmlFor="whycard-visible" className="font-bold text-gray-600 dark:text-neutral-300 select-none">{currentLang === 'en' ? 'Card is Visible' : 'কার্ডটি দৃশ্যমান হবে'}</label>
                           </div>
                         </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs mt-2">
                           <div className="space-y-1">
-                            <label className="font-bold text-gray-600 dark:text-neutral-300 dark:text-neutral-600 block">{currentLang === 'en' ? 'Description (English)' : 'বর্ণনা (ইংরেজী)'}</label>
+                            <label className="font-bold text-gray-600 dark:text-neutral-300 block">{currentLang === 'en' ? 'Description (English)' : 'বর্ণনা (ইংরেজী)'}</label>
                             <textarea
                               rows={3} required
                               value={whyCardForm.descriptionEn || ''}
                               onChange={(e) => setWhyCardForm({ ...whyCardForm, descriptionEn: e.target.value })}
-                              className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none"
+                              className="w-full rounded border border-gray-200 dark:border-neutral-600 bg-white dark:bg-neutral-900 px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:ring-2 focus:ring-orange-500/30 dark:border-neutral-600"
                             />
                           </div>
                           
@@ -5879,7 +5889,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                           <button
                             type="button"
                             onClick={() => { setIsCreatingWhyCard(false); setEditingWhyCard(null); }}
-                            className="rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-4 py-2 text-xs font-bold text-gray-600 dark:text-neutral-300 dark:text-neutral-600 hover:bg-gray-50 dark:hover:bg-neutral-800/70 dark:bg-neutral-900 transition"
+                            className="rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-4 py-2 text-xs font-bold text-gray-600 dark:text-neutral-300 hover:bg-gray-50 dark:hover:bg-neutral-800/70 dark:bg-[#141414] transition"
                           >
                             {currentLang === 'en' ? 'Cancel' : 'বাতিল'}
                           </button>
@@ -5894,12 +5904,12 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                     ) : (
                       <div className="grid grid-cols-1 gap-4">
                         {whyChooseUsCards.map((c) => (
-                          <div key={c.id} className="rounded-xl border border-gray-100 dark:border-neutral-800 p-4 flex items-center justify-between gap-4 shadow-sm bg-white dark:bg-[#141414] dark:bg-[#141414] hover:border-blue-500 dark:border-orange-500 transition">
+                          <div key={c.id} className="rounded-xl border border-gray-100 dark:border-neutral-800 p-4 flex items-center justify-between gap-4 shadow-sm bg-white dark:bg-[#141414] hover:border-blue-500 dark:border-orange-500 transition">
                             <div>
                               <div className="flex items-center gap-2">
                                 <span className="font-mono text-[10px] bg-blue-50 dark:bg-orange-500/10 text-blue-700 dark:text-orange-400 px-2 py-0.5 rounded uppercase font-bold">{c.icon}</span>
                                 {c.categoryEn && (
-                                  <span className="font-mono text-[10px] bg-gray-100 dark:bg-neutral-800 text-gray-600 dark:text-neutral-300 dark:text-neutral-600 px-2 py-0.5 rounded font-semibold">{c.categoryEn}</span>
+                                  <span className="font-mono text-[10px] bg-gray-100 dark:bg-neutral-800 text-gray-600 dark:text-neutral-300 px-2 py-0.5 rounded font-semibold">{c.categoryEn}</span>
                                 )}
                                 {!c.visible && (
                                   <span className="font-mono text-[10px] bg-red-50 dark:bg-red-500/10 text-red-600 dark:text-red-400 px-2 py-0.5 rounded font-bold">Hidden</span>
@@ -5920,7 +5930,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                                   setEditingWhyCard(c);
                                   setWhyCardForm(c);
                                 }}
-                                className="rounded bg-gray-50 dark:bg-neutral-900 hover:bg-gray-100 dark:hover:bg-neutral-800 dark:bg-neutral-800 px-3 py-1.5 text-xs font-bold text-gray-700 dark:text-neutral-200 border border-gray-100 dark:border-neutral-800 transition"
+                                className="rounded bg-gray-50 dark:bg-[#141414] hover:bg-gray-100 dark:hover:bg-neutral-800 dark:bg-neutral-800 px-3 py-1.5 text-xs font-bold text-gray-700 dark:text-neutral-200 border border-gray-100 dark:border-neutral-800 transition"
                               >
                                 {currentLang === 'en' ? 'Edit' : 'সম্পাদনা'}
                               </button>
@@ -5966,7 +5976,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                           <button 
                             type="button" 
                             onClick={() => { setIsCreatingWhyStat(false); setEditingWhyStat(null); }}
-                            className="text-gray-400 dark:text-neutral-500 hover:text-gray-600 dark:hover:text-neutral-300 dark:text-neutral-300 dark:text-neutral-600"
+                            className="text-gray-400 dark:text-neutral-500 hover:text-gray-600 dark:hover:text-neutral-300 dark:text-neutral-300"
                           >
                             ✖
                           </button>
@@ -5974,32 +5984,32 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
                           <div className="space-y-1">
-                            <label className="font-bold text-gray-600 dark:text-neutral-300 dark:text-neutral-600 block">{currentLang === 'en' ? 'Value (e.g. 99% or 250+)' : 'মান (উদাঃ ৯৯% বা ২৫০+)'}</label>
+                            <label className="font-bold text-gray-600 dark:text-neutral-300 block">{currentLang === 'en' ? 'Value (e.g. 99% or 250+)' : 'মান (উদাঃ ৯৯% বা ২৫০+)'}</label>
                             <input
                               type="text" required
                               value={whyStatForm.value || ''}
                               onChange={(e) => setWhyStatForm({ ...whyStatForm, value: e.target.value })}
-                              className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none"
+                              className="w-full rounded border border-gray-200 dark:border-neutral-600 bg-white dark:bg-neutral-900 px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:ring-2 focus:ring-orange-500/30 dark:border-neutral-600"
                             />
                           </div>
 
                           <div className="space-y-1">
-                            <label className="font-bold text-gray-600 dark:text-neutral-300 dark:text-neutral-600 block">{currentLang === 'en' ? 'Display Order' : 'প্রদর্শনের ক্রম'}</label>
+                            <label className="font-bold text-gray-600 dark:text-neutral-300 block">{currentLang === 'en' ? 'Display Order' : 'প্রদর্শনের ক্রম'}</label>
                             <input
                               type="number" required
                               value={whyStatForm.displayOrder || 1}
                               onChange={(e) => setWhyStatForm({ ...whyStatForm, displayOrder: Number(e.target.value) })}
-                              className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none"
+                              className="w-full rounded border border-gray-200 dark:border-neutral-600 bg-white dark:bg-neutral-900 px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:ring-2 focus:ring-orange-500/30 dark:border-neutral-600"
                             />
                           </div>
 
                           <div className="space-y-1">
-                            <label className="font-bold text-gray-600 dark:text-neutral-300 dark:text-neutral-600 block">{currentLang === 'en' ? 'Label (English)' : 'লেবেল (ইংরেজী)'}</label>
+                            <label className="font-bold text-gray-600 dark:text-neutral-300 block">{currentLang === 'en' ? 'Label (English)' : 'লেবেল (ইংরেজী)'}</label>
                             <input
                               type="text" required
                               value={whyStatForm.labelEn || ''}
                               onChange={(e) => setWhyStatForm({ ...whyStatForm, labelEn: e.target.value })}
-                              className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none"
+                              className="w-full rounded border border-gray-200 dark:border-neutral-600 bg-white dark:bg-neutral-900 px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:ring-2 focus:ring-orange-500/30 dark:border-neutral-600"
                             />
                           </div>
                           
@@ -6011,7 +6021,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                               onChange={(e) => setWhyStatForm({ ...whyStatForm, visible: e.target.checked })}
                               className="rounded border-gray-300 dark:border-neutral-600 text-blue-600 dark:text-orange-400 focus:ring-blue-500 dark:focus:ring-orange-500 mr-2 h-4 w-4"
                             />
-                            <label htmlFor="whystat-visible" className="font-bold text-gray-600 dark:text-neutral-300 dark:text-neutral-600 select-none">{currentLang === 'en' ? 'Stat is Visible' : 'পরিসংখ্যানটি দৃশ্যমান হবে'}</label>
+                            <label htmlFor="whystat-visible" className="font-bold text-gray-600 dark:text-neutral-300 select-none">{currentLang === 'en' ? 'Stat is Visible' : 'পরিসংখ্যানটি দৃশ্যমান হবে'}</label>
                           </div>
                         </div>
 
@@ -6019,7 +6029,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                           <button
                             type="button"
                             onClick={() => { setIsCreatingWhyStat(false); setEditingWhyStat(null); }}
-                            className="rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-4 py-2 text-xs font-bold text-gray-600 dark:text-neutral-300 dark:text-neutral-600 hover:bg-gray-50 dark:hover:bg-neutral-800/70 dark:bg-neutral-900 transition"
+                            className="rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-4 py-2 text-xs font-bold text-gray-600 dark:text-neutral-300 hover:bg-gray-50 dark:hover:bg-neutral-800/70 dark:bg-[#141414] transition"
                           >
                             {currentLang === 'en' ? 'Cancel' : 'বাতিল'}
                           </button>
@@ -6034,7 +6044,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                     ) : (
                       <div className="grid grid-cols-1 gap-4">
                         {whyChooseUsStats.map((s) => (
-                          <div key={s.id} className="rounded-xl border border-gray-100 dark:border-neutral-800 p-4 flex items-center justify-between gap-4 shadow-sm bg-white dark:bg-[#141414] dark:bg-[#141414] hover:border-blue-500 dark:border-orange-500 transition">
+                          <div key={s.id} className="rounded-xl border border-gray-100 dark:border-neutral-800 p-4 flex items-center justify-between gap-4 shadow-sm bg-white dark:bg-[#141414] hover:border-blue-500 dark:border-orange-500 transition">
                             <div>
                               <div className="flex items-center gap-2">
                                 <span className="font-mono text-base font-black text-blue-600 dark:text-orange-400">{s.value}</span>
@@ -6054,7 +6064,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                                   setEditingWhyStat(s);
                                   setWhyStatForm(s);
                                 }}
-                                className="rounded bg-gray-50 dark:bg-neutral-900 hover:bg-gray-100 dark:hover:bg-neutral-800 dark:bg-neutral-800 px-3 py-1.5 text-xs font-bold text-gray-700 dark:text-neutral-200 border border-gray-100 dark:border-neutral-800 transition"
+                                className="rounded bg-gray-50 dark:bg-[#141414] hover:bg-gray-100 dark:hover:bg-neutral-800 dark:bg-neutral-800 px-3 py-1.5 text-xs font-bold text-gray-700 dark:text-neutral-200 border border-gray-100 dark:border-neutral-800 transition"
                               >
                                 {currentLang === 'en' ? 'Edit' : 'সম্পাদনা'}
                               </button>
@@ -6100,7 +6110,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                           <button 
                             type="button" 
                             onClick={() => { setIsCreatingWhyBadge(false); setEditingWhyBadge(null); }}
-                            className="text-gray-400 dark:text-neutral-500 hover:text-gray-600 dark:hover:text-neutral-300 dark:text-neutral-300 dark:text-neutral-600"
+                            className="text-gray-400 dark:text-neutral-500 hover:text-gray-600 dark:hover:text-neutral-300 dark:text-neutral-300"
                           >
                             ✖
                           </button>
@@ -6108,23 +6118,23 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
                           <div className="space-y-1">
-                            <label className="font-bold text-gray-600 dark:text-neutral-300 dark:text-neutral-600 block">{currentLang === 'en' ? 'Label (English)' : 'লেবেল (ইংরেজী)'}</label>
+                            <label className="font-bold text-gray-600 dark:text-neutral-300 block">{currentLang === 'en' ? 'Label (English)' : 'লেবেল (ইংরেজী)'}</label>
                             <input
                               type="text" required
                               value={whyBadgeForm.labelEn || ''}
                               onChange={(e) => setWhyBadgeForm({ ...whyBadgeForm, labelEn: e.target.value })}
-                              className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none"
+                              className="w-full rounded border border-gray-200 dark:border-neutral-600 bg-white dark:bg-neutral-900 px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:ring-2 focus:ring-orange-500/30 dark:border-neutral-600"
                             />
                           </div>
                           
 
                           <div className="space-y-1">
-                            <label className="font-bold text-gray-600 dark:text-neutral-300 dark:text-neutral-600 block">{currentLang === 'en' ? 'Display Order' : 'প্রদর্শনের ক্রম'}</label>
+                            <label className="font-bold text-gray-600 dark:text-neutral-300 block">{currentLang === 'en' ? 'Display Order' : 'প্রদর্শনের ক্রম'}</label>
                             <input
                               type="number" required
                               value={whyBadgeForm.displayOrder || 1}
                               onChange={(e) => setWhyBadgeForm({ ...whyBadgeForm, displayOrder: Number(e.target.value) })}
-                              className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none"
+                              className="w-full rounded border border-gray-200 dark:border-neutral-600 bg-white dark:bg-neutral-900 px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:ring-2 focus:ring-orange-500/30 dark:border-neutral-600"
                             />
                           </div>
 
@@ -6135,7 +6145,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                               onChange={(e) => setWhyBadgeForm({ ...whyBadgeForm, visible: e.target.checked })}
                               className="rounded border-gray-300 dark:border-neutral-600 text-blue-600 dark:text-orange-400 focus:ring-blue-500 dark:focus:ring-orange-500 mr-2 h-4 w-4"
                             />
-                            <label htmlFor="whybadge-visible" className="font-bold text-gray-600 dark:text-neutral-300 dark:text-neutral-600 select-none">{currentLang === 'en' ? 'Badge is Visible' : 'ব্যাজটি দৃশ্যমান হবে'}</label>
+                            <label htmlFor="whybadge-visible" className="font-bold text-gray-600 dark:text-neutral-300 select-none">{currentLang === 'en' ? 'Badge is Visible' : 'ব্যাজটি দৃশ্যমান হবে'}</label>
                           </div>
                         </div>
 
@@ -6143,7 +6153,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                           <button
                             type="button"
                             onClick={() => { setIsCreatingWhyBadge(false); setEditingWhyBadge(null); }}
-                            className="rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-4 py-2 text-xs font-bold text-gray-600 dark:text-neutral-300 dark:text-neutral-600 hover:bg-gray-50 dark:hover:bg-neutral-800/70 dark:bg-neutral-900 transition"
+                            className="rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-4 py-2 text-xs font-bold text-gray-600 dark:text-neutral-300 hover:bg-gray-50 dark:hover:bg-neutral-800/70 dark:bg-[#141414] transition"
                           >
                             {currentLang === 'en' ? 'Cancel' : 'বাতিল'}
                           </button>
@@ -6158,7 +6168,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                     ) : (
                       <div className="grid grid-cols-1 gap-4">
                         {whyChooseUsBadges.map((b) => (
-                          <div key={b.id} className="rounded-xl border border-gray-100 dark:border-neutral-800 p-4 flex items-center justify-between gap-4 shadow-sm bg-white dark:bg-[#141414] dark:bg-[#141414] hover:border-blue-500 dark:border-orange-500 transition">
+                          <div key={b.id} className="rounded-xl border border-gray-100 dark:border-neutral-800 p-4 flex items-center justify-between gap-4 shadow-sm bg-white dark:bg-[#141414] hover:border-blue-500 dark:border-orange-500 transition">
                             <div>
                               <div className="flex items-center gap-2">
                                 <span className="font-bold text-sm text-gray-900 dark:text-white">{currentLang === 'en' ? b.labelEn : b.labelBn}</span>
@@ -6175,7 +6185,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                                   setEditingWhyBadge(b);
                                   setWhyBadgeForm(b);
                                 }}
-                                className="rounded bg-gray-50 dark:bg-neutral-900 hover:bg-gray-100 dark:hover:bg-neutral-800 dark:bg-neutral-800 px-3 py-1.5 text-xs font-bold text-gray-700 dark:text-neutral-200 border border-gray-100 dark:border-neutral-800 transition"
+                                className="rounded bg-gray-50 dark:bg-[#141414] hover:bg-gray-100 dark:hover:bg-neutral-800 dark:bg-neutral-800 px-3 py-1.5 text-xs font-bold text-gray-700 dark:text-neutral-200 border border-gray-100 dark:border-neutral-800 transition"
                               >
                                 {currentLang === 'en' ? 'Edit' : 'সম্পাদনা'}
                               </button>
@@ -6221,7 +6231,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                           <button 
                             type="button" 
                             onClick={() => { setIsCreatingWhyTech(false); setEditingWhyTech(null); }}
-                            className="text-gray-400 dark:text-neutral-500 hover:text-gray-600 dark:hover:text-neutral-300 dark:text-neutral-300 dark:text-neutral-600"
+                            className="text-gray-400 dark:text-neutral-500 hover:text-gray-600 dark:hover:text-neutral-300 dark:text-neutral-300"
                           >
                             ✖
                           </button>
@@ -6229,32 +6239,32 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
                           <div className="space-y-1">
-                            <label className="font-bold text-gray-600 dark:text-neutral-300 dark:text-neutral-600 block">{currentLang === 'en' ? 'Technology Name' : 'প্রযুক্তির নাম'}</label>
+                            <label className="font-bold text-gray-600 dark:text-neutral-300 block">{currentLang === 'en' ? 'Technology Name' : 'প্রযুক্তির নাম'}</label>
                             <input
                               type="text" required
                               value={whyTechForm.name || ''}
                               onChange={(e) => setWhyTechForm({ ...whyTechForm, name: e.target.value })}
-                              className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none"
+                              className="w-full rounded border border-gray-200 dark:border-neutral-600 bg-white dark:bg-neutral-900 px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:ring-2 focus:ring-orange-500/30 dark:border-neutral-600"
                             />
                           </div>
 
                           <div className="space-y-1">
-                            <label className="font-bold text-gray-600 dark:text-neutral-300 dark:text-neutral-600 block">{currentLang === 'en' ? 'SVG Logo Source / URL' : 'এসভিজি লোগো বা ছবির লিংক'}</label>
+                            <label className="font-bold text-gray-600 dark:text-neutral-300 block">{currentLang === 'en' ? 'SVG Logo Source / URL' : 'এসভিজি লোগো বা ছবির লিংক'}</label>
                             <input
                               type="text" required placeholder="https://cdn.jsdelivr.net/gh/devicons/..."
                               value={whyTechForm.logoUrl || ''}
                               onChange={(e) => setWhyTechForm({ ...whyTechForm, logoUrl: e.target.value })}
-                              className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none"
+                              className="w-full rounded border border-gray-200 dark:border-neutral-600 bg-white dark:bg-neutral-900 px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:ring-2 focus:ring-orange-500/30 dark:border-neutral-600"
                             />
                           </div>
 
                           <div className="space-y-1">
-                            <label className="font-bold text-gray-600 dark:text-neutral-300 dark:text-neutral-600 block">{currentLang === 'en' ? 'Display Order' : 'প্রদর্শনের ক্রম'}</label>
+                            <label className="font-bold text-gray-600 dark:text-neutral-300 block">{currentLang === 'en' ? 'Display Order' : 'প্রদর্শনের ক্রম'}</label>
                             <input
                               type="number" required
                               value={whyTechForm.displayOrder || 1}
                               onChange={(e) => setWhyTechForm({ ...whyTechForm, displayOrder: Number(e.target.value) })}
-                              className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none"
+                              className="w-full rounded border border-gray-200 dark:border-neutral-600 bg-white dark:bg-neutral-900 px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:ring-2 focus:ring-orange-500/30 dark:border-neutral-600"
                             />
                           </div>
 
@@ -6265,7 +6275,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                               onChange={(e) => setWhyTechForm({ ...whyTechForm, visible: e.target.checked })}
                               className="rounded border-gray-300 dark:border-neutral-600 text-blue-600 dark:text-orange-400 focus:ring-blue-500 dark:focus:ring-orange-500 mr-2 h-4 w-4"
                             />
-                            <label htmlFor="whytech-visible" className="font-bold text-gray-600 dark:text-neutral-300 dark:text-neutral-600 select-none">{currentLang === 'en' ? 'Tech is Visible' : 'প্রযুক্তিটি দৃশ্যমান হবে'}</label>
+                            <label htmlFor="whytech-visible" className="font-bold text-gray-600 dark:text-neutral-300 select-none">{currentLang === 'en' ? 'Tech is Visible' : 'প্রযুক্তিটি দৃশ্যমান হবে'}</label>
                           </div>
                         </div>
 
@@ -6273,7 +6283,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                           <button
                             type="button"
                             onClick={() => { setIsCreatingWhyTech(false); setEditingWhyTech(null); }}
-                            className="rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-4 py-2 text-xs font-bold text-gray-600 dark:text-neutral-300 dark:text-neutral-600 hover:bg-gray-50 dark:hover:bg-neutral-800/70 dark:bg-neutral-900 transition"
+                            className="rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-4 py-2 text-xs font-bold text-gray-600 dark:text-neutral-300 hover:bg-gray-50 dark:hover:bg-neutral-800/70 dark:bg-[#141414] transition"
                           >
                             {currentLang === 'en' ? 'Cancel' : 'বাতিল'}
                           </button>
@@ -6288,7 +6298,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                     ) : (
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         {whyChooseUsTechs.map((t) => (
-                          <div key={t.id} className="rounded-xl border border-gray-100 dark:border-neutral-800 p-4 flex items-center justify-between gap-4 shadow-sm bg-white dark:bg-[#141414] dark:bg-[#141414] hover:border-blue-500 dark:border-orange-500 transition">
+                          <div key={t.id} className="rounded-xl border border-gray-100 dark:border-neutral-800 p-4 flex items-center justify-between gap-4 shadow-sm bg-white dark:bg-[#141414] hover:border-blue-500 dark:border-orange-500 transition">
                             <div className="flex items-center gap-3">
                               {t.logoUrl ? (
                                 <img src={t.logoUrl} alt={t.name} referrerPolicy="no-referrer" className="h-7 w-7 object-contain bg-slate-50 dark:bg-slate-900/60 p-1 rounded border border-gray-100 dark:border-neutral-800 shrink-0" />
@@ -6307,7 +6317,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                                   setEditingWhyTech(t);
                                   setWhyTechForm(t);
                                 }}
-                                className="rounded bg-gray-50 dark:bg-neutral-900 hover:bg-gray-100 dark:hover:bg-neutral-800 dark:bg-neutral-800 px-2.5 py-1.5 text-xs font-bold text-gray-700 dark:text-neutral-200 border border-gray-100 dark:border-neutral-800 transition"
+                                className="rounded bg-gray-50 dark:bg-[#141414] hover:bg-gray-100 dark:hover:bg-neutral-800 dark:bg-neutral-800 px-2.5 py-1.5 text-xs font-bold text-gray-700 dark:text-neutral-200 border border-gray-100 dark:border-neutral-800 transition"
                               >
                                 {currentLang === 'en' ? 'Edit' : 'সম্পাদনা'}
                               </button>
@@ -6327,52 +6337,52 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
 
                 {/* subtab == 'cta' */}
                 {whyChooseUsSubTab === 'cta' && (
-                  <form onSubmit={handleSaveWhyCTA} className="space-y-4 rounded-xl border border-gray-100 dark:border-neutral-800 bg-white dark:bg-[#141414] dark:bg-[#141414] p-5 shadow-sm text-xs">
+                  <form onSubmit={handleSaveWhyCTA} className="space-y-4 rounded-xl border border-gray-100 dark:border-neutral-800 bg-white dark:bg-[#141414] p-5 shadow-sm text-xs">
                     <h4 className="text-sm font-bold text-gray-800 dark:text-neutral-100 pb-2 border-b border-gray-100 dark:border-neutral-800">
                       {currentLang === 'en' ? 'Call To Action (CTA) Box Text & Translations' : 'কল টু অ্যাকশন (CTA) বক্স টেক্সট ও অনুবাদসমূহ'}
                     </h4>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div className="space-y-1">
-                        <label className="font-bold text-gray-600 dark:text-neutral-300 dark:text-neutral-600 block">{currentLang === 'en' ? 'Tagline Over Heading (English)' : 'ট্যাগলাইন ওভার হেডিং (ইংরেজী)'}</label>
+                        <label className="font-bold text-gray-600 dark:text-neutral-300 block">{currentLang === 'en' ? 'Tagline Over Heading (English)' : 'ট্যাগলাইন ওভার হেডিং (ইংরেজী)'}</label>
                         <input
                           type="text" required
                           value={whyCTAForm.taglineEn || ''}
                           onChange={(e) => setWhyCTAForm({ ...whyCTAForm, taglineEn: e.target.value })}
-                          className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none"
+                          className="w-full rounded border border-gray-200 dark:border-neutral-600 bg-white dark:bg-neutral-900 px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:ring-2 focus:ring-orange-500/30 dark:border-neutral-600"
                         />
                       </div>
                       
 
                       <div className="space-y-1">
-                        <label className="font-bold text-gray-600 dark:text-neutral-300 dark:text-neutral-600 block">{currentLang === 'en' ? 'Headline (English)' : 'হেডলাইন (ইংরেজী)'}</label>
+                        <label className="font-bold text-gray-600 dark:text-neutral-300 block">{currentLang === 'en' ? 'Headline (English)' : 'হেডলাইন (ইংরেজী)'}</label>
                         <input
                           type="text" required
                           value={whyCTAForm.headlineEn || ''}
                           onChange={(e) => setWhyCTAForm({ ...whyCTAForm, headlineEn: e.target.value })}
-                          className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none"
+                          className="w-full rounded border border-gray-200 dark:border-neutral-600 bg-white dark:bg-neutral-900 px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:ring-2 focus:ring-orange-500/30 dark:border-neutral-600"
                         />
                       </div>
                       
 
                       <div className="space-y-1">
-                        <label className="font-bold text-gray-600 dark:text-neutral-300 dark:text-neutral-600 block">{currentLang === 'en' ? 'Primary Button Text (English)' : 'প্রধান বাটন টেক্সট (ইংরেজী)'}</label>
+                        <label className="font-bold text-gray-600 dark:text-neutral-300 block">{currentLang === 'en' ? 'Primary Button Text (English)' : 'প্রধান বাটন টেক্সট (ইংরেজী)'}</label>
                         <input
                           type="text" required
                           value={whyCTAForm.primaryButtonTextEn || ''}
                           onChange={(e) => setWhyCTAForm({ ...whyCTAForm, primaryButtonTextEn: e.target.value })}
-                          className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none"
+                          className="w-full rounded border border-gray-200 dark:border-neutral-600 bg-white dark:bg-neutral-900 px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:ring-2 focus:ring-orange-500/30 dark:border-neutral-600"
                         />
                       </div>
                       
 
                       <div className="space-y-1">
-                        <label className="font-bold text-gray-600 dark:text-neutral-300 dark:text-neutral-600 block">{currentLang === 'en' ? 'Secondary Button Text (English)' : 'सहयोगी বাটন টেক্সট (ইংরেজী)'}</label>
+                        <label className="font-bold text-gray-600 dark:text-neutral-300 block">{currentLang === 'en' ? 'Secondary Button Text (English)' : 'सहयोगी বাটন টেক্সট (ইংরেজী)'}</label>
                         <input
                           type="text" required
                           value={whyCTAForm.secondaryButtonTextEn || ''}
                           onChange={(e) => setWhyCTAForm({ ...whyCTAForm, secondaryButtonTextEn: e.target.value })}
-                          className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none"
+                          className="w-full rounded border border-gray-200 dark:border-neutral-600 bg-white dark:bg-neutral-900 px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:ring-2 focus:ring-orange-500/30 dark:border-neutral-600"
                         />
                       </div>
                       
@@ -6380,12 +6390,12 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
                       <div className="space-y-1">
-                        <label className="font-bold text-gray-600 dark:text-neutral-300 dark:text-neutral-600 block">{currentLang === 'en' ? 'Description (English)' : 'বর্ণনা (ইংরেজী)'}</label>
+                        <label className="font-bold text-gray-600 dark:text-neutral-300 block">{currentLang === 'en' ? 'Description (English)' : 'বর্ণনা (ইংরেজী)'}</label>
                         <textarea
                           rows={3} required
                           value={whyCTAForm.descriptionEn || ''}
                           onChange={(e) => setWhyCTAForm({ ...whyCTAForm, descriptionEn: e.target.value })}
-                          className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none"
+                          className="w-full rounded border border-gray-200 dark:border-neutral-600 bg-white dark:bg-neutral-900 px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:ring-2 focus:ring-orange-500/30 dark:border-neutral-600"
                         />
                       </div>
                       
@@ -6420,7 +6430,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                   <div className="flex items-center space-x-2">
                     <button
                       onClick={handleRestoreTechServiceCards}
-                      className="inline-flex items-center space-x-1 rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] hover:bg-gray-50 dark:hover:bg-neutral-800/70 dark:bg-neutral-900 px-3 py-1.5 text-xs font-bold text-gray-600 dark:text-neutral-300 dark:text-neutral-600 transition"
+                      className="inline-flex items-center space-x-1 rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] hover:bg-gray-50 dark:hover:bg-neutral-800/70 dark:bg-[#141414] px-3 py-1.5 text-xs font-bold text-gray-600 dark:text-neutral-300 transition"
                     >
                       <RotateCcwIcon className="h-3.5 w-3.5" />
                       <span>{currentLang === 'en' ? 'Restore Defaults' : 'ডিফল্ট পুনরুদ্ধার'}</span>
@@ -6443,18 +6453,18 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                 </div>
 
                 {isCreatingTechServiceCard || editingTechServiceCard ? (
-                  <form onSubmit={handleSaveTechServiceCard} className="space-y-4 rounded-xl border border-gray-100 dark:border-neutral-800 bg-white dark:bg-[#141414] dark:bg-[#141414] p-5 shadow-sm text-xs">
+                  <form onSubmit={handleSaveTechServiceCard} className="space-y-4 rounded-xl border border-gray-100 dark:border-neutral-800 bg-white dark:bg-[#141414] p-5 shadow-sm text-xs">
                     <h4 className="text-sm font-bold text-gray-800 dark:text-neutral-100 pb-2 border-b border-gray-100 dark:border-neutral-800">
                       {editingTechServiceCard ? (currentLang === 'en' ? 'Edit Card' : 'কার্ড সম্পাদন') : (currentLang === 'en' ? 'Create New Card' : 'নতুন কার্ড তৈরি')}
                     </h4>
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                       <div className="space-y-1">
-                        <label className="font-bold text-gray-600 dark:text-neutral-300 dark:text-neutral-600 block">{currentLang === 'en' ? 'Icon Class/Name' : 'আইকন নাম'}</label>
+                        <label className="font-bold text-gray-600 dark:text-neutral-300 block">{currentLang === 'en' ? 'Icon Class/Name' : 'আইকন নাম'}</label>
                         <select
                           value={techServiceCardForm.icon || 'Globe'}
                           onChange={(e) => setTechServiceCardForm({ ...techServiceCardForm, icon: e.target.value })}
-                          className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none"
+                          className="w-full rounded border border-gray-200 dark:border-neutral-600 bg-white dark:bg-neutral-900 px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:ring-2 focus:ring-orange-500/30 dark:border-neutral-600"
                         >
                           {['Globe', 'Layers', 'Sparkles', 'TrendingUp', 'Megaphone', 'Clock', 'Award', 'Zap', 'Cpu'].map(ic => (
                             <option key={ic} value={ic}>{ic}</option>
@@ -6463,12 +6473,12 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                       </div>
 
                       <div className="space-y-1">
-                        <label className="font-bold text-gray-600 dark:text-neutral-300 dark:text-neutral-600 block">{currentLang === 'en' ? 'Category (English)' : 'ক্যাটাগরি (ইংরেজী)'}</label>
+                        <label className="font-bold text-gray-600 dark:text-neutral-300 block">{currentLang === 'en' ? 'Category (English)' : 'ক্যাটাগরি (ইংরেজী)'}</label>
                         <input
                           type="text" required
                           value={techServiceCardForm.categoryEn || ''}
                           onChange={(e) => setTechServiceCardForm({ ...techServiceCardForm, categoryEn: e.target.value })}
-                          className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none"
+                          className="w-full rounded border border-gray-200 dark:border-neutral-600 bg-white dark:bg-neutral-900 px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:ring-2 focus:ring-orange-500/30 dark:border-neutral-600"
                         />
                       </div>
 
@@ -6477,12 +6487,12 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div className="space-y-1">
-                        <label className="font-bold text-gray-600 dark:text-neutral-300 dark:text-neutral-600 block">{currentLang === 'en' ? 'Description (English)' : 'বর্ণনা (ইংরেজী)'}</label>
+                        <label className="font-bold text-gray-600 dark:text-neutral-300 block">{currentLang === 'en' ? 'Description (English)' : 'বর্ণনা (ইংরেজী)'}</label>
                         <textarea
                           rows={2} required
                           value={techServiceCardForm.descriptionEn || ''}
                           onChange={(e) => setTechServiceCardForm({ ...techServiceCardForm, descriptionEn: e.target.value })}
-                          className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none"
+                          className="w-full rounded border border-gray-200 dark:border-neutral-600 bg-white dark:bg-neutral-900 px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:ring-2 focus:ring-orange-500/30 dark:border-neutral-600"
                         />
                       </div>
 
@@ -6491,22 +6501,22 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                       <div className="space-y-1">
-                        <label className="font-bold text-gray-600 dark:text-neutral-300 dark:text-neutral-600 block">{currentLang === 'en' ? 'Project Count Metric (e.g. 120+)' : 'প্রজেক্ট সংখ্যা বা মেট্রিক'}</label>
+                        <label className="font-bold text-gray-600 dark:text-neutral-300 block">{currentLang === 'en' ? 'Project Count Metric (e.g. 120+)' : 'প্রজেক্ট সংখ্যা বা মেট্রিক'}</label>
                         <input
                           type="text" required
                           value={techServiceCardForm.projectCount || ''}
                           onChange={(e) => setTechServiceCardForm({ ...techServiceCardForm, projectCount: e.target.value })}
-                          className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none"
+                          className="w-full rounded border border-gray-200 dark:border-neutral-600 bg-white dark:bg-neutral-900 px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:ring-2 focus:ring-orange-500/30 dark:border-neutral-600"
                         />
                       </div>
 
                       <div className="space-y-1">
-                        <label className="font-bold text-gray-600 dark:text-neutral-300 dark:text-neutral-600 block">{currentLang === 'en' ? 'Experience Level (English)' : 'অভিজ্ঞতা স্তর (ইংরেজী)'}</label>
+                        <label className="font-bold text-gray-600 dark:text-neutral-300 block">{currentLang === 'en' ? 'Experience Level (English)' : 'অভিজ্ঞতা স্তর (ইংরেজী)'}</label>
                         <input
                           type="text" required
                           value={techServiceCardForm.experienceLevelEn || ''}
                           onChange={(e) => setTechServiceCardForm({ ...techServiceCardForm, experienceLevelEn: e.target.value })}
-                          className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none"
+                          className="w-full rounded border border-gray-200 dark:border-neutral-600 bg-white dark:bg-neutral-900 px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:ring-2 focus:ring-orange-500/30 dark:border-neutral-600"
                         />
                       </div>
 
@@ -6515,12 +6525,12 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div className="space-y-1">
-                        <label className="font-bold text-gray-600 dark:text-neutral-300 dark:text-neutral-600 block">{currentLang === 'en' ? 'Featured Badge (English) - Optional' : 'ফিচারড ব্যাজ (ইংরেজী)'}</label>
+                        <label className="font-bold text-gray-600 dark:text-neutral-300 block">{currentLang === 'en' ? 'Featured Badge (English) - Optional' : 'ফিচারড ব্যাজ (ইংরেজী)'}</label>
                         <input
                           type="text"
                           value={techServiceCardForm.featuredBadgeEn || ''}
                           onChange={(e) => setTechServiceCardForm({ ...techServiceCardForm, featuredBadgeEn: e.target.value })}
-                          className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none"
+                          className="w-full rounded border border-gray-200 dark:border-neutral-600 bg-white dark:bg-neutral-900 px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:ring-2 focus:ring-orange-500/30 dark:border-neutral-600"
                         />
                       </div>
 
@@ -6529,24 +6539,24 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                       <div className="space-y-1">
-                        <label className="font-bold text-gray-600 dark:text-neutral-300 dark:text-neutral-600 block">{currentLang === 'en' ? 'Technologies (One per line)' : 'টেকনোলজিস (লাইন প্রতি একটি)'}</label>
+                        <label className="font-bold text-gray-600 dark:text-neutral-300 block">{currentLang === 'en' ? 'Technologies (One per line)' : 'টেকনোলজিস (লাইন প্রতি একটি)'}</label>
                         <textarea
                           rows={4} required
                           placeholder="React&#10;Next.js&#10;TailwindCSS"
                           value={techServiceCardForm.technologies ? techServiceCardForm.technologies.join('\n') : ''}
                           onChange={(e) => setTechServiceCardForm({ ...techServiceCardForm, technologies: e.target.value.split('\n').map(s => s.trim()).filter(Boolean) })}
-                          className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none font-mono"
+                          className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none font-mono"
                         />
                       </div>
 
                       <div className="space-y-1">
-                        <label className="font-bold text-gray-600 dark:text-neutral-300 dark:text-neutral-600 block">{currentLang === 'en' ? 'Popular Solutions (English, One per line)' : 'জনপ্রিয় সমাধান (ইংরেজী, লাইন প্রতি একটি)'}</label>
+                        <label className="font-bold text-gray-600 dark:text-neutral-300 block">{currentLang === 'en' ? 'Popular Solutions (English, One per line)' : 'জনপ্রিয় সমাধান (ইংরেজী, লাইন প্রতি একটি)'}</label>
                         <textarea
                           rows={4} required
                           placeholder="Enterprise CRM&#10;SaaS Dashboards"
                           value={techServiceCardForm.popularProjectsEn ? techServiceCardForm.popularProjectsEn.join('\n') : ''}
                           onChange={(e) => setTechServiceCardForm({ ...techServiceCardForm, popularProjectsEn: e.target.value.split('\n').map(s => s.trim()).filter(Boolean) })}
-                          className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none"
+                          className="w-full rounded border border-gray-200 dark:border-neutral-600 bg-white dark:bg-neutral-900 px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:ring-2 focus:ring-orange-500/30 dark:border-neutral-600"
                         />
                       </div>
 
@@ -6555,13 +6565,13 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div className="space-y-1">
-                        <label className="font-bold text-gray-600 dark:text-neutral-300 dark:text-neutral-600 block">{currentLang === 'en' ? 'Core Benefits (English, One per line)' : 'মূল সুবিধা (ইংরেজী, লাইন প্রতি একটি)'}</label>
+                        <label className="font-bold text-gray-600 dark:text-neutral-300 block">{currentLang === 'en' ? 'Core Benefits (English, One per line)' : 'মূল সুবিধা (ইংরেজী, লাইন প্রতি একটি)'}</label>
                         <textarea
                           rows={3} required
                           placeholder="Lightning Fast Loadtimes&#10;SEO friendly"
                           value={techServiceCardForm.benefitsEn ? techServiceCardForm.benefitsEn.join('\n') : ''}
                           onChange={(e) => setTechServiceCardForm({ ...techServiceCardForm, benefitsEn: e.target.value.split('\n').map(s => s.trim()).filter(Boolean) })}
-                          className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none"
+                          className="w-full rounded border border-gray-200 dark:border-neutral-600 bg-white dark:bg-neutral-900 px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:ring-2 focus:ring-orange-500/30 dark:border-neutral-600"
                         />
                       </div>
 
@@ -6570,12 +6580,12 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                       <div className="space-y-1">
-                        <label className="font-bold text-gray-600 dark:text-neutral-300 dark:text-neutral-600 block">{currentLang === 'en' ? 'Display Order' : 'প্রদর্শনের ক্রম'}</label>
+                        <label className="font-bold text-gray-600 dark:text-neutral-300 block">{currentLang === 'en' ? 'Display Order' : 'প্রদর্শনের ক্রম'}</label>
                         <input
                           type="number" required
                           value={techServiceCardForm.displayOrder || 1}
                           onChange={(e) => setTechServiceCardForm({ ...techServiceCardForm, displayOrder: Number(e.target.value) })}
-                          className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none"
+                          className="w-full rounded border border-gray-200 dark:border-neutral-600 bg-white dark:bg-neutral-900 px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:ring-2 focus:ring-orange-500/30 dark:border-neutral-600"
                         />
                       </div>
 
@@ -6586,7 +6596,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                           onChange={(e) => setTechServiceCardForm({ ...techServiceCardForm, visible: e.target.checked })}
                           className="rounded border-gray-300 dark:border-neutral-600 text-blue-600 dark:text-orange-400 focus:ring-blue-500 dark:focus:ring-orange-500 mr-2 h-4 w-4"
                         />
-                        <label htmlFor="techcard-visible" className="font-bold text-gray-600 dark:text-neutral-300 dark:text-neutral-600 select-none">{currentLang === 'en' ? 'Card is Visible' : 'কার্ডটি দৃশ্যমান হবে'}</label>
+                        <label htmlFor="techcard-visible" className="font-bold text-gray-600 dark:text-neutral-300 select-none">{currentLang === 'en' ? 'Card is Visible' : 'কার্ডটি দৃশ্যমান হবে'}</label>
                       </div>
                     </div>
 
@@ -6594,7 +6604,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                       <button
                         type="button"
                         onClick={() => { setIsCreatingTechServiceCard(false); setEditingTechServiceCard(null); }}
-                        className="rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] px-4 py-2 text-xs font-bold text-gray-600 dark:text-neutral-300 dark:text-neutral-600 hover:bg-gray-50 dark:hover:bg-neutral-800/70 dark:bg-neutral-900 transition"
+                        className="rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-4 py-2 text-xs font-bold text-gray-600 dark:text-neutral-300 hover:bg-gray-50 dark:hover:bg-neutral-800/70 dark:bg-[#141414] transition"
                       >
                         {currentLang === 'en' ? 'Cancel' : 'বাতিল'}
                       </button>
@@ -6609,7 +6619,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                 ) : (
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {techServiceCards.map((card) => (
-                      <div key={card.id} className="rounded-xl border border-gray-100 dark:border-neutral-800 p-4 flex items-center justify-between gap-4 shadow-sm bg-white dark:bg-[#141414] dark:bg-[#141414] hover:border-blue-500 dark:border-orange-500 transition">
+                      <div key={card.id} className="rounded-xl border border-gray-100 dark:border-neutral-800 p-4 flex items-center justify-between gap-4 shadow-sm bg-white dark:bg-[#141414] hover:border-blue-500 dark:border-orange-500 transition">
                         <div className="flex items-center gap-3">
                           <div className="h-9 w-9 rounded-lg bg-blue-50 dark:bg-orange-500/10 flex items-center justify-center text-blue-600 dark:text-orange-400 shrink-0">
                             <CpuIcon className="h-5 w-5" />
@@ -6630,7 +6640,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                               setEditingTechServiceCard(card);
                               setTechServiceCardForm(card);
                             }}
-                            className="rounded bg-gray-50 dark:bg-neutral-900 hover:bg-gray-100 dark:hover:bg-neutral-800 dark:bg-neutral-800 px-2.5 py-1.5 text-xs font-bold text-gray-700 dark:text-neutral-200 border border-gray-100 dark:border-neutral-800 transition"
+                            className="rounded bg-gray-50 dark:bg-[#141414] hover:bg-gray-100 dark:hover:bg-neutral-800 dark:bg-neutral-800 px-2.5 py-1.5 text-xs font-bold text-gray-700 dark:text-neutral-200 border border-gray-100 dark:border-neutral-800 transition"
                           >
                             {currentLang === 'en' ? 'Edit' : 'সম্পাদনা'}
                           </button>

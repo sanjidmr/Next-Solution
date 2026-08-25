@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 /**
  * @license
  * SPDX-License-Identifier: Apache-2.0
@@ -21,7 +21,7 @@ export default function ServicesSection({ currentLang, setTab, isFullPage = fals
   const services = getServices();
   const [selectedService, setSelectedService] = useState<Service | null>(null);
   const [activeFAQIndex, setActiveFAQIndex] = useState<number | null>(null);
-  const [activeTechTab, setActiveTechTab] = useState<'frontend' | 'backend' | 'design' | 'automation' | 'video'>('frontend');
+  const [activeTechTab, setActiveTechTab] = useState<'frontend' | 'backend' | 'design' | 'automation' | 'video' | 'marketing'>('frontend');
 
   // Interactive Service Blueprinter State
   const [selectedBlueprintTechs, setSelectedBlueprintTechs] = useState<string[]>(['web-dev', 'ui-ux']);
@@ -31,9 +31,9 @@ export default function ServicesSection({ currentLang, setTab, isFullPage = fals
     {
       id: 'web-dev',
       titleEn: 'Web Development',
-      titleBn: 'ওয়েব ডেভেলপমেন্ট',
+      titleBn: 'à¦“à¦¯à¦¼à§‡à¦¬ à¦¡à§‡à¦­à§‡à¦²à¦ªà¦®à§‡à¦¨à§à¦Ÿ',
       badgeEn: 'React / Next.js',
-      badgeBn: 'রিয়্যাক্ট / নেক্সট.জেএস',
+      badgeBn: 'à¦°à¦¿à§Ÿà§à¦¯à¦¾à¦•à§à¦Ÿ / à¦¨à§‡à¦•à§à¦¸à¦Ÿ.à¦œà§‡à¦à¦¸',
       icon: 'Code2',
       color: 'from-blue-500 dark:from-orange-500 to-cyan-500',
       terminalLog: 'Provisioning secure cloud architecture & CDN edge...',
@@ -42,9 +42,9 @@ export default function ServicesSection({ currentLang, setTab, isFullPage = fals
     {
       id: 'ui-ux',
       titleEn: 'UI/UX Design',
-      titleBn: 'ইউআই/ইউএক্স ডিজাইন',
+      titleBn: 'à¦‡à¦‰à¦†à¦‡/à¦‡à¦‰à¦à¦•à§à¦¸ à¦¡à¦¿à¦œà¦¾à¦‡à¦¨',
       badgeEn: 'Figma Systems',
-      badgeBn: 'ফিগোমা ডিজাইন সিস্টেম',
+      badgeBn: 'à¦«à¦¿à¦—à§‹à¦®à¦¾ à¦¡à¦¿à¦œà¦¾à¦‡à¦¨ à¦¸à¦¿à¦¸à§à¦Ÿà§‡à¦®',
       icon: 'Layout',
       color: 'from-purple-500 to-pink-600',
       terminalLog: 'Calibrating user personas & fluid UX flows...',
@@ -53,9 +53,9 @@ export default function ServicesSection({ currentLang, setTab, isFullPage = fals
     {
       id: 'marketing',
       titleEn: 'Digital Marketing',
-      titleBn: 'ডিজিটাল মার্কেটিং',
+      titleBn: 'à¦¡à¦¿à¦œà¦¿à¦Ÿà¦¾à¦² à¦®à¦¾à¦°à§à¦•à§‡à¦Ÿà¦¿à¦‚',
       badgeEn: 'High-ROI Funnels',
-      badgeBn: 'আরওআই ফানেল',
+      badgeBn: 'à¦†à¦°à¦“à¦†à¦‡ à¦«à¦¾à¦¨à§‡à¦²',
       icon: 'Megaphone',
       color: 'from-orange-500 to-red-600',
       terminalLog: 'Synthesizing conversion campaigns & analytics pixels...',
@@ -64,9 +64,9 @@ export default function ServicesSection({ currentLang, setTab, isFullPage = fals
     {
       id: 'seo',
       titleEn: 'SEO Strategy',
-      titleBn: 'এসইও ক্যাম্পেইন',
+      titleBn: 'à¦à¦¸à¦‡à¦“ à¦•à§à¦¯à¦¾à¦®à§à¦ªà§‡à¦‡à¦¨',
       badgeEn: 'Organic Rankings',
-      badgeBn: 'অর্গানিক র‍্যাঙ্কিং',
+      badgeBn: 'à¦…à¦°à§à¦—à¦¾à¦¨à¦¿à¦• à¦°â€à§à¦¯à¦¾à¦™à§à¦•à¦¿à¦‚',
       icon: 'Search',
       color: 'from-emerald-500 to-teal-600',
       terminalLog: 'Mapping search syntax & core semantic page ranks...',
@@ -75,9 +75,9 @@ export default function ServicesSection({ currentLang, setTab, isFullPage = fals
     {
       id: 'ai-automation',
       titleEn: 'AI Automations',
-      titleBn: 'এআই অটোমেশন',
+      titleBn: 'à¦à¦†à¦‡ à¦…à¦Ÿà§‹à¦®à§‡à¦¶à¦¨',
       badgeEn: 'LLMs & Agents',
-      badgeBn: 'এলএলএম ও এআই এজেন্টস',
+      badgeBn: 'à¦à¦²à¦à¦²à¦à¦® à¦“ à¦à¦†à¦‡ à¦à¦œà§‡à¦¨à§à¦Ÿà¦¸',
       icon: 'Cpu',
       color: 'from-indigo-500 to-blue-600',
       terminalLog: 'Wiring intelligent LLM cognitive node triggers...',
@@ -86,9 +86,9 @@ export default function ServicesSection({ currentLang, setTab, isFullPage = fals
     {
       id: 'video-editing',
       titleEn: 'Video Production',
-      titleBn: 'ভিডিও প্রডাকশন',
+      titleBn: 'à¦­à¦¿à¦¡à¦¿à¦“ à¦ªà§à¦°à¦¡à¦¾à¦•à¦¶à¦¨',
       badgeEn: 'Cinematic Promos',
-      badgeBn: 'সিনেম্যাটিক প্রমোশন',
+      badgeBn: 'à¦¸à¦¿à¦¨à§‡à¦®à§à¦¯à¦¾à¦Ÿà¦¿à¦• à¦ªà§à¦°à¦®à§‹à¦¶à¦¨',
       icon: 'Video',
       color: 'from-rose-500 to-red-600',
       terminalLog: 'Calibrating multi-channel timelines & keyframe FX...',
@@ -165,21 +165,21 @@ export default function ServicesSection({ currentLang, setTab, isFullPage = fals
   const mainFaqs = [
     {
       qEn: 'Do you charge on a fixed scope or hourly basis?',
-      qBn: 'আপনারা কি নির্দিষ্ট বাজেটে নাকি ঘণ্টার হিসাবে চার্জ করেন?',
+      qBn: 'à¦†à¦ªà¦¨à¦¾à¦°à¦¾ à¦•à¦¿ à¦¨à¦¿à¦°à§à¦¦à¦¿à¦·à§à¦Ÿ à¦¬à¦¾à¦œà§‡à¦Ÿà§‡ à¦¨à¦¾à¦•à¦¿ à¦˜à¦£à§à¦Ÿà¦¾à¦° à¦¹à¦¿à¦¸à¦¾à¦¬à§‡ à¦šà¦¾à¦°à§à¦œ à¦•à¦°à§‡à¦¨?',
       aEn: 'We prefer transparent fixed-price milestones for clearly defined scopes. For agile startups needing rapid continuous pivots, we offer dedicated monthly sprint squads on a retainer basis.',
-      aBn: 'আমরা সুনির্দিষ্ট কাজের পরিধির জন্য স্বচ্ছ ফিক্সড-প্রাইস মাইলস্টোন পছন্দ করি। তবে ক্রমাগত পরিবর্ধনশীল স্টার্টআপের জন্য আমরা রিটেইনার ভিত্তিতে মাসিক ডেডিকেটেড স্প্রিন্ট স্কোয়াড অফার করি।'
+      aBn: 'à¦†à¦®à¦°à¦¾ à¦¸à§à¦¨à¦¿à¦°à§à¦¦à¦¿à¦·à§à¦Ÿ à¦•à¦¾à¦œà§‡à¦° à¦ªà¦°à¦¿à¦§à¦¿à¦° à¦œà¦¨à§à¦¯ à¦¸à§à¦¬à¦šà§à¦› à¦«à¦¿à¦•à§à¦¸à¦¡-à¦ªà§à¦°à¦¾à¦‡à¦¸ à¦®à¦¾à¦‡à¦²à¦¸à§à¦Ÿà§‹à¦¨ à¦ªà¦›à¦¨à§à¦¦ à¦•à¦°à¦¿à¥¤ à¦¤à¦¬à§‡ à¦•à§à¦°à¦®à¦¾à¦—à¦¤ à¦ªà¦°à¦¿à¦¬à¦°à§à¦§à¦¨à¦¶à§€à¦² à¦¸à§à¦Ÿà¦¾à¦°à§à¦Ÿà¦†à¦ªà§‡à¦° à¦œà¦¨à§à¦¯ à¦†à¦®à¦°à¦¾ à¦°à¦¿à¦Ÿà§‡à¦‡à¦¨à¦¾à¦° à¦­à¦¿à¦¤à§à¦¤à¦¿à¦¤à§‡ à¦®à¦¾à¦¸à¦¿à¦• à¦¡à§‡à¦¡à¦¿à¦•à§‡à¦Ÿà§‡à¦¡ à¦¸à§à¦ªà§à¦°à¦¿à¦¨à§à¦Ÿ à¦¸à§à¦•à§‹à¦¯à¦¼à¦¾à¦¡ à¦…à¦«à¦¾à¦° à¦•à¦°à¦¿à¥¤'
     },
     {
       qEn: 'Can we migrate our existing application to Next Solution?',
-      qBn: 'আমরা কি আমাদের বর্তমান অ্যাপ্লিকেশন নেক্সট সলিউশনে মাইগ্রেট করতে পারব?',
+      qBn: 'à¦†à¦®à¦°à¦¾ à¦•à¦¿ à¦†à¦®à¦¾à¦¦à§‡à¦° à¦¬à¦°à§à¦¤à¦®à¦¾à¦¨ à¦…à§à¦¯à¦¾à¦ªà§à¦²à¦¿à¦•à§‡à¦¶à¦¨ à¦¨à§‡à¦•à§à¦¸à¦Ÿ à¦¸à¦²à¦¿à¦‰à¦¶à¦¨à§‡ à¦®à¦¾à¦‡à¦—à§à¦°à§‡à¦Ÿ à¦•à¦°à¦¤à§‡ à¦ªà¦¾à¦°à¦¬?',
       aEn: 'Absolutely. We specialize in legacy code refactoring, database normalization, and framework upgrades (e.g., migrating PHP/WordPress or raw HTML systems to secure React/Next.js and Cloud storage).',
-      aBn: 'অবশ্যই। আমরা লিগ্যাসি কোড রিফ্যাক্টরিং, ডাটাবেস অপ্টিমাইজেশন এবং আধুনিক ফ্রেমওয়ার্ক আপগ্রেডে পারদর্শী (যেমন ওয়ার্ডপ্রেস বা র রিয়্যাক্ট থেকে নিরাপদ ও দ্রুততর ক্লাউড আর্কিটেকচারে স্থানান্তরিত করা)।'
+      aBn: 'à¦…à¦¬à¦¶à§à¦¯à¦‡à¥¤ à¦†à¦®à¦°à¦¾ à¦²à¦¿à¦—à§à¦¯à¦¾à¦¸à¦¿ à¦•à§‹à¦¡ à¦°à¦¿à¦«à§à¦¯à¦¾à¦•à§à¦Ÿà¦°à¦¿à¦‚, à¦¡à¦¾à¦Ÿà¦¾à¦¬à§‡à¦¸ à¦…à¦ªà§à¦Ÿà¦¿à¦®à¦¾à¦‡à¦œà§‡à¦¶à¦¨ à¦à¦¬à¦‚ à¦†à¦§à§à¦¨à¦¿à¦• à¦«à§à¦°à§‡à¦®à¦“à¦¯à¦¼à¦¾à¦°à§à¦• à¦†à¦ªà¦—à§à¦°à§‡à¦¡à§‡ à¦ªà¦¾à¦°à¦¦à¦°à§à¦¶à§€ (à¦¯à§‡à¦®à¦¨ à¦“à¦¯à¦¼à¦¾à¦°à§à¦¡à¦ªà§à¦°à§‡à¦¸ à¦¬à¦¾ à¦° à¦°à¦¿à§Ÿà§à¦¯à¦¾à¦•à§à¦Ÿ à¦¥à§‡à¦•à§‡ à¦¨à¦¿à¦°à¦¾à¦ªà¦¦ à¦“ à¦¦à§à¦°à§à¦¤à¦¤à¦° à¦•à§à¦²à¦¾à¦‰à¦¡ à¦†à¦°à§à¦•à¦¿à¦Ÿà§‡à¦•à¦šà¦¾à¦°à§‡ à¦¸à§à¦¥à¦¾à¦¨à¦¾à¦¨à§à¦¤à¦°à¦¿à¦¤ à¦•à¦°à¦¾)à¥¤'
     },
     {
       qEn: 'Do you offer post-launch maintenance SLA guarantees?',
-      qBn: 'আপনারা কি লঞ্চের পর মেইনটেন্যান্স বা এসএলএ গ্যারান্টি দেন?',
+      qBn: 'à¦†à¦ªà¦¨à¦¾à¦°à¦¾ à¦•à¦¿ à¦²à¦žà§à¦šà§‡à¦° à¦ªà¦° à¦®à§‡à¦‡à¦¨à¦Ÿà§‡à¦¨à§à¦¯à¦¾à¦¨à§à¦¸ à¦¬à¦¾ à¦à¦¸à¦à¦²à¦ à¦—à§à¦¯à¦¾à¦°à¦¾à¦¨à§à¦Ÿà¦¿ à¦¦à§‡à¦¨?',
       aEn: 'Yes. Every project includes 30 days of complimentary hyper-care monitoring. Following that, we offer custom SLAs covering security audits, performance checkups, database backups, and instant bug fixes.',
-      aBn: 'হ্যাঁ। প্রতিটি প্রজেক্টে ৩০ দিনের প্রশংসামূলক সাপোর্ট অন্তর্ভুক্ত রয়েছে। এরপর নিরাপত্তা অডিট, পারফরম্যান্স চেকআপ এবং দ্রুত বাগ ফিক্সসহ কাস্টম এসএলএ চুক্তি বাৎসরিক বা মাসিক নেওয়া যায়।'
+      aBn: 'à¦¹à§à¦¯à¦¾à¦à¥¤ à¦ªà§à¦°à¦¤à¦¿à¦Ÿà¦¿ à¦ªà§à¦°à¦œà§‡à¦•à§à¦Ÿà§‡ à§©à§¦ à¦¦à¦¿à¦¨à§‡à¦° à¦ªà§à¦°à¦¶à¦‚à¦¸à¦¾à¦®à§‚à¦²à¦• à¦¸à¦¾à¦ªà§‹à¦°à§à¦Ÿ à¦…à¦¨à§à¦¤à¦°à§à¦­à§à¦•à§à¦¤ à¦°à§Ÿà§‡à¦›à§‡à¥¤ à¦à¦°à¦ªà¦° à¦¨à¦¿à¦°à¦¾à¦ªà¦¤à§à¦¤à¦¾ à¦…à¦¡à¦¿à¦Ÿ, à¦ªà¦¾à¦°à¦«à¦°à¦®à§à¦¯à¦¾à¦¨à§à¦¸ à¦šà§‡à¦•à¦†à¦ª à¦à¦¬à¦‚ à¦¦à§à¦°à§à¦¤ à¦¬à¦¾à¦— à¦«à¦¿à¦•à§à¦¸à¦¸à¦¹ à¦•à¦¾à¦¸à§à¦Ÿà¦® à¦à¦¸à¦à¦²à¦ à¦šà§à¦•à§à¦¤à¦¿ à¦¬à¦¾à§Žà¦¸à¦°à¦¿à¦• à¦¬à¦¾ à¦®à¦¾à¦¸à¦¿à¦• à¦¨à§‡à¦“à§Ÿà¦¾ à¦¯à¦¾à§Ÿà¥¤'
     }
   ];
 
@@ -199,7 +199,7 @@ export default function ServicesSection({ currentLang, setTab, isFullPage = fals
                   onClick={() => { setTab('home'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
                   className="hover:text-blue-600 dark:text-orange-400 transition"
                 >
-                  {currentLang === 'en' ? 'Home' : 'হোম'}
+                  {currentLang === 'en' ? 'Home' : 'à¦¹à§‹à¦®'}
                 </button>
               </li>
               <li className="flex items-center space-x-1.5">
@@ -208,7 +208,7 @@ export default function ServicesSection({ currentLang, setTab, isFullPage = fals
                   onClick={() => { setSelectedService(null); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
                   className="hover:text-blue-600 dark:text-orange-400 transition"
                 >
-                  {currentLang === 'en' ? 'Services' : 'সার্ভিসসমূহ'}
+                  {currentLang === 'en' ? 'Services' : 'à¦¸à¦¾à¦°à§à¦­à¦¿à¦¸à¦¸à¦®à§‚à¦¹'}
                 </button>
               </li>
               <li className="flex items-center space-x-1.5 text-blue-600 dark:text-orange-400" aria-current="page">
@@ -228,7 +228,7 @@ export default function ServicesSection({ currentLang, setTab, isFullPage = fals
             className="group inline-flex items-center space-x-2 text-xs font-bold text-gray-500 dark:text-neutral-400 dark:text-neutral-500 hover:text-blue-600 dark:text-orange-400 transition mb-8 cursor-pointer border border-gray-100 dark:border-neutral-800 rounded-full px-4 py-1.5 bg-gray-50/50 hover:bg-white dark:bg-[#141414]"
           >
             <Icons.ArrowLeft className="h-3.5 w-3.5 group-hover:-translate-x-0.5 transition-transform" />
-            <span>{currentLang === 'en' ? 'Back to Capabilities Catalog' : 'সেবা ক্যাটালগে ফিরে যান'}</span>
+            <span>{currentLang === 'en' ? 'Back to Capabilities Catalog' : 'à¦¸à§‡à¦¬à¦¾ à¦•à§à¦¯à¦¾à¦Ÿà¦¾à¦²à¦—à§‡ à¦«à¦¿à¦°à§‡ à¦¯à¦¾à¦¨'}</span>
           </button>
 
           {/* Header Layout mimicking Stripe / Clay premium design */}
@@ -251,7 +251,7 @@ export default function ServicesSection({ currentLang, setTab, isFullPage = fals
               {/* Action and indicators overview */}
               <div className="flex flex-col sm:items-end justify-center">
                 <span className="text-[10px] uppercase font-extrabold tracking-widest text-gray-400 dark:text-neutral-500">
-                  {currentLang === 'en' ? 'Service Reference Code' : 'সার্ভিস রেফারেন্স কোড'}
+                  {currentLang === 'en' ? 'Service Reference Code' : 'à¦¸à¦¾à¦°à§à¦­à¦¿à¦¸ à¦°à§‡à¦«à¦¾à¦°à§‡à¦¨à§à¦¸ à¦•à§‹à¦¡'}
                 </span>
                 <span className="text-sm font-extrabold text-blue-600 dark:text-orange-400 mt-1 font-mono">NS-{selectedService.slug.toUpperCase()}</span>
               </div>
@@ -276,7 +276,7 @@ export default function ServicesSection({ currentLang, setTab, isFullPage = fals
                 onClick={() => handleBookService(selectedService.titleEn)}
                 className="rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold px-6 py-3 transition shadow-lg shadow-blue-600/10 cursor-pointer flex items-center space-x-2 hover:scale-[1.01]"
               >
-                <span>{currentLang === 'en' ? 'Get Free Consultation' : 'ফ্রি পরামর্শ নিন'}</span>
+                <span>{currentLang === 'en' ? 'Get Free Consultation' : 'à¦«à§à¦°à¦¿ à¦ªà¦°à¦¾à¦®à¦°à§à¦¶ à¦¨à¦¿à¦¨'}</span>
                 <Icons.ArrowUpRight className="h-4 w-4" />
               </button>
             </div>
@@ -291,7 +291,7 @@ export default function ServicesSection({ currentLang, setTab, isFullPage = fals
                     <Icons.Users className="h-5 w-5" />
                   </div>
                   <h3 className="text-xs font-extrabold text-gray-900 dark:text-white uppercase tracking-widest">
-                    {currentLang === 'en' ? 'Who is this for?' : 'কার জন্য প্রযোজ্য?'}
+                    {currentLang === 'en' ? 'Who is this for?' : 'à¦•à¦¾à¦° à¦œà¦¨à§à¦¯ à¦ªà§à¦°à¦¯à§‹à¦œà§à¦¯?'}
                   </h3>
                   <p className="text-xs text-gray-500 dark:text-neutral-400 dark:text-neutral-500 leading-relaxed">
                     {currentLang === 'en' ? selectedService.whoForEn : selectedService.whoForBn}
@@ -305,7 +305,7 @@ export default function ServicesSection({ currentLang, setTab, isFullPage = fals
                     <Icons.AlertCircle className="h-5 w-5" />
                   </div>
                   <h3 className="text-xs font-extrabold text-gray-900 dark:text-white uppercase tracking-widest">
-                    {currentLang === 'en' ? 'Why you need this' : 'কেন এটি প্রয়োজন'}
+                    {currentLang === 'en' ? 'Why you need this' : 'à¦•à§‡à¦¨ à¦à¦Ÿà¦¿ à¦ªà§à¦°à§Ÿà§‹à¦œà¦¨'}
                   </h3>
                   <p className="text-xs text-gray-500 dark:text-neutral-400 dark:text-neutral-500 leading-relaxed">
                     {currentLang === 'en' ? selectedService.whyNeedEn : selectedService.whyNeedBn}
@@ -319,7 +319,7 @@ export default function ServicesSection({ currentLang, setTab, isFullPage = fals
                     <Icons.TrendingUp className="h-5 w-5" />
                   </div>
                   <h3 className="text-xs font-extrabold text-gray-900 dark:text-white uppercase tracking-widest">
-                    {currentLang === 'en' ? 'Expected Business Impact' : 'প্রত্যাশিত ব্যবসায়িক প্রভাব'}
+                    {currentLang === 'en' ? 'Expected Business Impact' : 'à¦ªà§à¦°à¦¤à§à¦¯à¦¾à¦¶à¦¿à¦¤ à¦¬à§à¦¯à¦¬à¦¸à¦¾à¦¯à¦¼à¦¿à¦• à¦ªà§à¦°à¦­à¦¾à¦¬'}
                   </h3>
                   <p className="text-xs text-gray-500 dark:text-neutral-400 dark:text-neutral-500 leading-relaxed">
                     {currentLang === 'en' ? selectedService.businessImpactEn : selectedService.businessImpactBn}
@@ -340,15 +340,15 @@ export default function ServicesSection({ currentLang, setTab, isFullPage = fals
                   <div className="space-y-2">
                     <h2 className="text-xl font-bold text-gray-900 dark:text-white flex items-center space-x-2.5">
                       <Icons.Layers className="h-5 w-5 text-blue-600 dark:text-orange-400" />
-                      <span>{currentLang === 'en' ? 'Specialized Sub-Services' : 'বিশেষায়িত সাব-সার্ভিস সমূহ'}</span>
+                      <span>{currentLang === 'en' ? 'Specialized Sub-Services' : 'à¦¬à¦¿à¦¶à§‡à¦·à¦¾à¦¯à¦¼à¦¿à¦¤ à¦¸à¦¾à¦¬-à¦¸à¦¾à¦°à§à¦­à¦¿à¦¸ à¦¸à¦®à§‚à¦¹'}</span>
                     </h2>
                     <p className="text-xs text-gray-400 dark:text-neutral-500">
-                      {currentLang === 'en' ? 'Micro-capabilities we activate within this service group' : 'এই সার্ভিস গ্রুপের অধীনে যে ছোট সাব-সেবাসমূহ আমরা প্রদান করি'}
+                      {currentLang === 'en' ? 'Micro-capabilities we activate within this service group' : 'à¦à¦‡ à¦¸à¦¾à¦°à§à¦­à¦¿à¦¸ à¦—à§à¦°à§à¦ªà§‡à¦° à¦…à¦§à§€à¦¨à§‡ à¦¯à§‡ à¦›à§‹à¦Ÿ à¦¸à¦¾à¦¬-à¦¸à§‡à¦¬à¦¾à¦¸à¦®à§‚à¦¹ à¦†à¦®à¦°à¦¾ à¦ªà§à¦°à¦¦à¦¾à¦¨ à¦•à¦°à¦¿'}
                     </p>
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                     {subServices.map((sub: any, idx: number) => (
-                      <div key={idx} className="rounded-2xl border border-gray-100 dark:border-neutral-800 p-5 space-y-3 hover:border-blue-500 hover:shadow-sm transition bg-[#FAFAFA]/50">
+                      <div key={idx} className="rounded-2xl border border-gray-100 dark:border-neutral-800 p-5 space-y-3 hover:border-blue-500 hover:shadow-sm transition bg-[#FAFAFA]/50 dark:bg-[#141414]/50">
                         <h4 className="text-xs font-extrabold text-gray-900 dark:text-white flex items-center space-x-2">
                           <span className="h-2 w-2 rounded-full bg-blue-600 shrink-0"></span>
                           <span>{currentLang === 'en' ? sub.titleEn : sub.titleBn}</span>
@@ -376,7 +376,7 @@ export default function ServicesSection({ currentLang, setTab, isFullPage = fals
               <div className="space-y-6">
                 <h2 className="text-lg font-bold text-gray-900 dark:text-white flex items-center space-x-2.5 border-b border-gray-100 dark:border-neutral-800 pb-3">
                   <Icons.Compass className="h-5 w-5 text-blue-500 dark:text-orange-400" />
-                  <span>{currentLang === 'en' ? 'Core Deliverables' : 'প্রধান ডেলিভারি সমূহ'}</span>
+                  <span>{currentLang === 'en' ? 'Core Deliverables' : 'à¦ªà§à¦°à¦§à¦¾à¦¨ à¦¡à§‡à¦²à¦¿à¦­à¦¾à¦°à¦¿ à¦¸à¦®à§‚à¦¹'}</span>
                 </h2>
                 <ul className="space-y-4">
                   {(currentLang === 'en' ? selectedService.featuresEn : selectedService.featuresBn).map((f, idx) => (
@@ -392,7 +392,7 @@ export default function ServicesSection({ currentLang, setTab, isFullPage = fals
               <div className="space-y-6">
                 <h2 className="text-lg font-bold text-gray-900 dark:text-white flex items-center space-x-2.5 border-b border-gray-100 dark:border-neutral-800 pb-3">
                   <Icons.Sparkles className="h-5 w-5 text-purple-500" />
-                  <span>{currentLang === 'en' ? 'Strategic Benefits' : 'কৌশলগত উপকারিতা'}</span>
+                  <span>{currentLang === 'en' ? 'Strategic Benefits' : 'à¦•à§Œà¦¶à¦²à¦—à¦¤ à¦‰à¦ªà¦•à¦¾à¦°à¦¿à¦¤à¦¾'}</span>
                 </h2>
                 <ul className="space-y-4">
                   {(currentLang === 'en' ? selectedService.benefitsEn : selectedService.benefitsBn).map((b, idx) => (
@@ -411,7 +411,7 @@ export default function ServicesSection({ currentLang, setTab, isFullPage = fals
               <div className="space-y-6">
                 <h2 className="text-lg font-bold text-gray-900 dark:text-white flex items-center space-x-2.5 border-b border-gray-100 dark:border-neutral-800 pb-3">
                   <Icons.Workflow className="h-5 w-5 text-blue-500 dark:text-orange-400" />
-                  <span>{currentLang === 'en' ? 'Execution Framework' : 'বাস্তবায়ন ফ্রেমওয়ার্ক'}</span>
+                  <span>{currentLang === 'en' ? 'Execution Framework' : 'à¦¬à¦¾à¦¸à§à¦¤à¦¬à¦¾à¦¯à¦¼à¦¨ à¦«à§à¦°à§‡à¦®à¦“à¦¯à¦¼à¦¾à¦°à§à¦•'}</span>
                 </h2>
                 <div className="space-y-5">
                   {(currentLang === 'en' ? selectedService.processEn : selectedService.processBn).map((step, idx) => (
@@ -429,7 +429,7 @@ export default function ServicesSection({ currentLang, setTab, isFullPage = fals
               <div className="space-y-6">
                 <h2 className="text-lg font-bold text-gray-900 dark:text-white flex items-center space-x-2.5 border-b border-gray-100 dark:border-neutral-800 pb-3">
                   <Icons.Code className="h-5 w-5 text-gray-700 dark:text-neutral-200" />
-                  <span>{currentLang === 'en' ? 'Technology Ecosystem' : 'প্রযুক্তি ইকোসিস্টেম'}</span>
+                  <span>{currentLang === 'en' ? 'Technology Ecosystem' : 'à¦ªà§à¦°à¦¯à§à¦•à§à¦¤à¦¿ à¦‡à¦•à§‹à¦¸à¦¿à¦¸à§à¦Ÿà§‡à¦®'}</span>
                 </h2>
                 <div className="flex flex-wrap gap-2">
                   {selectedService.techUsed.map((tech, idx) => (
@@ -454,10 +454,10 @@ export default function ServicesSection({ currentLang, setTab, isFullPage = fals
                   <div className="space-y-2">
                     <h2 className="text-xl font-bold text-gray-900 dark:text-white flex items-center space-x-2.5">
                       <Icons.Layers className="h-5 w-5 text-blue-600 dark:text-orange-400" />
-                      <span>{currentLang === 'en' ? 'Scope & Execution Blueprints' : 'প্রজেক্ট ডেলিভারি ব্লুপ্রিন্ট'}</span>
+                      <span>{currentLang === 'en' ? 'Scope & Execution Blueprints' : 'à¦ªà§à¦°à¦œà§‡à¦•à§à¦Ÿ à¦¡à§‡à¦²à¦¿à¦­à¦¾à¦°à¦¿ à¦¬à§à¦²à§à¦ªà§à¦°à¦¿à¦¨à§à¦Ÿ'}</span>
                     </h2>
                     <p className="text-xs text-gray-400 dark:text-neutral-500">
-                      {currentLang === 'en' ? 'Choose a structure matching your project volume and milestone speed' : 'আপনার প্রজেক্টের ভলিউম ও মাইলস্টোনের স্পিড অনুযায়ী সেরা কাঠামোটি নির্বাচন করুন'}
+                      {currentLang === 'en' ? 'Choose a structure matching your project volume and milestone speed' : 'à¦†à¦ªà¦¨à¦¾à¦° à¦ªà§à¦°à¦œà§‡à¦•à§à¦Ÿà§‡à¦° à¦­à¦²à¦¿à¦‰à¦® à¦“ à¦®à¦¾à¦‡à¦²à¦¸à§à¦Ÿà§‹à¦¨à§‡à¦° à¦¸à§à¦ªà¦¿à¦¡ à¦…à¦¨à§à¦¯à¦¾à§Ÿà§€ à¦¸à§‡à¦°à¦¾ à¦•à¦¾à¦ à¦¾à¦®à§‹à¦Ÿà¦¿ à¦¨à¦¿à¦°à§à¦¬à¦¾à¦šà¦¨ à¦•à¦°à§à¦¨'}
                     </p>
                   </div>
                   
@@ -489,7 +489,7 @@ export default function ServicesSection({ currentLang, setTab, isFullPage = fals
                           onClick={() => handleBookService(`${selectedService.titleEn} (${p.nameEn})`)}
                           className="w-full rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold py-3 transition mt-6 hover:scale-[1.01]"
                         >
-                          {currentLang === 'en' ? 'Select Plan' : 'প্ল্যানটি বেছে নিন'}
+                          {currentLang === 'en' ? 'Select Plan' : 'à¦ªà§à¦²à§à¦¯à¦¾à¦¨à¦Ÿà¦¿ à¦¬à§‡à¦›à§‡ à¦¨à¦¿à¦¨'}
                         </button>
                       </div>
                     ))}
@@ -513,10 +513,10 @@ export default function ServicesSection({ currentLang, setTab, isFullPage = fals
                   <div className="space-y-2">
                     <h2 className="text-xl font-bold text-gray-900 dark:text-white flex items-center space-x-2.5">
                       <Icons.HelpCircle className="h-5 w-5 text-blue-600 dark:text-orange-400" />
-                      <span>{currentLang === 'en' ? 'Frequently Asked Questions' : 'সাধারণ জিজ্ঞাসা'}</span>
+                      <span>{currentLang === 'en' ? 'Frequently Asked Questions' : 'à¦¸à¦¾à¦§à¦¾à¦°à¦£ à¦œà¦¿à¦œà§à¦žà¦¾à¦¸à¦¾'}</span>
                     </h2>
                     <p className="text-xs text-gray-400 dark:text-neutral-500">
-                      {currentLang === 'en' ? 'Answering specific details for this service' : 'এই সেবাসম্পর্কিত কিছু সাধারণ প্রশ্নোত্তর'}
+                      {currentLang === 'en' ? 'Answering specific details for this service' : 'à¦à¦‡ à¦¸à§‡à¦¬à¦¾à¦¸à¦®à§à¦ªà¦°à§à¦•à¦¿à¦¤ à¦•à¦¿à¦›à§ à¦¸à¦¾à¦§à¦¾à¦°à¦£ à¦ªà§à¦°à¦¶à§à¦¨à§‹à¦¤à§à¦¤à¦°'}
                     </p>
                   </div>
                   
@@ -550,7 +550,7 @@ export default function ServicesSection({ currentLang, setTab, isFullPage = fals
               }}
               className="rounded-xl border border-gray-200 dark:border-neutral-700 px-6 py-3 text-xs font-bold text-gray-700 dark:text-neutral-200 hover:text-blue-600 dark:text-orange-400 hover:border-blue-600 transition cursor-pointer bg-white dark:bg-[#141414] hover:bg-gray-50 dark:bg-neutral-900"
             >
-              {currentLang === 'en' ? 'Return to Capabilities Catalog' : 'সম্পূর্ণ ক্যাটালগে ফিরে যান'}
+              {currentLang === 'en' ? 'Return to Capabilities Catalog' : 'à¦¸à¦®à§à¦ªà§‚à¦°à§à¦£ à¦•à§à¦¯à¦¾à¦Ÿà¦¾à¦²à¦—à§‡ à¦«à¦¿à¦°à§‡ à¦¯à¦¾à¦¨'}
             </button>
           </div>
 
@@ -565,358 +565,162 @@ export default function ServicesSection({ currentLang, setTab, isFullPage = fals
   return (
     <div id="services-page-root" className="bg-white dark:bg-[#141414] min-h-screen font-sans selection:bg-blue-600 selection:text-white">
       
-      {/* 1. HERO SECTION */}
-      <section id="services-hero" className="bg-neutral-50/40 border-b border-neutral-100/80 py-16 sm:py-24 relative overflow-hidden">
-        
-        {/* Custom Styling for the Interactive Hero */}
-        <style dangerouslySetInnerHTML={{ __html: `
-          @keyframes dash {
-            to {
-              stroke-dashoffset: -20;
-            }
-          }
-          @keyframes float-slow {
-            0%, 100% { transform: translateY(0px) rotate(0deg); }
-            50% { transform: translateY(-8px) rotate(1deg); }
-          }
-          .animate-dash-flow {
-            stroke-dasharray: 6, 4;
-            animation: dash 1.5s linear infinite;
-          }
-          .animate-float-slow {
-            animation: float-slow 4s ease-in-out infinite;
-          }
-        `}} />
+      {/* 1. HERO SECTION â€” Full Screen */}
+      <section id="services-hero" className="relative min-h-[auto] sm:min-h-screen flex items-center overflow-hidden bg-white dark:bg-[#0A0908] py-12 sm:py-0">
+        {/* Unified background */}
+        <div className="absolute inset-0 bg-gradient-to-b from-white via-orange-50/30 to-white dark:from-[#0A0908] dark:via-[#0F0E0C] dark:to-[#0A0908]" />
+        <div className="absolute top-1/4 left-1/3 w-[700px] h-[700px] bg-orange-500/[0.06] rounded-full blur-[180px] pointer-events-none" />
+        <div className="absolute bottom-1/4 right-1/3 w-[500px] h-[500px] bg-orange-400/[0.04] rounded-full blur-[140px] pointer-events-none" />
+        <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: 'radial-gradient(circle, rgba(255,74,0,0.3) 1px, transparent 1px)', backgroundSize: '40px 40px' }} />
 
-        {/* Ambient Neon Blobs in Background */}
-        <div className="absolute top-1/4 left-10 h-72 w-72 rounded-full bg-blue-400/10 blur-[100px] pointer-events-none" />
-        <div className="absolute bottom-1/4 right-10 h-80 w-80 rounded-full bg-purple-400/10 blur-[120px] pointer-events-none" />
-        
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
-            
-            {/* Left Column: Copy & Interactive Category Selector */}
-            <div className="lg:col-span-6 space-y-6 text-left">
-              
-              {/* Premium Status Capsule */}
-              <div className="inline-flex items-center gap-2 rounded-full border border-blue-100 dark:border-orange-500/20 bg-blue-50/5 dark:bg-orange-500/50 px-3 py-1 text-xs font-bold text-blue-700">
-                <span className="h-1.5 w-1.5 rounded-full bg-blue-600 animate-pulse" />
-                <span>
-                  {currentLang === 'en' ? 'SYSTEMS STACK BUILDER v4.0' : 'সিস্টেম স্ট্যাক বিল্ডার ৪.০'}
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10 w-full py-16 sm:py-24">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-8 items-center">
+
+            {/* Left Column: Copy & CTA */}
+            <div className="space-y-6 sm:space-y-8 text-center sm:text-left">
+              <div className="inline-flex items-center gap-2 rounded-full border border-orange-500/20 bg-orange-500/10 px-4 py-1.5">
+                <span className="h-1.5 w-1.5 rounded-full bg-orange-500 animate-pulse" />
+                <span className="text-[10px] font-black uppercase tracking-[0.2em] text-orange-400">
+                  {currentLang === 'en' ? 'ONE TRUSTED PARTNER' : 'à¦à¦•à¦Ÿà¦¿ à¦¬à¦¿à¦¶à§à¦¬à¦¸à§à¦¤ à¦ªà¦¾à¦°à§à¦Ÿà¦¨à¦¾à¦°'}
                 </span>
               </div>
 
-              {/* Breadcrumb Navigation */}
-              <nav className="flex" aria-label="Breadcrumb">
-                <ol className="flex items-center space-x-2 text-xs font-black text-neutral-400 dark:text-neutral-500 uppercase tracking-widest">
-                  <li>
-                    <button 
-                      onClick={() => { setTab('home'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-                      className="hover:text-blue-600 dark:text-orange-400 transition cursor-pointer"
-                    >
-                      {currentLang === 'en' ? 'Home' : 'হোম'}
-                    </button>
-                  </li>
-                  <li className="flex items-center space-x-1.5">
-                    <Icons.ChevronRight className="h-3.5 w-3.5 text-neutral-300 dark:text-neutral-600" />
-                    <span className="text-blue-600 dark:text-orange-400">{currentLang === 'en' ? 'Services' : 'সার্ভিসসমূহ'}</span>
-                  </li>
-                </ol>
-              </nav>
-
-              {/* Headline */}
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-neutral-900 dark:text-white tracking-tight leading-none">
+              <h1 className="text-4xl sm:text-5xl lg:text-[4rem] font-black text-neutral-900 dark:text-white leading-[1.05] tracking-tight">
                 {currentLang === 'en' ? (
-                  <>Next-Gen <span className="bg-gradient-to-r from-blue-600 dark:from-orange-500 to-indigo-600 dark:to-orange-400 bg-clip-text text-transparent">Digital Blueprint</span> Suite</>
+                  <>All Digital Problems.<br /><span className="text-orange-500">One Trusted Solution.</span></>
                 ) : (
-                  <>নেক্সট-জেন <span className="bg-gradient-to-r from-blue-600 dark:from-orange-500 to-indigo-600 dark:to-orange-400 bg-clip-text text-transparent">ডিজিটাল ব্লুপ্রিন্ট</span> ডিজাইন</>
+                  <>à¦¸à¦•à¦² à¦¡à¦¿à¦œà¦¿à¦Ÿà¦¾à¦² à¦¸à¦®à¦¸à§à¦¯à¦¾à¥¤<br /><span className="text-orange-500">à¦à¦•à¦Ÿà¦¿ à¦¬à¦¿à¦¶à§à¦¬à¦¸à§à¦¤ à¦¸à¦®à¦¾à¦§à¦¾à¦¨à¥¤</span></>
                 )}
               </h1>
 
-              {/* Description */}
-              <p className="text-sm sm:text-base text-neutral-500 dark:text-neutral-400 dark:text-neutral-500 leading-relaxed max-w-xl">
-                {currentLang === 'en' ? (
-                  'Explore our digital capabilities and simulate system alignments in real-time. Toggle different engineering pillars, cognitive neural components, design systems, or growth funnels to see the technology topology map dynamically update.'
-                ) : (
-                  'আমাদের ডিজিটাল প্রযুক্তিগত সেবাগুলো একনজরে দেখে নিন। আমাদের রিয়েল-টাইম টপোলজি আর্কিটেক্টে বিভিন্ন ফ্রন্টএন্ড স্ট্যাক, ডিজাইন সিস্টেম, এআই অটোমেশন বা মার্কেটিং নোড যুক্ত করে ইন্টারেক্টিভ কানেক্টিভিটি পরীক্ষা করুন।'
-                )}
+              <p className="text-sm sm:text-base text-gray-500 dark:text-neutral-400 leading-relaxed max-w-lg">
+                {currentLang === 'en'
+                  ? 'From strategy to execution, we architect complete digital ecosystems. 50+ projects delivered, 100% client retention, and a team of senior engineers who ship revenue â€” not just code.'
+                  : 'à¦ªà¦°à¦¿à¦•à¦²à§à¦ªà¦¨à¦¾ à¦¥à§‡à¦•à§‡ à¦¬à¦¾à¦¸à§à¦¤à¦¬à¦¾à¦¯à¦¼à¦¨ à¦ªà¦°à§à¦¯à¦¨à§à¦¤, à¦†à¦®à¦°à¦¾ à¦¸à¦®à§à¦ªà§‚à¦°à§à¦£ à¦¡à¦¿à¦œà¦¿à¦Ÿà¦¾à¦² à¦‡à¦•à§‹à¦¸à¦¿à¦¸à§à¦Ÿà§‡à¦® à¦¤à§ˆà¦°à¦¿ à¦•à¦°à¦¿à¥¤ à§«à§¦+ à¦ªà§à¦°à¦œà§‡à¦•à§à¦Ÿ à¦¸à¦®à§à¦ªà¦¨à§à¦¨, à§§à§¦à§¦% à¦•à§à¦²à¦¾à¦¯à¦¼à§‡à¦¨à§à¦Ÿ à¦§à¦¾à¦°à¦£ à¦à¦¬à¦‚ à¦¸à¦¿à¦¨à¦¿à¦¯à¦¼à¦° à¦‡à¦žà§à¦œà¦¿à¦¨à¦¿à¦¯à¦¼à¦¾à¦°à¦¦à§‡à¦° à¦à¦•à¦Ÿà¦¿ à¦¦à¦² à¦¯à¦¾à¦°à¦¾ à¦°à¦¾à¦œà¦¸à§à¦¬ à¦¤à§ˆà¦°à¦¿ à¦•à¦°à§‡ â€” à¦¶à§à¦§à§ à¦•à§‹à¦¡ à¦¨à¦¯à¦¼à¥¤'}
               </p>
 
-              {/* Interactive Direct Anchor Selector */}
-              <div className="space-y-2.5 pt-2">
-                <span className="text-[10px] font-black uppercase tracking-wider text-neutral-400 dark:text-neutral-500 block">
-                  {currentLang === 'en' ? 'Or quick jump to catalog category' : 'অথবা নির্দিষ্ট ক্যাটাগরিতে ক্লিক করুন'}
-                </span>
-                <div className="flex flex-wrap gap-2">
-                  {['Development', 'Design', 'Marketing'].map((cat) => (
-                    <button
-                      key={cat}
-                      onClick={() => {
-                        const target = document.getElementById('services-grid-list');
-                        if (target) {
-                          target.scrollIntoView({ behavior: 'smooth' });
-                        }
-                      }}
-                      className="inline-flex items-center gap-1.5 rounded-xl border border-neutral-100 dark:border-neutral-800 bg-white dark:bg-[#141414] hover:border-blue-600 hover:text-blue-600 dark:text-orange-400 px-3.5 py-1.5 text-xs font-extrabold text-neutral-600 dark:text-neutral-300 dark:text-neutral-600 transition cursor-pointer shadow-sm hover:shadow"
-                    >
-                      <span>
-                        {cat === 'Development' && (currentLang === 'en' ? 'Web Systems' : 'ওয়েব সিস্টেম')}
-                        {cat === 'Design' && (currentLang === 'en' ? 'Creative UI' : 'ক্রিয়েটিভ ইউআই')}
-                        {cat === 'Marketing' && (currentLang === 'en' ? 'Growth Marketing' : 'গ্রোথ মার্কেটিং')}
-                      </span>
-                      <Icons.CornerDownRight className="h-3 w-3" />
-                    </button>
-                  ))}
-                </div>
+              <div className="flex flex-wrap gap-6 sm:gap-8 pt-2">
+                {[
+                  { num: '50+', labelEn: 'Projects Done', labelBn: 'à¦ªà§à¦°à¦œà§‡à¦•à§à¦Ÿ à¦¸à¦®à§à¦ªà¦¨à§à¦¨' },
+                  { num: '100%', labelEn: 'Client Retention', labelBn: 'à¦•à§à¦²à¦¾à¦¯à¦¼à§‡à¦¨à§à¦Ÿ à¦§à¦¾à¦°à¦£' },
+                  { num: '24/7', labelEn: 'Active Support', labelBn: 'à¦¸à¦•à§à¦°à¦¿à¦¯à¦¼ à¦¸à¦¾à¦ªà§‹à¦°à§à¦Ÿ' }
+                ].map((s, i) => (
+                  <div key={i} className="space-y-0.5">
+                    <span className="block text-2xl font-black text-orange-500 font-mono">{s.num}</span>
+                    <span className="block text-[10px] font-bold text-gray-400 dark:text-neutral-500 uppercase tracking-wider">{currentLang === 'en' ? s.labelEn : s.labelBn}</span>
+                  </div>
+                ))}
               </div>
 
-              {/* CTA Action Buttons */}
-              <div className="flex flex-wrap items-center gap-4 pt-4 border-t border-neutral-100 dark:border-neutral-800">
+              <div className="flex flex-wrap gap-4 pt-4">
                 <button
-                  id="hero-free-consultation-btn"
                   onClick={() => { setTab('contact'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-                  className="rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold px-6 py-3.5 transition shadow-lg shadow-blue-600/10 cursor-pointer hover:scale-[1.01]"
+                  className="rounded-xl bg-orange-500 hover:bg-orange-600 text-white text-xs font-bold px-8 py-4 transition-all duration-300 hover:scale-[1.01] shadow-lg shadow-orange-500/20 cursor-pointer"
                 >
-                  {currentLang === 'en' ? 'Get Free Consultation' : 'ফ্রি পরামর্শ নিন'}
+                  {currentLang === 'en' ? 'Get Free Consultation' : 'à¦«à§à¦°à¦¿ à¦ªà¦°à¦¾à¦®à¦°à§à¦¶ à¦¨à¦¿à¦¨'}
                 </button>
                 <button
-                  id="hero-view-portfolio-btn"
                   onClick={() => { setTab('portfolio'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-                  className="rounded-xl border border-neutral-200 dark:border-neutral-700 px-6 py-3.5 text-xs font-bold text-neutral-700 dark:text-neutral-200 hover:text-blue-600 dark:text-orange-400 hover:border-blue-600 bg-white dark:bg-[#141414] transition cursor-pointer"
+                  className="rounded-xl border border-gray-200 dark:border-neutral-700 px-8 py-4 text-xs font-bold text-gray-700 dark:text-neutral-200 hover:text-orange-500 hover:border-orange-500/30 bg-transparent transition-all duration-300 cursor-pointer"
                 >
-                  {currentLang === 'en' ? 'View Our Portfolio' : 'পোর্টফোলিও দেখুন'}
+                  {currentLang === 'en' ? 'View Our Portfolio' : 'à¦ªà§‹à¦°à§à¦Ÿà¦«à§‹à¦²à¦¿à¦“ à¦¦à§‡à¦–à§à¦¨'}
                 </button>
               </div>
-
             </div>
 
-            {/* Right Column: Next-Gen Service Blueprinter (Interactive Sandbox Terminal) */}
-            <div className="lg:col-span-6 relative">
-              <div className="w-full max-w-lg mx-auto bg-neutral-900 border border-neutral-800 rounded-[32px] p-6 shadow-2xl shadow-blue-950/20 relative z-10 overflow-hidden text-white font-sans animate-float-slow">
-                <div className="absolute inset-0 bg-gradient-to-b from-blue-500/5 via-transparent to-transparent pointer-events-none" />
-                
-                {/* Simulated Console Controls */}
-                <div className="flex items-center justify-between border-b border-neutral-800 pb-4 mb-5">
-                  <div className="flex items-center space-x-2">
-                    <div className="h-3 w-3 rounded-full bg-red-500/80" />
-                    <div className="h-3 w-3 rounded-full bg-yellow-500/80" />
-                    <div className="h-3 w-3 rounded-full bg-emerald-500/80" />
-                  </div>
-                  <div className="flex items-center gap-1 bg-neutral-800 px-2.5 py-1 rounded-md border border-neutral-700/50">
-                    <Icons.Settings className="h-3 w-3 text-blue-400 dark:text-orange-300 animate-spin" />
-                    <span className="text-[9px] font-mono font-bold tracking-wider text-neutral-300 dark:text-neutral-600">BLUEPRINT_SIMULATOR_CORE_V4</span>
-                  </div>
-                </div>
+            {/* Right Column: Logo + Orbiting Services */}
+            <div className="relative flex items-center justify-center min-h-[340px] sm:min-h-[440px] lg:min-h-[650px]">
 
-                {/* Main Interactive Grid */}
-                <div className="grid grid-cols-1 sm:grid-cols-12 gap-5 items-center">
-                  
-                  {/* Grid Left: Quick Toggle Pillars */}
-                  <div className="sm:col-span-6 space-y-2">
-                    <span className="text-[10px] font-black uppercase tracking-widest text-neutral-400 dark:text-neutral-500 block mb-1">
-                      {currentLang === 'en' ? 'Toggle Stack Modules' : 'স্ট্যাক মডিউল নির্বাচন'}
-                    </span>
-                    
-                    <div className="space-y-1.5 max-h-[175px] overflow-y-auto pr-1">
-                      {blueprintOptions.map((option) => {
-                        const active = selectedBlueprintTechs.includes(option.id);
-                        return (
-                          <button
-                            key={option.id}
-                            onClick={() => handleToggleTech(option.id)}
-                            className={`w-full flex items-center justify-between p-2 rounded-xl border transition-all text-left group cursor-pointer ${
-                              active
-                                ? 'bg-neutral-800/80 border-blue-500/40 text-white shadow-sm'
-                                : 'bg-neutral-950/40 border-neutral-800/80 text-neutral-400 dark:text-neutral-500 hover:border-neutral-700/60'
-                            }`}
-                          >
-                            <div className="flex items-center gap-2 min-w-0">
-                              <div className={`h-6.5 w-6.5 rounded-lg flex items-center justify-center shrink-0 border ${
-                                active
-                                  ? 'bg-blue-600 border-blue-400/50 text-white'
-                                  : 'bg-neutral-900 border-neutral-800 text-neutral-500 dark:text-neutral-400 dark:text-neutral-500'
-                              }`}>
-                                {option.icon === 'Code2' && <Icons.Code2 className="h-3.5 w-3.5" />}
-                                {option.icon === 'Layout' && <Icons.Layout className="h-3.5 w-3.5" />}
-                                {option.icon === 'Megaphone' && <Icons.Megaphone className="h-3.5 w-3.5" />}
-                                {option.icon === 'Search' && <Icons.Search className="h-3.5 w-3.5" />}
-                                {option.icon === 'Cpu' && <Icons.Cpu className="h-3.5 w-3.5" />}
-                                {option.icon === 'Video' && <Icons.Video className="h-3.5 w-3.5" />}
-                              </div>
-                              <span className="text-[11px] font-extrabold truncate">
-                                {currentLang === 'en' ? option.titleEn : option.titleBn}
-                              </span>
-                            </div>
-                            <div className="flex items-center gap-1.5 shrink-0">
-                              <span className="text-[9px] font-mono font-bold bg-neutral-800 border border-neutral-700/60 text-neutral-300 dark:text-neutral-600 px-1.5 py-0.5 rounded">
-                                {currentLang === 'en' ? option.badgeEn : option.badgeBn}
-                              </span>
-                              <div className={`h-3 w-3 rounded-full border flex items-center justify-center ${
-                                active ? 'border-blue-500 bg-blue-600' : 'border-neutral-700 bg-transparent'
-                              }`}>
-                                {active && <Icons.Check className="h-2 w-2 text-white stroke-[3px]" />}
-                              </div>
-                            </div>
-                          </button>
-                        );
-                      })}
-                    </div>
-                  </div>
+              {/* Responsive orbit wrapper â€” scales down on mobile */}
+              <div className="relative w-full h-full scale-[0.52] sm:scale-75 lg:scale-100 origin-center">
 
-                  {/* Grid Right: Interactive Dynamic Visual Topology Network */}
-                  <div className="sm:col-span-6 flex justify-center items-center">
-                    <div className="relative w-44 h-44 bg-neutral-950/80 border border-neutral-800/60 rounded-2xl flex items-center justify-center overflow-hidden">
-                      {/* Network Canvas */}
-                      <svg className="absolute inset-0 w-full h-full" viewBox="0 0 320 320">
-                        {/* Define gradients for connecting lines */}
-                        <defs>
-                          <linearGradient id="lineGlowGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                            <stop offset="0%" stopColor="#FF4D00" stopOpacity="0.8" />
-                            <stop offset="50%" stopColor="#FF4D00" stopOpacity="0.8" />
-                            <stop offset="100%" stopColor="#FF4D00" stopOpacity="0.8" />
-                          </linearGradient>
-                        </defs>
-
-                        {/* Connection Lines */}
-                        {blueprintOptions.map((opt) => {
-                          const isSelected = selectedBlueprintTechs.includes(opt.id);
-                          return (
-                            <line
-                              key={`line-${opt.id}`}
-                              x1="160"
-                              y1="160"
-                              x2={opt.coords.x}
-                              y2={opt.coords.y}
-                              stroke={isSelected ? 'url(#lineGlowGrad)' : '#333333'}
-                              strokeWidth={isSelected ? '2.5' : '1'}
-                              className={isSelected ? 'animate-dash-flow' : ''}
-                              strokeDasharray={isSelected ? '6, 4' : '3, 3'}
-                            />
-                          );
-                        })}
-
-                        {/* Core Server Node (Center) */}
-                        <g transform="translate(160, 160)">
-                          <circle r="22" className="fill-blue-500/10 stroke-blue-500/25 stroke-[1]" />
-                          <circle r="15" className="fill-blue-600/30 stroke-blue-400/50 stroke-[1.5]" />
-                          <circle r="6" className="fill-blue-500" />
-                          <circle r="5" className="fill-white" />
-                        </g>
-
-                        {/* Satellite Nodes */}
-                        {blueprintOptions.map((opt) => {
-                          const isSelected = selectedBlueprintTechs.includes(opt.id);
-                          return (
-                            <g
-                              key={`node-${opt.id}`}
-                              transform={`translate(${opt.coords.x}, ${opt.coords.y})`}
-                              onClick={() => handleToggleTech(opt.id)}
-                              className="cursor-pointer"
-                            >
-                              {/* Pulsing ring for selected ones */}
-                              {isSelected && (
-                                <circle r="18" className="fill-none stroke-blue-400/20 stroke-[3] animate-pulse" />
-                              )}
-                              <circle
-                                r="14"
-                                className={`transition-all duration-300 ${
-                                  isSelected
-                                    ? 'fill-neutral-900 stroke-blue-500 stroke-[1.5]'
-                                    : 'fill-neutral-950 stroke-neutral-800 hover:stroke-neutral-700 stroke-[1]'
-                                }`}
-                              />
-                              {/* Central Indicator Mini Icon */}
-                              <g transform="scale(0.5) translate(-10, -10)" className={isSelected ? 'text-blue-400 dark:text-orange-300' : 'text-neutral-600 dark:text-neutral-300 dark:text-neutral-600'}>
-                                {opt.icon === 'Code2' && <Icons.Code2 className="h-5 w-5" />}
-                                {opt.icon === 'Layout' && <Icons.Layout className="h-5 w-5" />}
-                                {opt.icon === 'Megaphone' && <Icons.Megaphone className="h-5 w-5" />}
-                                {opt.icon === 'Search' && <Icons.Search className="h-5 w-5" />}
-                                {opt.icon === 'Cpu' && <Icons.Cpu className="h-5 w-5" />}
-                                {opt.icon === 'Video' && <Icons.Video className="h-5 w-5" />}
-                              </g>
-                            </g>
-                          );
-                        })}
-                      </svg>
-
-                      {/* Overlaid Hub Label */}
-                      <div className="absolute bottom-2 bg-neutral-900/90 border border-neutral-800/80 px-2.5 py-0.5 rounded-full text-[7px] font-mono tracking-widest text-neutral-400 dark:text-neutral-500 text-center pointer-events-none">
-                        {currentLang === 'en' ? 'ACTIVE SYSTEM TOPOLOGY' : 'সক্রিয় সিস্টেম টপোলজি'}
-                      </div>
-                    </div>
-                  </div>
-
-                </div>
-
-                {/* Diagnostic Console Panel */}
-                <div className="bg-neutral-950 border border-neutral-800/60 rounded-xl p-3 my-4 space-y-1 font-mono text-[9px] text-emerald-400 h-16 overflow-y-auto">
-                  <div className="text-neutral-500 dark:text-neutral-400 dark:text-neutral-500 flex items-center justify-between">
-                    <span>{currentLang === 'en' ? 'BLUEPRINT CONFIGURATION OUTPUT' : 'ব্লুপ্রিন্ট কনফিগারেশন আউটপুট'}</span>
-                    <span className="text-[8px] uppercase tracking-wider text-blue-500 dark:text-orange-400 font-bold bg-blue-500/10 px-1 rounded">SLA SAFE</span>
-                  </div>
-                  <div className="truncate">
-                    &gt; {currentLang === 'en' ? 'Active nodes:' : 'সক্রিয় নোডসমূহ:'} {selectedBlueprintTechs.join(' || ')}
-                  </div>
-                  {/* Show dynamically updated provisioning logs */}
-                  {selectedBlueprintTechs.map((techId) => {
-                    const tech = blueprintOptions.find(o => o.id === techId);
-                    if (!tech) return null;
+                {/* Outer orbit ring â€” 6 services, rotates clockwise */}
+                <div className="absolute inset-0 animate-[spin_70s_linear_infinite]">
+                  {[
+                    { nameEn: 'Web Development', nameBn: 'à¦“à¦¯à¦¼à§‡à¦¬ à¦¡à§‡à¦­à§‡à¦²à¦ªà¦®à§‡à¦¨à§à¦Ÿ', icon: Icons.Globe, x: 0, y: -280 },
+                    { nameEn: 'UI/UX Design', nameBn: 'à¦‡à¦‰à¦†à¦‡/à¦‡à¦‰à¦à¦•à§à¦¸ à¦¡à¦¿à¦œà¦¾à¦‡à¦¨', icon: Icons.Palette, x: 242.49, y: -140 },
+                    { nameEn: 'Video Editing', nameBn: 'à¦­à¦¿à¦¡à¦¿à¦“ à¦à¦¡à¦¿à¦Ÿà¦¿à¦‚', icon: Icons.Video, x: 242.49, y: 140 },
+                    { nameEn: 'App Development', nameBn: 'à¦…à§à¦¯à¦¾à¦ª à¦¡à§‡à¦­à§‡à¦²à¦ªà¦®à§‡à¦¨à§à¦Ÿ', icon: Icons.Smartphone, x: 0, y: 280 },
+                    { nameEn: 'Graphic Design', nameBn: 'à¦—à§à¦°à¦¾à¦«à¦¿à¦• à¦¡à¦¿à¦œà¦¾à¦‡à¦¨', icon: Icons.PenTool, x: -242.49, y: 140 },
+                    { nameEn: 'SEO Strategy', nameBn: 'à¦à¦¸à¦‡à¦“ à¦•à§à¦¯à¦¾à¦®à§à¦ªà§‡à¦‡à¦¨', icon: Icons.Search, x: -242.49, y: -140 },
+                  ].map((svc, i) => {
+                    const SvcIcon = svc.icon;
                     return (
-                      <div key={techId} className="truncate text-blue-400 dark:text-orange-300">
-                        &gt; {tech.terminalLog}
+                      <div
+                        key={`outer-${i}`}
+                        className="absolute z-10 animate-[spin_70s_linear_infinite_reverse]"
+                        style={{ left: `calc(50% + ${svc.x}px - 40px)`, top: `calc(50% + ${svc.y}px - 11px)` }}
+                      >
+                        <div className="flex items-center gap-2 bg-white/80 dark:bg-white/[0.06] backdrop-blur-md border border-orange-100 dark:border-white/[0.08] rounded-full px-3.5 py-2 shadow-sm hover:bg-orange-50 dark:hover:bg-orange-500/15 hover:border-orange-300 dark:hover:border-orange-500/30 hover:shadow-[0_0_20px_rgba(255,74,0,0.1)] hover:scale-105 transition-all duration-300 cursor-default whitespace-nowrap">
+                          <SvcIcon className="h-3 w-3 text-orange-500 dark:text-orange-400 shrink-0" />
+                          <span className="text-[10px] font-bold text-neutral-800 dark:text-neutral-200">{currentLang === 'en' ? svc.nameEn : svc.nameBn}</span>
+                        </div>
                       </div>
                     );
                   })}
-                </div>
 
-                {/* Dynamic Package Summary & Value Indicator */}
-                <div className="border-t border-neutral-800/60 pt-4 mt-4 flex items-center justify-between">
-                  <div className="space-y-0.5">
-                    <span className="text-[10px] font-bold text-neutral-400 dark:text-neutral-500 uppercase tracking-widest block">
-                      {currentLang === 'en' ? 'System Standard' : 'সিস্টেম স্ট্যান্ডার্ড'}
-                    </span>
-                    <div className="flex items-center gap-1.5 text-xs font-mono font-bold text-neutral-200">
-                      <Icons.ShieldCheck className="h-4 w-4 text-emerald-400" />
-                      <span>{currentLang === 'en' ? 'Enterprise Grade' : 'এন্টারপ্রাইজ গ্রেড'}</span>
-                    </div>
-                  </div>
-
-                  <div className="text-right">
-                    <span className="text-[10px] font-bold text-neutral-400 dark:text-neutral-500 uppercase tracking-widest block">
-                      {currentLang === 'en' ? 'Topology Synergy' : 'টপোলজি সিনার্জি সূচক'}
-                    </span>
-                    <div className="flex items-center gap-1.5 justify-end text-xl sm:text-2xl font-black text-blue-400 dark:text-orange-300 tracking-tight font-mono">
-                      <Icons.Zap className="h-5 w-5 text-yellow-400 animate-pulse" />
-                      <span>{synergyRating}%</span>
-                    </div>
+                  {/* Outer orbit ring visual */}
+                  <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                    <div className="w-[560px] h-[560px] rounded-full border border-dashed border-orange-200/40 dark:border-orange-500/8" />
                   </div>
                 </div>
 
-                {/* Diagnostic Blueprint Call-to-Actions */}
-                <div className="grid grid-cols-1 sm:grid-cols-12 gap-2 mt-4 pt-1">
-                  <button
-                    onClick={handleCopyBlueprint}
-                    className="sm:col-span-4 rounded-xl bg-neutral-800 hover:bg-neutral-700/80 border border-neutral-700/60 text-[10px] font-bold py-2.5 transition flex items-center justify-center gap-1.5 cursor-pointer"
-                  >
-                    {isCopying ? <Icons.Check className="h-3.5 w-3.5 text-emerald-400" /> : <Icons.Copy className="h-3.5 w-3.5 text-neutral-400 dark:text-neutral-500" />}
-                    <span>{isCopying ? (currentLang === 'en' ? 'Copied' : 'কপি হয়েছে') : (currentLang === 'en' ? 'Copy Config' : 'কনফিগ কপি')}</span>
-                  </button>
+                {/* Inner orbit ring â€” 4 services, rotates counter-clockwise */}
+                <div className="absolute inset-0 animate-[spin_45s_linear_infinite_reverse]">
+                  {[
+                    { nameEn: 'Product Innovation', nameBn: 'à¦ªà§à¦°à§‹à¦¡à¦¾à¦•à§à¦Ÿ à¦‡à¦¨à§‹à¦­à§‡à¦¶à¦¨', icon: Icons.Lightbulb, x: 0, y: -155 },
+                    { nameEn: 'Creative Content', nameBn: 'à¦•à§à¦°à¦¿à¦¯à¦¼à§‡à¦Ÿà¦¿à¦­ à¦•à¦¨à¦Ÿà§‡à¦¨à§à¦Ÿ', icon: Icons.Film, x: 155, y: 0 },
+                    { nameEn: 'Marketing & PR', nameBn: 'à¦®à¦¾à¦°à§à¦•à§‡à¦Ÿà¦¿à¦‚ à¦“ à¦ªà¦¿à¦†à¦°', icon: Icons.Megaphone, x: 0, y: 155 },
+                    { nameEn: 'AI Automations', nameBn: 'à¦à¦†à¦‡ à¦…à¦Ÿà§‹à¦®à§‡à¦¶à¦¨', icon: Icons.BrainCircuit, x: -155, y: 0 },
+                  ].map((svc, i) => {
+                    const SvcIcon = svc.icon;
+                    return (
+                      <div
+                        key={`inner-${i}`}
+                        className="absolute z-10 animate-[spin_45s_linear_infinite]"
+                        style={{ left: `calc(50% + ${svc.x}px - 48px)`, top: `calc(50% + ${svc.y}px - 13px)` }}
+                      >
+                        <div className="flex items-center gap-2 bg-orange-50/90 dark:bg-orange-500/10 backdrop-blur-md border border-orange-200 dark:border-orange-500/25 rounded-full px-4 py-2 shadow-md hover:bg-orange-100 dark:hover:bg-orange-500/20 hover:shadow-[0_0_25px_rgba(255,74,0,0.15)] hover:scale-105 transition-all duration-300 cursor-default whitespace-nowrap">
+                          <SvcIcon className="h-3.5 w-3.5 text-orange-500 dark:text-orange-400 shrink-0" />
+                          <span className="text-[10px] font-extrabold text-orange-700 dark:text-orange-300">{currentLang === 'en' ? svc.nameEn : svc.nameBn}</span>
+                        </div>
+                      </div>
+                    );
+                  })}
 
-                  <button
-                    onClick={handleLockBlueprint}
-                    className="sm:col-span-8 rounded-xl bg-blue-600 hover:bg-blue-500 dark:bg-orange-500 text-white text-[10px] font-black py-2.5 transition flex items-center justify-center gap-1 cursor-pointer shadow-lg shadow-blue-600/20 hover:scale-[1.01]"
-                  >
-                    <span>{currentLang === 'en' ? 'Process Selected Capabilities' : 'নির্বাচিত সেবা আলোচনা করুন'}</span>
-                    <Icons.ArrowUpRight className="h-3.5 w-3.5" />
-                  </button>
+                  {/* Inner orbit ring visual */}
+                  <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                    <div className="w-[310px] h-[310px] rounded-full border border-orange-200/50 dark:border-orange-500/15" />
+                  </div>
                 </div>
 
               </div>
+
+              {/* Center logo â€” stays fixed, above everything */}
+              <div className="absolute z-30 left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
+                <div className="absolute inset-0 w-48 h-48 lg:w-64 lg:h-64 rounded-full bg-orange-500/10 blur-[60px] pointer-events-none -translate-x-[20%] -translate-y-[20%]" />
+                <img src="/logo.png" alt="Next Solution" className="w-20 h-20 sm:w-24 sm:h-24 lg:w-36 lg:h-36 object-contain block dark:hidden relative z-10 drop-shadow-[0_0_30px_rgba(255,74,0,0.12)]" />
+                <img src="/logow.png" alt="Next Solution" className="w-20 h-20 sm:w-24 sm:h-24 lg:w-36 lg:h-36 object-contain hidden dark:block relative z-10 drop-shadow-[0_0_30px_rgba(255,74,0,0.15)]" />
+              </div>
+
+              {/* Glow behind logo */}
+              <div className="absolute z-[25] left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-72 h-72 bg-orange-500/[0.08] rounded-full blur-[100px] pointer-events-none" />
+              <div className="absolute z-[25] left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-40 h-40 bg-orange-400/[0.05] rounded-full blur-[60px] pointer-events-none" />
             </div>
 
           </div>
+
+          {/* Scroll indicator */}
+          <div className="absolute bottom-8 left-1/2 -translate-x-1/2 hidden sm:flex flex-col items-center gap-2 animate-bounce">
+            <span className="text-[9px] font-bold text-neutral-500 uppercase tracking-widest">{currentLang === 'en' ? 'Scroll to explore' : 'à¦à¦•à§à¦¸à¦ªà§à¦²à§‹à¦° à¦•à¦°à¦¤à§‡ à¦¸à§à¦•à§à¦°à¦² à¦•à¦°à§à¦¨'}</span>
+            <div className="w-5 h-8 border-2 border-gray-300 dark:border-neutral-600 rounded-full flex justify-center pt-1.5">
+              <div className="w-1 h-2 bg-orange-500 rounded-full animate-pulse" />
+            </div>
+          </div>
         </div>
       </section>
+
+
 
       {/* 2. SERVICES OVERVIEW GRID (LOADED DYNAMICALLY) */}
       <section id="services-grid-list" className="py-24 border-b border-gray-50 bg-white dark:bg-[#141414]">
@@ -924,16 +728,16 @@ export default function ServicesSection({ currentLang, setTab, isFullPage = fals
           
           <div className="text-center space-y-4 max-w-3xl mx-auto mb-16">
             <span className="text-xs font-black uppercase tracking-widest text-blue-600 dark:text-orange-400">
-              {currentLang === 'en' ? 'OUR CAPABILITIES CATALOG' : 'আমাদের সেবা ক্যাটালগ'}
+              {currentLang === 'en' ? 'OUR CAPABILITIES CATALOG' : 'à¦†à¦®à¦¾à¦¦à§‡à¦° à¦¸à§‡à¦¬à¦¾ à¦•à§à¦¯à¦¾à¦Ÿà¦¾à¦²à¦—'}
             </span>
             <h2 className="font-sans text-3xl font-extrabold tracking-tight text-gray-900 dark:text-white sm:text-4xl">
-              {currentLang === 'en' ? 'Explore Specific Expertise' : 'বিশেষায়িত দক্ষতাসমূহ অন্বেষণ করুন'}
+              {currentLang === 'en' ? 'Explore Specific Expertise' : 'à¦¬à¦¿à¦¶à§‡à¦·à¦¾à¦¯à¦¼à¦¿à¦¤ à¦¦à¦•à§à¦·à¦¤à¦¾à¦¸à¦®à§‚à¦¹ à¦…à¦¨à§à¦¬à§‡à¦·à¦£ à¦•à¦°à§à¦¨'}
             </h2>
             <p className="text-sm text-gray-500 dark:text-neutral-400 dark:text-neutral-500 leading-relaxed">
               {currentLang === 'en' ? (
                 'Manageable via active client consoles. Zero hardcoding. Click to access complete deliverable checklists, tech stacks, and plans.'
               ) : (
-                'অ্যাডমিন কনসোল থেকে সরাসরি পরিচালনাযোগ্য। কোনো হার্ডকোডেড ডাটা নেই। পূর্ণ বিবরণ এবং ডেলিভারি প্ল্যান দেখতে যেকোনো সেবায় ক্লিক করুন।'
+                'à¦…à§à¦¯à¦¾à¦¡à¦®à¦¿à¦¨ à¦•à¦¨à¦¸à§‹à¦² à¦¥à§‡à¦•à§‡ à¦¸à¦°à¦¾à¦¸à¦°à¦¿ à¦ªà¦°à¦¿à¦šà¦¾à¦²à¦¨à¦¾à¦¯à§‹à¦—à§à¦¯à¥¤ à¦•à§‹à¦¨à§‹ à¦¹à¦¾à¦°à§à¦¡à¦•à§‹à¦¡à§‡à¦¡ à¦¡à¦¾à¦Ÿà¦¾ à¦¨à§‡à¦‡à¥¤ à¦ªà§‚à¦°à§à¦£ à¦¬à¦¿à¦¬à¦°à¦£ à¦à¦¬à¦‚ à¦¡à§‡à¦²à¦¿à¦­à¦¾à¦°à¦¿ à¦ªà§à¦²à§à¦¯à¦¾à¦¨ à¦¦à§‡à¦–à¦¤à§‡ à¦¯à§‡à¦•à§‹à¦¨à§‹ à¦¸à§‡à¦¬à¦¾à¦¯à¦¼ à¦•à§à¦²à¦¿à¦• à¦•à¦°à§à¦¨à¥¤'
               )}
             </p>
           </div>
@@ -957,7 +761,7 @@ export default function ServicesSection({ currentLang, setTab, isFullPage = fals
                     </div>
                     <div className="text-right">
                       <span className="text-[9px] font-mono font-bold bg-blue-50 dark:bg-orange-500/10 border border-blue-100 dark:border-orange-500/20 text-blue-600 dark:text-orange-400 px-1.5 py-0.5 rounded">
-                        {currentLang === 'en' ? 'Verified' : 'যাচাইকৃত'}
+                        {currentLang === 'en' ? 'Verified' : 'à¦¯à¦¾à¦šà¦¾à¦‡à¦•à§ƒà¦¤'}
                       </span>
                     </div>
                   </div>
@@ -975,7 +779,7 @@ export default function ServicesSection({ currentLang, setTab, isFullPage = fals
                   {/* Key Benefits (Requested Checklist) */}
                   <div className="pt-3 border-t border-gray-100 dark:border-neutral-800 space-y-2">
                     <span className="text-[9px] uppercase font-bold text-gray-400 dark:text-neutral-500 tracking-wider block">
-                      {currentLang === 'en' ? 'Core Benefits' : 'মূল সুবিধা সমূহ'}
+                      {currentLang === 'en' ? 'Core Benefits' : 'à¦®à§‚à¦² à¦¸à§à¦¬à¦¿à¦§à¦¾ à¦¸à¦®à§‚à¦¹'}
                     </span>
                     <ul className="space-y-1.5">
                       {(currentLang === 'en' ? service.benefitsEn : service.benefitsBn).slice(0, 2).map((b, idx) => (
@@ -990,7 +794,7 @@ export default function ServicesSection({ currentLang, setTab, isFullPage = fals
 
                 {/* Learn More Action Button */}
                 <div className="mt-6 pt-4 border-t border-gray-50 flex items-center justify-between text-xs font-bold text-blue-600 dark:text-orange-400 group-hover:text-blue-700">
-                  <span>{currentLang === 'en' ? 'View Details & Plan' : 'বিস্তারিত বিবরণ ও প্ল্যান'}</span>
+                  <span>{currentLang === 'en' ? 'View Details & Plan' : 'à¦¬à¦¿à¦¸à§à¦¤à¦¾à¦°à¦¿à¦¤ à¦¬à¦¿à¦¬à¦°à¦£ à¦“ à¦ªà§à¦²à§à¦¯à¦¾à¦¨'}</span>
                   <div className="flex h-6 w-6 items-center justify-center rounded-full bg-blue-50 dark:bg-orange-500/10 text-blue-600 dark:text-orange-400 group-hover:bg-blue-600 group-hover:text-white transition-all duration-300">
                     <Icons.ArrowRight className="h-3 w-3" />
                   </div>
@@ -1003,21 +807,21 @@ export default function ServicesSection({ currentLang, setTab, isFullPage = fals
       </section>
 
       {/* 3. WHY CHOOSE OUR SERVICES (8 VALUE CARDS) */}
-      <section id="services-why-choose" className="py-24 bg-[#FAFAFA] border-b border-gray-100 dark:border-neutral-800">
+      <section id="services-why-choose" className="py-24 bg-[#FAFAFA] dark:bg-[#0D0C0A] border-b border-gray-100 dark:border-neutral-800">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           
           <div className="text-center space-y-4 max-w-3xl mx-auto mb-16">
             <span className="text-xs font-black uppercase tracking-widest text-blue-600 dark:text-orange-400">
-              {currentLang === 'en' ? 'AGENCY PRINCIPLES' : 'এজেন্সি নীতিমালা'}
+              {currentLang === 'en' ? 'AGENCY PRINCIPLES' : 'à¦à¦œà§‡à¦¨à§à¦¸à¦¿ à¦¨à§€à¦¤à¦¿à¦®à¦¾à¦²à¦¾'}
             </span>
             <h2 className="font-sans text-3xl font-extrabold tracking-tight text-gray-900 dark:text-white sm:text-4xl">
-              {currentLang === 'en' ? 'Why Choose Next Solution?' : 'কেন আমাদের সেবা বেছে নেবেন?'}
+              {currentLang === 'en' ? 'Why Choose Next Solution?' : 'à¦•à§‡à¦¨ à¦†à¦®à¦¾à¦¦à§‡à¦° à¦¸à§‡à¦¬à¦¾ à¦¬à§‡à¦›à§‡ à¦¨à§‡à¦¬à§‡à¦¨?'}
             </h2>
             <p className="text-sm text-gray-500 dark:text-neutral-400 dark:text-neutral-500 max-w-xl mx-auto leading-relaxed">
               {currentLang === 'en' ? (
                 'We set premium benchmarks in execution. We do not compromise, outsource, or delay.'
               ) : (
-                'আমরা কাজ বাস্তবায়নে প্রিমিয়াম মানদণ্ড নির্ধারণ করি। কোনো অসম্পূর্ণ কাজ বা সময়ক্ষেপণ আমাদের অভিধানে নেই।'
+                'à¦†à¦®à¦°à¦¾ à¦•à¦¾à¦œ à¦¬à¦¾à¦¸à§à¦¤à¦¬à¦¾à§Ÿà¦¨à§‡ à¦ªà§à¦°à¦¿à¦®à¦¿à§Ÿà¦¾à¦® à¦®à¦¾à¦¨à¦¦à¦£à§à¦¡ à¦¨à¦¿à¦°à§à¦§à¦¾à¦°à¦£ à¦•à¦°à¦¿à¥¤ à¦•à§‹à¦¨à§‹ à¦…à¦¸à¦®à§à¦ªà§‚à¦°à§à¦£ à¦•à¦¾à¦œ à¦¬à¦¾ à¦¸à¦®à§Ÿà¦•à§à¦·à§‡à¦ªà¦£ à¦†à¦®à¦¾à¦¦à§‡à¦° à¦…à¦­à¦¿à¦§à¦¾à¦¨à§‡ à¦¨à§‡à¦‡à¥¤'
               )}
             </p>
           </div>
@@ -1028,65 +832,65 @@ export default function ServicesSection({ currentLang, setTab, isFullPage = fals
                 icon: 'Award',
                 color: 'text-blue-600 dark:text-orange-400 bg-blue-50 dark:bg-orange-500/10 border-blue-100/50',
                 titleEn: 'Experienced Team',
-                titleBn: 'অভিজ্ঞ টিম',
+                titleBn: 'à¦…à¦­à¦¿à¦œà§à¦ž à¦Ÿà¦¿à¦®',
                 descEn: 'All products are hand-engineered by senior full-stack developers and product designers.',
-                descBn: 'আমাদের প্রতিটি কোড এবং ডিজাইন তৈরি করেন সিনিয়র ফুল-স্ট্যাক ডেভেলপার ও ডিজাইনাররা।'
+                descBn: 'à¦†à¦®à¦¾à¦¦à§‡à¦° à¦ªà§à¦°à¦¤à¦¿à¦Ÿà¦¿ à¦•à§‹à¦¡ à¦à¦¬à¦‚ à¦¡à¦¿à¦œà¦¾à¦‡à¦¨ à¦¤à§ˆà¦°à¦¿ à¦•à¦°à§‡à¦¨ à¦¸à¦¿à¦¨à¦¿à§Ÿà¦° à¦«à§à¦²-à¦¸à§à¦Ÿà§à¦¯à¦¾à¦• à¦¡à§‡à¦­à§‡à¦²à¦ªà¦¾à¦° à¦“ à¦¡à¦¿à¦œà¦¾à¦‡à¦¨à¦¾à¦°à¦°à¦¾à¥¤'
               },
               {
                 icon: 'Cpu',
                 color: 'text-purple-600 dark:text-purple-400 dark:text-purple-300 bg-purple-50 dark:bg-purple-500/10 border-purple-100/50',
                 titleEn: 'Modern Technologies',
-                titleBn: 'আধুনিক প্রযুক্তি',
+                titleBn: 'à¦†à¦§à§à¦¨à¦¿à¦• à¦ªà§à¦°à¦¯à§à¦•à§à¦¤à¦¿',
                 descEn: 'Strict typesafe TypeScript, React ecosystem, and optimized serverless cloud configurations.',
-                descBn: 'টাইপসেফ টাইপস্ক্রিপ্ট, রিয়্যাক্ট ও ডাটাবেস অপ্টিমাইজেশন ব্যবহার করে সর্বোচ্চ গতি নিশ্চিত করা।'
+                descBn: 'à¦Ÿà¦¾à¦‡à¦ªà¦¸à§‡à¦« à¦Ÿà¦¾à¦‡à¦ªà¦¸à§à¦•à§à¦°à¦¿à¦ªà§à¦Ÿ, à¦°à¦¿à§Ÿà§à¦¯à¦¾à¦•à§à¦Ÿ à¦“ à¦¡à¦¾à¦Ÿà¦¾à¦¬à§‡à¦¸ à¦…à¦ªà§à¦Ÿà¦¿à¦®à¦¾à¦‡à¦œà§‡à¦¶à¦¨ à¦¬à§à¦¯à¦¬à¦¹à¦¾à¦° à¦•à¦°à§‡ à¦¸à¦°à§à¦¬à§‹à¦šà§à¦š à¦—à¦¤à¦¿ à¦¨à¦¿à¦¶à§à¦šà¦¿à¦¤ à¦•à¦°à¦¾à¥¤'
               },
               {
                 icon: 'Zap',
                 color: 'text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-500/10 border-emerald-100/50',
                 titleEn: 'Extreme Performance',
-                titleBn: 'চরম পারফরম্যান্স',
+                titleBn: 'à¦šà¦°à¦® à¦ªà¦¾à¦°à¦«à¦°à¦®à§à¦¯à¦¾à¦¨à§à¦¸',
                 descEn: 'Ultra-low latency rendering and serverless caching ensuring your pages score 100/100 on Google Lighthouse.',
-                descBn: '১০০% গুগল লাইটহাউস স্কোর এবং আল্ট্রা-লো ল্যাটেন্সি স্পিড নিশ্চিতকরণ।'
+                descBn: 'à§§à§¦à§¦% à¦—à§à¦—à¦² à¦²à¦¾à¦‡à¦Ÿà¦¹à¦¾à¦‰à¦¸ à¦¸à§à¦•à§‹à¦° à¦à¦¬à¦‚ à¦†à¦²à§à¦Ÿà§à¦°à¦¾-à¦²à§‹ à¦²à§à¦¯à¦¾à¦Ÿà§‡à¦¨à§à¦¸à¦¿ à¦¸à§à¦ªà¦¿à¦¡ à¦¨à¦¿à¦¶à§à¦šà¦¿à¦¤à¦•à¦°à¦£à¥¤'
               },
               {
                 icon: 'Zap',
                 color: 'text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-500/10 border-amber-100/50',
                 titleEn: 'Fast Delivery',
-                titleBn: 'দ্রুত ডেলিভারি',
+                titleBn: 'à¦¦à§à¦°à§à¦¤ à¦¡à§‡à¦²à¦¿à¦­à¦¾à¦°à¦¿',
                 descEn: 'Rigorous sprint tracking and agile timelines ensuring project milestones launch on schedule.',
-                descBn: 'সুনির্দিষ্ট চাক্ষুষ পরিকল্পনা ও স্প্রিন্ট ট্র্যাকিং-এর মাধ্যমে সময়মতো ডেলিভারি নিশ্চিতকরণ।'
+                descBn: 'à¦¸à§à¦¨à¦¿à¦°à§à¦¦à¦¿à¦·à§à¦Ÿ à¦šà¦¾à¦•à§à¦·à§à¦· à¦ªà¦°à¦¿à¦•à¦²à§à¦ªà¦¨à¦¾ à¦“ à¦¸à§à¦ªà§à¦°à¦¿à¦¨à§à¦Ÿ à¦Ÿà§à¦°à§à¦¯à¦¾à¦•à¦¿à¦‚-à¦à¦° à¦®à¦¾à¦§à§à¦¯à¦®à§‡ à¦¸à¦®à§Ÿà¦®à¦¤à§‹ à¦¡à§‡à¦²à¦¿à¦­à¦¾à¦°à¦¿ à¦¨à¦¿à¦¶à§à¦šà¦¿à¦¤à¦•à¦°à¦£à¥¤'
               },
               {
                 icon: 'ShieldCheck',
                 color: 'text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-500/10 border-red-100/50',
                 titleEn: 'Secure Solutions',
-                titleBn: 'নিরাপদ সমাধান',
+                titleBn: 'à¦¨à¦¿à¦°à¦¾à¦ªà¦¦ à¦¸à¦®à¦¾à¦§à¦¾à¦¨',
                 descEn: 'Robust middleware security, secure API routing, and full GDPR/HIPAA-ready compliance parameters.',
-                descBn: 'মজবুত মিডলওয়্যার সিকিউরিটি এবং ডেটা সুরক্ষায় সর্বোচ্চ নিরাপত্তা ও কমপ্লায়েন্স।'
+                descBn: 'à¦®à¦œà¦¬à§à¦¤ à¦®à¦¿à¦¡à¦²à¦“à§Ÿà§à¦¯à¦¾à¦° à¦¸à¦¿à¦•à¦¿à¦‰à¦°à¦¿à¦Ÿà¦¿ à¦à¦¬à¦‚ à¦¡à§‡à¦Ÿà¦¾ à¦¸à§à¦°à¦•à§à¦·à¦¾à§Ÿ à¦¸à¦°à§à¦¬à§‹à¦šà§à¦š à¦¨à¦¿à¦°à¦¾à¦ªà¦¤à§à¦¤à¦¾ à¦“ à¦•à¦®à¦ªà§à¦²à¦¾à¦¯à¦¼à§‡à¦¨à§à¦¸à¥¤'
               },
               {
                 icon: 'HeartHandshake',
                 color: 'text-cyan-600 dark:text-cyan-400 bg-cyan-50 dark:bg-cyan-500/10 border-cyan-100/50',
                 titleEn: 'Ongoing Support',
-                titleBn: 'সার্বক্ষণিক সাপোর্ট',
+                titleBn: 'à¦¸à¦¾à¦°à§à¦¬à¦•à§à¦·à¦£à¦¿à¦• à¦¸à¦¾à¦ªà§‹à¦°à§à¦Ÿ',
                 descEn: 'Committed SLA contracts, regular version upgrades, and direct priority support channels.',
-                descBn: 'বাৎসরিক এসএলএ চুক্তি, রেগুলার সিস্টেম ব্যাকআপ ও দ্রুত ত্রুটি সংশোধনে কাস্টমার সাপোর্ট।'
+                descBn: 'à¦¬à¦¾à§Žà¦¸à¦°à¦¿à¦• à¦à¦¸à¦à¦²à¦ à¦šà§à¦•à§à¦¤à¦¿, à¦°à§‡à¦—à§à¦²à¦¾à¦° à¦¸à¦¿à¦¸à§à¦Ÿà§‡à¦® à¦¬à§à¦¯à¦¾à¦•à¦†à¦ª à¦“ à¦¦à§à¦°à§à¦¤ à¦¤à§à¦°à§à¦Ÿà¦¿ à¦¸à¦‚à¦¶à§‹à¦§à¦¨à§‡ à¦•à¦¾à¦¸à§à¦Ÿà¦®à¦¾à¦° à¦¸à¦¾à¦ªà§‹à¦°à§à¦Ÿà¥¤'
               },
               {
                 icon: 'Layers',
                 color: 'text-indigo-600 dark:text-orange-400 bg-indigo-50 dark:bg-orange-500/10 border-indigo-100/50',
                 titleEn: 'Scalable Architecture',
-                titleBn: 'স্কেলেবল আর্কিটেকচার',
+                titleBn: 'à¦¸à§à¦•à§‡à¦²à§‡à¦¬à¦² à¦†à¦°à§à¦•à¦¿à¦Ÿà§‡à¦•à¦šà¦¾à¦°',
                 descEn: 'Database normalization and decoupling enabling traffic pivots of up to 10x without latency.',
-                descBn: 'ভবিষ্যতে সহজে ব্যবহারের জন্য ডিকাপলড আর্কিটেকচার যা ১০ গুণ ট্রাফিক লোড নিতে পারে।'
+                descBn: 'à¦­à¦¬à¦¿à¦·à§à¦¯à¦¤à§‡ à¦¸à¦¹à¦œà§‡ à¦¬à§à¦¯à¦¬à¦¹à¦¾à¦°à§‡à¦° à¦œà¦¨à§à¦¯ à¦¡à¦¿à¦•à¦¾à¦ªà¦²à¦¡ à¦†à¦°à§à¦•à¦¿à¦Ÿà§‡à¦•à¦šà¦¾à¦° à¦¯à¦¾ à§§à§¦ à¦—à§à¦£ à¦Ÿà§à¦°à¦¾à¦«à¦¿à¦• à¦²à§‹à¦¡ à¦¨à¦¿à¦¤à§‡ à¦ªà¦¾à¦°à§‡à¥¤'
               },
               {
                 icon: 'Smile',
                 color: 'text-teal-600 bg-teal-50 border-teal-100/50',
                 titleEn: 'Customer Satisfaction',
-                titleBn: 'গ্রাহক সন্তুষ্টি',
+                titleBn: 'à¦—à§à¦°à¦¾à¦¹à¦• à¦¸à¦¨à§à¦¤à§à¦·à§à¦Ÿà¦¿',
                 descEn: 'Comprehensive collaborative Figma feedback loops and 100% intellectual property transfers.',
-                descBn: 'সম্পূর্ণ সহযোগিতা, নিয়মিত কাজের আপডেট প্রদান ও শতভাগ বুদ্ধিবৃত্তিক স্বত্ব হস্তান্তর।'
+                descBn: 'à¦¸à¦®à§à¦ªà§‚à¦°à§à¦£ à¦¸à¦¹à¦¯à§‹à¦—à¦¿à¦¤à¦¾, à¦¨à¦¿à§Ÿà¦®à¦¿à¦¤ à¦•à¦¾à¦œà§‡à¦° à¦†à¦ªà¦¡à§‡à¦Ÿ à¦ªà§à¦°à¦¦à¦¾à¦¨ à¦“ à¦¶à¦¤à¦­à¦¾à¦— à¦¬à§à¦¦à§à¦§à¦¿à¦¬à§ƒà¦¤à§à¦¤à¦¿à¦• à¦¸à§à¦¬à¦¤à§à¦¬ à¦¹à¦¸à§à¦¤à¦¾à¦¨à§à¦¤à¦°à¥¤'
               }
             ].map((card, idx) => (
               <div key={idx} className="rounded-2xl border border-gray-100 dark:border-neutral-800 bg-white dark:bg-[#141414] p-6 space-y-4 shadow-sm hover:border-blue-600/30 transition duration-300">
@@ -1112,16 +916,16 @@ export default function ServicesSection({ currentLang, setTab, isFullPage = fals
           
           <div className="text-center space-y-4 max-w-3xl mx-auto mb-16">
             <span className="text-xs font-black uppercase tracking-widest text-blue-600 dark:text-orange-400">
-              {currentLang === 'en' ? 'OUR PIPELINE FRAMEWORK' : 'আমাদের কাজের পাইপলাইন'}
+              {currentLang === 'en' ? 'OUR PIPELINE FRAMEWORK' : 'à¦†à¦®à¦¾à¦¦à§‡à¦° à¦•à¦¾à¦œà§‡à¦° à¦ªà¦¾à¦‡à¦ªà¦²à¦¾à¦‡à¦¨'}
             </span>
             <h2 className="font-sans text-3xl font-extrabold tracking-tight text-gray-900 dark:text-white sm:text-4xl">
-              {currentLang === 'en' ? '8 Phases to Perfect Release' : 'নিখুঁত প্রকাশের ৮টি স্তর'}
+              {currentLang === 'en' ? '8 Phases to Perfect Release' : 'à¦¨à¦¿à¦–à§à¦à¦¤ à¦ªà§à¦°à¦•à¦¾à¦¶à§‡à¦° à§®à¦Ÿà¦¿ à¦¸à§à¦¤à¦°'}
             </h2>
             <p className="text-sm text-gray-500 dark:text-neutral-400 dark:text-neutral-500 max-w-xl mx-auto leading-relaxed">
               {currentLang === 'en' ? (
                 'How we transform ideas from napkin designs into production-ready software systems.'
               ) : (
-                'আমরা কীভাবে আপনার সাধারণ আইডিয়াকে মার্কেট-ডমিনেটিং ডিজিটাল সিস্টেমে রূপান্তর করি।'
+                'à¦†à¦®à¦°à¦¾ à¦•à§€à¦­à¦¾à¦¬à§‡ à¦†à¦ªà¦¨à¦¾à¦° à¦¸à¦¾à¦§à¦¾à¦°à¦£ à¦†à¦‡à¦¡à¦¿à§Ÿà¦¾à¦•à§‡ à¦®à¦¾à¦°à§à¦•à§‡à¦Ÿ-à¦¡à¦®à¦¿à¦¨à§‡à¦Ÿà¦¿à¦‚ à¦¡à¦¿à¦œà¦¿à¦Ÿà¦¾à¦² à¦¸à¦¿à¦¸à§à¦Ÿà§‡à¦®à§‡ à¦°à§‚à¦ªà¦¾à¦¨à§à¦¤à¦° à¦•à¦°à¦¿à¥¤'
               )}
             </p>
           </div>
@@ -1129,14 +933,14 @@ export default function ServicesSection({ currentLang, setTab, isFullPage = fals
           {/* Connected Steps Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 relative">
             {[
-              { step: '01', titleEn: 'Consultation', titleBn: 'পরামর্শ ও পরিচিতি', descEn: 'Direct scoping call with Solutions Architect to understand key business metrics.', descBn: 'ব্যবসায়িক লক্ষ্য ও কারিগরি পরিধি বুঝতে সলিউশন আর্কিটেক্টের সাথে আলোচনা।' },
-              { step: '02', titleEn: 'Requirement Analysis', titleBn: 'প্রয়োজনীয়তা বিশ্লেষণ', descEn: 'Surgical software auditing, user stories, and comprehensive data pipeline modeling.', descBn: 'সফটওয়্যার কোড অডিট, ইউজার জার্নি বিশ্লেষণ এবং তথ্য প্রবাহ ডায়াগ্রাম তৈরি।' },
-              { step: '03', titleEn: 'Planning & Architecture', titleBn: 'পরিকল্পনা ও স্থাপত্য', descEn: 'Database schema diagrams, system wireframes, and secure API blueprints mapping.', descBn: 'ডাটাবেস স্কিমা ডিজাইন, সিস্টেম রিডানড্যান্সি এবং এপিআই ব্লুপ্রিন্ট তৈরি।' },
-              { step: '04', titleEn: 'UI/UX Redesign', titleBn: 'ইউজার ইন্টারফেস ডিজাইন', descEn: 'Creating beautiful high-fidelity component libraries with responsive motion rules.', descBn: 'ফিডব্যাক লুপের মাধ্যমে ফিগমাতে চমৎকার কম্পোনেন্ট ডিজাইন ও প্রোটোটাইপিং।' },
-              { step: '05', titleEn: 'Development', titleBn: 'কোডিং ও ডেভেলপমেন্ট', descEn: 'Strict typesafe production-ready code execution on dedicated Git branches.', descBn: 'ডেডিকেটেড গিট রিপোজিটরিতে টাইপসেফ কোড লেখা ও সার্ভার ইন্টিগ্রেশন।' },
-              { step: '06', titleEn: 'Rigorous Testing', titleBn: 'নিবিড় পরীক্ষণ ও টেস্টিং', descEn: 'Continuous Integration automation, automated unit and user testing routines.', descBn: 'স্বয়ংক্রিয় ইউনিট টেস্ট এবং সম্পূর্ণ ইউজার ইন্টারফেস এক্সপেরিয়েন্স টেস্টিং।' },
-              { step: '07', titleEn: 'Production Deployment', titleBn: 'ডেপ্লয়মেন্ট ও প্রকাশ', descEn: 'Secure Cloud orchestration, SSL provisioning, and global DNS routing setups.', descBn: 'নিরাপদ ক্লাউড ইনফ্রাস্ট্রাকচারে ডেপ্লয়মেন্ট, এসএসএল ও সিডিএন অপ্টিমাইজেশন।' },
-              { step: '08', titleEn: 'Maintenance & Support', titleBn: 'রক্ষণাবেক্ষণ ও সাপোর্ট', descEn: 'Continuous optimization checkups, backups, and proactive security monitoring.', descBn: 'নিয়মিত সিকিউরিটি আপডেট, ডাটাবেস ব্যাকআপ এবং প্রোঅ্যাক্টিভ মনিটরিং।' }
+              { step: '01', titleEn: 'Consultation', titleBn: 'à¦ªà¦°à¦¾à¦®à¦°à§à¦¶ à¦“ à¦ªà¦°à¦¿à¦šà¦¿à¦¤à¦¿', descEn: 'Direct scoping call with Solutions Architect to understand key business metrics.', descBn: 'à¦¬à§à¦¯à¦¬à¦¸à¦¾à§Ÿà¦¿à¦• à¦²à¦•à§à¦·à§à¦¯ à¦“ à¦•à¦¾à¦°à¦¿à¦—à¦°à¦¿ à¦ªà¦°à¦¿à¦§à¦¿ à¦¬à§à¦à¦¤à§‡ à¦¸à¦²à¦¿à¦‰à¦¶à¦¨ à¦†à¦°à§à¦•à¦¿à¦Ÿà§‡à¦•à§à¦Ÿà§‡à¦° à¦¸à¦¾à¦¥à§‡ à¦†à¦²à§‹à¦šà¦¨à¦¾à¥¤' },
+              { step: '02', titleEn: 'Requirement Analysis', titleBn: 'à¦ªà§à¦°à§Ÿà§‹à¦œà¦¨à§€à§Ÿà¦¤à¦¾ à¦¬à¦¿à¦¶à§à¦²à§‡à¦·à¦£', descEn: 'Surgical software auditing, user stories, and comprehensive data pipeline modeling.', descBn: 'à¦¸à¦«à¦Ÿà¦“à§Ÿà§à¦¯à¦¾à¦° à¦•à§‹à¦¡ à¦…à¦¡à¦¿à¦Ÿ, à¦‡à¦‰à¦œà¦¾à¦° à¦œà¦¾à¦°à§à¦¨à¦¿ à¦¬à¦¿à¦¶à§à¦²à§‡à¦·à¦£ à¦à¦¬à¦‚ à¦¤à¦¥à§à¦¯ à¦ªà§à¦°à¦¬à¦¾à¦¹ à¦¡à¦¾à§Ÿà¦¾à¦—à§à¦°à¦¾à¦® à¦¤à§ˆà¦°à¦¿à¥¤' },
+              { step: '03', titleEn: 'Planning & Architecture', titleBn: 'à¦ªà¦°à¦¿à¦•à¦²à§à¦ªà¦¨à¦¾ à¦“ à¦¸à§à¦¥à¦¾à¦ªà¦¤à§à¦¯', descEn: 'Database schema diagrams, system wireframes, and secure API blueprints mapping.', descBn: 'à¦¡à¦¾à¦Ÿà¦¾à¦¬à§‡à¦¸ à¦¸à§à¦•à¦¿à¦®à¦¾ à¦¡à¦¿à¦œà¦¾à¦‡à¦¨, à¦¸à¦¿à¦¸à§à¦Ÿà§‡à¦® à¦°à¦¿à¦¡à¦¾à¦¨à¦¡à§à¦¯à¦¾à¦¨à§à¦¸à¦¿ à¦à¦¬à¦‚ à¦à¦ªà¦¿à¦†à¦‡ à¦¬à§à¦²à§à¦ªà§à¦°à¦¿à¦¨à§à¦Ÿ à¦¤à§ˆà¦°à¦¿à¥¤' },
+              { step: '04', titleEn: 'UI/UX Redesign', titleBn: 'à¦‡à¦‰à¦œà¦¾à¦° à¦‡à¦¨à§à¦Ÿà¦¾à¦°à¦«à§‡à¦¸ à¦¡à¦¿à¦œà¦¾à¦‡à¦¨', descEn: 'Creating beautiful high-fidelity component libraries with responsive motion rules.', descBn: 'à¦«à¦¿à¦¡à¦¬à§à¦¯à¦¾à¦• à¦²à§à¦ªà§‡à¦° à¦®à¦¾à¦§à§à¦¯à¦®à§‡ à¦«à¦¿à¦—à¦®à¦¾à¦¤à§‡ à¦šà¦®à§Žà¦•à¦¾à¦° à¦•à¦®à§à¦ªà§‹à¦¨à§‡à¦¨à§à¦Ÿ à¦¡à¦¿à¦œà¦¾à¦‡à¦¨ à¦“ à¦ªà§à¦°à§‹à¦Ÿà§‹à¦Ÿà¦¾à¦‡à¦ªà¦¿à¦‚à¥¤' },
+              { step: '05', titleEn: 'Development', titleBn: 'à¦•à§‹à¦¡à¦¿à¦‚ à¦“ à¦¡à§‡à¦­à§‡à¦²à¦ªà¦®à§‡à¦¨à§à¦Ÿ', descEn: 'Strict typesafe production-ready code execution on dedicated Git branches.', descBn: 'à¦¡à§‡à¦¡à¦¿à¦•à§‡à¦Ÿà§‡à¦¡ à¦—à¦¿à¦Ÿ à¦°à¦¿à¦ªà§‹à¦œà¦¿à¦Ÿà¦°à¦¿à¦¤à§‡ à¦Ÿà¦¾à¦‡à¦ªà¦¸à§‡à¦« à¦•à§‹à¦¡ à¦²à§‡à¦–à¦¾ à¦“ à¦¸à¦¾à¦°à§à¦­à¦¾à¦° à¦‡à¦¨à§à¦Ÿà¦¿à¦—à§à¦°à§‡à¦¶à¦¨à¥¤' },
+              { step: '06', titleEn: 'Rigorous Testing', titleBn: 'à¦¨à¦¿à¦¬à¦¿à§œ à¦ªà¦°à§€à¦•à§à¦·à¦£ à¦“ à¦Ÿà§‡à¦¸à§à¦Ÿà¦¿à¦‚', descEn: 'Continuous Integration automation, automated unit and user testing routines.', descBn: 'à¦¸à§à¦¬à¦¯à¦¼à¦‚à¦•à§à¦°à¦¿à¦¯à¦¼ à¦‡à¦‰à¦¨à¦¿à¦Ÿ à¦Ÿà§‡à¦¸à§à¦Ÿ à¦à¦¬à¦‚ à¦¸à¦®à§à¦ªà§‚à¦°à§à¦£ à¦‡à¦‰à¦œà¦¾à¦° à¦‡à¦¨à§à¦Ÿà¦¾à¦°à¦«à§‡à¦¸ à¦à¦•à§à¦¸à¦ªà§‡à¦°à¦¿à§Ÿà§‡à¦¨à§à¦¸ à¦Ÿà§‡à¦¸à§à¦Ÿà¦¿à¦‚à¥¤' },
+              { step: '07', titleEn: 'Production Deployment', titleBn: 'à¦¡à§‡à¦ªà§à¦²à¦¯à¦¼à¦®à§‡à¦¨à§à¦Ÿ à¦“ à¦ªà§à¦°à¦•à¦¾à¦¶', descEn: 'Secure Cloud orchestration, SSL provisioning, and global DNS routing setups.', descBn: 'à¦¨à¦¿à¦°à¦¾à¦ªà¦¦ à¦•à§à¦²à¦¾à¦‰à¦¡ à¦‡à¦¨à¦«à§à¦°à¦¾à¦¸à§à¦Ÿà§à¦°à¦¾à¦•à¦šà¦¾à¦°à§‡ à¦¡à§‡à¦ªà§à¦²à¦¯à¦¼à¦®à§‡à¦¨à§à¦Ÿ, à¦à¦¸à¦à¦¸à¦à¦² à¦“ à¦¸à¦¿à¦¡à¦¿à¦à¦¨ à¦…à¦ªà§à¦Ÿà¦¿à¦®à¦¾à¦‡à¦œà§‡à¦¶à¦¨à¥¤' },
+              { step: '08', titleEn: 'Maintenance & Support', titleBn: 'à¦°à¦•à§à¦·à¦£à¦¾à¦¬à§‡à¦•à§à¦·à¦£ à¦“ à¦¸à¦¾à¦ªà§‹à¦°à§à¦Ÿ', descEn: 'Continuous optimization checkups, backups, and proactive security monitoring.', descBn: 'à¦¨à¦¿à¦¯à¦¼à¦®à¦¿à¦¤ à¦¸à¦¿à¦•à¦¿à¦‰à¦°à¦¿à¦Ÿà¦¿ à¦†à¦ªà¦¡à§‡à¦Ÿ, à¦¡à¦¾à¦Ÿà¦¾à¦¬à§‡à¦¸ à¦¬à§à¦¯à¦¾à¦•à¦†à¦ª à¦à¦¬à¦‚ à¦ªà§à¦°à§‹à¦…à§à¦¯à¦¾à¦•à§à¦Ÿà¦¿à¦­ à¦®à¦¨à¦¿à¦Ÿà¦°à¦¿à¦‚à¥¤' }
             ].map((p, idx) => (
               <div key={idx} className="rounded-2xl border border-gray-100 dark:border-neutral-800 bg-white dark:bg-[#141414] p-6 space-y-4 shadow-sm relative group hover:border-blue-600 transition duration-300">
                 <div className="flex items-center justify-between">
@@ -1159,39 +963,39 @@ export default function ServicesSection({ currentLang, setTab, isFullPage = fals
       </section>
 
       {/* 5. INDUSTRIES WE SERVE (12 ELEGANT CARDS) */}
-      <section id="services-industries" className="py-24 bg-[#FAFAFA] border-b border-gray-100 dark:border-neutral-800">
+      <section id="services-industries" className="py-24 bg-[#FAFAFA] dark:bg-[#0D0C0A] border-b border-gray-100 dark:border-neutral-800">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           
           <div className="text-center space-y-4 max-w-3xl mx-auto mb-16">
             <span className="text-xs font-black uppercase tracking-widest text-blue-600 dark:text-orange-400">
-              {currentLang === 'en' ? 'MARKET VERTICALS' : 'মার্কেট ভার্টিকাল সমূহ'}
+              {currentLang === 'en' ? 'MARKET VERTICALS' : 'à¦®à¦¾à¦°à§à¦•à§‡à¦Ÿ à¦­à¦¾à¦°à§à¦Ÿà¦¿à¦•à¦¾à¦² à¦¸à¦®à§‚à¦¹'}
             </span>
             <h2 className="font-sans text-3xl font-extrabold tracking-tight text-gray-900 dark:text-white sm:text-4xl">
-              {currentLang === 'en' ? 'Industries We Serve' : 'যে সকল সেক্টরে আমরা সেবা দিই'}
+              {currentLang === 'en' ? 'Industries We Serve' : 'à¦¯à§‡ à¦¸à¦•à¦² à¦¸à§‡à¦•à§à¦Ÿà¦°à§‡ à¦†à¦®à¦°à¦¾ à¦¸à§‡à¦¬à¦¾ à¦¦à¦¿à¦‡'}
             </h2>
             <p className="text-sm text-gray-500 dark:text-neutral-400 dark:text-neutral-500 max-w-xl mx-auto leading-relaxed">
               {currentLang === 'en' ? (
                 'Tailored architectures designed specifically for compliance and user context of individual markets.'
               ) : (
-                'নির্দিষ্ট বাজারের নিয়মকানুন এবং ব্যবহারকারীদের অভিজ্ঞতার সাথে সামঞ্জস্যপূর্ণ বিশেষায়িত কাঠামো।'
+                'à¦¨à¦¿à¦°à§à¦¦à¦¿à¦·à§à¦Ÿ à¦¬à¦¾à¦œà¦¾à¦°à§‡à¦° à¦¨à¦¿à§Ÿà¦®à¦•à¦¾à¦¨à§à¦¨ à¦à¦¬à¦‚ à¦¬à§à¦¯à¦¬à¦¹à¦¾à¦°à¦•à¦¾à¦°à§€à¦¦à§‡à¦° à¦…à¦­à¦¿à¦œà§à¦žà¦¤à¦¾à¦° à¦¸à¦¾à¦¥à§‡ à¦¸à¦¾à¦®à¦žà§à¦œà¦¸à§à¦¯à¦ªà§‚à¦°à§à¦£ à¦¬à¦¿à¦¶à§‡à¦·à¦¾à§Ÿà¦¿à¦¤ à¦•à¦¾à¦ à¦¾à¦®à§‹à¥¤'
               )}
             </p>
           </div>
 
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
             {[
-              { icon: 'ShoppingBag', labelEn: 'E-Commerce', labelBn: 'ই-কমার্স' },
-              { icon: 'Utensils', labelEn: 'Restaurant', labelBn: 'রেস্টুরেন্ট ও ফুড' },
-              { icon: 'Heart', labelEn: 'Healthcare', labelBn: 'হেলথকেয়ার ও মেডিসিন' },
-              { icon: 'GraduationCap', labelEn: 'Education', labelBn: 'শিক্ষা ও এডটেক' },
-              { icon: 'Home', labelEn: 'Real Estate', labelBn: 'রিয়েল এস্টেট' },
-              { icon: 'Plane', labelEn: 'Travel & Tourism', labelBn: 'ভ্রমণ ও পর্যটন' },
-              { icon: 'Building', labelEn: 'Corporate Enterprises', labelBn: 'কর্পোরেট প্রতিষ্ঠান' },
-              { icon: 'Rocket', labelEn: 'High-Growth Startups', labelBn: 'স্টার্টআপ ও উদ্ভাবন' },
-              { icon: 'Globe', labelEn: 'NGO & Non-Profits', labelBn: 'এনজিও ও সামাজিক সংস্থা' },
-              { icon: 'Factory', labelEn: 'Manufacturing', labelBn: 'উৎপাদন ও শিল্প কারখানা' },
-              { icon: 'Briefcase', labelEn: 'Law Firms', labelBn: 'আইনজীবী ও ফার্ম' },
-              { icon: 'User', labelEn: 'Personal Brands', labelBn: 'ব্যক্তিগত ব্র্যান্ডিং' }
+              { icon: 'ShoppingBag', labelEn: 'E-Commerce', labelBn: 'à¦‡-à¦•à¦®à¦¾à¦°à§à¦¸' },
+              { icon: 'Utensils', labelEn: 'Restaurant', labelBn: 'à¦°à§‡à¦¸à§à¦Ÿà§à¦°à§‡à¦¨à§à¦Ÿ à¦“ à¦«à§à¦¡' },
+              { icon: 'Heart', labelEn: 'Healthcare', labelBn: 'à¦¹à§‡à¦²à¦¥à¦•à§‡à§Ÿà¦¾à¦° à¦“ à¦®à§‡à¦¡à¦¿à¦¸à¦¿à¦¨' },
+              { icon: 'GraduationCap', labelEn: 'Education', labelBn: 'à¦¶à¦¿à¦•à§à¦·à¦¾ à¦“ à¦à¦¡à¦Ÿà§‡à¦•' },
+              { icon: 'Home', labelEn: 'Real Estate', labelBn: 'à¦°à¦¿à¦¯à¦¼à§‡à¦² à¦à¦¸à§à¦Ÿà§‡à¦Ÿ' },
+              { icon: 'Plane', labelEn: 'Travel & Tourism', labelBn: 'à¦­à§à¦°à¦®à¦£ à¦“ à¦ªà¦°à§à¦¯à¦Ÿà¦¨' },
+              { icon: 'Building', labelEn: 'Corporate Enterprises', labelBn: 'à¦•à¦°à§à¦ªà§‹à¦°à§‡à¦Ÿ à¦ªà§à¦°à¦¤à¦¿à¦·à§à¦ à¦¾à¦¨' },
+              { icon: 'Rocket', labelEn: 'High-Growth Startups', labelBn: 'à¦¸à§à¦Ÿà¦¾à¦°à§à¦Ÿà¦†à¦ª à¦“ à¦‰à¦¦à§à¦­à¦¾à¦¬à¦¨' },
+              { icon: 'Globe', labelEn: 'NGO & Non-Profits', labelBn: 'à¦à¦¨à¦œà¦¿à¦“ à¦“ à¦¸à¦¾à¦®à¦¾à¦œà¦¿à¦• à¦¸à¦‚à¦¸à§à¦¥à¦¾' },
+              { icon: 'Factory', labelEn: 'Manufacturing', labelBn: 'à¦‰à§Žà¦ªà¦¾à¦¦à¦¨ à¦“ à¦¶à¦¿à¦²à§à¦ª à¦•à¦¾à¦°à¦–à¦¾à¦¨à¦¾' },
+              { icon: 'Briefcase', labelEn: 'Law Firms', labelBn: 'à¦†à¦‡à¦¨à¦œà§€à¦¬à§€ à¦“ à¦«à¦¾à¦°à§à¦®' },
+              { icon: 'User', labelEn: 'Personal Brands', labelBn: 'à¦¬à§à¦¯à¦•à§à¦¤à¦¿à¦—à¦¤ à¦¬à§à¦°à§à¦¯à¦¾à¦¨à§à¦¡à¦¿à¦‚' }
             ].map((ind, idx) => (
               <div key={idx} className="rounded-xl border border-gray-100 dark:border-neutral-800 bg-white dark:bg-[#141414] p-5 flex items-center space-x-3 shadow-sm hover:border-blue-600/30 transition duration-300">
                 <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-50 dark:bg-orange-500/10 text-blue-600 dark:text-orange-400 border border-blue-100/50">
@@ -1213,28 +1017,29 @@ export default function ServicesSection({ currentLang, setTab, isFullPage = fals
           
           <div className="text-center space-y-4 max-w-3xl mx-auto mb-16">
             <span className="text-xs font-black uppercase tracking-widest text-blue-600 dark:text-orange-400">
-              {currentLang === 'en' ? 'OUR STACK ECOSYSTEM' : 'আমাদের প্রযুক্তি ইকোসিস্টেম'}
+              {currentLang === 'en' ? 'OUR STACK ECOSYSTEM' : 'à¦†à¦®à¦¾à¦¦à§‡à¦° à¦ªà§à¦°à¦¯à§à¦•à§à¦¤à¦¿ à¦‡à¦•à§‹à¦¸à¦¿à¦¸à§à¦Ÿà§‡à¦®'}
             </span>
             <h2 className="font-sans text-3xl font-extrabold tracking-tight text-gray-900 dark:text-white sm:text-4xl">
-              {currentLang === 'en' ? 'Technology Ecosystem' : 'প্রযুক্তি ইকোসিস্টেম'}
+              {currentLang === 'en' ? 'Technology Ecosystem' : 'à¦ªà§à¦°à¦¯à§à¦•à§à¦¤à¦¿ à¦‡à¦•à§‹à¦¸à¦¿à¦¸à§à¦Ÿà§‡à¦®'}
             </h2>
             <p className="text-sm text-gray-500 dark:text-neutral-400 dark:text-neutral-500 max-w-xl mx-auto leading-relaxed">
               {currentLang === 'en' ? (
                 'We write strict typesafe assemblies using industry leading stacks. Zero legacy dependencies.'
               ) : (
-                'আমরা আধুনিক এবং নিরাপদ স্ট্যাক ব্যবহার করে টাইপসেফ কোড লিখে থাকি। কোনো অপ্রয়োজনীয় জটিলতা ছাড়াই।'
+                'à¦†à¦®à¦°à¦¾ à¦†à¦§à§à¦¨à¦¿à¦• à¦à¦¬à¦‚ à¦¨à¦¿à¦°à¦¾à¦ªà¦¦ à¦¸à§à¦Ÿà§à¦¯à¦¾à¦• à¦¬à§à¦¯à¦¬à¦¹à¦¾à¦° à¦•à¦°à§‡ à¦Ÿà¦¾à¦‡à¦ªà¦¸à§‡à¦« à¦•à§‹à¦¡ à¦²à¦¿à¦–à§‡ à¦¥à¦¾à¦•à¦¿à¥¤ à¦•à§‹à¦¨à§‹ à¦…à¦ªà§à¦°à§Ÿà§‹à¦œà¦¨à§€à§Ÿ à¦œà¦Ÿà¦¿à¦²à¦¤à¦¾ à¦›à¦¾à§œà¦¾à¦‡à¥¤'
               )}
             </p>
           </div>
 
           {/* Stack Tab selection */}
-          <div className="flex flex-wrap items-center justify-center gap-3 mb-10">
+          <div className="flex overflow-x-auto items-center gap-2 sm:gap-3 mb-10 pb-2 -mx-4 px-4 sm:mx-0 sm:px-0 sm:flex-wrap sm:justify-center scrollbar-none">
             {[
-              { id: 'frontend', labelEn: 'Frontend', labelBn: 'ফ্রন্টএন্ড' },
-              { id: 'backend', labelEn: 'Backend & Cloud', labelBn: 'ব্যাকএন্ড ও ক্লাউড' },
-              { id: 'design', labelEn: 'Design Tools', labelBn: 'ডিজাইন টুলস' },
-              { id: 'automation', labelEn: 'AI & Automations', labelBn: 'এআই ও অটোমেশন' },
-              { id: 'video', labelEn: 'Video & Graphics', labelBn: 'ভিডিও ও গ্রাফিক্স' }
+              { id: 'frontend', labelEn: 'Frontend', labelBn: 'à¦«à§à¦°à¦¨à§à¦Ÿà¦à¦¨à§à¦¡' },
+              { id: 'backend', labelEn: 'Backend & Cloud', labelBn: 'à¦¬à§à¦¯à¦¾à¦•à¦à¦¨à§à¦¡ à¦“ à¦•à§à¦²à¦¾à¦‰à¦¡' },
+              { id: 'design', labelEn: 'Design Tools', labelBn: 'à¦¡à¦¿à¦œà¦¾à¦‡à¦¨ à¦Ÿà§à¦²à¦¸' },
+              { id: 'automation', labelEn: 'AI & Automations', labelBn: 'à¦à¦†à¦‡ à¦“ à¦…à¦Ÿà§‹à¦®à§‡à¦¶à¦¨' },
+              { id: 'video', labelEn: 'Video & Graphics', labelBn: 'à¦­à¦¿à¦¡à¦¿à¦“ à¦“ à¦—à§à¦°à¦¾à¦«à¦¿à¦•à§à¦¸' },
+              { id: 'marketing', labelEn: 'Marketing & PR', labelBn: 'à¦®à¦¾à¦°à§à¦•à§‡à¦Ÿà¦¿à¦‚ à¦“ à¦ªà¦¿à¦†à¦°' }
             ].map((tab) => (
               <button
                 key={tab.id}
@@ -1251,7 +1056,7 @@ export default function ServicesSection({ currentLang, setTab, isFullPage = fals
           </div>
 
           {/* Tab contents */}
-          <div className="bg-[#FAFAFA]/60 border border-gray-100 dark:border-neutral-800 rounded-3xl p-8 max-w-4xl mx-auto">
+          <div className="bg-[#FAFAFA]/60 dark:bg-[#141414]/60 border border-gray-100 dark:border-neutral-800 rounded-3xl p-5 sm:p-8 max-w-4xl mx-auto">
             {activeTechTab === 'frontend' && (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 animate-fadeIn">
                 <div className="space-y-2">
@@ -1331,21 +1136,37 @@ export default function ServicesSection({ currentLang, setTab, isFullPage = fals
                 </div>
               </div>
             )}
+
+            {activeTechTab === 'marketing' && (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 animate-fadeIn">
+                <div className="space-y-2">
+                  <h4 className="text-sm font-extrabold text-gray-900 dark:text-white">Marketing, PR & Brand Strategy</h4>
+                  <p className="text-xs text-gray-500 dark:text-neutral-400 leading-relaxed">
+                    Data-driven marketing campaigns, brand positioning, media outreach, performance analytics, and full-funnel growth strategies powered by industry-leading platforms.
+                  </p>
+                </div>
+                <div className="flex flex-wrap gap-2.5 items-center">
+                  {['Google Analytics 4', 'Meta Business Suite', 'SEMrush', 'Ahrefs', 'HubSpot CRM', 'Mailchimp', 'Hootsuite', 'Google Ads', 'Facebook Ads Manager', 'Buffer'].map((t) => (
+                    <span key={t} className="bg-white dark:bg-[#141414] border border-gray-100 dark:border-neutral-800 rounded-xl px-4 py-2 text-xs font-bold text-gray-700 dark:text-neutral-200 shadow-sm">{t}</span>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
 
         </div>
       </section>
 
       {/* 7. FAQ PREVIEW SECTION */}
-      <section id="services-faq-accordion" className="py-24 bg-[#FAFAFA] border-b border-gray-100 dark:border-neutral-800">
+      <section id="services-faq-accordion" className="py-24 bg-white dark:bg-[#141414] border-b border-gray-100 dark:border-neutral-800">
         <div className="mx-auto max-w-4xl px-4 sm:px-6">
           
           <div className="text-center space-y-4 max-w-3xl mx-auto mb-16">
             <span className="text-xs font-black uppercase tracking-widest text-blue-600 dark:text-orange-400">
-              {currentLang === 'en' ? 'COMMON QUESTIONS' : 'জিজ্ঞাসিত প্রশ্নাবলী'}
+              {currentLang === 'en' ? 'COMMON QUESTIONS' : 'à¦œà¦¿à¦œà§à¦žà¦¾à¦¸à¦¿à¦¤ à¦ªà§à¦°à¦¶à§à¦¨à¦¾à¦¬à¦²à§€'}
             </span>
             <h2 className="font-sans text-3xl font-extrabold tracking-tight text-gray-900 dark:text-white sm:text-4xl">
-              {currentLang === 'en' ? 'Frequently Asked Questions' : 'সাধারণ জিজ্ঞাসাসমূহ'}
+              {currentLang === 'en' ? 'Frequently Asked Questions' : 'à¦¸à¦¾à¦§à¦¾à¦°à¦£ à¦œà¦¿à¦œà§à¦žà¦¾à¦¸à¦¾à¦¸à¦®à§‚à¦¹'}
             </h2>
           </div>
 
@@ -1353,7 +1174,11 @@ export default function ServicesSection({ currentLang, setTab, isFullPage = fals
             {mainFaqs.map((faq, idx) => {
               const isOpen = activeFAQIndex === idx;
               return (
-                <div key={idx} className="rounded-2xl border border-gray-100 dark:border-neutral-800 bg-white dark:bg-[#141414] shadow-sm overflow-hidden transition-all duration-300">
+                <div key={idx} className={`
+  rounded-2xl border bg-white dark:bg-[#141414] p-5 cursor-pointer transition duration-300 ${
+    isOpen ? 'border-blue-500 shadow-md' : 'border-gray-200/60 hover:border-gray-300 shadow-sm'
+  }
+`}>
                   <button
                     onClick={() => setActiveFAQIndex(isOpen ? null : idx)}
                     className="w-full px-6 py-5 flex items-center justify-between text-left font-bold text-xs sm:text-sm text-gray-900 dark:text-white hover:text-blue-600 dark:text-orange-400 transition"
@@ -1364,8 +1189,10 @@ export default function ServicesSection({ currentLang, setTab, isFullPage = fals
                     </span>
                   </button>
                   {isOpen && (
-                    <div className="px-6 pb-5 pt-1 text-xs text-gray-500 dark:text-neutral-400 dark:text-neutral-500 leading-relaxed border-t border-gray-50/50 animate-fadeIn">
-                      {currentLang === 'en' ? faq.aEn : faq.aBn}
+                    <div className="mt-4 pt-4 border-t border-gray-50 space-y-4">
+                      <p className="text-xs md:text-sm leading-relaxed text-gray-600 dark:text-neutral-300 dark:text-neutral-600">
+                        {currentLang === 'en' ? faq.aEn : faq.aBn}
+                      </p>
                     </div>
                   )}
                 </div>
@@ -1379,22 +1206,22 @@ export default function ServicesSection({ currentLang, setTab, isFullPage = fals
       {/* 8. CTA SECTION */}
       <section id="services-final-cta" className="py-24 bg-white dark:bg-[#141414]">
         <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-          <div className="rounded-3xl bg-gradient-to-r from-blue-600 dark:from-orange-500 to-indigo-600 dark:to-orange-400 p-8 md:p-14 text-center space-y-6 relative overflow-hidden shadow-xl text-white">
+          <div className="rounded-3xl bg-gradient-to-r from-blue-600 dark:from-orange-500 to-indigo-600 dark:to-orange-400 p-6 sm:p-8 md:p-14 text-center space-y-4 sm:space-y-6 relative overflow-hidden shadow-xl text-white">
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-white/10 via-transparent to-transparent pointer-events-none"></div>
             
             <span className="text-[10px] uppercase tracking-widest font-extrabold text-blue-100 relative z-10 block">
-              {currentLang === 'en' ? 'COLLABORATIVE CODES' : 'সহযোগিতা'}
+              {currentLang === 'en' ? 'COLLABORATIVE CODES' : 'à¦¸à¦¹à¦¯à§‹à¦—à¦¿à¦¤à¦¾'}
             </span>
             
             <h2 className="text-3xl md:text-4xl font-black max-w-2xl mx-auto leading-tight relative z-10">
-              {currentLang === 'en' ? 'Ready to Scale Your Business Operations?' : 'আপনার ব্যবসায়িক কার্যক্রমকে আরও প্রসারিত করতে প্রস্তুত?'}
+              {currentLang === 'en' ? 'Ready to Scale Your Business Operations?' : 'à¦†à¦ªà¦¨à¦¾à¦° à¦¬à§à¦¯à¦¬à¦¸à¦¾à¦¯à¦¼à¦¿à¦• à¦•à¦¾à¦°à§à¦¯à¦•à§à¦°à¦®à¦•à§‡ à¦†à¦°à¦“ à¦ªà§à¦°à¦¸à¦¾à¦°à¦¿à¦¤ à¦•à¦°à¦¤à§‡ à¦ªà§à¦°à¦¸à§à¦¤à§à¦¤?'}
             </h2>
             
             <p className="text-xs md:text-sm text-blue-100 max-w-md mx-auto relative z-10 leading-relaxed">
               {currentLang === 'en' ? (
                 'Talk to a senior partner today to map out user stories, scope budgets, and draft blueprints.'
               ) : (
-                'আপনার প্রজেক্টের পরিকল্পনা, বাজেট নির্ধারণ এবং সফল বাস্তবায়নের জন্য আজই আমাদের পার্টনারের সাথে কথা বলুন।'
+                'à¦†à¦ªà¦¨à¦¾à¦° à¦ªà§à¦°à¦œà§‡à¦•à§à¦Ÿà§‡à¦° à¦ªà¦°à¦¿à¦•à¦²à§à¦ªà¦¨à¦¾, à¦¬à¦¾à¦œà§‡à¦Ÿ à¦¨à¦¿à¦°à§à¦§à¦¾à¦°à¦£ à¦à¦¬à¦‚ à¦¸à¦«à¦² à¦¬à¦¾à¦¸à§à¦¤à¦¬à¦¾à§Ÿà¦¨à§‡à¦° à¦œà¦¨à§à¦¯ à¦†à¦œà¦‡ à¦†à¦®à¦¾à¦¦à§‡à¦° à¦ªà¦¾à¦°à§à¦Ÿà¦¨à¦¾à¦°à§‡à¦° à¦¸à¦¾à¦¥à§‡ à¦•à¦¥à¦¾ à¦¬à¦²à§à¦¨à¥¤'
               )}
             </p>
 
@@ -1404,14 +1231,14 @@ export default function ServicesSection({ currentLang, setTab, isFullPage = fals
                 onClick={() => { setTab('contact'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
                 className="rounded-xl bg-white dark:bg-[#141414] hover:bg-gray-50 dark:bg-neutral-900 text-blue-600 dark:text-orange-400 text-xs font-bold px-6 py-3.5 transition shadow-md hover:scale-[1.01] cursor-pointer"
               >
-                {currentLang === 'en' ? 'Start Now' : 'এখনই শুরু করুন'}
+                {currentLang === 'en' ? 'Start Now' : 'à¦à¦–à¦¨à¦‡ à¦¶à§à¦°à§ à¦•à¦°à§à¦¨'}
               </button>
               <button
                 id="cta-contact-us"
                 onClick={() => { setTab('contact'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
                 className="rounded-xl border border-white/30 px-6 py-3.5 text-xs font-bold text-white hover:bg-white/10 transition cursor-pointer"
               >
-                {currentLang === 'en' ? 'Contact Us Directly' : 'সরাসরি যোগাযোগ করুন'}
+                {currentLang === 'en' ? 'Contact Us Directly' : 'à¦¸à¦°à¦¾à¦¸à¦°à¦¿ à¦¯à§‹à¦—à¦¾à¦¯à§‹à¦— à¦•à¦°à§à¦¨'}
               </button>
             </div>
           </div>

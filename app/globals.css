@@ -185,3 +185,121 @@ body {
 .scrollbar-none::-webkit-scrollbar {
   display: none;
 }
+
+/* =========================================================
+   DARK MODE — Override ALL browser defaults for form elements
+   ========================================================= */
+.dark input,
+.dark textarea,
+.dark select {
+  color-scheme: dark !important;
+}
+
+.dark input::placeholder,
+.dark textarea::placeholder,
+.dark input::placeholder {
+  color: rgba(255, 255, 255, 0.35) !important;
+  opacity: 1 !important;
+}
+
+.dark textarea::placeholder {
+  color: rgba(255, 255, 255, 0.35) !important;
+  opacity: 1 !important;
+}
+
+/* Kill autofill white flash */
+.dark input:-webkit-autofill,
+.dark input:-webkit-autofill:hover,
+.dark input:-webkit-autofill:focus,
+.dark input:-webkit-autofill:active,
+.dark textarea:-webkit-autofill,
+.dark textarea:-webkit-autofill:hover,
+.dark textarea:-webkit-autofill:focus,
+.dark textarea:-webkit-autofill:active,
+.dark select:-webkit-autofill,
+.dark select:-webkit-autofill:hover,
+.dark select:-webkit-autofill:focus,
+.dark select:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0px 1000px #1a1a1a inset !important;
+  -webkit-text-fill-color: #f5f5f5 !important;
+  caret-color: #f5f5f5 !important;
+  background-color: #1a1a1a !important;
+  transition: background-color 5000s ease-in-out 0s !important;
+  color: #f5f5f5 !important;
+}
+
+/* Dark select options dropdown */
+.dark select option,
+.dark select option:hover,
+.dark select option:checked,
+.dark select option:active {
+  background-color: #1a1a1a !important;
+  color: #f5f5f5 !important;
+  background-image: none !important;
+}
+
+/* Dark select arrow */
+.dark select {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23999' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e") !important;
+  background-position: right 0.75rem center !important;
+  background-repeat: no-repeat !important;
+  background-size: 1.25em 1.25em !important;
+  -webkit-appearance: none !important;
+  -moz-appearance: none !important;
+  appearance: none !important;
+}
+
+/* Prevent browser blue outline from overriding dark theme */
+.dark input:focus-visible,
+.dark textarea:focus-visible,
+.dark select:focus-visible {
+  outline: none !important;
+}
+
+/* Active state - no background flash */
+.dark input:active,
+.dark textarea:active,
+.dark select:active {
+  background-color: #1a1a1a !important;
+  color: #f5f5f5 !important;
+}
+
+/* Dark button press effect */
+.dark button:active {
+  transform: scale(0.98);
+}
+
+/* Scrollbar dark mode */
+.dark * {
+  scrollbar-color: #333 transparent;
+}
+
+/* Dark mode scrollbars webkit */
+.dark *::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+.dark *::-webkit-scrollbar-track {
+  background: transparent;
+}
+.dark *::-webkit-scrollbar-thumb {
+  background: #333;
+  border-radius: 999px;
+}
+.dark *::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/* =========================================================
+   PREFERS REDUCED MOTION — Disable animations for accessibility
+   ========================================================= */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

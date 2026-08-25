@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 import React, { useState } from 'react';
 import { Globe, ArrowUpRight, TrendingUp, Zap, Users, ShieldAlert, Sparkles, MoveRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
@@ -228,7 +228,7 @@ export default function TestimonialsVisuals({ currentLang }: VisualsProps) {
       <div className="bg-white dark:bg-[#141414] rounded-3xl border border-slate-100 p-6 md:p-10 shadow-sm relative overflow-hidden">
         
         {/* Decorative Grid Backing */}
-        <div className="absolute inset-0 bg-[radial-gradient(#e2e8f0_1px,transparent_1px)] [background-size:16px_16px] opacity-40 pointer-events-none"></div>
+        <div className="absolute inset-0 bg-[radial-gradient(#e2e8f0_1px,transparent_1px)] [background-size:16px_16px] opacity-40 dark:opacity-10 pointer-events-none"></div>
 
         <div className="relative z-10 space-y-8">
           
@@ -238,10 +238,10 @@ export default function TestimonialsVisuals({ currentLang }: VisualsProps) {
                 <Sparkles className="h-3.5 w-3.5 text-blue-600 dark:text-orange-400" />
                 <span>{currentLang === 'en' ? 'Measurable Impact Analytics' : 'পরিমাপযোগ্য কাজের প্রভাব'}</span>
               </div>
-              <h3 className="font-display text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
+              <h3 className="font-display text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight">
                 {currentLang === 'en' ? 'Client Performance Achievements' : 'আমাদের অর্জিত মাইলস্টোন এবং পারফরম্যান্স'}
               </h3>
-              <p className="text-xs sm:text-sm text-slate-500 max-w-2xl">
+              <p className="text-xs sm:text-sm text-slate-500 dark:text-neutral-400 max-w-2xl">
                 {currentLang === 'en'
                   ? 'We do not just build gorgeous layouts. We engineer high-performance systems that double conversions, optimize rendering speeds, and drive authentic business growth.'
                   : 'আমরা শুধু চমৎকার ল্যান্ডিং পেজই তৈরি করি না। আমরা এমন সিস্টেম ডেভেলপ করি যা ব্যবসার প্রবৃদ্ধি বৃদ্ধি করতে সরাসরি কাজ করে।'}
@@ -249,7 +249,7 @@ export default function TestimonialsVisuals({ currentLang }: VisualsProps) {
             </div>
 
             {/* Achievements Selector buttons */}
-            <div className="flex flex-wrap gap-1.5 bg-slate-100 p-1 rounded-xl">
+            <div className="flex flex-wrap gap-1.5 bg-slate-100 dark:bg-neutral-800 p-1 rounded-xl">
               {Object.keys(metricsData).map((tab) => (
                 <button
                   key={tab}
@@ -267,19 +267,19 @@ export default function TestimonialsVisuals({ currentLang }: VisualsProps) {
           </div>
 
           {/* Interactive Comparison Card Content */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center bg-slate-50 rounded-2xl border border-slate-150 p-6">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center bg-slate-50 dark:bg-[#141414] rounded-2xl border border-slate-150 dark:border-neutral-700/60 p-6">
             
             {/* Descriptive Content */}
             <div className="lg:col-span-5 space-y-4">
-              <h4 className="font-display font-bold text-lg text-slate-900 flex items-center">
+              <h4 className="font-display font-bold text-lg text-slate-900 dark:text-white flex items-center">
                 <span>{activeMetric.titleEn}</span>
                 <ArrowUpRight className="h-4 w-4 ml-1.5 text-blue-500 dark:text-orange-400" />
               </h4>
-              <p className="text-xs text-slate-500 leading-relaxed">
+              <p className="text-xs text-slate-500 dark:text-neutral-400 leading-relaxed">
                 {currentLang === 'en' ? activeMetric.descEn : activeMetric.descBn}
               </p>
               
-              <div className="flex items-center space-x-2 text-xs text-slate-400 font-semibold bg-white dark:bg-[#141414] px-3 py-2 rounded-xl border border-slate-100 max-w-xs">
+              <div className="flex items-center space-x-2 text-xs text-slate-400 dark:text-neutral-500 font-semibold bg-white dark:bg-[#141414] px-3 py-2 rounded-xl border border-slate-100 dark:border-neutral-700/60 max-w-xs">
                 <ShieldAlert className="h-4 w-4 text-emerald-500 dark:text-emerald-400" />
                 <span>Independently verified client audits</span>
               </div>
@@ -292,9 +292,9 @@ export default function TestimonialsVisuals({ currentLang }: VisualsProps) {
               <div className="space-y-1.5">
                 <div className="flex justify-between items-center text-xs">
                   <span className="font-bold text-rose-600 dark:text-rose-400 uppercase tracking-wide">BEFORE Next Solution</span>
-                  <span className="font-bold text-slate-700">{activeMetric.before}</span>
+                  <span className="font-bold text-slate-700 dark:text-neutral-300">{activeMetric.before}</span>
                 </div>
-                <div className="h-4 w-full bg-slate-200 rounded-full overflow-hidden">
+                <div className="h-4 w-full bg-slate-200 dark:bg-neutral-700 rounded-full overflow-hidden">
                   <motion.div
                     initial={{ width: 0 }}
                     animate={{ width: `${activeMetric.beforeVal}%` }}
@@ -313,9 +313,9 @@ export default function TestimonialsVisuals({ currentLang }: VisualsProps) {
                       {activeMetric.percentage}
                     </span>
                   </span>
-                  <span className="font-bold text-slate-900">{activeMetric.after}</span>
+                  <span className="font-bold text-slate-900 dark:text-white">{activeMetric.after}</span>
                 </div>
-                <div className="h-6 w-full bg-slate-200 rounded-full overflow-hidden p-0.5 border border-slate-300 shadow-inner">
+                <div className="h-6 w-full bg-slate-200 dark:bg-neutral-700 rounded-full overflow-hidden p-0.5 border border-slate-300 dark:border-neutral-600 shadow-inner">
                   <motion.div
                     initial={{ width: 0 }}
                     animate={{ width: `${activeMetric.afterVal}%` }}

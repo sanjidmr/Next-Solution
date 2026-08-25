@@ -26,6 +26,7 @@ import {
   getCurrencies, getCurrencySettings
 } from '@/lib/db';
 import { getLocalItem, setLocalItem } from '@/lib/utils';
+import FAQSection from '@/components/FAQSection';
 import { 
   Service, PortfolioItem, BlogPost, Testimonial, SuccessStory, 
   ClientLogo, PricingPackage, WhyChooseUsCard, WhyChooseUsStat, 
@@ -1270,29 +1271,29 @@ className="group cursor-pointer"
       {/* ========================================================
           SECTION 8: INDUSTRIES WE SERVE (PREMIUM ASYMMETRIC EDITORIAL)
          ======================================================== */}
-      <section id="industries" className="relative bg-white py-16 sm:py-20 overflow-hidden">
+      <section id="industries" className="relative bg-white dark:bg-[#0A0908] py-16 sm:py-20 overflow-hidden">
         {/* Subtle background decorations */}
-        <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-orange-100/30 rounded-full blur-[120px] pointer-events-none" />
-        <div className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] bg-orange-50/40 rounded-full blur-[100px] pointer-events-none" />
-        <div className="absolute inset-0 bg-[radial-gradient(#FF4A00_0.8px,transparent_0.8px)] [background-size:32px_32px] opacity-[0.03] pointer-events-none" />
+        <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-orange-100/30 dark:bg-orange-500/5 rounded-full blur-[120px] pointer-events-none" />
+        <div className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] bg-orange-50/40 dark:bg-orange-500/[0.03] rounded-full blur-[100px] pointer-events-none" />
+        <div className="absolute inset-0 bg-[radial-gradient(#FF4A00_0.8px,transparent_0.8px)] [background-size:32px_32px] opacity-[0.03] dark:opacity-[0.02] pointer-events-none" />
 
         <div className="relative z-10 mx-auto max-w-[1400px] px-4 sm:px-6 lg:px-8">
           {/* ── Section Header ── */}
           <div className="text-center space-y-4 max-w-3xl mx-auto mb-12 sm:mb-16">
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-orange-50 border border-orange-200/60">
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-orange-50 dark:bg-orange-500/10 border border-orange-200/60 dark:border-orange-500/20">
               <span className="h-1.5 w-1.5 rounded-full bg-orange-500 animate-pulse" />
-              <span className="text-[10px] font-black uppercase tracking-[0.2em] text-orange-600">
+              <span className="text-[10px] font-black uppercase tracking-[0.2em] text-orange-600 dark:text-orange-400">
                 {currentLang === 'en' ? 'INDUSTRIES WE SERVE' : 'যে সকল সেক্টরে আমরা সেবা দিই'}
               </span>
             </div>
-            <h2 className="font-sans text-3xl sm:text-4xl lg:text-5xl font-black text-gray-900 leading-[1.1] tracking-tight">
+            <h2 className="font-sans text-3xl sm:text-4xl lg:text-5xl font-black text-gray-900 dark:text-white leading-[1.1] tracking-tight">
               {currentLang === 'en' ? (
                 <>Built for <span className="text-orange-500">Your Industry.</span><br />Designed for Your Growth.</>
               ) : (
                 <>আপনার <span className="text-orange-500">সেক্টরের</span> জন্য তৈরি।<br />আপনার প্রবৃদ্ধির জন্য ডিজাইন।</>
               )}
             </h2>
-            <p className="text-sm sm:text-base text-gray-500 leading-relaxed max-w-2xl mx-auto">
+            <p className="text-sm sm:text-base text-gray-500 dark:text-gray-400 leading-relaxed max-w-2xl mx-auto">
               {currentLang === 'en'
                 ? 'From startups to established enterprises, we create digital experiences and solutions tailored to the unique needs of every industry.'
                 : 'স্টার্টআপ থেকে প্রতিষ্ঠিত এন্টারপ্রাইজ — প্রতিটি সেক্টরের অনন্য চাহিদার জন্য আমরা কাস্টম ডিজিটাল সলিউশন তৈরি করি।'}
@@ -1329,7 +1330,7 @@ className="group cursor-pointer"
                     transition={{ delay: idx * 0.08, duration: 0.5 }}
                     whileHover={{ y: -6 }}
                     onMouseEnter={() => setHoveredIndustry(ind.id)}
-                    className={`relative group cursor-pointer rounded-[22px] overflow-hidden border transition-all duration-400 ${isHovered ? 'border-orange-400 shadow-[0_12px_40px_rgba(255,74,0,0.15)]' : 'border-gray-200 shadow-sm hover:shadow-lg'}`}
+                    className={`relative group cursor-pointer rounded-[22px] overflow-hidden border transition-all duration-400 ${isHovered ? 'border-orange-400 shadow-[0_12px_40px_rgba(255,74,0,0.15)]' : 'border-gray-200 dark:border-white/10 shadow-sm hover:shadow-lg'}`}
                     style={{ transform: idx % 2 === 1 ? 'translateX(8px)' : 'none' }}
                   >
                     <div className="relative w-full h-[155px]">
@@ -1368,11 +1369,11 @@ className="group cursor-pointer"
             >
               <div className={`relative w-full aspect-square max-w-[400px] rounded-full transition-all duration-500 ${hoveredIndustry !== null ? 'shadow-[0_0_60px_rgba(255,74,0,0.12)]' : ''}`}>
                 {/* Outer ring */}
-                <div className={`absolute -inset-3 rounded-full border-2 border-dashed transition-all duration-500 ${hoveredIndustry !== null ? 'border-orange-400/50' : 'border-gray-200'}`} />
+                <div className={`absolute -inset-3 rounded-full border-2 border-dashed transition-all duration-500 ${hoveredIndustry !== null ? 'border-orange-400/50' : 'border-gray-200 dark:border-white/10'}`} />
                 {/* Inner ring */}
-                <div className={`absolute -inset-1 rounded-full border transition-all duration-500 ${hoveredIndustry !== null ? 'border-orange-400' : 'border-gray-300'}`} />
+                <div className={`absolute -inset-1 rounded-full border transition-all duration-500 ${hoveredIndustry !== null ? 'border-orange-400' : 'border-gray-300 dark:border-white/15'}`} />
                 {/* Image */}
-                <div className="w-full h-full rounded-full overflow-hidden border-4 border-white shadow-2xl">
+                <div className="w-full h-full rounded-full overflow-hidden border-4 border-white dark:border-[#1a1a1a] shadow-2xl">
                   <img
                     src={hoveredIndustry ? industries.find(i => i.id === hoveredIndustry)?.image || industries[0].image : industries[0].image}
                     alt="Industries"
@@ -1380,8 +1381,8 @@ className="group cursor-pointer"
                   />
                 </div>
                 {/* Center label */}
-                <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 bg-white border border-gray-200 rounded-full px-5 py-2 shadow-lg">
-                  <span className="text-[10px] font-black uppercase tracking-[0.15em] text-gray-900">
+                <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-white/10 rounded-full px-5 py-2 shadow-lg">
+                  <span className="text-[10px] font-black uppercase tracking-[0.15em] text-gray-900 dark:text-white">
                     {currentLang === 'en' ? '9+ INDUSTRIES' : '৯+ সেক্টর'}
                   </span>
                 </div>
@@ -1401,7 +1402,7 @@ className="group cursor-pointer"
                     transition={{ delay: (idx + 4) * 0.08, duration: 0.5 }}
                     whileHover={{ y: -6 }}
                     onMouseEnter={() => setHoveredIndustry(ind.id)}
-                    className={`relative group cursor-pointer rounded-[22px] overflow-hidden border transition-all duration-400 ${isHovered ? 'border-orange-400 shadow-[0_12px_40px_rgba(255,74,0,0.15)]' : 'border-gray-200 shadow-sm hover:shadow-lg'}`}
+                    className={`relative group cursor-pointer rounded-[22px] overflow-hidden border transition-all duration-400 ${isHovered ? 'border-orange-400 shadow-[0_12px_40px_rgba(255,74,0,0.15)]' : 'border-gray-200 dark:border-white/10 shadow-sm hover:shadow-lg'}`}
                     style={{ transform: idx % 2 === 0 ? 'translateX(-8px)' : 'none' }}
                   >
                     <div className="relative w-full h-[155px]">
@@ -1434,7 +1435,7 @@ className="group cursor-pointer"
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.4, duration: 0.5 }}
-            className="hidden lg:block mt-6 relative mx-auto max-w-3xl group cursor-pointer rounded-[24px] overflow-hidden border border-gray-200 shadow-sm hover:shadow-xl transition-all duration-400 hover:border-orange-400"
+            className="hidden lg:block mt-6 relative mx-auto max-w-3xl group cursor-pointer rounded-[24px] overflow-hidden border border-gray-200 dark:border-white/10 shadow-sm hover:shadow-xl transition-all duration-400 hover:border-orange-400"
           >
             <div className="relative h-[180px] flex">
               <img src={industries[8].image} alt={currentLang === 'en' ? industries[8].nameEn : industries[8].nameBn} className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
@@ -1489,7 +1490,7 @@ className="group cursor-pointer"
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: idx * 0.04, duration: 0.4 }}
-                  className="group cursor-pointer rounded-[18px] overflow-hidden border border-gray-200 shadow-sm hover:shadow-lg hover:border-orange-300 transition-all duration-300"
+                  className="group cursor-pointer rounded-[18px] overflow-hidden border border-gray-200 dark:border-white/10 shadow-sm hover:shadow-lg hover:border-orange-300 transition-all duration-300"
                 >
                   <div className="relative h-[110px] sm:h-[130px]">
                     <img src={ind.image} alt={currentLang === 'en' ? ind.nameEn : ind.nameBn} className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
@@ -1703,212 +1704,18 @@ className="group cursor-pointer"
       )}
 
       {/* ========================================================
-          SECTION 12: SUCCESS STORIES (DETAILED PROBLEM-SOLUTION-RESULT)
+          SECTION 12: FAQ
          ======================================================== */}
-      <section id="success-stories" className="bg-gray-50/20 border-y border-gray-100 dark:border-neutral-800 py-12">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-10">
-          <div className="text-center space-y-4 max-w-2xl mx-auto">
-            <span className="text-xs font-bold uppercase tracking-wider text-blue-600 dark:text-orange-400">
-              {currentLang === 'en' ? 'ENTERPRISE OUTCOMES' : 'গ্রাহক কেস স্টাডি'}
-            </span>
-            <h2 className="font-sans text-3xl font-black text-gray-900 dark:text-white leading-tight">
-              {currentLang === 'en' ? 'Real Problem. Real Engineering. Real Results.' : 'বাস্তব চ্যালেঞ্জ ও আমাদের তৈরি সফল সলিউশন'}
-            </h2>
-          </div>
+      <FAQSection currentLang={currentLang} setTab={setTab} />
 
-          <div className="space-y-10">
-            {successStories.slice(0, 2).map((story, sIdx) => (
-              <motion.div
-                key={story.id}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5 }}
-                className="rounded-3xl border border-gray-100 dark:border-neutral-800 bg-white dark:bg-[#141414] p-6 md:p-10 shadow-sm hover:shadow-md transition duration-200"
-              >
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-                  
-                  {/* Text Flow: Challenge & Solution */}
-                  <div className="lg:col-span-7 space-y-6">
-                    <div className="space-y-1.5">
-                      <span className="text-[10px] uppercase font-bold text-blue-600 dark:text-orange-400 tracking-wider">
-                        {currentLang === 'en' ? story.industryEn : story.industryBn} • {story.timelineEn}
-                      </span>
-                      <h3 className="font-sans text-lg font-bold text-gray-900 dark:text-white">
-                        {story.companyName} — {currentLang === 'en' ? story.serviceEn : story.serviceBn}
-                      </h3>
-                    </div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2">
-                      <div className="space-y-2">
-                        <span className="text-[10px] font-bold text-rose-600 dark:text-rose-400 uppercase tracking-widest font-mono">
-                          {currentLang === 'en' ? 'THE CHALLENGE' : 'প্রধান সমস্যা'}
-                        </span>
-                        <p className="text-xs text-gray-500 dark:text-neutral-400 dark:text-neutral-500 leading-relaxed">
-                          {currentLang === 'en' ? story.challengeEn : story.challengeBn}
-                        </p>
-                      </div>
-
-                      <div className="space-y-2">
-                        <span className="text-[10px] font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-widest font-mono">
-                          {currentLang === 'en' ? 'OUR SYSTEM SOLUTION' : 'আমাদের কাস্টম সলিউশন'}
-                        </span>
-                        <p className="text-xs text-gray-500 dark:text-neutral-400 dark:text-neutral-500 leading-relaxed">
-                          {currentLang === 'en' ? story.solutionEn : story.solutionBn}
-                        </p>
-                      </div>
-                    </div>
-
-                    {/* Client quote */}
-                    <div className="relative rounded-2xl bg-[#FAFAFA]/80 p-5 border border-gray-50">
-                      <Quote className="absolute right-4 top-4 h-8 w-8 text-blue-50" />
-                      <blockquote className="text-xs text-gray-600 dark:text-neutral-300 dark:text-neutral-600 leading-relaxed italic relative z-10">
-                        "{currentLang === 'en' ? story.clientQuoteEn : story.clientQuoteBn}"
-                      </blockquote>
-                      <div className="mt-3 flex items-center space-x-2.5">
-                        <div className="h-8 w-8 rounded-full overflow-hidden bg-gray-100 dark:bg-neutral-800 border border-gray-100 dark:border-neutral-800 shrink-0">
-                          <img src={story.clientPhoto} alt={story.clientName} className="h-full w-full object-cover" referrerPolicy="no-referrer" />
-                        </div>
-                        <div>
-                          <span className="block text-[10px] font-bold text-gray-900 dark:text-white">{story.clientName}</span>
-                          <span className="block text-[9px] text-gray-400 dark:text-neutral-500">
-                            {currentLang === 'en' ? story.clientRoleEn : story.clientRoleBn} — {story.companyName}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Results Display Grid */}
-                  <div className="lg:col-span-5 space-y-6">
-                    <div className="rounded-2xl border border-blue-50 bg-blue-50/20 dark:bg-orange-500/5 p-6 space-y-4">
-                      <span className="text-[10px] font-bold text-blue-600 dark:text-orange-400 uppercase tracking-widest font-mono">
-                        {currentLang === 'en' ? 'MEASURABLE IMPROVEMENTS' : 'পরিমাপযোগ্য ফলাফল'}
-                      </span>
-                      <p className="text-xs text-gray-700 dark:text-neutral-200 leading-relaxed font-medium">
-                        {currentLang === 'en' ? story.resultsEn : story.resultsBn}
-                      </p>
-                    </div>
-
-                    <div className="grid grid-cols-2 gap-4">
-                      <div className="rounded-2xl border border-gray-100 dark:border-neutral-800 p-4 text-center space-y-1">
-                        <span className="text-2xl font-black text-blue-600 dark:text-orange-400 font-mono">35%</span>
-                        <span className="block text-[9px] text-gray-400 dark:text-neutral-500 font-bold uppercase tracking-wider">
-                          {currentLang === 'en' ? 'Transaction Lift' : 'সেলস ও ট্রানজেকশন বৃদ্ধি'}
-                        </span>
-                      </div>
-                      <div className="rounded-2xl border border-gray-100 dark:border-neutral-800 p-4 text-center space-y-1">
-                        <span className="text-2xl font-black text-emerald-600 dark:text-emerald-400 font-mono">&lt;300ms</span>
-                        <span className="block text-[9px] text-gray-400 dark:text-neutral-500 font-bold uppercase tracking-wider">
-                          {currentLang === 'en' ? 'Response Latency' : 'সাইটের লোডিং টাইম'}
-                        </span>
-                      </div>
-                    </div>
-
-                    <div className="flex flex-wrap gap-1.5 pt-2">
-                      {story.technologies.map((t) => (
-                        <span key={t} className="rounded bg-gray-50 dark:bg-neutral-900 border border-gray-100 dark:border-neutral-800 text-[9px] font-bold text-gray-400 dark:text-neutral-500 font-mono px-2 py-0.5">
-                          {t}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ========================================================
-          SECTION 13: BLOG PREVIEW (LATEST THREE ARTICLES)
-         ======================================================== */}
-      {blogs.length > 0 && (
-        <section id="blog-preview" className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-10">
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
-            <div className="space-y-4 max-w-xl text-left">
-              <span className="text-xs font-bold uppercase tracking-wider text-blue-600 dark:text-orange-400">
-                {currentLang === 'en' ? 'KNOWLEDGE CENTER' : 'আমাদের সর্বশেষ ব্লগ'}
-              </span>
-              <h2 className="font-sans text-3xl font-black text-gray-900 dark:text-white leading-tight">
-                {currentLang === 'en' ? 'Insights on Software Engineering' : 'সফটওয়্যার ও এআই প্রযুক্তির সর্বশেষ আপডেট'}
-              </h2>
-            </div>
-            
-            <button
-              onClick={() => { setTab('blogs'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-              className="inline-flex items-center space-x-1.5 rounded-xl border border-gray-200 dark:border-neutral-700 px-5 py-2.5 text-xs font-bold text-gray-700 dark:text-neutral-200 hover:text-blue-600 dark:text-orange-400 hover:border-blue-600 transition cursor-pointer self-start md:self-auto"
-            >
-              <span>{currentLang === 'en' ? 'See All Intel Posts' : 'সকল ব্লগ পোস্ট দেখুন'}</span>
-              <ArrowRight className="h-3.5 w-3.5" />
-            </button>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {blogs.slice(0, 3).map((post, idx) => (
-              <motion.div
-                key={post.id}
-                initial={{ opacity: 0, y: 15 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: idx * 0.05, duration: 0.5 }}
-                onClick={() => {
-                  setTab('blogs');
-                  window.scrollTo({ top: 0, behavior: 'smooth' });
-                }}
-                className="group cursor-pointer rounded-3xl border border-gray-100 dark:border-neutral-800 bg-white dark:bg-[#141414] p-5 space-y-5 hover:border-blue-500 hover:shadow-xl transition-all duration-300 flex flex-col justify-between"
-              >
-                <div className="space-y-4">
-                  <div className="aspect-video overflow-hidden rounded-2xl bg-gray-50 dark:bg-neutral-900 relative border border-gray-50">
-                    <img 
-                      src={post.image} 
-                      alt={post.titleEn} 
-                      className="h-full w-full object-cover group-hover:scale-102 transition duration-500"
-                      referrerPolicy="no-referrer"
-                    />
-                    <div className="absolute top-4 left-4 bg-gray-900/80 backdrop-blur-md text-white font-mono text-[9px] font-bold px-2.5 py-1 rounded-md uppercase tracking-wider border border-white/10">
-                      {currentLang === 'en' ? post.categoryEn : post.categoryBn}
-                    </div>
-                  </div>
-
-                  <div className="space-y-2">
-                    <span className="text-[10px] text-gray-400 dark:text-neutral-500 font-mono flex items-center space-x-1.5">
-                      <span>{post.publishedAt}</span>
-                      <span>•</span>
-                      <span>{post.readTime}</span>
-                    </span>
-                    <h3 className="font-sans text-sm font-bold text-gray-900 dark:text-white group-hover:text-blue-600 dark:text-orange-400 transition duration-200 line-clamp-2">
-                      {currentLang === 'en' ? post.titleEn : post.titleBn}
-                    </h3>
-                    <p className="text-xs text-gray-400 dark:text-neutral-500 leading-relaxed line-clamp-2">
-                      {currentLang === 'en' ? post.excerptEn : post.excerptBn}
-                    </p>
-                  </div>
-                </div>
-
-                <div className="pt-4 border-t border-gray-50 flex items-center justify-between text-xs font-bold text-gray-400 dark:text-neutral-500 group-hover:text-blue-600 dark:text-orange-400 transition">
-                  <div className="flex items-center space-x-2">
-                    <span className="text-[10px] text-gray-500 dark:text-neutral-400 dark:text-neutral-500">By {post.author}</span>
-                  </div>
-                  <span className="inline-flex items-center space-x-1">
-                    <span>{currentLang === 'en' ? 'Read Post' : 'পড়ুন'}</span>
-                    <ArrowUpRight className="h-3.5 w-3.5" />
-                  </span>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </section>
-      )}
 
       {/* ========================================================
           SECTION 15: FINAL CTA (HIGH-IMPACT NEGATIVE-SPACE BANNER)
          ======================================================== */}
       <section id="final-cta" className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pb-12">
-        <div className="rounded-3xl border border-gray-100 dark:border-neutral-800 bg-[#FAFAFA] p-8 md:p-16 text-center space-y-8 shadow-sm relative overflow-hidden">
+        <div className="rounded-3xl border border-gray-100 dark:border-neutral-800 bg-[#FAFAFA] dark:bg-[#1a1a1a] p-8 md:p-16 text-center space-y-8 shadow-sm relative overflow-hidden">
           {/* Subtle grid pattern background */}
-          <div className="absolute inset-0 opacity-5 bg-[linear-gradient(to_right,#808080_1px,transparent_1px),linear-gradient(to_bottom,#808080_1px,transparent_1px)] [background-size:24px_24px]"></div>
+          <div className="absolute inset-0 opacity-5 dark:opacity-[0.03] bg-[linear-gradient(to_right,#808080_1px,transparent_1px),linear-gradient(to_bottom,#808080_1px,transparent_1px)] [background-size:24px_24px]"></div>
           
           <div className="space-y-4 relative z-10 max-w-2xl mx-auto">
             <h2 className="font-sans text-3xl md:text-4xl font-black text-gray-900 dark:text-white leading-tight">

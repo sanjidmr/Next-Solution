@@ -125,6 +125,12 @@ export const mapPortfolioItem = {
       seo_desc_bn: item.seoDescBn || null,
       live_url: item.liveUrl || null,
       github_url: item.githubUrl || null,
+      project_type: item.projectType || '',
+      project_date: item.projectDate || '',
+      app_store_url: item.appStoreUrl || null,
+      play_store_url: item.playStoreUrl || null,
+      thumbnail_image: item.thumbnailImage || null,
+      updated_at: new Date().toISOString(),
     };
   },
   fromDb(row: any): PortfolioItem {
@@ -170,6 +176,11 @@ export const mapPortfolioItem = {
       seoDescBn: row.seo_desc_bn || undefined,
       liveUrl: row.live_url || undefined,
       githubUrl: row.github_url || undefined,
+      projectType: row.project_type || undefined,
+      projectDate: row.project_date || undefined,
+      appStoreUrl: row.app_store_url || undefined,
+      playStoreUrl: row.play_store_url || undefined,
+      thumbnailImage: row.thumbnail_image || undefined,
     };
   }
 };

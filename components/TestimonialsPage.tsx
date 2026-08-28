@@ -1022,7 +1022,7 @@ export default function TestimonialsPage({ currentLang, setTab }: TestimonialsPa
                 {currentLang === 'en' ? 'Ready To Become Our Next Success Story?' : 'পরবর্তী সফলতার গল্প হতে প্রস্তুত?'}
               </h2>
               <p className="text-slate-400 text-xs sm:text-sm max-w-2xl mx-auto leading-relaxed">
-                Join 150+ global corporate brands and scale your digital experience with custom engineering solutions. Tell us about your project or submit your verified review of our work today.
+                Join 20+ global corporate brands and scale your digital experience with custom engineering solutions. Tell us about your project or submit your verified review of our work today.
               </p>
             </div>
 

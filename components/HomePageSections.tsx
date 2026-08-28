@@ -13,7 +13,7 @@ import {
   Users, Calendar, BarChart3, TrendingUp, Award, Clock, ArrowLeft, 
   Check, Mail, Send, Activity, Play, Plus, Trash2, Edit2,
   ShoppingCart, Palette, Search, Clapperboard, Bot,
-  Target, Handshake, MapPin, Truck, Briefcase
+  Target, Handshake, MapPin, Truck, Briefcase, Rocket
 } from 'lucide-react';
 
 import { translations } from '@/data/translations';
@@ -331,9 +331,10 @@ const renderCardVisual = (stat: string | undefined) => {
 interface HomePageSectionsProps {
   currentLang: 'en' | 'bn';
   setTab: (tab: string) => void;
+  portfolioData?: PortfolioItem[];
 }
 
-export default function HomePageSections({ currentLang, setTab }: HomePageSectionsProps) {
+export default function HomePageSections({ currentLang, setTab, portfolioData }: HomePageSectionsProps) {
   const t = translations[currentLang];
   const settings = getSettings();
 
@@ -376,7 +377,7 @@ export default function HomePageSections({ currentLang, setTab }: HomePageSectio
 
   const testimonials = getTestimonials();
   const blogs = getBlogs().filter(b => b.status === 'published');
-  const portfolio = getPortfolio();
+  const portfolio = portfolioData ?? getPortfolio();
   const pricingPackages = getPricingPackages().filter(p => p.enabled !== false);
 
   const whyChooseUsCards = getWhyChooseUsCards().filter(c => c.visible !== false).sort((a, b) => a.displayOrder - b.displayOrder);
@@ -394,13 +395,13 @@ export default function HomePageSections({ currentLang, setTab }: HomePageSectio
 
   // Home page services showcase (deep-links into /services detail view)
   const homeServices = [
+    { slug: 'product-innovation', icon: Rocket, title: 'Product & Business Innovation', desc: 'End-to-end product strategy, MVP development and business model innovation that turns ideas into market-ready digital products.', techs: ['Product Strategy', 'MVP Development', 'Market Research', 'Agile'], popular: ['MVP Development', 'Product Strategy', 'Business Model Design'], benefits: ['Faster time-to-market', 'Reduced development risk'] },
+    { slug: 'creative-content', icon: Sparkles, title: 'Creative Content & Visual Storytelling', desc: 'Cinematic video production, motion graphics and brand storytelling that captivates audiences and drives engagement.', techs: ['Premiere Pro', 'After Effects', 'Cinema 4D', 'Motion FX'], popular: ['Brand Videos', 'Social Media Content', 'Motion Graphics'], benefits: ['Higher audience engagement', 'Memorable brand presence'] },
+    { slug: 'marketing-pr', icon: Megaphone, title: 'Marketing, PR & Brand Strategy', desc: 'Full-service brand strategy, public relations and performance marketing that amplifies your brand across every channel.', techs: ['Brand Strategy', 'PR Campaigns', 'Meta Ads', 'Google Ads'], popular: ['Brand Strategy', 'PR Campaigns', 'Performance Marketing'], benefits: ['Amplified brand reach', 'Measurable marketing ROI'] },
     { slug: 'web-development', icon: Code, title: 'Web Development', desc: 'High-converting, blazing-fast websites and portals built to scale your business.', techs: ['Next.js', 'React', 'TypeScript', 'Tailwind', 'WordPress', 'Shopify'], popular: ['Business & Corporate Sites', 'Multi-Vendor E-Commerce', 'Custom CMS Portals'], benefits: ['Blazing-fast load speeds', 'Pixel-perfect responsive design'] },
-    { slug: 'web-development', icon: ShoppingCart, title: 'E-Commerce Solutions', desc: 'Online stores with secure payments, smart inventory and seamless checkout.', techs: ['Shopify', 'WooCommerce', 'Stripe', 'Laravel', 'Supabase'], popular: ['Online Stores', 'Secure Checkout', 'Admin Inventory Suite'], benefits: ['Boosted conversion rates', 'Secure payment gateways'] },
-    { slug: 'ui-ux-design', icon: Palette, title: 'UI/UX Design', desc: 'Stunning, user-centric interfaces that boost engagement and conversions.', techs: ['Figma', 'Adobe XD', 'Prototyping', 'Design Systems'], popular: ['Website UI Design', 'Dashboard Layouts', 'Mobile App UI'], benefits: ['Higher user engagement', 'Consistent brand experience'] },
     { slug: 'digital-marketing', icon: Megaphone, title: 'Digital Marketing', desc: 'Data-driven campaigns that generate leads and maximize marketing ROI.', techs: ['Meta Ads', 'Google Ads', 'Email Automation', 'Analytics'], popular: ['Social Media Campaigns', 'Lead Funnels', 'Email Marketing'], benefits: ['Measurable lead growth', 'Maximized ad ROI'] },
     { slug: 'seo', icon: Search, title: 'SEO Optimization', desc: 'Dominate Google with technical SEO, on-page mastery and authority links.', techs: ['Technical SEO', 'Keyword Research', 'Link Building', 'Local SEO'], popular: ['Site Audits', 'On-Page Optimization', 'Local Map SEO'], benefits: ['Higher organic rankings', 'Long-term traffic growth'] },
-    { slug: 'mobile-app', icon: Smartphone, title: 'Mobile App Development', desc: 'Premium iOS & Android apps that put your business in every pocket.', techs: ['Flutter', 'React Native', 'Swift', 'Kotlin'], popular: ['iOS Apps', 'Android Apps', 'Cross-Platform Apps'], benefits: ['App-store ready builds', 'Smooth native performance'] },
-    { slug: 'graphic-design', icon: Sparkles, title: 'Branding & Graphic Design', desc: 'Complete brand identities and visuals that make you unforgettable.', techs: ['Adobe Photoshop', 'Illustrator', 'Brand Identity', 'Print Design'], popular: ['Logo & Identity', 'Social Media Graphics', 'Flyers & Brochures'], benefits: ['Memorable brand presence', 'Professional visual assets'] },
+    { slug: 'graphic-design', icon: Palette, title: 'Branding & Graphic Design', desc: 'Complete brand identities and visuals that make you unforgettable.', techs: ['Adobe Photoshop', 'Illustrator', 'Brand Identity', 'Print Design'], popular: ['Logo & Identity', 'Social Media Graphics', 'Flyers & Brochures'], benefits: ['Memorable brand presence', 'Professional visual assets'] },
     { slug: 'video-editing', icon: Clapperboard, title: 'Content & Video Production', desc: 'Cinematic reels, ads and videos engineered to stop the scroll.', techs: ['Premiere Pro', 'After Effects', 'Color Grading', 'Motion FX'], popular: ['Reels & Shorts', 'Corporate Promos', 'Video Ads'], benefits: ['Viral-ready content', 'High-retention edits'] },
     { slug: 'ai-automation', icon: Cpu, title: 'AI Automation / AI Solutions', desc: 'Custom AI agents and workflows that sell, support and save time 24/7.', techs: ['OpenAI', 'Gemini', 'Claude', 'n8n', 'Make'], popular: ['AI Support Bots', 'Workflow Automation', 'AI Voice Agents'], benefits: ['Round-the-clock automation', 'Reduced operating costs'] },
   ];
@@ -1129,6 +1130,7 @@ export default function HomePageSections({ currentLang, setTab }: HomePageSectio
 {/* ========================================================
           SECTION 7: FEATURED PORTFOLIO (WITH CATEGORY FILTERING)
          ======================================================== */}
+      {filteredPortfolio.length > 0 && (
       <section id="featured-portfolio" className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-10">
         {/* Header Block */}
         <div className="text-center space-y-4 max-w-3xl mx-auto">
@@ -1268,6 +1270,7 @@ className="group cursor-pointer"
           </button>
         </div>
       </section>
+      )}
       {/* ========================================================
           SECTION 8: INDUSTRIES WE SERVE (PREMIUM ASYMMETRIC EDITORIAL)
          ======================================================== */}

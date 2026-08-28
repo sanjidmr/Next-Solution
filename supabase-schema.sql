@@ -83,8 +83,14 @@ CREATE TABLE IF NOT EXISTS portfolio_items (
   seo_desc_bn TEXT,
   live_url TEXT,
   github_url TEXT,
+  project_type TEXT DEFAULT '',
+  project_date TEXT DEFAULT '',
+  app_store_url TEXT,
+  play_store_url TEXT,
+  thumbnail_image TEXT,
   deleted_at TIMESTAMPTZ,
-  created_at TIMESTAMPTZ DEFAULT now()
+  created_at TIMESTAMPTZ DEFAULT now(),
+  updated_at TIMESTAMPTZ DEFAULT now()
 );
 
 -- ===================== BLOG POSTS =====================

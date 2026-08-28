@@ -77,6 +77,13 @@ export interface PortfolioItem {
   seoDescBn?: string;
   liveUrl?: string;
   githubUrl?: string;
+
+  // New fields for enhanced portfolio system
+  projectType?: string; // 'Website' | 'Web App' | 'Mobile App' | 'UI/UX Design' | 'Branding / Graphic Design' | 'Video' | 'Marketing / SEO' | 'AI Automation'
+  projectDate?: string; // e.g. "2025-03" or "March 2025"
+  appStoreUrl?: string;
+  playStoreUrl?: string;
+  thumbnailImage?: string; // Optional thumbnail separate from main image
 }
 
 export interface BlogPost {

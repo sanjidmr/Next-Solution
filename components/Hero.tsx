@@ -24,7 +24,7 @@ export default function Hero({ currentLang, setTab }: HeroProps) {
 
   const stats = [
     {
-      value: "120+",
+      value: "50+",
       label: isEn ? "Projects Completed" : "সম্পন্ন প্রজেক্ট",
       icon: Award,
     },
@@ -34,12 +34,12 @@ export default function Hero({ currentLang, setTab }: HeroProps) {
       icon: Heart,
     },
     {
-      value: "5+",
+      value: "2+",
       label: isEn ? "Years Experience" : "বছরের অভিজ্ঞতা",
       icon: Clock,
     },
     {
-      value: "50+",
+      value: "20+",
       label: isEn ? "Happy Clients" : "সন্তুষ্ট ক্লায়েন্ট",
       icon: Users,
     },

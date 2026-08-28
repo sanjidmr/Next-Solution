@@ -1153,8 +1153,8 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
               {/* Four Stats Row */}
               <div className="flex flex-wrap items-center gap-x-5 gap-y-4 pt-4">
                 {[
-                  { icon: Users, value: '500+', labelEn: 'Happy Clients', labelBn: 'সুখী ক্লায়েন্ট' },
-                  { icon: Rocket, value: '15K+', labelEn: 'Projects Done', labelBn: 'প্রজেক্ট সম্পন্ন' },
+                  { icon: Users, value: '20+', labelEn: 'Happy Clients', labelBn: 'সুখী ক্লায়েন্ট' },
+                  { icon: Rocket, value: '50+', labelEn: 'Projects Done', labelBn: 'প্রজেক্ট সম্পন্ন' },
                   { icon: Globe, value: 'Global', labelEn: 'Service Provider', labelBn: 'সেবা প্রদানকারী' },
                   { icon: BrainCircuit, value: 'AI', labelEn: 'Automation Experts', labelBn: 'অটোমেশন বিশেষজ্ঞ' },
                 ].map((s, i) => (
@@ -1211,8 +1211,8 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
             {/* ── Mobile Floating Cards ── */}
             <div className="col-span-full lg:hidden grid grid-cols-2 gap-3 mt-2">
               {[
-                { icon: Users, value: '500+', labelEn: 'Happy Clients', labelBn: 'সুখী ক্লায়েন্ট' },
-                { icon: Rocket, value: '15K+', labelEn: 'Projects Done', labelBn: 'প্রজেক্ট সম্পন্ন' },
+                { icon: Users, value: '20+', labelEn: 'Happy Clients', labelBn: 'সুখী ক্লায়েন্ট' },
+                { icon: Rocket, value: '50+', labelEn: 'Projects Done', labelBn: 'প্রজেক্ট সম্পন্ন' },
                 { icon: Globe, value: 'Global', labelEn: 'Service Provider', labelBn: 'সেবা প্রদানকারী' },
                 { icon: BrainCircuit, value: 'AI', labelEn: 'Automation Experts', labelBn: 'অটোমেশন বিশেষজ্ঞ' },
               ].map((c, i) => (
@@ -1682,11 +1682,11 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
 
          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-7 gap-4 max-w-6xl mx-auto mb-14">
             {[
-              { value: '5+', label: currentLang === 'en' ? 'Years Technical' : 'বছর টেকনিক্যাল', color: 'from-blue-500 dark:from-blue-500 to-indigo-500', bg: 'bg-blue-50/60', border: 'border-blue-100/60', textColor: 'text-blue-600 dark:text-blue-400' },
-              { value: '4+', label: currentLang === 'en' ? 'Years Agency' : 'বছর এজেন্সি', color: 'from-violet-500 to-purple-500', bg: 'bg-violet-50/60', border: 'border-violet-100/60', textColor: 'text-violet-600 dark:text-blue-400' },
-              { value: '100+', label: currentLang === 'en' ? 'Projects' : 'প্রজেক্ট', color: 'from-emerald-500 to-teal-500', bg: 'bg-emerald-50/60', border: 'border-emerald-100/60', textColor: 'text-emerald-600 dark:text-emerald-400' },
-              { value: '50+', label: currentLang === 'en' ? 'Clients' : 'ক্লায়েন্ট', color: 'from-rose-500 to-pink-500', bg: 'bg-rose-50/60', border: 'border-rose-100/60', textColor: 'text-rose-600 dark:text-rose-400' },
-              { value: '15+', label: currentLang === 'en' ? 'Team Members' : 'টিম মেম্বার', color: 'from-blue-500 to-indigo-500', bg: 'bg-amber-50/60', border: 'border-amber-100/60', textColor: 'text-blue-600 dark:text-blue-400' },
+              { value: '2+', label: currentLang === 'en' ? 'Years Technical' : 'বছর টেকনিক্যাল', color: 'from-blue-500 dark:from-blue-500 to-indigo-500', bg: 'bg-blue-50/60', border: 'border-blue-100/60', textColor: 'text-blue-600 dark:text-blue-400' },
+              { value: '2+', label: currentLang === 'en' ? 'Years Agency' : 'বছর এজেন্সি', color: 'from-violet-500 to-purple-500', bg: 'bg-violet-50/60', border: 'border-violet-100/60', textColor: 'text-violet-600 dark:text-blue-400' },
+              { value: '50+', label: currentLang === 'en' ? 'Projects' : 'প্রজেক্ট', color: 'from-emerald-500 to-teal-500', bg: 'bg-emerald-50/60', border: 'border-emerald-100/60', textColor: 'text-emerald-600 dark:text-emerald-400' },
+              { value: '20+', label: currentLang === 'en' ? 'Clients' : 'ক্লায়েন্ট', color: 'from-rose-500 to-pink-500', bg: 'bg-rose-50/60', border: 'border-rose-100/60', textColor: 'text-rose-600 dark:text-rose-400' },
+              { value: '5+', label: currentLang === 'en' ? 'Team Members' : 'টিম মেম্বার', color: 'from-blue-500 to-indigo-500', bg: 'bg-amber-50/60', border: 'border-amber-100/60', textColor: 'text-blue-600 dark:text-blue-400' },
               { value: '8+', label: currentLang === 'en' ? 'Digital Services' : 'ডিজিটাল সেবা', color: 'from-cyan-500 to-sky-500', bg: 'bg-cyan-50/60', border: 'border-cyan-100/60', textColor: 'text-cyan-600 dark:text-cyan-400' },
               { value: '20+', label: currentLang === 'en' ? 'Industries Served' : 'ইন্ডাস্ট্রি', color: 'from-slate-600 to-gray-500', bg: 'bg-slate-50/60', border: 'border-slate-100/60', textColor: 'text-slate-600' },
             ].map((stat, i) => (

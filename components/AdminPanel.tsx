@@ -210,7 +210,8 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
   const [portfolioForm, setPortfolioForm] = useState<Partial<PortfolioItem>>({
     titleEn: '', titleBn: '', category: 'Web Development', duration: '3 Months', budget: '$15,000',
     descriptionEn: '', descriptionBn: '', client: '', challengeEn: '', challengeBn: '',
-    solutionEn: '', solutionBn: '', resultEn: '', resultBn: '', technologies: [], image: '', featured: false
+    solutionEn: '', solutionBn: '', resultEn: '', resultBn: '', technologies: [], image: '', featured: false,
+    projectType: '', projectDate: '', appStoreUrl: '', playStoreUrl: '', thumbnailImage: ''
   });
 
   // Form states for FAQs
@@ -598,7 +599,12 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
       seoDescEn: portfolioForm.seoDescEn || '',
       seoDescBn: portfolioForm.seoDescBn || '',
       liveUrl: portfolioForm.liveUrl || '',
-      githubUrl: portfolioForm.githubUrl || ''
+      githubUrl: portfolioForm.githubUrl || '',
+      projectType: portfolioForm.projectType || '',
+      projectDate: portfolioForm.projectDate || '',
+      appStoreUrl: portfolioForm.appStoreUrl || '',
+      playStoreUrl: portfolioForm.playStoreUrl || '',
+      thumbnailImage: portfolioForm.thumbnailImage || ''
     };
 
     await adminDB.savePortfolio(completedItem);
@@ -615,6 +621,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
   };
 
   const handleDeletePortfolio = async (id: string) => {
+    if (!window.confirm('Are you sure you want to delete this portfolio project?')) return;
     await adminDB.deletePortfolio(id);
     const pfs = await adminDB.getAllPortfolio(); setPortfolios(pfs || []);
     triggerNotice(currentLang === 'en' ? 'Portfolio item deleted.' : 'পোর্টফোলিও প্রজেক্টটি মুছে ফেলা হয়েছে।');
@@ -2768,7 +2775,8 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                       setPortfolioForm({
                         titleEn: '', titleBn: '', category: 'Web Development', duration: '3 Months', budget: '$15,000',
                         descriptionEn: '', descriptionBn: '', client: '', challengeEn: '', challengeBn: '',
-                        solutionEn: '', solutionBn: '', resultEn: '', resultBn: '', technologies: [], image: '', featured: false
+                        solutionEn: '', solutionBn: '', resultEn: '', resultBn: '', technologies: [], image: '', featured: false,
+                        projectType: '', projectDate: '', appStoreUrl: '', playStoreUrl: '', thumbnailImage: ''
                       });
                     }}
                     className="flex items-center space-x-1.5 rounded-lg bg-blue-600 dark:bg-orange-500 hover:bg-blue-700 dark:hover:bg-orange-400 text-white px-3 py-2 font-bold transition"
@@ -2813,6 +2821,28 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                             <option>Digital Marketing</option>
                             <option>AI Automation & Agent</option>
                             <option>SEO</option>
+                            <option>Mobile App</option>
+                            <option>Product & Business Innovation</option>
+                            <option>Creative Content & Visual Storytelling</option>
+                            <option>Marketing, PR & Brand Strategy</option>
+                          </select>
+                        </div>
+                        <div className="space-y-1.5">
+                          <label className="font-semibold text-gray-500 dark:text-neutral-400">Project Type</label>
+                          <select
+                            value={portfolioForm.projectType || ''}
+                            onChange={(e) => setPortfolioForm({ ...portfolioForm, projectType: e.target.value })}
+                            className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
+                          >
+                            <option value="">Select Type</option>
+                            <option value="website">Website</option>
+                            <option value="webapp">Web Application</option>
+                            <option value="mobile">Mobile App</option>
+                            <option value="desktop">Desktop Software</option>
+                            <option value="design">Design Project</option>
+                            <option value="marketing">Marketing Campaign</option>
+                            <option value="ai">AI/Automation</option>
+                            <option value="other">Other</option>
                           </select>
                         </div>
                         <div className="space-y-1.5">
@@ -2853,7 +2883,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                         </div>
                       </div>
 
-                      <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
+                      <div className="grid grid-cols-2 md:grid-cols-5 gap-3 pt-2">
                         <div className="space-y-1.5 col-span-2">
                           <label className="font-semibold text-gray-500 dark:text-neutral-400">Custom URL Slug (leave empty for automatic)</label>
                           <input
@@ -2894,6 +2924,24 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                             value={portfolioForm.image || ''}
                             onChange={(e) => setPortfolioForm({ ...portfolioForm, image: e.target.value })}
                             className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
+                          />
+                        </div>
+                        <div className="space-y-1.5">
+                          <label className="font-semibold text-gray-500 dark:text-neutral-400">Thumbnail Image URL (optional)</label>
+                          <input
+                            type="text" placeholder="Smaller card image URL"
+                            value={portfolioForm.thumbnailImage || ''}
+                            onChange={(e) => setPortfolioForm({ ...portfolioForm, thumbnailImage: e.target.value })}
+                            className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
+                          />
+                        </div>
+                        <div className="space-y-1.5">
+                          <label className="font-semibold text-gray-500 dark:text-neutral-400">Project Date</label>
+                          <input
+                            type="date"
+                            value={portfolioForm.projectDate || ''}
+                            onChange={(e) => setPortfolioForm({ ...portfolioForm, projectDate: e.target.value })}
+                            className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
                           />
                         </div>
                         <div className="space-y-1.5">
@@ -3104,6 +3152,27 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                               className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
                             />
                           </div>
+                        </div>
+                      </div>
+
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+                        <div className="space-y-1.5">
+                          <label className="font-semibold text-gray-500 dark:text-neutral-400">App Store URL (iOS)</label>
+                          <input
+                            type="text" placeholder="https://apps.apple.com/..."
+                            value={portfolioForm.appStoreUrl || ''}
+                            onChange={(e) => setPortfolioForm({ ...portfolioForm, appStoreUrl: e.target.value })}
+                            className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
+                          />
+                        </div>
+                        <div className="space-y-1.5">
+                          <label className="font-semibold text-gray-500 dark:text-neutral-400">Play Store URL (Android)</label>
+                          <input
+                            type="text" placeholder="https://play.google.com/..."
+                            value={portfolioForm.playStoreUrl || ''}
+                            onChange={(e) => setPortfolioForm({ ...portfolioForm, playStoreUrl: e.target.value })}
+                            className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
+                          />
                         </div>
                       </div>
 
@@ -6440,7 +6509,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                         onClick={() => {
                           setIsCreatingTechServiceCard(true);
                           setTechServiceCardForm({
-                            icon: 'Globe', categoryEn: '', categoryBn: '', descriptionEn: '', descriptionBn: '', technologies: [], projectCount: 'Used by 120+ Projects', popularProjectsEn: [], popularProjectsBn: [], benefitsEn: [], benefitsBn: [], experienceLevelEn: 'Expert Level Architecture', experienceLevelBn: 'এক্সপার্ট লেভেল আর্কিটেকচার', featuredBadgeEn: '', featuredBadgeBn: '', displayOrder: techServiceCards.length + 1, visible: true, animationType: 'fade'
+                            icon: 'Globe', categoryEn: '', categoryBn: '', descriptionEn: '', descriptionBn: '', technologies: [], projectCount: 'Used by 50+ Projects', popularProjectsEn: [], popularProjectsBn: [], benefitsEn: [], benefitsBn: [], experienceLevelEn: 'Expert Level Architecture', experienceLevelBn: 'এক্সপার্ট লেভেল আর্কিটেকচার', featuredBadgeEn: '', featuredBadgeBn: '', displayOrder: techServiceCards.length + 1, visible: true, animationType: 'fade'
                           });
                         }}
                         className="inline-flex items-center space-x-1 rounded bg-blue-600 dark:bg-orange-500 hover:bg-blue-700 dark:hover:bg-orange-400 px-3.5 py-1.5 text-xs font-bold text-white transition shadow-sm"

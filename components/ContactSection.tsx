@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 /**
  * @license
  * SPDX-License-Identifier: Apache-2.0
@@ -15,12 +15,11 @@ import { addMessage, getServices } from '@/lib/db';
 // Default services for server-side rendering fallback
 const defaultServices = [
   { id: 1, titleEn: 'Web Development', titleBn: 'à¦“à¦¯à¦¼à§‡à¦¬ à¦¡à§‡à¦­à§‡à¦²à¦ªà¦®à§‡à¦¨à§à¦Ÿ' },
-  { id: 2, titleEn: 'Mobile App', titleBn: 'à¦®à§‹à¦¬à¦¾à¦‡à¦² à¦…à§à¦¯à¦¾à¦ª' },
   { id: 3, titleEn: 'UI/UX Design', titleBn: 'à¦‡à¦‰à¦†à¦‡/à¦‰à¦‡à¦•à§à¦¸ à¦¡à¦¿à¦œà¦¾à¦‡à¦¨' },
   { id: 4, titleEn: 'Graphic Design', titleBn: 'à¦—à§à¦°à¦¾à¦«à¦¿à¦•à§à¦¸ à¦¡à¦¿à¦œà¦¾à¦‡à¦¨' },
   { id: 5, titleEn: 'Video Editing', titleBn: 'à¦­à¦¿à¦¡à¦¿à¦“ à¦à¦¡à¦¿à¦Ÿà¦¿à¦‚' },
   { id: 6, titleEn: 'Digital Marketing', titleBn: 'à¦¡à¦¿à¦œà¦¿à¦Ÿà¦¾à¦² à¦®à¦¾à¦°à§à¦•à§‡à¦Ÿà¦¿à¦‚' },
-  { id: 7, titleEn: 'AI Automation', titleBn: 'à¦à¦†à¦‡ à¦…à¦Ÿà§‹à¦®à§‡à¦¶à¦¨' },
+  { id: 7, titleEn: 'AI Services', titleBn: 'à¦à¦†à¦‡ à¦…à¦Ÿà§‹à¦®à§‡à¦¶à¦¨' },
   { id: 8, titleEn: 'SEO', titleBn: 'à¦à¦¸à¦‡à¦“' }
 ];
 

@@ -79,7 +79,7 @@ export interface PortfolioItem {
   githubUrl?: string;
 
   // New fields for enhanced portfolio system
-  projectType?: string; // 'Website' | 'Web App' | 'Mobile App' | 'UI/UX Design' | 'Branding / Graphic Design' | 'Video' | 'Marketing / SEO' | 'AI Automation'
+  projectType?: string; // 'Website' | 'Web App' | 'UI/UX Design' | 'Branding / Graphic Design' | 'Video' | 'Marketing / SEO' | 'AI Services'
   projectDate?: string; // e.g. "2025-03" or "March 2025"
   appStoreUrl?: string;
   playStoreUrl?: string;

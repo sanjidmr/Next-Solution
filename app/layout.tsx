@@ -48,7 +48,7 @@ export const metadata: Metadata = {
     "web design",
     "digital marketing",
     "branding",
-    "AI automation",
+    "AI Services",
   ],
   authors: [{ name: siteConfig.name }],
   creator: siteConfig.name,

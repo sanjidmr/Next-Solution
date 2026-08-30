@@ -615,7 +615,7 @@ export default function BlogSection({ currentLang, setTab, isFullPage = false }:
                 <p className="text-sm md:text-base text-gray-500 dark:text-neutral-400 dark:text-neutral-500 leading-relaxed max-w-xl font-sans">
                   {currentLang === 'en' 
                     ? 'Unlock enterprise-grade design philosophies, high-performance tech stacks, video-editing strategies, organic SEO breakthroughs, and custom AI agent blueprints written by team leaders.'
-                    : 'সিনিয়র টিম লিডারদের অভিজ্ঞতার আলোকে ডিজাইন থিওরি, হাই-পারফরম্যান্স ডেভেলপমেন্ট, হাই-রিটেনশন ভিডিও এডিটিং, আধুনিক এসইও স্ট্র্যাটেজি এবং এআই অটোমেশনের কমপ্লিট সোর্স গাইড বুক।'}
+                    : 'সিনিয়র টিম লিডারদের অভিজ্ঞতার আলোকে ডিজাইন থিওরি, হাই-পারফরম্যান্স ডেভেলপমেন্ট, হাই-রিটেনশন ভিডিও এডিটিং, আধুনিক এসইও স্ট্র্যাটেজি এবং এআই সার্ভিসের কমপ্লিট সোর্স গাইড বুক।'}
                 </p>
               </div>
 
@@ -723,7 +723,7 @@ export default function BlogSection({ currentLang, setTab, isFullPage = false }:
                             {selectedServiceHero === 'dev' && (currentLang === 'en' ? 'Full-Stack Code & Cloud' : 'কোডিং ও ক্লাউড')}
                             {selectedServiceHero === 'video' && (currentLang === 'en' ? 'Video Production & Motion' : 'ভিডিও এডিটিং')}
                             {selectedServiceHero === 'marketing' && (currentLang === 'en' ? 'Semantic SEO & Growth Ads' : 'এসইও ও গ্রোথ')}
-                            {selectedServiceHero === 'ai' && (currentLang === 'en' ? 'AI Automations & LLM Agents' : 'এআই ও অটোমেশন')}
+                            {selectedServiceHero === 'ai' && (currentLang === 'en' ? 'AI Services & LLM Agents' : 'এআই সার্ভিস')}
                           </h4>
                         </div>
                         <div className="p-2 rounded-xl bg-white dark:bg-[#141414] border border-neutral-100 dark:border-neutral-800 text-neutral-700 dark:text-neutral-200 shadow-xs">

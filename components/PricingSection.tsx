@@ -175,12 +175,11 @@ export default function PricingSection({ currentLang, setTab, isFullPage = false
   const categories = [
     { key: 'Agency Packages', labelEn: 'All Works', labelBn: 'সব কাজ' },
     { key: 'Web Development', labelEn: 'Web Development', labelBn: 'ওয়েব ডেভেলপমেন্ট' },
-    { key: 'Mobile App', labelEn: 'Mobile App', labelBn: 'মোবাইল অ্যাপ' },
     { key: 'UI/UX Design', labelEn: 'UI/UX Design', labelBn: 'ইউআই/ইউএক্স ডিজাইন' },
     { key: 'Graphic Design', labelEn: 'Graphic Design', labelBn: 'গ্রাফিক ডিজাইন' },
     { key: 'Video Editing', labelEn: 'Video Editing', labelBn: 'ভিডিও এডিটিং' },
     { key: 'Digital Marketing', labelEn: 'Digital Marketing', labelBn: 'ডিজিটাল মার্কেটিং' },
-    { key: 'AI Automation', labelEn: 'AI Automation', labelBn: 'এআই অটোমেশন' },
+    { key: 'AI Services', labelEn: 'AI Services', labelBn: 'এআই সার্ভিস' },
     { key: 'SEO', labelEn: 'SEO', labelBn: 'এসইও' }
   ];
 
@@ -1354,12 +1353,12 @@ export default function PricingSection({ currentLang, setTab, isFullPage = false
                           className="w-full rounded-xl border border-neutral-800 bg-neutral-900/60 px-3.5 py-3 text-xs text-white focus:outline-none focus:ring-1 focus:ring-blue-600 cursor-pointer"
                         >
                           <option value="Web Development">{currentLang === 'en' ? 'Web Development' : 'ওয়েব ডেভেলপমেন্ট'}</option>
-                          <option value="Web App">{currentLang === 'en' ? 'mobile app' : 'ওয়েব অ্যাপস'}</option>
+                          <option value="Web App">{currentLang === 'en' ? 'Web Application' : 'ওয়েব অ্যাপস'}</option>
                           <option value="UI/UX Design">{currentLang === 'en' ? 'UI/UX Design' : 'ইউআই/ইউএক্স ডিজাইন'}</option>
                           <option value="Graphic Design">{currentLang === 'en' ? 'Graphic Design' : 'গ্রাফিক ডিজাইন'}</option>
                           <option value="Digital Marketing">{currentLang === 'en' ? 'Digital Marketing' : 'ডিজিটাল মার্কেটিং'}</option>
                           <option value="SEO">{currentLang === 'en' ? 'SEO Search' : 'এসইও সার্চ'}</option>
-                          <option value="AI Automation & Agent">{currentLang === 'en' ? 'AI Agent' : 'এআই এজেন্ট'}</option>
+                          <option value="AI Services">{currentLang === 'en' ? 'AI Services' : 'এআই সার্ভিস'}</option>
                           <option value="Video Editing">{currentLang === 'en' ? 'Video Editing' : 'ভিডিও এডিটিং'}</option>
                         </select>
                       </div>

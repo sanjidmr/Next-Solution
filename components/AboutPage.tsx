@@ -217,13 +217,13 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
       roleBn: 'প্রতিষ্ঠাতা ও সিইও',
       portrait: sanjidImage ,
       bioEn: 'Visionary technologist driving the mission of Next Solution. Specializing in high-scale web sites, predictive Web devolopment pipelines, and robust enterprise strategies.',
-      bioBn: 'নেক্সট সলিউশনের রূপকল্প পরিচালনাকারী স্বপ্নদর্শী টেকনোলজিস্ট ও প্রতিষ্ঠাতা। তিনি হাই-স্কেল ক্লাউড সিস্টেম, প্রেডিক্টিভ এআই অটোমেশন পাইপলাইন এবং শক্তিশালী ব্যবসায়িক কৌশল বাস্তবায়নে পারদর্শী।',
+      bioBn: 'নেক্সট সলিউশনের রূপকল্প পরিচালনাকারী স্বপ্নদর্শী টেকনোলজিস্ট ও প্রতিষ্ঠাতা। তিনি হাই-স্কেল ক্লাউড সিস্টেম, প্রেডিক্টিভ এআই সার্ভিস পাইপলাইন এবং শক্তিশালী ব্যবসায়িক কৌশল বাস্তবায়নে পারদর্শী।',
       experienceEn: '4+ Years of Tech Experience',
       experienceBn: '4+ বছরের প্রযুক্তি অভিজ্ঞতা',
       mottoEn: 'Our mission is to build digital solutions that create lasting business impact.',
       mottoBn: 'এমন ডিজিটাল সলিউশন তৈরি করা যা স্থায়ী ব্যবসায়িক প্রভাব ফেলে।',
       skillsEn: ['Business Strategy', 'Technology', 'Web devolopment'],
-      skillsBn: ['বিজনেস স্ট্র্যাটেজি', 'প্রযুক্তি', 'এআই অটোমেশন'],
+      skillsBn: ['বিজনেস স্ট্র্যাটেজি', 'প্রযুক্তি', 'এআই সার্ভিস'],
       email: 'mushfiqurrahmansanjid@gmail.com',
       linkedin: 'https://linkedin.com/',
       statusEn: 'Available for Advisory',
@@ -319,8 +319,8 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
       nameBn: 'আসিফ জামান', 
       roleEn: 'AI Integration Specialist', 
       roleBn: 'এআই ইন্টিগ্রেশন স্পেশালিস্ট', 
-      deptEn: 'AI & Automations', 
-      deptBn: 'এআই ও অটোমেশন',
+      deptEn: 'AI Services', 
+      deptBn: 'এআই সার্ভিস',
       image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=400',
       descEn: 'Building modern cognitive agent structures, custom LLM pipelines, and automated integrations.',
       descBn: 'আধুনিক কগনিটিভ এজেন্ট স্ট্রাকচার, কাস্টম এলএলএম পাইপলাইন এবং স্বয়ংক্রিয় এআই ইন্টিগ্রেশন বিল্ডার।'
@@ -538,18 +538,6 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
       benefitBn: '৯৯+ লাইটহাউস স্পিড স্কোর'
     },
     {
-      id: 'mobile-apps',
-      category: 'dev',
-      icon: Smartphone,
-      nameEn: 'Mobile App',
-      nameBn: 'মোবাইল অ্যাপ্লিকেশন',
-      descEn: 'Native iOS & Android apps with Flutter & React Native — seamless UX, offline-first architecture, and App Store ready.',
-      descBn: 'ফ্লাটার ও রিঅ্যাক্ট নেটিভ দিয়ে নেটিভ আইওএস অ্যান্ড্রয়েড অ্যাপ — স্মুথ ইউএক্স, অফলাইন-ফার্সট আর্কিটেকচার, অ্যাপ স্টোর রেডি।',
-      techs: ['Flutter', 'React Native', 'Dart', 'Swift', 'Kotlin'],
-      benefitEn: '60fps smooth native performance',
-      benefitBn: '৬০এফপিএস নেটিভ পারফরম্যান্স'
-    },
-    {
       id: 'ui-ux',
       category: 'design',
       icon: Layers,
@@ -601,8 +589,8 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
       id: 'ai-automation',
       category: 'ai',
       icon: Cpu,
-      nameEn: 'AI Automation',
-      nameBn: 'এআই অটোমেশন',
+      nameEn: 'AI Services',
+      nameBn: 'এআই সার্ভিস',
       descEn: 'Automate repetitive back-office operations, sync data vectors, and streamline workflows with intelligent triggers.',
       descBn: 'ব্যবসায়িক পুনরাবৃত্তিমূলক কাজ দূরীকরণ এবং স্বয়ংক্রিয় এআই সিস্টেম সংস্থাপন।',
       techs: ['n8n', 'Make.com', 'Zapier', 'APIs'],
@@ -684,22 +672,6 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
       ]
     },
     {
-      titleEn: 'Mobile App Engineering',
-      titleBn: 'মোবাইল অ্যাপ ইঞ্জিনিয়ারিং',
-      descEn: 'Seamless native experiences published across iOS and Android app stores.',
-      descBn: 'আইওএস এবং অ্যান্ড্রয়েডের জন্য হাই-কনভার্সন ও শতভাগ নির্ভরযোগ্য মোবাইল অ্যাপ্লিকেশন।',
-      direction: 'left',
-      techs: [
-        { name: 'React Native', tagEn: 'Hybrid Core', tagBn: 'হাইব্রিড অ্যাপ', logo: 'react' },
-        { name: 'Flutter', tagEn: 'Native Engines', tagBn: 'নেটিভ ইঞ্জিন', logo: 'flutter' },
-        { name: 'Swift', tagEn: 'Native iOS', tagBn: 'নেটিভ আইওএস', logo: 'swift' },
-        { name: 'Kotlin', tagEn: 'Native Android', tagBn: 'নেটিভ অ্যান্ড্রয়েড', logo: 'kotlin' },
-        { name: 'Android SDK', tagEn: 'OS Services', tagBn: 'অ্যান্ড্রয়েড এসডিকে', logo: 'android' },
-        { name: 'iOS SDK', tagEn: 'Core Apple Services', tagBn: 'অ্যাপল এসডিকে', logo: 'ios' },
-        { name: 'Expo', tagEn: 'Fast Ecosystem', tagBn: 'এক্সপো ইকোসিস্টেম', logo: 'expo' }
-      ]
-    },
-    {
       titleEn: 'Premium UI/UX Design',
       titleBn: 'ইউআই/ইউএক্স ডিজাইন',
       descEn: 'Bespoke UI layouts, pixel-perfect interactive systems, and strict branding guidebooks.',
@@ -745,8 +717,8 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
       ]
     },
     {
-      titleEn: 'AI Automations & Agents',
-      titleBn: 'এআই অটোমেশন ও এজেন্ট',
+      titleEn: 'AI Services & Agents',
+      titleBn: 'এআই সার্ভিস ও এজেন্ট',
       descEn: 'Cognitive decision loops, private LLM pipelines, and headless back-office triggers.',
       descBn: 'ব্যবসায়ের জটিল পুনরাবৃত্তিমূলক কাজ সহজ করতে স্বয়ংক্রিয় ইন্টেলিজেন্ট ওয়ার্কফ্লো।',
       direction: 'left',
@@ -911,8 +883,8 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
     },
     {
       icon: BrainCircuit,
-      nameEn: 'AI & Automation',
-      nameBn: 'এআই ও অটোমেশন',
+      nameEn: 'AI Services',
+      nameBn: 'এআই সার্ভিস',
       descEn: 'LLM-powered chatbots, intelligent RPA pipelines, and computer vision systems.',
       descBn: 'এলএলএম-চালিত চ্যাটবট, ইন্টেলিজেন্ট আরপিএ পাইপলাইন এবং কম্পিউটার ভিশন সিস্টেম।'
     },
@@ -1121,8 +1093,8 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
               {/* Description */}
               <p className="text-[15px] sm:text-[16px] leading-[1.65] text-[#555555] dark:text-[#b5b5b5] max-w-[460px]">
                 {currentLang === 'en'
-                  ? 'At Next Solution, we combine creativity, technology and strategy to help businesses grow faster. From web development to AI automation, we deliver complete digital solutions under one roof.'
-                  : 'নেক্সট সলিউশনে, আমরা সৃজনশীলতা, প্রযুক্তি এবং কৌশল একত্রিত করে ব্যবসাগুলোকে দ্রুত বৃদ্ধি পেতে সাহায্য করি। ওয়েব ডেভেলপমেন্ট থেকে AI অটোমেশন — আমরা এক ছাদের নিচে সম্পূর্ণ ডিজিটাল সমাধান প্রদান করি।'}
+? 'At Next Solution, we combine creativity, technology and strategy to help businesses grow faster. From web development to AI Services, we deliver complete digital solutions under one roof.'
+                  : 'নেক্সট সলিউশনে, আমরা সৃজনশীলতা, প্রযুক্তি এবং কৌশল একত্রিত করে ব্যবসাগুলোকে দ্রুত বৃদ্ধি পেতে সাহায্য করি। ওয়েব ডেভেলপমেন্ট থেকে AI সার্ভিস — আমরা এক ছাদের নিচে সম্পূর্ণ ডিজিটাল সমাধান প্রদান করি।'}
               </p>
 
               {/* CTA Buttons */}
@@ -1284,7 +1256,7 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
                 {[
                   { icon: '01', titleEn: 'Engineer-Led', titleBn: '\u0987\u09A8\u09CD\u099C\u09BF\u09A8\u09BF\u09AF\u09BC\u09BE\u09B0-\u09A8\u09C7\u09A4\u09C3\u09A4\u09CD\u09B5\u09AC\u09B9\u09C0\u09A8', descEn: 'Every solution is built by senior engineers, not junior designers with a template.', descBn: '\u09AA\u09CD\u09B0\u09A4\u09BF\u099F\u09BF \u09B8\u09AE\u09BE\u09A7\u09BE\u09A8 \u09B8\u09BF\u09A8\u09BF\u09AF\u09BC\u09B0 \u0987\u09A8\u09CD\u099C\u09BF\u09A8\u09BF\u09AF\u09BC\u09BE\u09B0 \u09A6\u09CD\u09AC\u09BE\u09B0\u09BE \u09A4\u09C8\u09B0\u09BF, \u099F\u09C7\u09AE\u09AA\u09CD\u09B2\u09C7\u099F \u09A6\u09BF\u09AF\u09BC\u09C7 \u09A8\u09DF\u0964' },
                   { icon: '02', titleEn: 'Revenue-First', titleBn: '\u09B0\u09BE\u099C\u09B8\u09CD\u09AC-\u09AA\u09CD\u09B0\u09A5\u09AE', descEn: 'We measure success by your revenue lift, not deliverable checkboxes.', descBn: '\u0986\u09AE\u09B0\u09BE \u09B8\u09AB\u09B2\u09A4\u09BE \u09AE\u09BE\u09AA\u09BF \u0986\u09AA\u09A8\u09BE\u09B0 \u09B0\u09BE\u099C\u09B8\u09CD\u09AC \u09AC\u09C3\u09A6\u09CD\u09A7\u09BF \u09A6\u09BF\u09AF\u09BC\u09C7, \u09A1\u09C7\u09B2\u09BF\u09AD\u09BE\u09B0\u09C7\u09AC\u09B2 \u099A\u09C7\u0995\u09AC\u0995\u09CD\u09B8 \u09A6\u09BF\u09AF\u09BC\u09C7 \u09A8\u09DF\u0964' },
-                  { icon: '03', titleEn: 'AI-Powered', titleBn: 'AI-\u099A\u09BE\u09B2\u09BF\u09A4', descEn: 'We bake AI automation into every workflow from day one \u2014 not as an afterthought.', descBn: '\u0986\u09AE\u09B0\u09BE \u09AA\u09CD\u09B0\u09A5\u09AE \u09A6\u09BF\u09A8 \u09A5\u09C7\u0995\u09C7\u09A8 \u09A5\u09C7\u0995\u09C7\u09A8\u09A8\u09C0\u09B0 \u09AA\u09CD\u09B0\u09A4\u09BF\u099F\u09BF \u0993\u09DF\u09BE\u09B0\u09CD\u0995\u09AB\u09CD\u09B2\u09CB\u09A4\u09C7 AI \u0985\u099F\u09CB\u09AE\u09C7\u09B6\u09A8 \u09AC\u09CD\u09AF\u09AC\u09B9\u09BE\u09B0 \u0995\u09B0\u09BF\u0964' }
+                  { icon: '03', titleEn: 'AI-Powered', titleBn: 'AI-\u099A\u09BE\u09B2\u09BF\u09A4', descEn: 'We bake AI Services into every workflow from day one \u2014 not as an afterthought.', descBn: '\u0986\u09AE\u09B0\u09BE \u09AA\u09CD\u09B0\u09A5\u09AE \u09A6\u09BF\u09A8 \u09A5\u09C7\u0995\u09C7\u09A8 \u09A5\u09C7\u0995\u09C7\u09A8\u09A8\u09C0\u09B0 \u09AA\u09CD\u09B0\u09A4\u09BF\u099F\u09BF \u0993\u09DF\u09BE\u09B0\u09CD\u0995\u09AB\u09CD\u09B2\u09CB\u09A4\u09C7 AI \u0985\u099F\u09CB\u09AE\u09C7\u09B6\u09A8 \u09AC\u09CD\u09AF\u09AC\u09B9\u09BE\u09B0 \u0995\u09B0\u09BF\u0964' }
                 ].map((pillar, i) => (
                   <div key={i} className="group relative rounded-2xl bg-white dark:bg-[#141414] border border-neutral-100 dark:border-neutral-800 p-5 space-y-3 hover:border-orange-200 dark:hover:border-orange-500/20 hover:shadow-lg hover:shadow-orange-500/5 transition-all duration-500">
                     <span className="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-orange-50 dark:bg-orange-500/10 text-[11px] font-black text-orange-600 dark:text-orange-400">{pillar.icon}</span>
@@ -1454,7 +1426,6 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
       <section id="about-leadership" className="border-t border-neutral-100 dark:border-neutral-800 bg-white dark:bg-[#141414] py-24 relative z-10 overflow-hidden">
         
         {/* Abstract Background Design Elements */}
-        <div className="absolute inset-0 bg-[radial-gradient(#f1f5f9_1.2px,transparent_1.2px)] [background-size:20px_20px] opacity-60 pointer-events-none" />
         <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-gradient-to-tr from-blue-400/5 via-teal-400/5 to-purple-400/5 rounded-full blur-[120px] pointer-events-none" />
         <div className="absolute -top-10 -left-10 w-72 h-72 bg-gradient-to-br from-indigo-50/20 to-sky-50/20 rounded-full blur-3xl pointer-events-none" />
         <div className="absolute bottom-10 right-10 w-96 h-96 bg-gradient-to-tl from-emerald-50/10 to-blue-50/10 rounded-full blur-3xl pointer-events-none" />
@@ -1587,7 +1558,7 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
               { id: 'all', labelEn: 'All Departments', labelBn: 'সকল ডিপার্টমেন্ট' },
               { id: 'Development', labelEn: 'Development', labelBn: 'ডেভেলপমেন্ট' },
               { id: 'Design', labelEn: 'Design', labelBn: 'ডিজাইন' },
-              { id: 'AI & Automations', labelEn: 'AI & Automations', labelBn: 'এআই ও অটোমেশন' },
+              { id: 'AI Services', labelEn: 'AI Services', labelBn: 'এআই সার্ভিস' },
               { id: 'Content Strategy', labelEn: 'Content Strategy', labelBn: 'কনটেন্ট স্ট্র্যাটেজি' },
               { id: 'Growth & SEO', labelEn: 'Growth & SEO', labelBn: 'এসইও ও প্রবৃদ্ধি' },
               { id: 'Cloud & DevOps', labelEn: 'Cloud & DevOps', labelBn: 'ক্লাউড ও ডেভঅপ্স' }
@@ -1806,7 +1777,7 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
           {/* Side Features Right */}
           <div className="lg:col-span-4 space-y-6">
             {[
-              { titleEn: 'AI & Automation Driven', titleBn: 'এআই ও অটোমেশন চালিত', descEn: 'By coding proprietary LLM triggers and custom cognitive workflows, we eliminate manual paperwork.', descBn: 'আমাদের তৈরি কাস্টম এলএলএম কোডিং ও ইন্টেলিজেন্ট এপিআই আপনার ব্যবসার পুনরাবৃত্তিমূলক জটিলতা দূর করে দেয়।' },
+              { titleEn: 'AI Services Driven', titleBn: 'এআই সার্ভিস চালিত', descEn: 'By coding proprietary LLM triggers and custom cognitive workflows, we eliminate manual paperwork.', descBn: 'আমাদের তৈরি কাস্টম এলএলএম কোডিং ও ইন্টেলিজেন্ট এপিআই আপনার ব্যবসার পুনরাবৃত্তিমূলক জটিলতা দূর করে দেয়।' },
               { titleEn: 'Direct Developer SLA Hotline', titleBn: 'ডেভেলপার এসএলএ হটলাইন', descEn: 'Direct access to engineering channels on Slack without wading through slow ticket boards.', descBn: 'ঝামেলাহীন সরাসরি সাপোর্ট চ্যানেল। ধীরগতির টিকিট ব্যবস্থার অবসান ঘটিয়ে সরাসরি স্ল্যাকে ডেভেলপারদের অ্যাক্সেস।' }
             ].map((f, i) => (
               <div key={i} className="border border-neutral-100/70 rounded-2xl p-6 bg-white dark:bg-[#141414] shadow-sm hover:shadow-md transition-shadow">
@@ -1845,7 +1816,7 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
               { id: 'all', labelEn: 'All Services', labelBn: 'সকল সার্ভিস' },
               { id: 'dev', labelEn: 'Development', labelBn: 'ডেভেলপমেন্ট' },
               { id: 'design', labelEn: 'Design & Branding', labelBn: 'ডিজাইন ও ব্র্যান্ডিং' },
-              { id: 'ai', labelEn: 'AI & Automation', labelBn: 'এআই ও অটোমেশন' },
+              { id: 'ai', labelEn: 'AI Services', labelBn: 'এআই সার্ভিস' },
               { id: 'marketing', labelEn: 'Marketing & SEO', labelBn: 'মার্কেটিং ও এসইও' }
             ].map((cat) => (
               <button
@@ -2073,7 +2044,7 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
             </h2>
             <p className="text-xs sm:text-sm text-neutral-400 dark:text-neutral-500 max-w-md mx-auto">
               {currentLang === 'en' 
-                ? 'We write clean, well-tested code in strict frontend, backend, design, and AI automation stacks.' 
+                ? 'We write clean, well-tested code in strict frontend, backend, design, and AI Services stacks.' 
                 : 'আমরা নিখুঁত কোড লিখি এবং সর্বোত্তম গতি নিশ্চিত করতে বিশ্বমানের ফ্রেমওয়ার্ক ব্যবহার করি।'}
             </p>
           </div>

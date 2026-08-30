@@ -196,21 +196,21 @@ export const initialServices: Service[] = [
     subtitleBn: 'হাই-ফিডেলিটি ওয়্যারফ্রেম এবং ইউনিফাইড ডিজাইন সিস্টেমের সাহায্যে কাঁচা ধারণাগুলোকে আকর্ষণীয় ডিজিটাল প্রোডাক্টে রূপান্তর করা।',
     whyNeedEn: 'An intuitive design system removes cognitive friction. If users cannot find what they need in 3 seconds, they leave.',
     whyNeedBn: 'সহজ ইউজার ইন্টারফেস ব্যবহারকারীর মানসিক ক্লান্তি দূর করে। যদি ৩ সেকেন্ডে প্রয়োজনীয় জিনিস খুঁজে না পাওয়া যায়, তবে ব্যবহারকারী সাইট ছেড়ে চলে যান।',
-    whoForEn: 'SaaS companies, fintech portals, digital healthcare products, and complex consumer mobile applications.',
-    whoForBn: 'সাশ কোম্পানি, ফিনটেক পোর্টাল, ডিজিটাল হেলথকেয়ার প্রোডাক্ট এবং জটিল কনজিউমার মোবাইল অ্যাপ্লিকেশন।',
+    whoForEn: 'SaaS companies, fintech portals, digital healthcare products, and complex consumer web applications.',
+    whoForBn: 'সাশ কোম্পানি, ফিনটেক পোর্টাল, ডিজিটাল হেলথকেয়ার প্রোডাক্ট এবং জটিল কনজিউমার ওয়েব অ্যাপ্লিকেশন।',
     businessImpactEn: 'Triggers a massive 200% jump in product activation rates and significantly reduces support ticketing volume by making workflows self-explanatory.',
     businessImpactBn: 'প্রোডাক্ট অ্যাক্টিভেশন রেট ২০০% পর্যন্ত বাড়িয়ে দেয় এবং ওয়ার্কফ্লোকে সহজ করার মাধ্যমে সাপোর্ট টিকিটের চাপ অনেক কমিয়ে দেয়।',
     subServicesJson: JSON.stringify([
       { titleEn: 'Website UI Design', titleBn: 'ওয়েবসাইট ইউআই ডিজাইন', descEn: 'High contrast web landing structures to optimize clicks.', descBn: 'ক্লিক অপ্টিমাইজ করতে উচ্চ-কন্ট্রাস্ট ওয়েব ল্যান্ডিং লেআউট।' },
       { titleEn: 'Dashboard UI Layout', titleBn: 'ড্যাশবোর্ড ইউআই', descEn: 'Clean, dense visual representation of complex analytics.', descBn: 'জটিল অ্যানালিটিক্স ডেটার পরিচ্ছন্ন ও ঘন ভিজ্যুয়াল উপস্থাপন।' },
-      { titleEn: 'Mobile App UI', titleBn: 'মোবাইল অ্যাপ ইউআই', descEn: 'Pixel perfect iOS and Android layouts.', descBn: 'আইওএস এবং অ্যান্ড্রয়েডের জন্য পিক্সেল পারফেক্ট লেআউট।' },
+      { titleEn: 'Web App UI', titleBn: 'ওয়েব অ্যাপ ইউআই', descEn: 'Pixel perfect responsive web layouts.', descBn: 'রেসপনসিভ ওয়েব অ্যাপের জন্য পিক্সেল পারফেক্ট লেআউট।' },
       { titleEn: 'Comprehensive Design System', titleBn: 'ডিজাইন সিস্টেম', descEn: 'Reusable components, tokens, typography rules, and guides.', descBn: 'পুনর্ব্যবহারযোগ্য উপাদান, টোকেন এবং টাইপোগ্রাফি নিয়ম।' },
       { titleEn: 'Interactive Prototyping', titleBn: 'ইন্টারেক্টিভ প্রোটোটাইপিং', descEn: 'Clickable realistic desktop animations for validation.', descBn: 'যাচাইকরণের জন্য ক্লিকযোগ্য বাস্তবসম্মত অ্যানিমেশন প্রোটোটাইপ।' },
       { titleEn: 'Expert Design Audit', titleBn: 'ডিজাইন অডিট', descEn: 'Detailed analytical reports targeting usability bottlenecks.', descBn: 'ইউজাবিলিটির দুর্বলতাগুলো চিহ্নিত করে বিস্তারিত বিশ্লেষণাত্মক রিপোর্ট।' }
     ]),
     faqsJson: JSON.stringify([
       { questionEn: 'Do you design in Figma?', questionBn: 'আপনারা কি ফিজমাতে ডিজাইন করেন?', answerEn: 'Yes, our primary designing workspace is Figma, facilitating real-time comments and flawless developer collaboration.', answerBn: 'হ্যাঁ, আমাদের প্রধান ডিজাইনিং টুল হলো Figma, যা রিয়েল-টাইম কমেন্ট ও সহজে কোড করার সুবিধা দেয়।' },
-      { questionEn: 'What is a design system and why do we need it?', questionBn: 'ডিজাইন সিস্টেম কী এবং কেন এটি প্রয়োজন?', answerEn: 'A design system is a central visual library containing typography rules, colors, and reusable button variants to maintain absolute UI consistency across web and mobile products.', answerBn: 'ডিজাইন সিস্টেম হলো একটি সেন্ট্রাল ভিজ্যুয়াল লাইব্রেরি যা ওয়েব ও মোবাইল অ্যাপে ডিজাইনের সামঞ্জস্য বজায় রাখে।' }
+      { questionEn: 'What is a design system and why do we need it?', questionBn: 'ডিজাইন সিস্টেম কী এবং কেন এটি প্রয়োজন?', answerEn: 'A design system is a central visual library containing typography rules, colors, and reusable button variants to maintain absolute UI consistency across web and app products.', answerBn: 'ডিজাইন সিস্টেম হলো একটি সেন্ট্রাল ভিজ্যুয়াল লাইব্রেরি যা ওয়েব ও অ্যাপে ডিজাইনের সামঞ্জস্য বজায় রাখে।' }
     ]),
     pricingJson: JSON.stringify([
       { nameEn: 'Prototyping Kit', nameBn: 'প্রোটোটাইপিং কিট', price: '$2,999', periodEn: 'Single Scope', periodBn: 'একক স্কোপ', featuresEn: ['Up to 8 Custom Viewports', 'User Flow Matrix Diagram', 'Figma Interactive Clicking Prototype', 'Typography & Palette Guide', 'Developer Asset Handoff Pack'], featuresBn: ['৮টি পর্যন্ত কাস্টম ভিউপোর্ট', 'ইউজার ফ্লো ম্যাট্রিক্স ডায়াগ্রাম', 'ফিগমা ইন্টারেক্টিভ প্রোটোটাইপ', 'টাইপোগ্রাফি ও কালার গাইড', 'সহজ ডেভেলপার অ্যাসেট হ্যান্ডঅফ'] },
@@ -346,8 +346,8 @@ export const initialServices: Service[] = [
   {
     id: '6',
     category: 'Development',
-    titleEn: 'AI Automation & AI Agents',
-    titleBn: 'এআই অটোমেশন এবং এআই এজেন্ট',
+    titleEn: 'AI Services',
+    titleBn: 'এআই সার্ভিস',
     descriptionEn: 'Intelligent AI-driven workflow automations, custom LLM models integration, and conversational support bots to cut operations cost.',
     descriptionBn: 'বুদ্ধিমান এআই-চালিত ওয়ার্কফ্লো অটোমেশন, কাস্টম এলএলএম মডেল ইন্টিগ্রেশন এবং অপারেশন খরচ কমাতে চমৎকার সাপোর্ট বট।',
     featuresEn: ['AI Chatbot Integrations', 'n8n & Make Workflow automation', 'Custom Gemini & GPT integration', 'AI Voice & Sales Agents', 'Secure API LLM Fine-Tuning'],
@@ -423,46 +423,7 @@ export const initialServices: Service[] = [
       { nameEn: 'Social Media Pack', nameBn: 'সোশ্যাল মিডিয়া প্যাক', price: '$999', periodEn: 'Single Pack', periodBn: 'একক প্যাক', featuresEn: ['Up to 10 Edited Reels/Shorts', 'Dynamic Kinetic Subtitles', 'Sound FX & Audio Restoration', '1080p Export optimized formats', '2 Revision Iterations Included'], featuresBn: ['১০টি পর্যন্ত রিলস বা শর্টস ভিডিও', 'ডাইনামিক সাবটাইটেল টেক্সট', 'সাউন্ড এফেক্টস ও অডিও ব্যালেন্সিং', '১০৮০পি হাই-কোয়ালিটি এক্সপোর্ট', '২টি পর্যন্ত রিভিশন সুবিধা অন্তর্ভুক্ত'] },
       { nameEn: 'Cinematic Launch Kit', nameBn: 'সিনেমাটিক লঞ্চ কিট', price: '$2,499', periodEn: 'Production Pack', periodBn: 'প্রোডাকশন প্যাক', featuresEn: ['1 Core Corporate Brand video', 'Professional Storyboard Drafting', 'Custom Motion Graphic templates', 'High-End Cinematic Sound Design', 'Full Color Grading Treatment', 'Unlimited Revisions on active lines'], featuresBn: ['১টি প্রধান কর্পোরেট ব্র্যান্ড ভিডিও', 'পেশাদার স্টোরিবোর্ড ড্রাফটিং', 'কাস্টম মোশন গ্রাফিক্স উপাদান', 'প্রিমিয়াম সিনেমাটিক সাউন্ড ডিজাইন', 'সম্পূর্ণ কালার গ্রেডিং ও এফেক্টস', 'সক্রিয় লাইনে আনলিমিটেড রিভিশন'] }
     ])
-  },
-
-  {
-    id: '8',
-    category: 'Development',
-    titleEn: 'Mobile App Development',
-    titleBn: 'মোবাইল অ্যাপ ডেভেলপমেন্ট',
-    descriptionEn: 'Premium native and cross-platform mobile applications for iOS and Android, built with stunning animations, offline synchronization, and secure features.',
-    descriptionBn: 'নেটিভ পারফরম্যান্স, চমৎকার ইউজার ইন্টারফেস এবং অফলাইন সিঙ্ক সহ প্রিমিয়াম আইওএস এবং অ্যান্ড্রয়েড মোবাইল অ্যাপ্লিকেশন।',
-    featuresEn: ['Native iOS & Android Apps', 'Cross-Platform (Flutter / React Native)', 'Offline-First Architectures', 'Push Notifications Integration', 'App Store & Play Store Launching'],
-    featuresBn: ['নেটিভ আইওএস এবং অ্যান্ড্রয়েড অ্যাপ', 'ক্রস-প্ল্যাটফর্ম (ফ্লাটার/রিয়্যাক্ট নেটিভ)', 'অফলাইন-ফার্স্ট আর্কিটেকচার', 'পুশ নোটিফিকেশন ইন্টিগ্রেশন', 'অ্যাপ স্টোর ও প্লে স্টোর পাবলিশিং'],
-    benefitsEn: ['Stunning Mobile-First Engagements', 'Blazing Fast Performance', 'Secure Local Fingerprint/FaceID Sync', 'Instant push reach directly to pockets'],
-    benefitsBn: ['সরাসরি কাস্টমার এনগেজমেন্ট', 'অত্যন্ত দ্রুত নেটিভ গতি', 'অনন্য মোবাইল ইউজার এক্সপেরিয়েন্স', 'নিরাপদ অফলাইন ডেটা স্টোরেজ'],
-    price: '$4,499',
-    icon: 'Smartphone',
-    slug: 'mobile-app',
-    processEn: ['Persona & App Requirements Definition', 'Mobile UI/UX Wireframing & Prototyping', 'Cross-Platform Framework Development', 'App Store and Play Store Submissions', 'Continuous Post-Launch Optimizations'],
-    processBn: ['অ্যাপ ব্লুপ্রিন্ট', 'মোবাইল ইউআই/ইউএক্স ওয়্যারফ্রেম', 'ক্রস-প্ল্যাটফর্ম কোডিং ও টেস্টিং', 'অ্যাপ স্টোর সাবমিশন ও অনুমোদন', 'লঞ্চ পরবর্তী সাপোর্ট'],
-    techUsed: ['Flutter', 'React Native', 'Swift', 'Kotlin', 'Firebase', 'Supabase', 'Node.js', 'GraphQL'],
-    subtitleEn: 'Designing and building premium, high-performance mobile apps that connect your business directly to your customers’ pockets.',
-    subtitleBn: 'আমরা চমৎকার এবং উচ্চ পারফরম্যান্সের মোবাইল অ্যাপ তৈরি করি যা আপনার ব্যবসাকে সরাসরি গ্রাহকদের হাতের মুঠোয় পৌঁছে দেয়।',
-    whyNeedEn: 'With over 60% of all internet users searching on mobile platforms, a dedicated app helps secure customer retention, increase orders, and amplify authority.',
-    whyNeedBn: 'বর্তমানে ৬০%-এর বেশি ওয়েব ট্রাফিক মোবাইল থেকে আসে। একটি ডেডিকেটেড মোবাইল অ্যাপ কাস্টমার রিটেনশন এবং ব্র্যান্ড লয়্যালটি বাড়াতে সাহায্য করে।',
-    whoForEn: 'E-commerce retailers, smart startups, logistics operations, and service providers aiming for native mobile touch points.',
-    whoForBn: 'ই-কমার্স রিটেইলার, বুকিং প্ল্যাটফর্ম, কমিউনিটি নেটওয়ার্ক এবং মোবাইল এক্সপেরিয়েন্সের সন্ধানকারী নতুন স্টার্টআপ।',
-    businessImpactEn: 'Boosts repeat purchases by up to 80%, enables direct 24/7 client connection via push alerts, and drives outstanding user engagement.',
-    businessImpactBn: 'কাস্টমার রিপিট পারচেজ রেট ৮০% পর্যন্ত বৃদ্ধি করে, পুশ নোটিফিকেশনের মাধ্যমে সরাসরি মার্কেটিং করার সুযোগ দেয় এবং গ্রাহক এনগেজমেন্ট বাড়ায়।',
-    subServicesJson: JSON.stringify([
-      { titleEn: 'iOS App Development', titleBn: 'আইওএস অ্যাপ ডেভেলপমেন্ট', descEn: 'Bespoke Apple Swift apps optimized for premium iPhone users.', descBn: 'প্রিমিয়াম আইফোন ব্যবহারকারীদের জন্য কাস্টম অ্যাপ ডেভেলপমেন্ট।' },
-      { titleEn: 'Android App Development', titleBn: 'অ্যান্ড্রয়েড অ্যাপ ডেভেলপমেন্ট', descEn: 'Robust Kotlin applications targeting global Android audiences.', descBn: 'বিশ্বব্যাপী অ্যান্ড্রয়েড ব্যবহারকারীদের জন্য কাস্টম অ্যান্ড্রয়েড অ্যাপ।' },
-      { titleEn: 'Flutter Cross-Platform', titleBn: 'ফ্লাটার ক্রস-প্ল্যাটফর্ম', descEn: 'Single codebase powering gorgeous iOS & Android apps simultaneously.', descBn: 'একটিমাত্র কোডবেস দিয়ে আইওএস ও অ্যান্ড্রয়েড অ্যাপ চালনা।' },
-      { titleEn: 'Mobile App UI/UX', titleBn: 'মোবাইল অ্যাপ ইউআই/ইউএক্স', descEn: 'Immersive touch-friendly layouts and smooth gesture transitions.', descBn: 'স্পর্শ-বান্ধব লেআউট এবং মসৃণ জেসচার ট্রানজিশন।' }
-    ]),
-    faqsJson: JSON.stringify([
-      { questionEn: 'Do you assist with Google Play and Apple App Store publishing?', questionBn: 'আপনারা কি গুগল প্লে এবং অ্যাপল অ্যাপ স্টোরে পাবলিশ করতে সাহায্য করেন?', answerEn: 'Yes, we handle the complete deployment, guideline compliance audits, and store listings setups.', answerBn: 'হ্যাঁ, আমরা অ্যাপ পাবলিশিং, গাইডলাইন কমপ্লায়েন্স অডিট এবং স্টোর লিস্টিং সেটআপের সমস্ত কাজ পরিচালনা করি।' }
-    ]),
-    pricingJson: JSON.stringify([
-      { nameEn: 'MVP App', nameBn: 'এমভিপি অ্যাপ', price: '$4,499', periodEn: 'Single Platform', periodBn: 'একক প্ল্যাটফর্ম', featuresEn: ['1 Native OS Target', 'Clean UI/UX Design Assets', 'Core Feature Integrations', 'Push Notifications Integration', '30 Days Play Store Support'], featuresBn: ['১টি নেটিভ ওএস টার্গেট', 'পরিচ্ছন্ন ইউআই/ইউএক্স অ্যাসেটস', 'মূল ফিচার ইন্টিগ্রেশন', 'পুশ নোটিফিকেশন ইন্টিগ্রেশন', '৩০ দিনের প্লে স্টোর সাপোর্ট'] }
-    ])
-  }
+}
 ];
 
 export const initialPortfolio: PortfolioItem[] = [
@@ -606,44 +567,7 @@ export const initialPortfolio: PortfolioItem[] = [
     liveUrl: 'https://socrates.example.edu',
     githubUrl: ''
   },
-  {
-    id: '4',
-    category: 'Mobile App',
-    titleEn: 'SwiftFit: AI-Powered Fitness Tracker',
-    titleBn: 'সুইফটফিট: এআই-চালিত ফিটনেস ট্র্যাকার',
-    descriptionEn: 'A custom cross-platform iOS and Android application featuring real-time biometric tracking and dynamic offline sync.',
-    descriptionBn: 'রিয়েল-টাইম বায়োমেট্রিক ট্র্যাকিং এবং ডাইনামিক অফলাইন সিঙ্ক সমৃদ্ধ একটি ক্রস-প্ল্যাটফর্ম আইওএস এবং অ্যান্ড্রয়েড অ্যাপ।',
-    client: 'SwiftFit Global',
-    duration: '4 Months',
-    budget: '$55,000',
-    challengeEn: 'SwiftFit needed a native-performing mobile app built with a single codebase that could synchronize workout data flawlessly while offline.',
-    challengeBn: 'সুইফটফিট-এর একটি সিঙ্গেল কোডবেস ভিত্তিক নেটিভ-পারফর্মিং মোবাইল অ্যাপের প্রয়োজন ছিল যা অফলাইনেও নির্ভুলভাবে ওয়ার্কআউট ডেটা সিঙ্ক করতে পারে।',
-    solutionEn: 'We engineered a React Native application with SQLite offline caching, custom charts using D3, and lazy synchronization protocols.',
-    solutionBn: 'আমরা SQLite অফলাইন ক্যাশিং, D3 চার্ট এবং অত্যন্ত অপ্টিমাইজড সিঙ্ক্রোনাইজেশন প্রোটোকল সহ একটি রিয়্যাক্ট নেটিভ অ্যাপ্লিকেশন তৈরি করেছি।',
-    resultEn: 'Active monthly users surged by 150k within 60 days, and the app holds a steady 4.8 rating on both Google Play and Apple App Store.',
-    resultBn: '৬০ দিনের মধ্যে ১.৫ লক্ষ সক্রিয় ব্যবহারকারী যুক্ত হয়েছে এবং অ্যাপটি গুগল প্লে ও অ্যাপল অ্যাপ স্টোরে ৪.৮ রেটিং বজায় রেখেছে।',
-    technologies: ['React Native', 'Expo', 'FastAPI', 'SQLite', 'Tailwind CSS'],
-    image: 'https://images.unsplash.com/photo-1517838277536-f5f99be501cd?auto=format&fit=crop&q=80&w=800',
-    featured: true,
-    rating: 5,
-    reviewEn: 'The team delivered our mobile app on time with flawless native execution. Highly recommended!',
-    reviewBn: 'নেক্সট সলিউশন আমাদের মোবাইল অ্যাপটি নির্ধারিত সময়ে চমৎকারভাবে সম্পন্ন করে দিয়েছে। অত্যন্ত প্রশংসনীয়!',
-    slug: 'swiftfit-fitness-tracker',
-    status: 'published',
-    sortOrder: 4,
-    industryEn: 'Health & Wellness',
-    industryBn: 'স্বাস্থ্য ও ফিটনেস',
-    completionYear: '2026',
-    clientPhoto: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=150',
-    clientRoleEn: 'Founder & CEO',
-    clientRoleBn: 'প্রতিষ্ঠাতা ও সিইও',
-    featuresEn: ['Full Offline Offline Sync', 'Advanced Interactive Workout Insights', 'Custom Push Alert Engines', 'Cross-Platform App Store Publishing'],
-    featuresBn: ['সম্পূর্ণ অফলাইন সিঙ্ক', 'উন্নত ইন্টারেক্টিভ ওয়ার্কআউট ড্যাশবোর্ড', 'কাস্টম পুশ নোটিফিকেশন ইঞ্জিন', 'ক্রস-প্ল্যাটফর্ম অ্যাপ পাবলিশিং'],
-    galleryJson: JSON.stringify([
-      'https://images.unsplash.com/photo-1517838277536-f5f99be501cd?auto=format&fit=crop&q=80&w=800'
-    ])
-  },
-  {
+{
     id: '5',
     category: 'Graphic Design',
     titleEn: 'Cosmic Brand Identity System',
@@ -747,7 +671,7 @@ export const initialPortfolio: PortfolioItem[] = [
   },
   {
     id: '8',
-    category: 'AI Automation & Agent',
+    category: 'AI Services',
     titleEn: 'OmniBot: Enterprise AI Customer Success Agent',
     titleBn: 'ওমনিবট: এন্টারপ্রাইজ এআই কাস্টমার সাকসেস এজেন্ট',
     descriptionEn: 'A custom LLM agent integrated directly with corporate Knowledgebases to automate complex customer interactions.',
@@ -1127,8 +1051,8 @@ Agencies using AI agents report a 70% decrease in support response time and imme
 
 ### পরিমাপযোগ্য ফলাফল
 এআই এজেন্ট ব্যবহারের মাধ্যমে ক্লায়েন্ট সাপোর্ট সময় প্রায় ৭০% কমে আসে এবং কর্মদক্ষতা বৃদ্ধি পায়।`,
-    categoryEn: 'AI Automation',
-    categoryBn: 'এআই অটোমেশন',
+    categoryEn: 'AI Services',
+    categoryBn: 'এআই সার্ভিস',
     tags: ['AIAgents', 'Automation', 'SaaS', 'API'],
     image: 'https://images.unsplash.com/photo-1677442136019-21780efad99a?auto=format&fit=crop&q=80&w=800',
     author: 'Sanjid Rahman',
@@ -1331,7 +1255,7 @@ export const defaultSiteSettings: SiteSettings = {
       image: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=150',
       bioEn: 'Awwwards-winning Visual and Interaction Designer who believes in spacious, human layouts.',
       bioBn: 'পুরস্কার বিজয়ী ভিজ্যুয়াল এবং ইন্টারঅ্যাকশন ডিজাইনার যিনি ফাঁকা স্থান এবং মানবিক লেআউটে বিশ্বাসী।',
-      skills: ['Figma', 'Mobile App', 'Design Systems', 'Framer'],
+      skills: ['Figma', 'Web Design', 'Design Systems', 'Framer'],
       linkedin: 'https://linkedin.com',
       github: 'https://github.com'
     },
@@ -1374,7 +1298,7 @@ export const defaultSiteSettings: SiteSettings = {
       year: '2024',
       titleEn: '100+ Completed Projects',
       titleBn: '১০০টিরও বেশি প্রজেক্ট সম্পন্ন',
-      descEn: 'Successfully deployed more than 100 high-performance mobile apps worldwide.',
+      descEn: 'Successfully deployed more than 100 high-performance web applications worldwide.',
       descBn: 'বিশ্বব্যাপী ১০০টিরও বেশি উচ্চ-ক্ষমতাসম্পন্ন ওয়েব অ্যাপ্লিকেশন সফলভাবে স্থাপন।'
     },
     {
@@ -1491,7 +1415,7 @@ export const initialPricingPackages: PricingPackage[] = [
     descriptionBn: 'নিবেদিত সিনিয়র স্টাফ ইঞ্জিনিয়ার এবং অত্যন্ত দ্রুত এসএলএ পারফরম্যান্স সহ সম্পূর্ণ আর্কিটেকচারাল স্বাধীনতা।',
     featuresEn: [
       'Everything in Business plus:',
-      'Custom Enterprise mobile app',
+      'Custom Enterprise Web Platforms',
       'Bespoke Fine-Tuned AI Integrations',
       'Automated Backend Workflow Systems',
       'Enterprise CRM/ERP Syncing',
@@ -1624,7 +1548,7 @@ export const initialPricingPackages: PricingPackage[] = [
     sortOrder: 3
   },
 
-  // 3. mobile app PRICING
+  // 3. WEB APP PRICING
   {
     id: 'webapp-basic',
     category: 'Web App',
@@ -1697,11 +1621,11 @@ export const initialPricingPackages: PricingPackage[] = [
     nameBn: 'অ্যাপ এন্টারপ্রাইজ',
     priceMonthly: 9999,
     priceYearly: 7999,
-    descriptionEn: 'High-availability mobile apps built for extreme throughput, custom AI loops, and redundant servers.',
+    descriptionEn: 'High-availability web applications built for extreme throughput, custom AI loops, and redundant servers.',
     descriptionBn: 'উচ্চ ধারণক্ষমতার ওয়েব অ্যাপ্লিকেশন যা চরম কর্মক্ষমতা, কাস্টম এআই লুপ এবং রিডান্ডেন্ট সার্ভারের জন্য তৈরি।',
     featuresEn: [
       'Everything in Scale plus:',
-      'Custom Integrated AI Automation Co-pilots',
+      'Custom Integrated AI Services Co-pilots',
       'Complex External API Gateway Integrations',
       'Server-Authoritative Real-Time Syncs',
       'Zero-Trust Security & Row-Level Encryptions',
@@ -1710,7 +1634,7 @@ export const initialPricingPackages: PricingPackage[] = [
     ],
     featuresBn: [
       'স্কেলের সবকিছু এবং:',
-      'কাস্টম ইন্টিগ্রেটেড এআই অটোমেশন কো-পাইলট',
+      'কাস্টম ইন্টিগ্রেটেড এআই সার্ভিস কো-পাইলট',
       'জটিল এক্সটার্নাল এপিআই গেটওয়ে ইন্টিগ্রেশন',
       'সার্ভার-অথরিটেটিভ রিয়েল-টাইম সিঙ্কিং',
       'জিরো-ট্রাস্ট সিকিউরিটি এবং রো-লেভেল এনক্রিপশন',
@@ -2112,7 +2036,7 @@ export const initialPricingPackages: PricingPackage[] = [
   // 8. AI AUTOMATION & AI AGENT PRICING
   {
     id: 'ai-basic',
-    category: 'AI Automation & Agent',
+    category: 'AI Services',
     nameEn: 'AI Agent Basic',
     nameBn: 'এআই এজেন্ট বেসিক',
     priceMonthly: 1499,
@@ -2141,7 +2065,7 @@ export const initialPricingPackages: PricingPackage[] = [
   },
   {
     id: 'ai-standard',
-    category: 'AI Automation & Agent',
+    category: 'AI Services',
     nameEn: 'AI Agent Pro',
     nameBn: 'এআই এজেন্ট প্রো',
     priceMonthly: 3499,
@@ -2175,7 +2099,7 @@ export const initialPricingPackages: PricingPackage[] = [
   },
   {
     id: 'ai-premium',
-    category: 'AI Automation & Agent',
+    category: 'AI Services',
     nameEn: 'Custom AI Architect',
     nameBn: 'কাস্টম এআই আর্কিটেক্ট',
     priceMonthly: 7999,
@@ -2349,7 +2273,7 @@ export const initialTechServiceCards: TechServiceCard[] = [
   {
     id: 'tech-card-2',
     icon: 'Layers',
-    categoryEn: 'mobile apps',
+    categoryEn: 'Web Apps',
     categoryBn: 'ওয়েব অ্যাপ্লিকেশন',
     descriptionEn: 'Modern business applications and SaaS platforms.',
     descriptionBn: 'আধুনিক বিজনেস অ্যাপ্লিকেশন এবং স্যাস প্ল্যাটফর্ম।',
@@ -2376,8 +2300,8 @@ export const initialTechServiceCards: TechServiceCard[] = [
     descriptionBn: 'মানুষ-কেন্দ্রিক ডিজাইন এবং চমৎকার ব্যবহারকারী অভিজ্ঞতা।',
     technologies: ['Figma', 'Adobe XD', 'Photoshop', 'Illustrator', 'Miro', 'FigJam', 'Spline', 'Framer'],
     projectCount: '120+',
-    popularProjectsEn: ['Mobile App Prototypes', 'Design Systems', 'Interactive SaaS Wireframes'],
-    popularProjectsBn: ['মোবাইল অ্যাপ প্রোটোটাইপ', 'ডিজাইন সিস্টেম', 'ইন্টারেক্টিভ স্যাস ওয়্যারফ্রেম'],
+    popularProjectsEn: ['Web App Prototypes', 'Design Systems', 'Interactive SaaS Wireframes'],
+    popularProjectsBn: ['ওয়েব অ্যাপ প্রোটোটাইপ', 'ডিজাইন সিস্টেম', 'ইন্টারেক্টিভ স্যাস ওয়্যারফ্রেম'],
     benefitsEn: ['Pixel-Perfect Prototyping', 'Consistent Component Libraries', 'High Conversion Aesthetics'],
     benefitsBn: ['পিক্সেল-পারফেক্ট প্রোটোটাইপিং', 'কনসিস্টেন্ট কম্পোনেন্ট লাইব্রেরি', 'হাই কনভার্সন ডিজাইন'],
     experienceLevelEn: 'Award-Winning Designers',
@@ -2475,8 +2399,8 @@ export const initialTechServiceCards: TechServiceCard[] = [
   {
     id: 'tech-card-8',
     icon: 'Zap',
-    categoryEn: 'AI Automation',
-    categoryBn: 'এআই অটোমেশন',
+    categoryEn: 'AI Services',
+    categoryBn: 'এআই সার্ভিস',
     descriptionEn: 'Smart automation systems that save time and increase productivity.',
     descriptionBn: 'সময় বাঁচাতে এবং প্রোডাক্টিভিটি বাড়াতে স্মার্ট অটোমেশন সিস্টেম।',
     technologies: ['OpenAI', 'Gemini', 'Claude', 'n8n', 'Make', 'Zapier', 'LangChain', 'Supabase', 'Webhook APIs', 'Automation Workflows'],

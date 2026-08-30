@@ -78,7 +78,7 @@ export default function ServicesSection({ currentLang, setTab, isFullPage = fals
     },
     {
       id: 'ai-automation',
-      titleEn: 'AI Automations',
+      titleEn: 'AI Services',
       titleBn: 'à¦à¦†à¦‡ à¦…à¦Ÿà§‹à¦®à§‡à¦¶à¦¨',
       badgeEn: 'LLMs & Agents',
       badgeBn: 'à¦à¦²à¦à¦²à¦à¦® à¦“ à¦à¦†à¦‡ à¦à¦œà§‡à¦¨à§à¦Ÿà¦¸',
@@ -675,7 +675,7 @@ export default function ServicesSection({ currentLang, setTab, isFullPage = fals
                     { nameEn: 'Product Innovation', nameBn: 'à¦ªà§à¦°à§‹à¦¡à¦¾à¦•à§à¦Ÿ à¦‡à¦¨à§‹à¦­à§‡à¦¶à¦¨', icon: Icons.Lightbulb, x: 0, y: -155 },
                     { nameEn: 'Creative Content', nameBn: 'à¦•à§à¦°à¦¿à¦¯à¦¼à§‡à¦Ÿà¦¿à¦­ à¦•à¦¨à¦Ÿà§‡à¦¨à§à¦Ÿ', icon: Icons.Film, x: 155, y: 0 },
                     { nameEn: 'Marketing & PR', nameBn: 'à¦®à¦¾à¦°à§à¦•à§‡à¦Ÿà¦¿à¦‚ à¦“ à¦ªà¦¿à¦†à¦°', icon: Icons.Megaphone, x: 0, y: 155 },
-                    { nameEn: 'AI Automations', nameBn: 'à¦à¦†à¦‡ à¦…à¦Ÿà§‹à¦®à§‡à¦¶à¦¨', icon: Icons.BrainCircuit, x: -155, y: 0 },
+                    { nameEn: 'AI Services', nameBn: 'à¦à¦†à¦‡ à¦…à¦Ÿà§‹à¦®à§‡à¦¶à¦¨', icon: Icons.BrainCircuit, x: -155, y: 0 },
                   ].map((svc, i) => {
                     const SvcIcon = svc.icon;
                     return (
@@ -1041,7 +1041,7 @@ export default function ServicesSection({ currentLang, setTab, isFullPage = fals
               { id: 'frontend', labelEn: 'Frontend', labelBn: 'à¦«à§à¦°à¦¨à§à¦Ÿà¦à¦¨à§à¦¡' },
               { id: 'backend', labelEn: 'Backend & Cloud', labelBn: 'à¦¬à§à¦¯à¦¾à¦•à¦à¦¨à§à¦¡ à¦“ à¦•à§à¦²à¦¾à¦‰à¦¡' },
               { id: 'design', labelEn: 'Design Tools', labelBn: 'à¦¡à¦¿à¦œà¦¾à¦‡à¦¨ à¦Ÿà§à¦²à¦¸' },
-              { id: 'automation', labelEn: 'AI & Automations', labelBn: 'à¦à¦†à¦‡ à¦“ à¦…à¦Ÿà§‹à¦®à§‡à¦¶à¦¨' },
+              { id: 'automation', labelEn: 'AI Services', labelBn: 'à¦à¦†à¦‡ à¦“ à¦…à¦Ÿà§‹à¦®à§‡à¦¶à¦¨' },
               { id: 'video', labelEn: 'Video & Graphics', labelBn: 'à¦­à¦¿à¦¡à¦¿à¦“ à¦“ à¦—à§à¦°à¦¾à¦«à¦¿à¦•à§à¦¸' },
               { id: 'marketing', labelEn: 'Marketing & PR', labelBn: 'à¦®à¦¾à¦°à§à¦•à§‡à¦Ÿà¦¿à¦‚ à¦“ à¦ªà¦¿à¦†à¦°' }
             ].map((tab) => (

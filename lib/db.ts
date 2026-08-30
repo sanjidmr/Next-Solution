@@ -72,8 +72,8 @@ export const initialProcessSteps: ProcessStep[] = [
     icon: '📋',
     titleEn: 'Strategy & Planning',
     titleBn: 'কৌশল ও পরিকল্পনা',
-    descriptionEn: 'After understanding your business, we create a customized digital strategy. Depending on your service, this may include website architecture, SEO roadmap, marketing strategy, brand strategy, content planning, AI automation planning, and technology selection.',
-    descriptionBn: 'আপনার ব্যবসা বোঝার পরে, আমরা একটি কাস্টমাইজড ডিজিটাল স্ট্র্যাটেজি তৈরি করি। সেবার ধরন অনুযায়ী এর মধ্যে থাকতে পারে ওয়েবসাইট আর্কিটেকচার, এসইও রোডম্যাপ, মার্কেটিং স্ট্র্যাটেজি, ব্র্যান্ড স্ট্র্যাটেজি, কনটেন্ট প্ল্যানিং, এআই অটোমেশন প্ল্যানিং এবং উপযুক্ত টেকনোলজি নির্বাচন।',
+    descriptionEn: 'After understanding your business, we create a customized digital strategy. Depending on your service, this may include website architecture, SEO roadmap, marketing strategy, brand strategy, content planning, AI Services planning, and technology selection.',
+    descriptionBn: 'আপনার ব্যবসা বোঝার পরে, আমরা একটি কাস্টমাইজড ডিজিটাল স্ট্র্যাটেজি তৈরি করি। সেবার ধরন অনুযায়ী এর মধ্যে থাকতে পারে ওয়েবসাইট আর্কিটেকচার, এসইও রোডম্যাপ, মার্কেটিং স্ট্র্যাটেজি, ব্র্যান্ড স্ট্র্যাটেজি, কনটেন্ট প্ল্যানিং, এআই সার্ভিস প্ল্যানিং এবং উপযুক্ত টেকনোলজি নির্বাচন।',
     deliverablesEn: ['Project Roadmap', 'Timeline', 'Milestones', 'Technology Stack', 'Growth Strategy'],
     deliverablesBn: ['প্রজেক্ট রোডম্যাপ', 'চূড়ান্ত টাইমলাইন', 'মাইলস্টোন পরিকল্পনা', 'টেকনোলজি স্ট্যাক নির্ধারণ', 'গ্রোথ স্ট্র্যাটেজি'],
     estimatedDurationEn: '1-2 Weeks',
@@ -110,8 +110,8 @@ export const initialProcessSteps: ProcessStep[] = [
     icon: '⚙️',
     titleEn: 'Production & Development',
     titleBn: 'প্রডাকশন ও ডেভেলপমেন্ট',
-    descriptionEn: 'This stage depends on your selected services: Web Development, mobile apps, WordPress, Shopify, Laravel, SEO Implementation, Video Editing, Graphic Design, AI Automation, AI Agents, Marketing Assets, and Content Creation. Every deliverable follows modern quality standards.',
-    descriptionBn: 'এই ধাপটি আপনার নির্বাচিত সেবার ওপর নির্ভর করে: ওয়েব ডেভেলপমেন্ট, ওয়েব অ্যাপ্লিকেশন, ওয়ার্ডপ্রেস, শপিফাই, লারাভেল, এসইও ইমপ্লিমেন্টেশন, ভিডিও এডিটিং, গ্রাফিক ডিজাইন, এআই অটোমেশন, এআই এজেন্ট, মার্কেটিং অ্যাসেটস এবং কনটেন্ট রাইটিং। প্রতিটি ডেলিভারিবল আধুনিক কোয়ালিটি স্ট্যান্ডার্ড মেনে তৈরি করা হয়।',
+    descriptionEn: 'This stage depends on your selected services: Web Development, web apps, WordPress, Shopify, Laravel, SEO Implementation, Video Editing, Graphic Design, AI Services, AI Agents, Marketing Assets, and Content Creation. Every deliverable follows modern quality standards.',
+    descriptionBn: 'এই ধাপটি আপনার নির্বাচিত সেবার ওপর নির্ভর করে: ওয়েব ডেভেলপমেন্ট, ওয়েব অ্যাপ্লিকেশন, ওয়ার্ডপ্রেস, শপিফাই, লারাভেল, এসইও ইমপ্লিমেন্টেশন, ভিডিও এডিটিং, গ্রাফিক ডিজাইন, এআই সার্ভিস, এআই এজেন্ট, মার্কেটিং অ্যাসেটস এবং কনটেন্ট রাইটিং। প্রতিটি ডেলিভারিবল আধুনিক কোয়ালিটি স্ট্যান্ডার্ড মেনে তৈরি করা হয়।',
     deliverablesEn: ['Custom Source Code', 'Production Deployment', 'CMS Setup', 'Automation Integration', 'Video Master Cuts', 'Digital Graphics'],
     deliverablesBn: ['কাস্টম সোর্স কোড', 'প্রোডাকশন ডেপ্লয়মেন্ট', 'সিএমএস সেটআপ', 'অটোমেশন ইন্টিগ্রেশন', 'ভিডিও মাস্টার কাট', 'ডিজিটাল গ্রাফিক্স'],
     estimatedDurationEn: '3-6 Weeks',
@@ -188,8 +188,8 @@ export const initialProcessCTA: ProcessCTA = {
   titleBn: 'আমাদের পরীক্ষিত কর্মপদ্ধতি',
   highlightEn: 'From Idea to Long-Term Business Growth',
   highlightBn: 'পরিকল্পনা থেকে দীর্ঘমেয়াদী ব্যবসায়িক প্রবৃদ্ধি',
-  subtitleEn: 'Whether you need a website, branding, SEO, digital marketing, AI automation, graphic design, or a complete digital transformation, our proven workflow ensures every project is delivered with quality, transparency, and measurable results.',
-  subtitleBn: 'আপনার ওয়েবসাইট, ব্র্যান্ডিং, এসইও, ডিজিটাল মার্কেটিং, এআই অটোমেশন, গ্রাফিক ডিজাইন বা সম্পূর্ণ ডিজিটাল ট্রান্সফর্মেশনের প্রয়োজন হোক না কেন, আমাদের নির্ভরযোগ্য কর্মপদ্ধতি নিশ্চিত করে প্রতিটি প্রজেক্ট যেন সর্বোচ্চ গুণমান, স্বচ্ছতা এবং পরিমাপযোগ্য ফলাফল সহ ডেলিভারি করা হয়।',
+  subtitleEn: 'Whether you need a website, branding, SEO, digital marketing, AI Services, graphic design, or a complete digital transformation, our proven workflow ensures every project is delivered with quality, transparency, and measurable results.',
+  subtitleBn: 'আপনার ওয়েবসাইট, ব্র্যান্ডিং, এসইও, ডিজিটাল মার্কেটিং, এআই সার্ভিস, গ্রাফিক ডিজাইন বা সম্পূর্ণ ডিজিটাল ট্রান্সফর্মেশনের প্রয়োজন হোক না কেন, আমাদের নির্ভরযোগ্য কর্মপদ্ধতি নিশ্চিত করে প্রতিটি প্রজেক্ট যেন সর্বোচ্চ গুণমান, স্বচ্ছতা এবং পরিমাপযোগ্য ফলাফল সহ ডেলিভারি করা হয়।',
   ctaHeadlineEn: 'Ready to Start Your Digital Journey?',
   ctaHeadlineBn: 'আপনার ডিজিটাল যাত্রা শুরু করতে প্রস্তুত?',
   ctaSubtitleEn: 'Whether you need one service or a complete digital transformation, our team is ready to turn your ideas into measurable business success.',
@@ -234,7 +234,7 @@ export const initialTestimonialCategories: TestimonialCategory[] = [
   { id: 'cat-2', nameEn: 'UI/UX & Product Design', nameBn: 'ইউআই/ইউএক্স ও প্রোডাক্ট ডিজাইন', slug: 'ui-ux-design' },
   { id: 'cat-3', nameEn: 'Digital Marketing', nameBn: 'ডিজিটাল মার্কেটিং', slug: 'digital-marketing' },
   { id: 'cat-4', nameEn: 'SEO Optimization', nameBn: 'এসইও অপ্টিমাইজেশন', slug: 'seo' },
-  { id: 'cat-5', nameEn: 'AI Automation', nameBn: 'এআই অটোমেশন', slug: 'ai-automation' }
+  { id: 'cat-5', nameEn: 'AI Services', nameBn: 'এআই সার্ভিস', slug: 'ai-automation' }
 ];
 
 export const initialTestimonialVideos: TestimonialVideo[] = [
@@ -402,8 +402,8 @@ export const initialWhyChooseUsCards: WhyChooseUsCard[] = [
     icon: 'Layers',
     titleEn: 'One Partner For Everything',
     titleBn: 'সবকিছুর জন্য একটি পার্টনার',
-    descEn: 'From strategy to development, marketing, branding, SEO, AI automation, and ongoing support—all under one trusted agency.',
-    descBn: 'কৌশল থেকে শুরু করে ডেভেলপমেন্ট, মার্কেটিং, ব্র্যান্ডিং, এসইও, এআই অটোমেশন এবং সার্বক্ষণিক সাপোর্ট—সবকিছুই পাবেন একই এজেন্সির অধীনে।',
+    descEn: 'From strategy to development, marketing, branding, SEO, AI Services, and ongoing support—all under one trusted agency.',
+    descBn: 'কৌশল থেকে শুরু করে ডেভেলপমেন্ট, মার্কেটিং, ব্র্যান্ডিং, এসইও, এআই সার্ভিস এবং সার্বক্ষণিক সাপোর্ট—সবকিছুই পাবেন একই এজেন্সির অধীনে।',
     stat: '100% Core',
     displayOrder: 1,
     visible: true
@@ -479,8 +479,8 @@ export const initialWhyChooseUsCards: WhyChooseUsCard[] = [
     icon: 'Sparkles',
     titleEn: 'AI-Powered Future',
     titleBn: 'এআই-চালিত ভবিষ্যৎ',
-    descEn: 'Leverage AI automation, AI agents, workflow optimization, and intelligent business solutions to stay ahead of the competition.',
-    descBn: 'প্রতিযোগিতায় এগিয়ে থাকতে এআই অটোমেশন, এআই এজেন্ট, বুদ্ধিমান ওয়ার্কফ্লো এবং স্মার্ট বিজনেস সলিউশনের সর্বোচ্চ ব্যবহার।',
+    descEn: 'Leverage AI Services, AI agents, workflow optimization, and intelligent business solutions to stay ahead of the competition.',
+    descBn: 'প্রতিযোগিতায় এগিয়ে থাকতে এআই সার্ভিস, এআই এজেন্ট, বুদ্ধিমান ওয়ার্কফ্লো এবং স্মার্ট বিজনেস সলিউশনের সর্বোচ্চ ব্যবহার।',
     stat: 'Next-Gen',
     displayOrder: 8,
     visible: true

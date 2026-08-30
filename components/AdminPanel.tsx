@@ -2859,7 +2859,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                             <option value="">-- Select a service --</option>
                             {(services.length > 0
                               ? Array.from(new Set(services.map(s => s.titleEn).filter(Boolean)))
-                              : ['Web Development', 'Web App', 'Mobile App', 'UI/UX Design', 'Graphic Design', 'Digital Marketing', 'SEO', 'AI Automation & Agent']
+                              : ['Web Development', 'Web App', 'UI/UX Design', 'Graphic Design', 'Digital Marketing', 'SEO', 'AI Services']
                             ).map((name) => (
                               <option key={name} value={name}>{name}</option>
                             ))}
@@ -2875,11 +2875,10 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                             <option value="">Select Type</option>
                             <option value="website">Website</option>
                             <option value="webapp">Web Application</option>
-                            <option value="mobile">Mobile App</option>
                             <option value="desktop">Desktop Software</option>
                             <option value="design">Design Project</option>
                             <option value="marketing">Marketing Campaign</option>
-                            <option value="ai">AI / Automation</option>
+                            <option value="ai">AI / AI Services</option>
                             <option value="other">Other</option>
                           </select>
                         </div>
@@ -3237,12 +3236,11 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                             >
                               <option>Agency Packages</option>
                               <option>Web Development</option>
-                              <option>Mobile App</option>
                               <option>UI/UX Design</option>
                               <option>Graphic Design</option>
                               <option>Video Editing</option>
                               <option>Digital Marketing</option>
-                              <option>AI Automation</option>
+                              <option>AI Services</option>
                               <option>SEO</option>
                             </select>
                           </div>

@@ -22,12 +22,11 @@ const HERO_IMAGES = ['/travel.png', '/laziz.png', '/stranger.png'];
 const CATEGORIES = [
   { id: 'all', labelEn: 'All Works', labelBn: 'সব কাজ' },
   { id: 'Web Development', labelEn: 'Web Development', labelBn: 'ওয়েব ডেভেলপমেন্ট' },
-  { id: 'Mobile App', labelEn: 'Mobile App', labelBn: 'মোবাইল অ্যাপ' },
   { id: 'UI/UX Design', labelEn: 'UI/UX Design', labelBn: 'ইউআই/ইউএক্স ডিজাইন' },
   { id: 'Graphic Design', labelEn: 'Graphic Design', labelBn: 'গ্রাফিক ডিজাইন' },
   { id: 'Video Editing', labelEn: 'Video Editing', labelBn: 'ভিডিও এডিটিং' },
   { id: 'Digital Marketing', labelEn: 'Digital Marketing', labelBn: 'ডিজিটাল মার্কেটিং' },
-  { id: 'AI Automation & Agent', labelEn: 'AI Automation', labelBn: 'এআই অটোমেশন' },
+  { id: 'AI Services', labelEn: 'AI Services', labelBn: 'এআই সার্ভিস' },
   { id: 'SEO', labelEn: 'SEO', labelBn: 'এসইও' },
 ];
 
@@ -45,12 +44,11 @@ const INDUSTRIES = [
 
 const CATEGORY_ICONS: Record<string, React.ElementType> = {
   'Web Development': Code2,
-  'Mobile App': Smartphone,
   'UI/UX Design': Palette,
   'Graphic Design': Palette,
   'Video Editing': Video,
   'Digital Marketing': Megaphone,
-  'AI Automation & Agent': Cpu,
+  'AI Services': Cpu,
   'SEO': SearchIcon,
   'Web App': Monitor,
 };
@@ -200,7 +198,7 @@ export default function PortfolioSection({ currentLang, setTab, isFullPage = fal
                   <img src={HERO_IMAGES[1]} alt="Restaurant project" className="w-full h-full object-cover" />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/20 dark:from-black/30 to-transparent" />
                   <div className="absolute bottom-3 left-3 right-3 opacity-0 group-hover/img:opacity-100 transition-opacity duration-300">
-                    <span className="text-[9px] font-bold text-white bg-orange-500/40 backdrop-blur-sm rounded-full px-2.5 py-1">Mobile App</span>
+                    <span className="text-[9px] font-bold text-white bg-orange-500/40 backdrop-blur-sm rounded-full px-2.5 py-1">Web App</span>
                   </div>
                 </div>
 

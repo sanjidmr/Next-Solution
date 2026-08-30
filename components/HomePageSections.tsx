@@ -57,11 +57,11 @@ const IconHelper = ({ name, className }: { name: string; className?: string }) =
 const ecosystemServices = [
   { id: 'eco-1', icon: 'TrendingUp', labelEn: 'Business Growth', labelBn: 'ব্যবসায়িক প্রবৃদ্ধি', descEn: 'Direct scale & conversion focus.', descBn: 'সরাসরি প্রবৃদ্ধি ও সেলস বৃদ্ধি।' },
   { id: 'eco-2', icon: 'Globe', labelEn: 'Website Development', labelBn: 'ওয়েবসাইট ডেভেলপমেন্ট', descEn: 'High performance React & Next.js.', descBn: 'উচ্চ ক্ষমতার রিয়্যাক্ট ও নেক্সট.জেএস।' },
-  { id: 'eco-3', icon: 'Code', labelEn: 'mobile apps', labelBn: 'ওয়েব অ্যাপ্লিকেশন', descEn: 'Custom full-stack cloud SaaS.', descBn: 'কাস্টম ফুল-স্ট্যাক ক্লাউড ওয়েব অ্যাপ।' },
+  { id: 'eco-3', icon: 'Code', labelEn: 'Web Apps', labelBn: 'ওয়েব অ্যাপ্লিকেশন', descEn: 'Custom full-stack cloud SaaS.', descBn: 'কাস্টম ফুল-স্ট্যাক ক্লাউড ওয়েব অ্যাপ।' },
   { id: 'eco-4', icon: 'Layers', labelEn: 'UI/UX Design', labelBn: 'ইউআই/ইউএক্স ডিজাইন', descEn: 'Awwwards-winning interfaces.', descBn: 'অ্যাওয়ার্ড-উইনিং প্রিমিয়াম ডিজাইন।' },
   { id: 'eco-5', icon: 'Activity', labelEn: 'Digital Marketing', labelBn: 'ডিজিটাল মার্কেটিং', descEn: 'Data-driven growth & ads.', descBn: 'ডাটা-চালিত গ্রোথ ও বিজ্ঞাপন।' },
   { id: 'eco-6', icon: 'Zap', labelEn: 'SEO Optimization', labelBn: 'এসইও অপ্টিমাইজেশন', descEn: 'Organic search performance.', descBn: 'সার্চ ইঞ্জিনে অর্গানিক ট্রাফিক।' },
-  { id: 'eco-7', icon: 'Sparkles', labelEn: 'AI Automation', labelBn: 'এআই অটোমেশন', descEn: 'Smart agents & workflows.', descBn: 'বুদ্ধিমান এআই এজেন্ট ও ওয়ার্কফ্লো।' },
+  { id: 'eco-7', icon: 'Sparkles', labelEn: 'AI Services', labelBn: 'এআই সার্ভিস', descEn: 'Smart agents & workflows.', descBn: 'বুদ্ধিমান এআই এজেন্ট ও ওয়ার্কফ্লো।' },
   { id: 'eco-8', icon: 'Play', labelEn: 'Video Editing', labelBn: 'ভিডিও এডিটিং', descEn: 'High-retention video stories.', descBn: 'আকর্ষণীয় ও রিটেনশন-ভিত্তিক ভিডিও।' },
   { id: 'eco-9', icon: 'Award', labelEn: 'Branding', labelBn: 'ব্র্যান্ডিং', descEn: 'Unforgettable digital identities.', descBn: 'স্মরণীয় ও আকর্ষণীয় ডিজিটাল ব্র্যান্ড।' },
   { id: 'eco-10', icon: 'Cpu', labelEn: 'Cloud Solutions', labelBn: 'ক্লাউড সলিউশনস', descEn: 'Scalable AWS & Vercel setups.', descBn: 'স্কেলেবল ক্লাউড সেটআপ ও ডেপ্লয়মেন্ট।' },
@@ -403,7 +403,7 @@ export default function HomePageSections({ currentLang, setTab, portfolioData }:
     { slug: 'seo', icon: Search, title: 'SEO Optimization', desc: 'Dominate Google with technical SEO, on-page mastery and authority links.', techs: ['Technical SEO', 'Keyword Research', 'Link Building', 'Local SEO'], popular: ['Site Audits', 'On-Page Optimization', 'Local Map SEO'], benefits: ['Higher organic rankings', 'Long-term traffic growth'] },
     { slug: 'graphic-design', icon: Palette, title: 'Branding & Graphic Design', desc: 'Complete brand identities and visuals that make you unforgettable.', techs: ['Adobe Photoshop', 'Illustrator', 'Brand Identity', 'Print Design'], popular: ['Logo & Identity', 'Social Media Graphics', 'Flyers & Brochures'], benefits: ['Memorable brand presence', 'Professional visual assets'] },
     { slug: 'video-editing', icon: Clapperboard, title: 'Content & Video Production', desc: 'Cinematic reels, ads and videos engineered to stop the scroll.', techs: ['Premiere Pro', 'After Effects', 'Color Grading', 'Motion FX'], popular: ['Reels & Shorts', 'Corporate Promos', 'Video Ads'], benefits: ['Viral-ready content', 'High-retention edits'] },
-    { slug: 'ai-automation', icon: Cpu, title: 'AI Automation / AI Solutions', desc: 'Custom AI agents and workflows that sell, support and save time 24/7.', techs: ['OpenAI', 'Gemini', 'Claude', 'n8n', 'Make'], popular: ['AI Support Bots', 'Workflow Automation', 'AI Voice Agents'], benefits: ['Round-the-clock automation', 'Reduced operating costs'] },
+    { slug: 'ai-automation', icon: Cpu, title: 'AI Services / AI Solutions', desc: 'Custom AI agents and workflows that sell, support and save time 24/7.', techs: ['OpenAI', 'Gemini', 'Claude', 'n8n', 'Make'], popular: ['AI Support Bots', 'Workflow Automation', 'AI Voice Agents'], benefits: ['Round-the-clock automation', 'Reduced operating costs'] },
   ];
 
   const openService = (slug: string) => {
@@ -521,12 +521,11 @@ export default function HomePageSections({ currentLang, setTab, portfolioData }:
     'All', 
     'Web Development', 
     'UI/UX Design', 
-    'Mobile App', 
     'Graphic Design', 
     'Video Editing', 
     'Digital Marketing', 
     'SEO', 
-    'AI Automation & Agent'
+    'AI Services'
   ];
 
   const getPortfolioCategoryLabel = (cat: string) => {
@@ -535,12 +534,11 @@ export default function HomePageSections({ currentLang, setTab, portfolioData }:
         case 'All': return 'সব কাজ';
         case 'Web Development': return 'ওয়েব ডেভেলপমেন্ট';
         case 'UI/UX Design': return 'ইউআই/ইউএক্স ডিজাইন';
-        case 'Mobile App': return 'মোবাইল অ্যাপ';
         case 'Graphic Design': return 'গ্রাফিক ডিজাইন';
         case 'Video Editing': return 'ভিডিও এডিটিং';
         case 'Digital Marketing': return 'ডিজিটাল মার্কেটিং';
         case 'SEO': return 'এসইও';
-        case 'AI Automation & Agent': return 'এআই অটোমেশন ও এজেন্ট';
+        case 'AI Services': return 'এআই সার্ভিস';
         default: return cat;
       }
     }
@@ -583,8 +581,8 @@ export default function HomePageSections({ currentLang, setTab, portfolioData }:
       ]
     },
     {
-      nameEn: 'AI & Automations',
-      nameBn: 'এআই ও অটোমেশন',
+      nameEn: 'AI Services',
+      nameBn: 'এআই সার্ভিস',
       techs: [
         { name: 'Gemini AI', url: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&q=80&w=100', bg: 'bg-indigo-50/5 dark:bg-orange-500/50' },
         { name: 'LangChain', url: 'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&q=80&w=100', bg: 'bg-amber-50/30' },
@@ -653,8 +651,8 @@ export default function HomePageSections({ currentLang, setTab, portfolioData }:
               className="text-sm sm:text-base text-neutral-600 dark:text-neutral-300 leading-relaxed font-sans max-w-2xl mx-auto"
             >
               {currentLang === 'en' 
-                ? 'From high-performance websites to intelligent AI automation — we deliver every digital service you need to grow, win and scale. Click any service to explore full details, deliverables and plans.'
-                : 'উচ্চ-মানের ওয়েবসাইট থেকে বুদ্ধিমান এআই অটোমেশন — আপনার ব্যবসাকে বড় করার জন্য দরকারি প্রতিটি ডিজিটাল সেবা আমরা দিয়ে থাকি। যেকোনো সেবায় ক্লিক করে বিস্তারিত, ডেলিভারেবল এবং প্ল্যান দেখুন।'}
+                ? 'From high-performance websites to intelligent AI services — we deliver every digital service you need to grow, win and scale. Click any service to explore full details, deliverables and plans.'
+                : 'উচ্চ-মানের ওয়েবসাইট থেকে বুদ্ধিমান এআই সার্ভিস — আপনার ব্যবসাকে বড় করার জন্য দরকারি প্রতিটি ডিজিটাল সেবা আমরা দিয়ে থাকি। যেকোনো সেবায় ক্লিক করে বিস্তারিত, ডেলিভারেবল এবং প্ল্যান দেখুন।'}
             </motion.p>
           </div>
 
@@ -676,6 +674,12 @@ export default function HomePageSections({ currentLang, setTab, portfolioData }:
                 { name: 'Adobe Premiere', xOffset: 15, yOffset: -10, speed: 6.2 },
                 { name: 'Laravel', xOffset: -10, yOffset: -14, speed: 8.5 },
                 { name: 'SEO Engine', xOffset: 12, yOffset: 8, speed: 6.4 },
+                { name: 'Node.js', xOffset: -9, yOffset: 13, speed: 6.9 },
+                { name: 'Tailwind CSS', xOffset: 13, yOffset: -11, speed: 7.6 },
+                { name: 'Adobe Photoshop', xOffset: -13, yOffset: 9, speed: 6.1 },
+                { name: 'Canva', xOffset: 9, yOffset: -13, speed: 8.3 },
+                { name: 'Ahrefs', xOffset: -11, yOffset: 12, speed: 5.9 },
+                { name: 'Mailchimp', xOffset: 11, yOffset: -9, speed: 6.7 },
               ].map((tag, idx) => (
                 <motion.div
                   key={idx}
@@ -701,7 +705,7 @@ export default function HomePageSections({ currentLang, setTab, portfolioData }:
          
 
           {/* BENTO GRID OF CARDS */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+          <div className="grid grid-cols-2 gap-3 sm:gap-6 lg:grid-cols-3 lg:gap-8">
             {homeServices.map((service, idx) => {
               const Icon = service.icon;
               return (
@@ -713,16 +717,16 @@ export default function HomePageSections({ currentLang, setTab, portfolioData }:
                   whileHover={{ y: -8 }}
                   key={idx}
                   onClick={() => openService(service.slug)}
-                  className="group relative cursor-pointer rounded-3xl border border-neutral-200/50 bg-white dark:bg-[#141414] p-6 md:p-8 flex flex-col justify-between overflow-hidden shadow-[0_4px_30px_rgba(0,0,0,0.015)] hover:border-orange-500 hover:shadow-[0_20px_50px_-10px_rgba(255,77,0,0.08)] transition-all duration-500"
+                  className="group relative cursor-pointer rounded-3xl border border-neutral-200/50 bg-white dark:bg-[#141414] p-4 sm:p-6 md:p-8 flex flex-col justify-between overflow-hidden shadow-[0_4px_30px_rgba(0,0,0,0.015)] hover:border-orange-500 hover:shadow-[0_20px_50px_-10px_rgba(255,77,0,0.08)] transition-all duration-500"
                 >
                   {/* Glossy gradient highlight on hover */}
                   <div className="absolute inset-0 bg-radial-gradient(circle_at_top_left,rgba(255,77,0,0.02)_0%,transparent_60%) pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
 
                   {/* Top Badge & Icon Row */}
-                  <div className="relative z-10 space-y-5">
+                  <div className="relative z-10 space-y-3 sm:space-y-5">
                     <div className="flex items-start justify-between">
-                      <div className="h-12 w-12 rounded-2xl bg-blue-50/5 dark:bg-orange-500/50 border border-blue-100/50 flex items-center justify-center text-blue-600 dark:text-orange-400 group-hover:bg-blue-600 group-hover:text-white transition-all duration-500 shadow-sm">
-                        <Icon className="h-6 w-6" />
+                      <div className="h-10 w-10 sm:h-12 sm:w-12 rounded-2xl bg-blue-50/5 dark:bg-orange-500/50 border border-blue-100/50 flex items-center justify-center text-blue-600 dark:text-orange-400 group-hover:bg-blue-600 group-hover:text-white transition-all duration-500 shadow-sm">
+                        <Icon className="h-5 w-5 sm:h-6 sm:w-6" />
                       </div>
                       
                       {/* Featured Badge */}
@@ -734,7 +738,7 @@ export default function HomePageSections({ currentLang, setTab, portfolioData }:
                     {/* Service Text */}
                     <div className="space-y-2">
                       <div className="flex items-baseline space-x-2">
-                        <h3 className="font-sans text-xl font-extrabold text-neutral-900 dark:text-white group-hover:text-blue-600 dark:text-orange-400 transition-colors duration-300">
+                        <h3 className="font-sans text-sm sm:text-base md:text-xl font-extrabold text-neutral-900 dark:text-white group-hover:text-blue-600 dark:text-orange-400 transition-colors duration-300">
                           {service.title}
                         </h3>
                         <span className="text-[10px] font-extrabold text-neutral-400 dark:text-neutral-500 font-mono">
@@ -916,7 +920,7 @@ export default function HomePageSections({ currentLang, setTab, portfolioData }:
               { id: 'web', labelEn: 'Web & Apps Dev', labelBn: 'ওয়েব ও অ্যাপ ডেভেলপমেন্ট', icon: 'Code' },
               { id: 'design', labelEn: 'UI/UX & Branding', labelBn: 'ইউআই/ইউএক্স ও ব্র্যান্ডিং', icon: 'Layers' },
               { id: 'marketing', labelEn: 'SEO & Marketing', labelBn: 'এসইও ও ডিজিটাল মার্কেটিং', icon: 'Megaphone' },
-              { id: 'ai', labelEn: 'AI & Automations', labelBn: 'এআই ও অটোমেশন', icon: 'Cpu' }
+              { id: 'ai', labelEn: 'AI Services', labelBn: 'এআই সার্ভিস', icon: 'Cpu' }
             ].map((tab) => {
               const isActive = (activeTimelineStep === 0 && tab.id === 'all') || 
                                (activeTimelineStep === 1 && tab.id === 'web') ||
@@ -962,8 +966,8 @@ export default function HomePageSections({ currentLang, setTab, portfolioData }:
                 ? "📈 SEO & Marketing Path: Maximizes competitor backlink profiling, technical core web vitals audits, landing page conversions, dynamic pixel tracking, and performance reporting."
                 : "📈 এসইও ও মার্কেটিং পথ: প্রতিযোগী ব্যাকলিংক প্রোফাইলিং, টেকনিক্যাল ও কন্টেন্ট অডিট, ল্যান্ডিং পেজ কনভার্সন এবং পারফরম্যান্স রিপোর্টিং নিশ্চিত করে।")}
               {activeTimelineStep === 4 && (currentLang === 'en' 
-                ? "🤖 AI & Automation Path: Specializes in custom LLM orchestrations (Gemini API), flow diagrams, integration testing, training custom agents, and automated database triggering."
-                : "🤖 এআই ও অটোমেশন পথ: কাস্টম এলএলএম অর্কেস্ট্রেশন (জেমিনি এপিআই), ফ্লো ডায়াগ্রাম, ইন্টিগ্রেশন টেস্টিং এবং কাস্টম এজেন্ট ট্রেনিং সলিউশনে পারদর্শী।")}
+                ? "🤖 AI Services Path: Specializes in custom LLM orchestrations (Gemini API), flow diagrams, integration testing, training custom agents, and automated database triggering."
+                : "🤖 এআই সার্ভিস পথ: কাস্টম এলএলএম অর্কেস্ট্রেশন (জেমিনি এপিআই), ফ্লো ডায়াগ্রাম, ইন্টিগ্রেশন টেস্টিং এবং কাস্টম এজেন্ট ট্রেনিং সলিউশনে পারদর্শী।")}
             </p>
           </div>
 

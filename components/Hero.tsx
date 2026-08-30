@@ -58,6 +58,7 @@ export default function Hero({ currentLang, setTab }: HeroProps) {
   return (
     <section
       id="hero-section"
+      data-space-hero
       className="relative overflow-hidden bg-white font-sans selection:bg-orange-600 selection:text-white transition-colors duration-300 dark:bg-[#0A0A0A]"
     >
       <style>{`

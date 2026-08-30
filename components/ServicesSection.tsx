@@ -8,6 +8,7 @@ import React, { useState, useEffect } from 'react';
 import * as Icons from 'lucide-react';
 import { translations } from '@/data/translations';
 import { getServices } from '@/lib/db';
+import { initialServices } from '@/data/initialData';
 import { Service } from '@/types';
 
 interface ServicesSectionProps {
@@ -18,7 +19,10 @@ interface ServicesSectionProps {
 
 export default function ServicesSection({ currentLang, setTab, isFullPage = false }: ServicesSectionProps) {
   const t = translations[currentLang];
-  const services = getServices();
+  const [services, setServices] = useState<Service[]>(initialServices);
+  useEffect(() => {
+    setServices(getServices());
+  }, []);
   const [selectedService, setSelectedService] = useState<Service | null>(null);
   const [activeFAQIndex, setActiveFAQIndex] = useState<number | null>(null);
   const [activeTechTab, setActiveTechTab] = useState<'frontend' | 'backend' | 'design' | 'automation' | 'video' | 'marketing'>('frontend');
@@ -563,10 +567,10 @@ export default function ServicesSection({ currentLang, setTab, isFullPage = fals
   // VIEW: MAIN SERVICES PAGE (isFullPage)
   // ==========================================
   return (
-    <div id="services-page-root" className="bg-white dark:bg-[#141414] min-h-screen font-sans selection:bg-blue-600 selection:text-white">
+    <div id="services-page-root" data-space-page className="bg-white dark:bg-[#141414] min-h-screen font-sans selection:bg-blue-600 selection:text-white">
       
       {/* 1. HERO SECTION â€” Full Screen */}
-      <section id="services-hero" className="relative min-h-[auto] sm:min-h-screen flex items-center overflow-hidden bg-white dark:bg-[#0A0908] py-12 sm:py-0">
+      <section id="services-hero" data-space-hero className="relative min-h-[auto] sm:min-h-screen flex items-center overflow-hidden bg-white dark:bg-[#0A0908] py-12 sm:py-0">
         {/* Unified background */}
         <div className="absolute inset-0 bg-gradient-to-b from-white via-orange-50/30 to-white dark:from-[#0A0908] dark:via-[#0F0E0C] dark:to-[#0A0908]" />
         <div className="absolute top-1/4 left-1/3 w-[700px] h-[700px] bg-orange-500/[0.06] rounded-full blur-[180px] pointer-events-none" />

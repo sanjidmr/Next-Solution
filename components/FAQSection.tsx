@@ -62,7 +62,7 @@ export default function FAQSection({ currentLang, setTab, isFullPage = false }: 
   };
 
   return (
-    <section id="faq-section" className={`bg-white dark:bg-[#141414] py-20 ${isFullPage ? 'min-h-screen py-24' : ''}`}>
+    <section id="faq-section" data-space-page className={`bg-white dark:bg-[#141414] py-20 ${isFullPage ? 'min-h-screen py-24' : ''}`}>
       <div className="mx-auto max-w-4xl px-4 sm:px-6">
         
         {/* Section Header */}

@@ -596,7 +596,7 @@ export default function HomePageSections({ currentLang, setTab, portfolioData }:
 
 
   return (
-    <div className="space-y-8">
+    <div data-space-page className="space-y-8">
       {/* ========================================================
           SECTION 9: TECHNOLOGIES WE USE (PREMIUM INTERACTIVE STACK)
          ======================================================== */}
@@ -627,7 +627,7 @@ export default function HomePageSections({ currentLang, setTab, portfolioData }:
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.1 }}
-              className="font-sans text-3xl sm:text-4xl md:text-5xl font-black text-neutral-900 dark:text-black leading-tight tracking-tight"
+              className="font-sans text-3xl sm:text-4xl md:text-5xl font-black text-neutral-900 dark:text-white leading-tight tracking-tight"
             >
               {currentLang === 'en' ? 'Everything Your Business Needs, ' : 'আপনার ব্যবসার যাবতীয় চাহিদা, '}
               <span className="bg-gradient-to-r from-blue-600 dark:from-orange-500 via-indigo-600 to-blue-700 bg-clip-text text-transparent">
@@ -640,7 +640,7 @@ export default function HomePageSections({ currentLang, setTab, portfolioData }:
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.2 }}
-              className="font-sans text-sm md:text-base text-neutral-500 dark:text-neutral-400 dark:text-neutral-500 font-semibold uppercase tracking-wider"
+              className="font-sans text-sm md:text-base text-neutral-500 dark:text-neutral-400 font-semibold uppercase tracking-wider"
             >
               {currentLang === 'en' ? 'From Websites to AI — We Deliver It All' : 'ওয়েবসাইট থেকে এআই — সবকিছুই আমরা করে দিই'}
             </motion.p>
@@ -650,7 +650,7 @@ export default function HomePageSections({ currentLang, setTab, portfolioData }:
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.3 }}
-              className="text-sm sm:text-base text-neutral-600 dark:text-neutral-300 dark:text-neutral-600 leading-relaxed font-sans max-w-2xl mx-auto"
+              className="text-sm sm:text-base text-neutral-600 dark:text-neutral-300 leading-relaxed font-sans max-w-2xl mx-auto"
             >
               {currentLang === 'en' 
                 ? 'From high-performance websites to intelligent AI automation — we deliver every digital service you need to grow, win and scale. Click any service to explore full details, deliverables and plans.'

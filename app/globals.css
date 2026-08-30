@@ -303,3 +303,155 @@ body {
     scroll-behavior: auto !important;
   }
 }
+
+/* =========================================================
+   GLOBAL DEEP-SPACE BACKGROUND SYSTEM (Dark mode only)
+   One continuous "premium digital agency floating in space"
+   environment behind ALL marketing content between Hero &
+   Footer. Fixed to the viewport, pointer-events none, sits
+   strictly behind everything (z-index -10).
+   ========================================================= */
+.space-bg {
+  position: fixed;
+  inset: 0;
+  z-index: -10;
+  pointer-events: none;
+  overflow: hidden;
+  opacity: 0;
+  transition: opacity 0.8s ease;
+}
+
+/* Only activate in dark mode (animations also gated so light
+   mode wastes no CPU). */
+.dark .space-bg {
+  opacity: 1;
+}
+
+/* Layer 1 — near-black cinematic base, never a flat solid black */
+.space-bg-base {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(1100px 720px at 78% -8%, rgba(255, 77, 0, 0.055), transparent 62%),
+    radial-gradient(820px 620px at 8% 38%, rgba(255, 102, 0, 0.035), transparent 58%),
+    radial-gradient(700px 500px at 62% 82%, rgba(255, 77, 0, 0.03), transparent 60%),
+    linear-gradient(180deg, #060606 0%, #070707 48%, #040404 100%);
+}
+
+.space-bg-stars,
+.space-bg-particles {
+  position: absolute;
+  inset: 0;
+}
+
+/* Stars — tiny, sparse, elegant */
+.space-star {
+  position: absolute;
+  border-radius: 9999px;
+  background-color: #ffffff;
+  box-shadow: 0 0 3px 0 rgba(255, 255, 255, 0.55);
+}
+
+.dark .space-star--tw {
+  animation-name: space-twinkle;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+  will-change: opacity;
+}
+
+/* Some stars get a very soft warm tint to match the brand */
+.space-star:nth-child(4n + 1) {
+  background-color: #ffd9c4;
+  box-shadow: 0 0 4px 0 rgba(255, 92, 10, 0.35);
+}
+
+@keyframes space-twinkle {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.28; }
+}
+
+/* Orange ambient glows — soft futuristic energy light */
+.space-bg-glow {
+  position: absolute;
+  border-radius: 9999px;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(circle, rgba(255, 80, 0, 0.75) 0%, rgba(255, 80, 0, 0) 70%);
+  filter: blur(45px);
+}
+
+.dark .space-bg-glow {
+  animation: space-glow-drift ease-in-out infinite;
+  will-change: transform, opacity;
+}
+
+@keyframes space-glow-drift {
+  0%, 100% {
+    transform: translate(-50%, -50%) translate3d(0, 0, 0) scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: translate(-50%, -50%) translate3d(30px, -22px, 0) scale(1.06);
+    opacity: 0.72;
+  }
+}
+
+/* Particles — very slow rising specks, desktop only */
+.space-particle {
+  position: absolute;
+  border-radius: 9999px;
+  background: radial-gradient(circle, rgba(255, 143, 74, 0.9), rgba(255, 113, 44, 0));
+  display: none;
+}
+
+.dark .space-particle {
+  display: block;
+  animation: space-particle-rise linear infinite;
+  will-change: transform, opacity;
+}
+
+@keyframes space-particle-rise {
+  0% {
+    transform: translate3d(0, 0, 0) translateY(0);
+    opacity: 0;
+  }
+  12% { opacity: var(--p-o, 0.5); }
+  88% { opacity: var(--p-o, 0.5); }
+  100% {
+    transform: translate3d(0, 0, 0) translateY(-52vh);
+    opacity: 0;
+  }
+}
+
+/* Mobile: soften + lighten so performance stays smooth */
+@media (max-width: 640px) {
+  .dark .space-bg-base {
+    background:
+      radial-gradient(900px 560px at 75% -6%, rgba(255, 77, 0, 0.04), transparent 62%),
+      linear-gradient(180deg, #060606 0%, #060606 48%, #040404 100%);
+  }
+
+  .space-star { opacity: 0.55; }
+
+  .dark .space-bg-glow {
+    filter: blur(60px);
+  }
+
+  /* Particles completely hidden on small screens */
+  .space-particle { display: none !important; }
+}
+
+/* =========================================================
+   DEEP-SPACE PAGE INTEGRATION — dark mode
+   The full-width marketing content sections between Hero and
+   Footer hand their opaque backgrounds back to the continuous
+   deep-space layer, so there are no section rectangles and no
+   seams. Hero sections are excluded (data-space-hero) and keep
+   their exact original backgrounds. Admin / auth / legal pages
+   are not touched (they opt out by not carrying data-space-page).
+   ========================================================= */
+.dark [data-space-page],
+.dark [data-space-page] > *:not([data-space-hero]),
+.dark [data-space-page] section:not([data-space-hero]) {
+  background-color: transparent !important;
+  background-image: none !important;
+}

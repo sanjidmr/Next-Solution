@@ -32,7 +32,10 @@ interface ContactSectionProps {
 
 export default function ContactSection({ currentLang, isFullPage = false }: ContactSectionProps) {
   const t = translations[currentLang];
-  const services = getServices();
+  const [services, setServices] = useState<any[]>(defaultServices);
+  useEffect(() => {
+    setServices(getServices());
+  }, []);
 
   // Form states
   const [name, setName] = useState('');
@@ -62,7 +65,7 @@ export default function ContactSection({ currentLang, isFullPage = false }: Cont
     }
   }, []);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMsg('');
     
@@ -78,35 +81,44 @@ export default function ContactSection({ currentLang, isFullPage = false }: Cont
 
     setIsSubmitting(true);
 
-    setTimeout(() => {
-      addMessage({
-        name: name.trim(),
-        email: email.trim(),
-        phone: phone.trim(),
-        subject: `Service Request: ${service || 'General Inquiry'}`,
-        message: message.trim(),
-        service: service || 'Not Specified',
-        budget: budget || 'Not Specified'
-      });
+    const payload = {
+      name: name.trim(),
+      email: email.trim(),
+      phone: phone.trim(),
+      subject: `Service Request: ${service || 'General Inquiry'}`,
+      message: message.trim(),
+      service: service || 'Not Specified',
+      budget: budget || 'Not Specified'
+    };
 
-      setIsSubmitting(false);
-      setIsSuccess(true);
-      
-      // Clear fields
-      setName('');
-      setEmail('');
-      setPhone('');
-      setService('');
-      setBudget('');
-      setMessage('');
-    }, 1000);
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+      if (!res.ok) throw new Error('contact-api-failed');
+    } catch {
+      addMessage(payload);
+    }
+
+    setIsSubmitting(false);
+    setIsSuccess(true);
+    
+    // Clear fields
+    setName('');
+    setEmail('');
+    setPhone('');
+    setService('');
+    setBudget('');
+    setMessage('');
   };
 
   return (
-    <section id="contact-section" className={`bg-gradient-to-b from-white via-gray-50/50 to-gray-50 dark:from-[#080808] dark:via-[#080808] dark:to-[#0a0a0a] ${isFullPage ? 'min-h-screen' : 'py-20'}`}>
+    <section id="contact-section" data-space-page className={`bg-gradient-to-b from-white via-gray-50/50 to-gray-50 dark:from-[#080808] dark:via-[#080808] dark:to-[#0a0a0a] ${isFullPage ? 'min-h-screen' : 'py-20'}`}>
       
       {/* ─── HERO SECTION ─── */}
-      <div className="relative overflow-hidden">
+      <div data-space-hero className="relative overflow-hidden bg-gradient-to-b from-white via-gray-50/50 to-gray-50 dark:from-[#080808] dark:via-[#080808] dark:to-[#0a0a0a]">
         <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-orange-500/[0.04] dark:bg-orange-500/[0.06] rounded-full blur-[140px] pointer-events-none" />
         <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-blue-500/[0.03] dark:bg-orange-400/[0.04] rounded-full blur-[120px] pointer-events-none" />
         

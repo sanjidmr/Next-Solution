@@ -1028,7 +1028,7 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
   ], []);
 
   return (
-    <section id="about-page" className="bg-white dark:bg-[#0F0E0C] dark:bg-gradient-to-b dark:from-[#12100D] dark:via-[#0F0E0C] dark:to-[#0A0908] text-neutral-900 dark:text-white overflow-hidden relative selection:bg-blue-500 dark:bg-blue-500 selection:text-white">
+    <section id="about-page" data-space-page className="bg-white dark:bg-[#0F0E0C] dark:bg-gradient-to-b dark:from-[#12100D] dark:via-[#0F0E0C] dark:to-[#0A0908] text-neutral-900 dark:text-white overflow-hidden relative selection:bg-blue-500 dark:bg-blue-500 selection:text-white">
       
       {/* Scroll Progress Bar */}
       <div className="fixed top-0 left-0 right-0 h-1 bg-neutral-100 dark:bg-neutral-800 z-50">
@@ -1048,7 +1048,7 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
       {/* ========================================================
           01. HERO STORY — ABOUT US PREMIUM HERO
          ======================================================== */}
-      <section id="about-hero" className="relative overflow-hidden bg-white dark:bg-[#080a0d] min-h-[calc(100vh-72px)] lg:min-h-[110vh]">
+      <section id="about-hero" data-space-hero className="relative overflow-hidden bg-white dark:bg-[#080a0d] min-h-[calc(100vh-72px)] lg:min-h-[110vh]">
         
         {/* Background "NEXT SOLUTION" watermark typography */}
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none select-none z-0" aria-hidden="true">

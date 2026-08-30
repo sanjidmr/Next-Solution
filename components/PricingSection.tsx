@@ -346,10 +346,10 @@ export default function PricingSection({ currentLang, setTab, isFullPage = false
   };
 
   return (
-    <section id="pricing-page-root" className={`bg-neutral-50/60 selection:bg-blue-600 selection:text-white ${isFullPage ? 'pt-0 pb-20' : 'py-20'}`}>
+    <section id="pricing-page-root" data-space-page className={`bg-neutral-50/60 selection:bg-blue-600 selection:text-white ${isFullPage ? 'pt-0 pb-20' : 'py-20'}`}>
       
       {/* 1. HERO SECTION — Big Impact. Small Investment. */}
-      <section className="relative min-h-screen flex items-center overflow-hidden bg-[#050607]">
+      <section data-space-hero className="relative min-h-screen flex items-center overflow-hidden bg-[#050607]">
         {/* Dark atmospheric layers */}
         <div className="absolute inset-0 bg-gradient-to-br from-[#050607] via-[#0a0b0d] to-[#08090b]" />
         <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(ellipse_80%_50%_at_70%_50%,rgba(255,102,0,0.06),transparent)]" />

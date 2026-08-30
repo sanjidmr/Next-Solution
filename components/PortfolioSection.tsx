@@ -118,12 +118,12 @@ export default function PortfolioSection({ currentLang, setTab, isFullPage = fal
   const ctaRef = useScrollReveal();
 
   return (
-    <div className="min-h-screen bg-white dark:bg-[#0A0908] text-gray-900 dark:text-white font-sans transition-colors">
+    <div data-space-page className="min-h-screen bg-white dark:bg-[#0A0908] text-gray-900 dark:text-white font-sans transition-colors">
 
       {/* ========================================
           1. HERO SECTION
       ========================================= */}
-      <section className="relative overflow-hidden min-h-screen flex items-center bg-gradient-to-b from-gray-50 to-white dark:from-[#0A0908] dark:to-[#0E0D0B]">
+      <section data-space-hero className="relative overflow-hidden min-h-screen flex items-center bg-gradient-to-b from-gray-50 to-white dark:from-[#0A0908] dark:to-[#0E0D0B]">
         <div className="absolute inset-0 opacity-[0.015] dark:opacity-[0.03] pointer-events-none" style={{ backgroundImage: 'radial-gradient(circle, rgba(255,90,0,0.4) 1px, transparent 1px)', backgroundSize: '40px 40px' }} />
         <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-orange-500/[0.03] dark:bg-orange-500/[0.04] rounded-full blur-[180px] pointer-events-none" />
         <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-orange-400/[0.02] dark:bg-orange-400/[0.03] rounded-full blur-[150px] pointer-events-none" />

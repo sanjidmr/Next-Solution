@@ -162,7 +162,7 @@ export default function TestimonialsPage({ currentLang, setTab }: TestimonialsPa
   };
 
   return (
-    <div id="testimonials-page-root" className="bg-white dark:bg-[#0a0a0a] min-h-screen text-slate-900 dark:text-white overflow-x-hidden font-sans">
+    <div id="testimonials-page-root" data-space-page className="bg-white dark:bg-[#0a0a0a] min-h-screen text-slate-900 dark:text-white overflow-x-hidden font-sans">
       
       {/* Floating Admin Entry Button */}
       <div className="fixed bottom-6 right-6 z-40">
@@ -180,6 +180,7 @@ export default function TestimonialsPage({ currentLang, setTab }: TestimonialsPa
       {sectionVisibility.hero && (
         <section
           id="reviews-hero"
+          data-space-hero
           className="relative overflow-hidden min-h-screen flex items-center bg-gradient-to-br from-orange-50/40 via-white to-gray-50 dark:from-[#030303] dark:via-[#030303] dark:to-[#0a0a0a]"
         >
           {/* Subtle orange ambient glow behind right image */}

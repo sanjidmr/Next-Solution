@@ -61,14 +61,44 @@ const SINGLETON_TABLES = new Set([
   "cookie_settings",
 ]);
 
+// Tables that order by their "sort_order" column.
+// NOTE: Only tables that actually HAVE a sort_order column (per supabase-schema.sql).
+const SORT_ORDER_TABLES = new Set([
+  "services",
+  "portfolio_items",
+  "testimonials",
+  "products",
+  "team_members",
+  "pricing_packages",
+  "pricing_comparisons",
+  "currencies",
+  "cookie_categories",
+]);
+
+// Tables that order by their "display_order" column instead.
+const DISPLAY_ORDER_TABLES = new Set([
+  "testimonial_videos",
+  "client_logos",
+  "client_moments",
+  "success_stories",
+  "why_choose_us_cards",
+  "why_choose_us_stats",
+  "why_choose_us_badges",
+  "why_choose_us_techs",
+  "process_steps",
+  "tech_service_cards",
+]);
+
 const NO_ORDER_TABLES = new Set([
   "newsletter_subscribers",
   "contact_messages",
   "pricing_quote_requests",
+  "faqs",
+  "pricing_addons",
   "legal_revisions",
+  "legal_policies",
   "product_images",
   "testimonial_categories",
-  "client_moments",
 ]);
 
 // Map entity slug → mapper.toDb function
@@ -110,6 +140,45 @@ const TO_DB_MAP: Record<string, (item: any) => any> = {
   "product-images": (i) => mapProductImage.toDb(i),
 };
 
+// Map entity slug → mapper.fromDb function (DB snake_case → admin camelCase).
+const FROM_DB_MAP: Record<string, (row: any) => any> = {
+  services: (r) => mapService.fromDb(r),
+  portfolio: (r) => mapPortfolioItem.fromDb(r),
+  blogs: (r) => mapBlogPost.fromDb(r),
+  faqs: (r) => mapFAQ.fromDb(r),
+  testimonials: (r) => mapTestimonial.fromDb(r),
+  messages: (r) => mapContactMessage.fromDb(r),
+  subscribers: (r) => mapSubscriber.fromDb(r),
+  settings: (r) => mapSiteSettings.fromDb(r),
+  "pricing-packages": (r) => mapPricingPackage.fromDb(r),
+  "pricing-addons": (r) => mapPricingAddon.fromDb(r),
+  "pricing-comparisons": (r) => mapPricingComparison.fromDb(r),
+  "pricing-quotes": (r) => mapPricingQuoteRequest.fromDb(r),
+  currencies: (r) => mapCurrency.fromDb(r),
+  "currency-settings": (r) => mapCurrencySettings.fromDb(r),
+  "testimonial-categories": (r) => ({ id: r.id, nameEn: r.name_en, nameBn: r.name_bn, slug: r.slug }),
+  "testimonial-videos": (r) => mapTestimonialVideo.fromDb(r),
+  "testimonial-statistics": (r) => mapTestimonialStatistics.fromDb(r),
+  "client-logos": (r) => mapClientLogo.fromDb(r),
+  "success-stories": (r) => mapSuccessStory.fromDb(r),
+  "review-settings": (r) => mapReviewSettings.fromDb(r),
+  "legal-policies": (r) => mapLegalPolicy.fromDb(r),
+  "legal-revisions": (r) => mapLegalRevision.fromDb(r),
+  "cookie-categories": (r) => mapCookieCategory.fromDb(r),
+  "cookie-settings": (r) => mapCookieSettings.fromDb(r),
+  "why-choose-us-cards": (r) => mapWhyChooseUsCard.fromDb(r),
+  "why-choose-us-stats": (r) => mapWhyChooseUsStat.fromDb(r),
+  "why-choose-us-badges": (r) => mapWhyChooseUsBadge.fromDb(r),
+  "why-choose-us-techs": (r) => mapWhyChooseUsTech.fromDb(r),
+  "why-choose-us-cta": (r) => mapWhyChooseUsCTA.fromDb(r),
+  "process-steps": (r) => mapProcessStep.fromDb(r),
+  "process-cta": (r) => mapProcessCTA.fromDb(r),
+  "tech-service-cards": (r) => mapTechServiceCard.fromDb(r),
+  "client-moments": (r) => mapClientMoment.fromDb(r),
+  products: (r) => mapProduct.fromDb(r),
+  "product-images": (r) => mapProductImage.fromDb(r),
+};
+
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ entity: string }> }
@@ -124,28 +193,28 @@ export async function GET(
     const supabase = createAdminClient();
     let query = supabase.from(tableName).select("*");
 
-    if (tableName === "services") {
-      query = query.is("deleted_at", null).order("sort_order", { ascending: true });
-    } else if (tableName === "portfolio_items") {
+    if (tableName === "services" || tableName === "portfolio_items") {
       query = query.is("deleted_at", null).order("sort_order", { ascending: true });
     } else if (tableName === "blog_posts") {
       query = query.is("deleted_at", null).order("published_at", { ascending: false });
-    } else if (tableName === "products") {
-      query = query.is("deleted_at", null).order("sort_order", { ascending: true });
+    } else if (SORT_ORDER_TABLES.has(tableName)) {
+      query = query.order("sort_order", { ascending: true });
+    } else if (DISPLAY_ORDER_TABLES.has(tableName)) {
+      query = query.order("display_order", { ascending: true });
     } else if (SINGLETON_TABLES.has(tableName)) {
       query = query.limit(1);
-    } else if (tableName === "contact_messages") {
-      query = query.order("created_at", { ascending: false });
     } else if (NO_ORDER_TABLES.has(tableName)) {
       query = query.order("created_at", { ascending: false });
-    } else {
-      query = query.order("display_order", { ascending: true }).order("sort_order", { ascending: true });
     }
 
     const { data, error } = await query;
     if (error) throw error;
 
-    return NextResponse.json({ data: data || [] });
+    // Convert snake_case DB rows → camelCase for the admin panel.
+    const fromDb = FROM_DB_MAP[entity];
+    const mapped = (data || []).map((row) => (fromDb ? fromDb(row) : row));
+
+    return NextResponse.json({ data: mapped });
   } catch (error: any) {
     return NextResponse.json(
       { error: error.message || "Failed to fetch data" },
@@ -177,9 +246,10 @@ export async function POST(
     const dbItems = items.map((item) => toDb(item));
 
     if (SINGLETON_TABLES.has(tableName) && dbItems.length === 1) {
+      const row = { id: "default", ...dbItems[0] };
       const { error } = await supabase
         .from(tableName)
-        .upsert(dbItems[0], { onConflict: "id" });
+        .upsert(row, { onConflict: "id" });
       if (error) throw error;
     } else {
       const { error } = await supabase.from(tableName).upsert(dbItems);

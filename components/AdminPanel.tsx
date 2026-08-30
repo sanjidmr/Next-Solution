@@ -337,6 +337,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
 
   // Load Admin Data from central simulated DB with auxiliary loaders
   const loadAdminData = async () => {
+    try {
     const msgs = await adminDB.getAllMessages(); setMessages(msgs || []);
     const subs = await adminDB.getAllSubscribers(); setSubscribers(subs || []);
     const blgs = await adminDB.getAllBlogs(); setBlogs(blgs || []);
@@ -416,6 +417,9 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
 
     // Load Tech Service Cards
     const tsCards = await adminDB.getAllTechServiceCards(); setTechServiceCardsState(tsCards || []);
+    } catch (err) {
+      console.error('Admin data load failed (continuing):', err);
+    }
   };
 
   useEffect(() => {
@@ -512,7 +516,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
       serviceToSave.id = `service-${Date.now()}`;
     }
     if (!serviceToSave.slug) {
-      serviceToSave.slug = serviceToSave.titleEn
+      serviceToSave.slug = (serviceToSave.titleEn || 'service')
         .toLowerCase()
         .replace(/[^a-z0-9]+/g, '-')
         .replace(/(^-|-$)+/g, '');
@@ -546,6 +550,57 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
   };
 
   // Portfolio CRUD operations
+  const [portfolioUploading, setPortfolioUploading] = useState(false);
+  const uploadPortfolioFile = async (file: File): Promise<string> => {
+    const fd = new FormData();
+    fd.append('file', file);
+    fd.append('folder', 'projects');
+    const res = await fetch('/api/admin/upload', { method: 'POST', body: fd });
+    const json = await res.json();
+    if (!res.ok) throw new Error(json.error || 'Upload failed');
+    return json.data.url;
+  };
+  const handlePortfolioImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setPortfolioUploading(true);
+    try {
+      const url = await uploadPortfolioFile(file);
+      setPortfolioForm({ ...portfolioForm, image: url });
+      triggerNotice(currentLang === 'en' ? 'Featured image uploaded!' : 'প্রধান ছবি আপলোড করা হয়েছে!');
+    } catch (err: any) {
+      triggerNotice(err.message || 'Upload failed');
+    } finally {
+      setPortfolioUploading(false);
+      e.target.value = '';
+    }
+  };
+  const handlePortfolioGalleryChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files || []);
+    if (!files.length) return;
+    setPortfolioUploading(true);
+    try {
+      let gallery: string[] = [];
+      try { gallery = JSON.parse(portfolioForm.galleryJson || '[]') || []; } catch { gallery = []; }
+      for (const f of files) {
+        const url = await uploadPortfolioFile(f);
+        gallery.push(url);
+      }
+      setPortfolioForm({ ...portfolioForm, galleryJson: JSON.stringify(gallery) });
+      triggerNotice(currentLang === 'en' ? 'Gallery images uploaded!' : 'গ্যালারির ছবিগুলো আপলোড করা হয়েছে!');
+    } catch (err: any) {
+      triggerNotice(err.message || 'Upload failed');
+    } finally {
+      setPortfolioUploading(false);
+      e.target.value = '';
+    }
+  };
+  const removeGalleryImage = (url: string) => {
+    let gallery: string[] = [];
+    try { gallery = JSON.parse(portfolioForm.galleryJson || '[]') || []; } catch { gallery = []; }
+    setPortfolioForm({ ...portfolioForm, galleryJson: JSON.stringify(gallery.filter(u => u !== url)) });
+  };
+
   const handleSavePortfolio = async (e: React.FormEvent) => {
     e.preventDefault();
     const itemId = editingPortfolio ? editingPortfolio.id : `portfolio-${Date.now()}`;
@@ -561,11 +616,11 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
       titleEn: portfolioForm.titleEn || 'Untitled Project',
       titleBn: portfolioForm.titleBn || 'শিরোনামহীন প্রজেক্ট',
       category: portfolioForm.category || 'Web Development',
-      duration: portfolioForm.duration || '3 Months',
-      budget: portfolioForm.budget || '$15,000',
+      duration: portfolioForm.duration || '',
+      budget: portfolioForm.budget || '',
       descriptionEn: portfolioForm.descriptionEn || '',
       descriptionBn: portfolioForm.descriptionBn || '',
-      client: portfolioForm.client || 'Enterprise Client',
+      client: portfolioForm.client || '',
       challengeEn: portfolioForm.challengeEn || '',
       challengeBn: portfolioForm.challengeBn || '',
       solutionEn: portfolioForm.solutionEn || '',
@@ -1634,24 +1689,15 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
           
           {/* Sub Tab selection (Sidebar left) */}
           <div className="lg:col-span-3 rounded-xl border border-gray-200 dark:border-neutral-700/80 bg-white dark:bg-[#141414] p-3 flex flex-row lg:flex-col gap-1 overflow-x-auto lg:overflow-x-visible shadow-sm">
-            {[
+{[
               { id: 'overview', label: currentLang === 'en' ? 'Dashboard Overview' : 'ড্যাশবোর্ড ওভারভিউ', icon: BarChart3Icon },
               { id: 'messages', label: currentLang === 'en' ? 'Inbound Leads' : 'প্রাপ্ত বার্তা সমূহ', icon: MailIcon },
-              { id: 'subscribers', label: currentLang === 'en' ? 'Subscribers' : 'নিউজলেটার তালিকা', icon: UsersIcon },
               { id: 'services', label: currentLang === 'en' ? 'Manage Services' : 'সার্ভিস পরিবর্তন', icon: SettingsIcon },
               { id: 'portfolio', label: currentLang === 'en' ? 'Manage Portfolio' : 'পোর্টফোলিও পরিচালনা', icon: FolderKanbanIcon },
               { id: 'pricing', label: currentLang === 'en' ? 'Pricing Plans' : 'প্রাইসিং প্যাকেজ', icon: DollarSignIcon },
-              { id: 'blogs', label: currentLang === 'en' ? 'Manage Blogs' : 'ব্লগ পরিচালনা', icon: BookOpenIcon },
               { id: 'faqs', label: currentLang === 'en' ? 'Manage FAQs' : 'সাধারণ জিজ্ঞাসা', icon: HelpCircleIcon },
-              { id: 'testimonials', label: currentLang === 'en' ? 'Testimonials' : 'টেস্টিমোনিয়ালস', icon: MessageSquareIcon },
               { id: 'team', label: currentLang === 'en' ? 'Team Members' : 'টিম মেম্বার্স', icon: UserCheckIcon },
-              { id: 'media', label: currentLang === 'en' ? 'Media Library' : 'মিডিয়া লাইব্রেরি', icon: ImageIcon },
               { id: 'settings', label: currentLang === 'en' ? 'Site Config & SEO' : 'সাইটের তথ্য ও এসইও', icon: SettingsIcon },
-              { id: 'users', label: currentLang === 'en' ? 'User & Roles' : 'অ্যাডমিন ইউজার', icon: ShieldIcon },
-              { id: 'legal', label: currentLang === 'en' ? 'Legal & Cookies' : 'নীতিমালা ও কুকিজ', icon: ShieldIcon },
-              { id: 'whychooseus', label: currentLang === 'en' ? 'Why Choose Us' : 'হোয়াই চুজ আস', icon: SparklesIcon },
-              { id: 'process', label: currentLang === 'en' ? 'Our Process' : 'আমাদের প্রসেস', icon: SparklesIcon },
-              { id: 'techstack', label: currentLang === 'en' ? 'Technologies & Tools' : 'টেকনোলজি ও টুলস', icon: CpuIcon },
               { id: 'products', label: currentLang === 'en' ? 'Manage Products' : 'প্রোডাক্টস পরিচালনা', icon: ShoppingBagIcon }
             ].map((tab) => (
               <button
@@ -2773,10 +2819,10 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                       setIsCreatingPortfolio(true);
                       setEditingPortfolio(null);
                       setPortfolioForm({
-                        titleEn: '', titleBn: '', category: 'Web Development', duration: '3 Months', budget: '$15,000',
+                        titleEn: '', titleBn: '', category: '', duration: '', budget: '', projectType: '', completionYear: '',
                         descriptionEn: '', descriptionBn: '', client: '', challengeEn: '', challengeBn: '',
                         solutionEn: '', solutionBn: '', resultEn: '', resultBn: '', technologies: [], image: '', featured: false,
-                        projectType: '', projectDate: '', appStoreUrl: '', playStoreUrl: '', thumbnailImage: ''
+                        projectDate: '', appStoreUrl: '', playStoreUrl: '', thumbnailImage: ''
                       });
                     }}
                     className="flex items-center space-x-1.5 rounded-lg bg-blue-600 dark:bg-orange-500 hover:bg-blue-700 dark:hover:bg-orange-400 text-white px-3 py-2 font-bold transition"
@@ -2787,14 +2833,14 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                 </div>
 
                 {isCreatingPortfolio ? (
-                  <form onSubmit={handleSavePortfolio} className="space-y-6 bg-gray-50/50 dark:bg-neutral-800/40 rounded-xl p-4 md:p-6 border border-gray-200 dark:border-neutral-700 max-h-[80vh] overflow-y-auto text-xs">
-                    
-                    {/* Part 1: Project Metadata & Identity */}
+<form onSubmit={handleSavePortfolio} className="space-y-5 bg-gray-50/50 dark:bg-neutral-800/40 rounded-xl p-4 md:p-6 border border-gray-200 dark:border-neutral-700 max-h-[80vh] overflow-y-auto text-xs">
+
+                    {/* 1. BASIC PROJECT INFO */}
                     <div className="space-y-3 p-4 rounded-xl border border-gray-100 dark:border-neutral-800 bg-white dark:bg-[#141414]">
-                      <h4 className="font-extrabold text-blue-600 dark:text-orange-400 uppercase tracking-wider text-[10px] mb-2 border-b border-gray-50 pb-1.5">1. Project Identity & Metadata</h4>
+                      <h4 className="font-extrabold text-blue-600 dark:text-orange-400 uppercase tracking-wider text-[10px] mb-2 border-b border-gray-50 pb-1.5">1. Basic Project Info</h4>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div className="space-y-1.5">
-                          <label className="font-semibold text-gray-500 dark:text-neutral-400">Project Title (English)</label>
+                          <label className="font-semibold text-gray-500 dark:text-neutral-400">Project Name *</label>
                           <input
                             type="text" required
                             value={portfolioForm.titleEn || ''}
@@ -2802,29 +2848,21 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                             className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
                           />
                         </div>
-                        
-                      </div>
-
-                      <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
                         <div className="space-y-1.5">
-                          <label className="font-semibold text-gray-500 dark:text-neutral-400">Category</label>
+                          <label className="font-semibold text-gray-500 dark:text-neutral-400">This portfolio is for which service? *</label>
                           <select
-                            value={portfolioForm.category || 'Web Development'}
+                            required
+                            value={portfolioForm.category || ''}
                             onChange={(e) => setPortfolioForm({ ...portfolioForm, category: e.target.value })}
                             className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
                           >
-                            <option>Web Development</option>
-                            <option>Web App</option>
-                            <option>UI/UX Design</option>
-                            <option>Graphic Design</option>
-                            <option>Video Editing</option>
-                            <option>Digital Marketing</option>
-                            <option>AI Automation & Agent</option>
-                            <option>SEO</option>
-                            <option>Mobile App</option>
-                            <option>Product & Business Innovation</option>
-                            <option>Creative Content & Visual Storytelling</option>
-                            <option>Marketing, PR & Brand Strategy</option>
+                            <option value="">-- Select a service --</option>
+                            {(services.length > 0
+                              ? Array.from(new Set(services.map(s => s.titleEn).filter(Boolean)))
+                              : ['Web Development', 'Web App', 'Mobile App', 'UI/UX Design', 'Graphic Design', 'Digital Marketing', 'SEO', 'AI Automation & Agent']
+                            ).map((name) => (
+                              <option key={name} value={name}>{name}</option>
+                            ))}
                           </select>
                         </div>
                         <div className="space-y-1.5">
@@ -2841,36 +2879,9 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                             <option value="desktop">Desktop Software</option>
                             <option value="design">Design Project</option>
                             <option value="marketing">Marketing Campaign</option>
-                            <option value="ai">AI/Automation</option>
+                            <option value="ai">AI / Automation</option>
                             <option value="other">Other</option>
                           </select>
-                        </div>
-                        <div className="space-y-1.5">
-                          <label className="font-semibold text-gray-500 dark:text-neutral-400">Client Name</label>
-                          <input
-                            type="text" required
-                            value={portfolioForm.client || ''}
-                            onChange={(e) => setPortfolioForm({ ...portfolioForm, client: e.target.value })}
-                            className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
-                          />
-                        </div>
-                        <div className="space-y-1.5">
-                          <label className="font-semibold text-gray-500 dark:text-neutral-400">Duration (e.g. 3 Months)</label>
-                          <input
-                            type="text" required
-                            value={portfolioForm.duration || ''}
-                            onChange={(e) => setPortfolioForm({ ...portfolioForm, duration: e.target.value })}
-                            className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
-                          />
-                        </div>
-                        <div className="space-y-1.5">
-                          <label className="font-semibold text-gray-500 dark:text-neutral-400">Budget (e.g. $15,000)</label>
-                          <input
-                            type="text" required
-                            value={portfolioForm.budget || ''}
-                            onChange={(e) => setPortfolioForm({ ...portfolioForm, budget: e.target.value })}
-                            className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
-                          />
                         </div>
                         <div className="space-y-1.5">
                           <label className="font-semibold text-gray-500 dark:text-neutral-400">Completion Year</label>
@@ -2882,280 +2893,118 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                           />
                         </div>
                       </div>
+                    </div>
 
-                      <div className="grid grid-cols-2 md:grid-cols-5 gap-3 pt-2">
-                        <div className="space-y-1.5 col-span-2">
-                          <label className="font-semibold text-gray-500 dark:text-neutral-400">Custom URL Slug (leave empty for automatic)</label>
-                          <input
-                            type="text" placeholder="e.g. aerobank-neobank-solution"
-                            value={portfolioForm.slug || ''}
-                            onChange={(e) => setPortfolioForm({ ...portfolioForm, slug: e.target.value })}
-                            className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
-                          />
-                        </div>
-                        <div className="space-y-1.5">
-                          <label className="font-semibold text-gray-500 dark:text-neutral-400">Industry (En)</label>
-                          <input
-                            type="text" placeholder="FinTech"
-                            value={portfolioForm.industryEn || ''}
-                            onChange={(e) => setPortfolioForm({ ...portfolioForm, industryEn: e.target.value })}
-                            className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
-                          />
-                        </div>
-                        
-                        <div className="space-y-1.5">
-                          <label className="font-semibold text-gray-500 dark:text-neutral-400">Project Status</label>
-                          <select
-                            value={portfolioForm.status || 'published'}
-                            onChange={(e) => setPortfolioForm({ ...portfolioForm, status: e.target.value as any })}
-                            className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500 font-bold"
-                          >
-                            <option value="published">Published</option>
-                            <option value="draft">Draft</option>
-                          </select>
+                    {/* 2. IMAGES — REAL UPLOAD */}
+                    <div className="space-y-3 p-4 rounded-xl border border-gray-100 dark:border-neutral-800 bg-white dark:bg-[#141414]">
+                      <h4 className="font-extrabold text-blue-600 dark:text-orange-400 uppercase tracking-wider text-[10px] mb-2 border-b border-gray-50 pb-1.5">2. Project Images (Upload Files)</h4>
+
+                      {/* Featured image upload */}
+                      <div className="space-y-1.5">
+                        <label className="font-semibold text-gray-500 dark:text-neutral-400">Featured / Main Image *</label>
+                        <div className="flex flex-wrap items-center gap-3">
+                          <label className="cursor-pointer inline-flex items-center space-x-1.5 rounded border border-dashed border-gray-300 dark:border-neutral-600 bg-gray-50 dark:bg-[#141414] hover:bg-gray-100 dark:hover:bg-neutral-800 px-3 py-2 font-bold text-gray-600 dark:text-neutral-300 text-[10px] transition">
+                            {portfolioUploading
+                              ? <span>{currentLang === 'en' ? 'Uploading…' : 'আপলোড হচ্ছে…'}</span>
+                              : <span>{currentLang === 'en' ? '⬆ Upload Image' : '⬆ ছবি আপলোড'}</span>}
+                            <input type="file" accept="image/*" className="hidden" onChange={handlePortfolioImageChange} />
+                          </label>
+                          {portfolioForm.image && (
+                            <div className="relative">
+                              <img src={portfolioForm.image} alt="" className="h-14 w-20 object-cover rounded border border-gray-200 dark:border-neutral-700" referrerPolicy="no-referrer" />
+                              <button
+                                type="button"
+                                onClick={() => setPortfolioForm({ ...portfolioForm, image: '' })}
+                                className="absolute -top-1.5 -right-1.5 h-5 w-5 rounded-full bg-red-500 text-white text-[10px] leading-none font-bold transition hover:bg-red-600"
+                                title="Remove"
+                              >✕</button>
+                            </div>
+                          )}
+                          {portfolioForm.image && (
+                            <span className="text-[9px] text-gray-400 dark:text-neutral-500 font-mono break-all max-w-[220px]">{portfolioForm.image}</span>
+                          )}
                         </div>
                       </div>
 
-                      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 pt-2">
-                        <div className="space-y-1.5 col-span-2">
-                          <label className="font-semibold text-gray-500 dark:text-neutral-400">Featured Image URL</label>
-                          <input
-                            type="text" required
-                            value={portfolioForm.image || ''}
-                            onChange={(e) => setPortfolioForm({ ...portfolioForm, image: e.target.value })}
-                            className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
-                          />
-                        </div>
-                        <div className="space-y-1.5">
-                          <label className="font-semibold text-gray-500 dark:text-neutral-400">Thumbnail Image URL (optional)</label>
-                          <input
-                            type="text" placeholder="Smaller card image URL"
-                            value={portfolioForm.thumbnailImage || ''}
-                            onChange={(e) => setPortfolioForm({ ...portfolioForm, thumbnailImage: e.target.value })}
-                            className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
-                          />
-                        </div>
-                        <div className="space-y-1.5">
-                          <label className="font-semibold text-gray-500 dark:text-neutral-400">Project Date</label>
-                          <input
-                            type="date"
-                            value={portfolioForm.projectDate || ''}
-                            onChange={(e) => setPortfolioForm({ ...portfolioForm, projectDate: e.target.value })}
-                            className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
-                          />
-                        </div>
-                        <div className="space-y-1.5">
-                          <label className="font-semibold text-gray-500 dark:text-neutral-400">Sort Order</label>
-                          <input
-                            type="number"
-                            value={portfolioForm.sortOrder || 0}
-                            onChange={(e) => setPortfolioForm({ ...portfolioForm, sortOrder: parseInt(e.target.value) || 0 })}
-                            className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
-                          />
-                        </div>
-                        <div className="flex items-center space-x-2 h-full pt-6">
-                          <input
-                            type="checkbox"
-                            id="portfolio-form-featured"
-                            checked={portfolioForm.featured || false}
-                            onChange={(e) => setPortfolioForm({ ...portfolioForm, featured: e.target.checked })}
-                            className="h-4 w-4 text-blue-600 dark:text-orange-400 rounded border-gray-300 dark:border-neutral-600 focus:ring-blue-500 dark:focus:ring-orange-500"
-                          />
-                          <label htmlFor="portfolio-form-featured" className="font-bold text-gray-700 dark:text-neutral-200">Featured Project</label>
-                        </div>
+                      {/* Gallery upload */}
+                      <div className="space-y-1.5 pt-2 border-t border-gray-50">
+                        <label className="font-semibold text-gray-500 dark:text-neutral-400">More Project Photos (Gallery)</label>
+                        <label className="cursor-pointer inline-flex items-center space-x-1.5 rounded border border-dashed border-gray-300 dark:border-neutral-600 bg-gray-50 dark:bg-[#141414] hover:bg-gray-100 dark:hover:bg-neutral-800 px-3 py-2 font-bold text-gray-600 dark:text-neutral-300 text-[10px] transition">
+                          <span>{portfolioUploading ? (currentLang === 'en' ? 'Uploading…' : 'আপলোড হচ্ছে…') : (currentLang === 'en' ? '⬆ Upload more images' : '⬆ আরও ছবি আপলোড')}</span>
+                          <input type="file" accept="image/*" multiple className="hidden" onChange={handlePortfolioGalleryChange} />
+                        </label>
+                        {(() => {
+                          let gallery: string[] = [];
+                          try { gallery = JSON.parse(portfolioForm.galleryJson || '[]') || []; } catch { gallery = []; }
+                          if (gallery.length === 0) {
+                            return <p className="text-[10px] text-gray-400 dark:text-neutral-500 italic">No gallery photos yet. Upload as many as you like.</p>;
+                          }
+                          return (
+                            <div className="flex flex-wrap gap-2 pt-1">
+                              {gallery.map((u) => (
+                                <div key={u} className="relative">
+                                  <img src={u} alt="" className="h-14 w-20 object-cover rounded border border-gray-200 dark:border-neutral-700" referrerPolicy="no-referrer" />
+                                  <button
+                                    type="button"
+                                    onClick={() => removeGalleryImage(u)}
+                                    className="absolute -top-1.5 -right-1.5 h-5 w-5 rounded-full bg-red-500 text-white text-[10px] leading-none font-bold transition hover:bg-red-600"
+                                    title="Remove"
+                                  >✕</button>
+                                </div>
+                              ))}
+                            </div>
+                          );
+                        })()}
                       </div>
                     </div>
 
-                    {/* Part 2: Brief & Challenge Description */}
+                    {/* 3. DESCRIPTION & TECHNOLOGIES */}
                     <div className="space-y-3 p-4 rounded-xl border border-gray-100 dark:border-neutral-800 bg-white dark:bg-[#141414]">
-                      <h4 className="font-extrabold text-blue-600 dark:text-orange-400 uppercase tracking-wider text-[10px] mb-2 border-b border-gray-50 pb-1.5">2. Deep Case Study Content</h4>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div className="space-y-1.5">
-                          <label className="font-semibold text-gray-500 dark:text-neutral-400">Short Summary (English)</label>
-                          <textarea
-                            rows={2} required
-                            value={portfolioForm.descriptionEn || ''}
-                            onChange={(e) => setPortfolioForm({ ...portfolioForm, descriptionEn: e.target.value })}
-                            className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
-                          />
-                        </div>
-                        
+                      <h4 className="font-extrabold text-blue-600 dark:text-orange-400 uppercase tracking-wider text-[10px] mb-2 border-b border-gray-50 pb-1.5">3. About the Project</h4>
+                      <div className="space-y-1.5">
+                        <label className="font-semibold text-gray-500 dark:text-neutral-400">Project Description *</label>
+                        <textarea
+                          rows={4} required
+                          value={portfolioForm.descriptionEn || ''}
+                          onChange={(e) => setPortfolioForm({ ...portfolioForm, descriptionEn: e.target.value })}
+                          className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
+                        />
                       </div>
-
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div className="space-y-1.5">
-                          <label className="font-semibold text-gray-500 dark:text-neutral-400">The Challenge (English)</label>
-                          <textarea
-                            rows={3} required
-                            value={portfolioForm.challengeEn || ''}
-                            onChange={(e) => setPortfolioForm({ ...portfolioForm, challengeEn: e.target.value })}
-                            className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
-                          />
-                        </div>
-                        
-                      </div>
-
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div className="space-y-1.5">
-                          <label className="font-semibold text-gray-500 dark:text-neutral-400">Our Solution (English)</label>
-                          <textarea
-                            rows={3} required
-                            value={portfolioForm.solutionEn || ''}
-                            onChange={(e) => setPortfolioForm({ ...portfolioForm, solutionEn: e.target.value })}
-                            className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
-                          />
-                        </div>
-                        
-                      </div>
-
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div className="space-y-1.5">
-                          <label className="font-semibold text-gray-500 dark:text-neutral-400">Measurable Results (English)</label>
-                          <textarea
-                            rows={3} required
-                            value={portfolioForm.resultEn || ''}
-                            onChange={(e) => setPortfolioForm({ ...portfolioForm, resultEn: e.target.value })}
-                            className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
-                          />
-                        </div>
-                        
-                      </div>
-
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 border-t border-gray-50 pt-2">
-                        <div className="space-y-1.5">
-                          <label className="font-semibold text-gray-500 dark:text-neutral-400">Delivered Features (English, Comma Separated)</label>
-                          <textarea
-                            rows={2}
-                            placeholder="Responsive Dashboard, Biometric Gateway, Data Pipeline"
-                            value={portfolioForm.featuresEn ? portfolioForm.featuresEn.join(', ') : ''}
-                            onChange={(e) => setPortfolioForm({ ...portfolioForm, featuresEn: e.target.value.split(',').map(s => s.trim()).filter(Boolean) })}
-                            className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
-                          />
-                        </div>
-                        
-                      </div>
-
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div className="space-y-1.5">
-                          <label className="font-semibold text-gray-500 dark:text-neutral-400">Image Gallery (JSON List of URLs, e.g. ["url1", "url2"])</label>
-                          <textarea
-                            rows={2}
-                            value={portfolioForm.galleryJson || '[]'}
-                            onChange={(e) => setPortfolioForm({ ...portfolioForm, galleryJson: e.target.value })}
-                            className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500 font-mono"
-                          />
-                        </div>
-                        <div className="grid grid-cols-2 gap-2">
-                          <div className="space-y-1.5">
-                            <label className="font-semibold text-gray-500 dark:text-neutral-400">Before Image (URL)</label>
-                            <input
-                              type="text"
-                              value={portfolioForm.beforeImage || ''}
-                              onChange={(e) => setPortfolioForm({ ...portfolioForm, beforeImage: e.target.value })}
-                              className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
-                            />
-                          </div>
-                          <div className="space-y-1.5">
-                            <label className="font-semibold text-gray-500 dark:text-neutral-400">After Image (URL)</label>
-                            <input
-                              type="text"
-                              value={portfolioForm.afterImage || ''}
-                              onChange={(e) => setPortfolioForm({ ...portfolioForm, afterImage: e.target.value })}
-                              className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
-                            />
-                          </div>
-                        </div>
+                      <div className="space-y-1.5">
+                        <label className="font-semibold text-gray-500 dark:text-neutral-400">What was this project built with? (Technologies) *</label>
+                        <input
+                          type="text" required
+                          placeholder="Next.js, React, Tailwind CSS, Supabase, OpenAI"
+                          value={portfolioForm.technologies ? portfolioForm.technologies.join(', ') : ''}
+                          onChange={(e) => setPortfolioForm({ ...portfolioForm, technologies: e.target.value.split(',').map(t => t.trim()).filter(Boolean) })}
+                          className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
+                        />
+                        <p className="text-[9px] text-gray-400 dark:text-neutral-500">Separate with commas, e.g. Next.js, Supabase, Stripe</p>
                       </div>
                     </div>
 
-                    {/* Part 3: Client Testimonial */}
+                    {/* 4. LINKS */}
                     <div className="space-y-3 p-4 rounded-xl border border-gray-100 dark:border-neutral-800 bg-white dark:bg-[#141414]">
-                      <h4 className="font-extrabold text-blue-600 dark:text-orange-400 uppercase tracking-wider text-[10px] mb-2 border-b border-gray-50 pb-1.5">3. Project-Specific Client Testimonial</h4>
-                      <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
-                        <div className="space-y-1.5 col-span-2">
-                          <label className="font-semibold text-gray-500 dark:text-neutral-400">Client Contact Person Photo URL</label>
-                          <input
-                            type="text"
-                            value={portfolioForm.clientPhoto || ''}
-                            onChange={(e) => setPortfolioForm({ ...portfolioForm, clientPhoto: e.target.value })}
-                            className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
-                          />
-                        </div>
-                        <div className="space-y-1.5">
-                          <label className="font-semibold text-gray-500 dark:text-neutral-400">Client Role (English)</label>
-                          <input
-                            type="text" placeholder="e.g. CEO of AeroBank"
-                            value={portfolioForm.clientRoleEn || ''}
-                            onChange={(e) => setPortfolioForm({ ...portfolioForm, clientRoleEn: e.target.value })}
-                            className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
-                          />
-                        </div>
-                        
-                      </div>
-
+                      <h4 className="font-extrabold text-blue-600 dark:text-orange-400 uppercase tracking-wider text-[10px] mb-2 border-b border-gray-50 pb-1.5">4. Project Links</h4>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div className="space-y-1.5">
-                          <label className="font-semibold text-gray-500 dark:text-neutral-400">Testimonial Feedback (English)</label>
-                          <textarea
-                            rows={2}
-                            value={portfolioForm.reviewEn || ''}
-                            onChange={(e) => setPortfolioForm({ ...portfolioForm, reviewEn: e.target.value })}
-                            className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
-                          />
-                        </div>
-                        
-                      </div>
-
-                      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                        <div className="space-y-1.5">
-                          <label className="font-semibold text-gray-500 dark:text-neutral-400">Rating (1 to 5 Stars)</label>
+                          <label className="font-semibold text-gray-500 dark:text-neutral-400">Live Website / Demo URL</label>
                           <input
-                            type="number" min="1" max="5"
-                            value={portfolioForm.rating || 5}
-                            onChange={(e) => setPortfolioForm({ ...portfolioForm, rating: parseInt(e.target.value) || 5 })}
-                            className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
+                            type="text" placeholder="https://..."
+                            value={portfolioForm.liveUrl || ''}
+                            onChange={(e) => setPortfolioForm({ ...portfolioForm, liveUrl: e.target.value })}
+                            className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
                           />
                         </div>
-                      </div>
-                    </div>
-
-                    {/* Part 4: Links, Techs & SEO */}
-                    <div className="space-y-3 p-4 rounded-xl border border-gray-100 dark:border-neutral-800 bg-white dark:bg-[#141414]">
-                      <h4 className="font-extrabold text-blue-600 dark:text-orange-400 uppercase tracking-wider text-[10px] mb-2 border-b border-gray-50 pb-1.5">4. Integration, Links & SEO</h4>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div className="space-y-1.5">
-                          <label className="font-semibold text-gray-500 dark:text-neutral-400">Technologies (Comma Separated)</label>
+                          <label className="font-semibold text-gray-500 dark:text-neutral-400">GitHub Repository URL</label>
                           <input
-                            type="text" required
-                            placeholder="React, Next.js, Tailwind CSS, TypeScript"
-                            value={portfolioForm.technologies ? portfolioForm.technologies.join(', ') : ''}
-                            onChange={(e) => setPortfolioForm({ ...portfolioForm, technologies: e.target.value.split(',').map(t => t.trim()).filter(Boolean) })}
-                            className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
+                            type="text" placeholder="https://github.com/..."
+                            value={portfolioForm.githubUrl || ''}
+                            onChange={(e) => setPortfolioForm({ ...portfolioForm, githubUrl: e.target.value })}
+                            className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
                           />
                         </div>
-                        <div className="grid grid-cols-2 gap-2">
-                          <div className="space-y-1.5">
-                            <label className="font-semibold text-gray-500 dark:text-neutral-400">Live Project URL</label>
-                            <input
-                              type="text" placeholder="https://..."
-                              value={portfolioForm.liveUrl || ''}
-                              onChange={(e) => setPortfolioForm({ ...portfolioForm, liveUrl: e.target.value })}
-                              className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
-                            />
-                          </div>
-                          <div className="space-y-1.5">
-                            <label className="font-semibold text-gray-500 dark:text-neutral-400">GitHub Repository URL</label>
-                            <input
-                              type="text" placeholder="https://github.com/..."
-                              value={portfolioForm.githubUrl || ''}
-                              onChange={(e) => setPortfolioForm({ ...portfolioForm, githubUrl: e.target.value })}
-                              className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
-                            />
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
                         <div className="space-y-1.5">
                           <label className="font-semibold text-gray-500 dark:text-neutral-400">App Store URL (iOS)</label>
                           <input
@@ -3175,31 +3024,41 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                           />
                         </div>
                       </div>
+                    </div>
 
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 border-t border-gray-50 pt-2">
+                    {/* 5. OPTIONS */}
+                    <div className="p-4 rounded-xl border border-gray-100 dark:border-neutral-800 bg-white dark:bg-[#141414]">
+                      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 items-end">
                         <div className="space-y-1.5">
-                          <label className="font-semibold text-gray-500 dark:text-neutral-400">SEO Title (English)</label>
+                          <label className="font-semibold text-gray-500 dark:text-neutral-400">Display Order</label>
                           <input
-                            type="text" placeholder="Optimal Google title length is under 60 chars"
-                            value={portfolioForm.seoTitleEn || ''}
-                            onChange={(e) => setPortfolioForm({ ...portfolioForm, seoTitleEn: e.target.value })}
-                            className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
+                            type="number"
+                            value={portfolioForm.sortOrder || 0}
+                            onChange={(e) => setPortfolioForm({ ...portfolioForm, sortOrder: parseInt(e.target.value) || 0 })}
+                            className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
                           />
                         </div>
-                        
-                      </div>
-
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="flex items-center space-x-2 h-full pt-6">
+                          <input
+                            type="checkbox"
+                            id="portfolio-form-featured"
+                            checked={portfolioForm.featured || false}
+                            onChange={(e) => setPortfolioForm({ ...portfolioForm, featured: e.target.checked })}
+                            className="h-4 w-4 text-blue-600 dark:text-orange-400 rounded border-gray-300 dark:border-neutral-600 focus:ring-blue-500 dark:focus:ring-orange-500"
+                          />
+                          <label htmlFor="portfolio-form-featured" className="font-bold text-gray-700 dark:text-neutral-200">Featured Project</label>
+                        </div>
                         <div className="space-y-1.5">
-                          <label className="font-semibold text-gray-500 dark:text-neutral-400">SEO Meta Description (English)</label>
-                          <textarea
-                            rows={2} placeholder="Optimal Google meta description length is under 160 chars"
-                            value={portfolioForm.seoDescEn || ''}
-                            onChange={(e) => setPortfolioForm({ ...portfolioForm, seoDescEn: e.target.value })}
-                            className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
-                          />
+                          <label className="font-semibold text-gray-500 dark:text-neutral-400">Status</label>
+                          <select
+                            value={portfolioForm.status || 'published'}
+                            onChange={(e) => setPortfolioForm({ ...portfolioForm, status: e.target.value as any })}
+                            className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500 font-bold"
+                          >
+                            <option value="published">Published</option>
+                            <option value="draft">Draft</option>
+                          </select>
                         </div>
-                        
                       </div>
                     </div>
 
@@ -3213,9 +3072,10 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                       </button>
                       <button
                         type="submit"
-                        className="rounded bg-blue-600 dark:bg-orange-500 hover:bg-blue-700 dark:hover:bg-orange-400 text-white px-5 py-2 font-bold shadow-md shadow-blue-600/10"
+                        disabled={portfolioUploading}
+                        className={`rounded px-5 py-2 font-bold shadow-md shadow-blue-600/10 text-white transition ${portfolioUploading ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-600 dark:bg-orange-500 hover:bg-blue-700 dark:hover:bg-orange-400'}`}
                       >
-                        Save Case Study
+                        {currentLang === 'en' ? 'Save Project' : 'প্রজেক্ট সংরক্ষণ করুন'}
                       </button>
                     </div>
                   </form>
@@ -3227,7 +3087,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                           <img src={item.image} alt="" className="h-12 w-16 object-cover rounded bg-gray-50 dark:bg-[#141414] border border-gray-100 dark:border-neutral-800" referrerPolicy="no-referrer" />
                           <div>
                             <span className="font-bold text-sm text-gray-900 dark:text-white block">{item.titleEn}</span>
-                            <span className="text-gray-400 dark:text-neutral-500 font-mono text-[10px] block mt-0.5">{item.category} • Client: {item.client} • Budget: {item.budget}</span>
+                            <span className="text-gray-400 dark:text-neutral-500 font-mono text-[10px] block mt-0.5">{item.category}{item.completionYear ? ` • ${item.completionYear}` : ''}{(item.projectType ? ` • ${item.projectType}` : '')}</span>
                           </div>
                         </div>
                         <div className="flex items-center space-x-2">

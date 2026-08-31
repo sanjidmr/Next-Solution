@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 /**
  * @license
  * SPDX-License-Identifier: Apache-2.0
@@ -850,11 +850,9 @@ export default function HomePageSections({ currentLang, setTab, portfolioData }:
           {/* Centered header */}
           <div className="mx-auto max-w-3xl text-center">
             <div className="flex items-center justify-center gap-4">
-              <span className="h-px w-12 sm:w-16 bg-orange-500/60"></span>
               <span className="text-xs font-bold tracking-[0.25em] uppercase text-orange-600 dark:text-orange-400">
                 {currentLang === 'en' ? 'Why Choose Us' : 'কেন আমাদের বেছে নেবেন'}
               </span>
-              <span className="h-px w-12 sm:w-16 bg-orange-500/60"></span>
             </div>
 
             <h2 className="mt-4 text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight leading-tight text-neutral-900 dark:text-white">
@@ -903,12 +901,12 @@ export default function HomePageSections({ currentLang, setTab, portfolioData }:
           <div className="text-center space-y-4 max-w-3xl mx-auto">
             <span className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full bg-blue-50 dark:bg-orange-500/10 border border-blue-100 dark:border-orange-500/20 text-xs font-bold uppercase tracking-wider text-blue-600 dark:text-orange-400">
               <Sparkles className="h-3.5 w-3.5 text-blue-500 dark:text-orange-400 animate-spin" style={{ animationDuration: '3s' }} />
-              <span>{currentLang === 'en' ? processCTA.titleEn : processCTA.titleBn}</span>
+              <span suppressHydrationWarning>{currentLang === 'en' ? processCTA.titleEn : processCTA.titleBn}</span>
             </span>
-            <h2 className="font-sans text-2xl sm:text-3xl lg:text-4xl font-black text-gray-900 dark:text-white leading-tight tracking-tight">
+            <h2 suppressHydrationWarning className="font-sans text-2xl sm:text-3xl lg:text-4xl font-black text-gray-900 dark:text-white leading-tight tracking-tight">
               {currentLang === 'en' ? processCTA.highlightEn : processCTA.highlightBn}
             </h2>
-            <p className="text-sm sm:text-base text-gray-500 dark:text-neutral-400 dark:text-neutral-500 leading-relaxed max-w-2xl mx-auto">
+            <p suppressHydrationWarning className="text-sm sm:text-base text-gray-500 dark:text-neutral-400 dark:text-neutral-500 leading-relaxed max-w-2xl mx-auto">
               {currentLang === 'en' ? processCTA.subtitleEn : processCTA.subtitleBn}
             </p>
           </div>
@@ -996,7 +994,7 @@ export default function HomePageSections({ currentLang, setTab, portfolioData }:
                   >
                     {/* Visual dot indicator with glow if hovered */}
                     <div className="absolute left-4 lg:left-1/2 top-8 h-8 w-8 rounded-full bg-white dark:bg-[#141414] border-4 border-blue-600 z-10 lg:-translate-x-[16px] flex items-center justify-center shadow-lg transition-all duration-300">
-                      <span className="text-[10px] font-black text-blue-600 dark:text-orange-400 font-mono">{step.stepNumber}</span>
+                      <span suppressHydrationWarning className="text-[10px] font-black text-blue-600 dark:text-orange-400 font-mono">{step.stepNumber}</span>
                     </div>
                     
                     {/* Content card (Responsive wrapper) */}
@@ -1007,7 +1005,7 @@ export default function HomePageSections({ currentLang, setTab, portfolioData }:
 
                         {/* Top Metadata Row */}
                         <div className="flex items-center justify-between">
-                          <span className="text-[10px] sm:text-xs font-black px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-md lg:rounded-lg bg-blue-50 dark:bg-orange-500/10 text-blue-600 dark:text-orange-400 font-mono">
+                          <span suppressHydrationWarning className="text-[10px] sm:text-xs font-black px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-md lg:rounded-lg bg-blue-50 dark:bg-orange-500/10 text-blue-600 dark:text-orange-400 font-mono">
                             STEP {step.stepNumber}
                           </span>
                           <span className="text-lg sm:text-2xl" role="img" aria-label="step-icon">
@@ -1017,10 +1015,10 @@ export default function HomePageSections({ currentLang, setTab, portfolioData }:
 
                         {/* Title & Description */}
                         <div className="space-y-1.5 lg:space-y-3">
-                          <h3 className="font-sans text-sm sm:text-base lg:text-lg font-bold text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-orange-400 transition-colors duration-200 leading-snug">
+                          <h3 suppressHydrationWarning className="font-sans text-sm sm:text-base lg:text-lg font-bold text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-orange-400 transition-colors duration-200 leading-snug">
                             {currentLang === 'en' ? step.titleEn : step.titleBn}
                           </h3>
-                          <p className="text-[10px] sm:text-[11px] lg:text-xs text-gray-500 dark:text-neutral-400 leading-snug line-clamp-2 lg:line-clamp-none">
+                          <p suppressHydrationWarning className="text-[10px] sm:text-[11px] lg:text-xs text-gray-500 dark:text-neutral-400 leading-snug line-clamp-2 lg:line-clamp-none">
                             {currentLang === 'en' ? step.descriptionEn : step.descriptionBn}
                           </p>
                         </div>
@@ -1036,7 +1034,7 @@ export default function HomePageSections({ currentLang, setTab, portfolioData }:
                               {(currentLang === 'en' ? step.deliverablesEn : step.deliverablesBn).map((del, dIdx) => (
                                 <li key={dIdx} className="flex items-center space-x-1 text-gray-600 dark:text-neutral-300 dark:text-neutral-600">
                                   <CheckCircle className="h-3 w-3 sm:h-3.5 sm:w-3.5 text-emerald-500 dark:text-emerald-400 shrink-0" />
-                                  <span>{del}</span>
+                                  <span suppressHydrationWarning>{del}</span>
                                 </li>
                               ))}
                             </ul>
@@ -1049,7 +1047,7 @@ export default function HomePageSections({ currentLang, setTab, portfolioData }:
                               <span className="block font-bold text-gray-400 dark:text-neutral-500 uppercase tracking-widest text-[8px] lg:text-[9px]">
                                 {currentLang === 'en' ? 'Estimated Duration' : 'আনুমানিক সময়'}
                               </span>
-                              <span className="font-semibold text-gray-700 dark:text-neutral-200 bg-gray-50 dark:bg-neutral-900 px-1.5 sm:px-2 py-0.5 rounded-md inline-block text-[10px] lg:text-[11px]">
+                              <span suppressHydrationWarning className="font-semibold text-gray-700 dark:text-neutral-200 bg-gray-50 dark:bg-neutral-900 px-1.5 sm:px-2 py-0.5 rounded-md inline-block text-[10px] lg:text-[11px]">
                                 {currentLang === 'en' ? step.estimatedDurationEn : step.estimatedDurationBn}
                               </span>
                             </div>
@@ -1061,7 +1059,7 @@ export default function HomePageSections({ currentLang, setTab, portfolioData }:
                               </span>
                               <div className="flex flex-wrap gap-1">
                                 {step.toolsUsed.map((tool, tIdx) => (
-                                  <span key={tIdx} className="px-1.5 sm:px-2 py-0.5 rounded bg-gray-50 dark:bg-neutral-900 text-gray-500 dark:text-neutral-400 dark:text-neutral-500 font-mono text-[9px] lg:text-[10px]">
+                                  <span suppressHydrationWarning key={tIdx} className="px-1.5 sm:px-2 py-0.5 rounded bg-gray-50 dark:bg-neutral-900 text-gray-500 dark:text-neutral-400 dark:text-neutral-500 font-mono text-[9px] lg:text-[10px]">
                                     {tool}
                                   </span>
                                 ))}
@@ -1206,7 +1204,7 @@ className="group cursor-pointer"
                       />
 
                       {/* Category Badge over Image (top right) */}
-                      <div className="absolute top-3 right-3 bg-white/90 dark:bg-neutral-900/90 backdrop-blur-md text-neutral-800 dark:text-neutral-100 font-mono text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider border border-neutral-200/50 dark:border-neutral-700/50 shadow-sm">
+                      <div suppressHydrationWarning className="absolute top-3 right-3 bg-white/90 dark:bg-neutral-900/90 backdrop-blur-md text-neutral-800 dark:text-neutral-100 font-mono text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider border border-neutral-200/50 dark:border-neutral-700/50 shadow-sm">
                         {getPortfolioCategoryLabel(item.category)}
                       </div>
 
@@ -1221,19 +1219,19 @@ className="group cursor-pointer"
                     {/* 2. Below image: industry + duration, name, description */}
                     <div className="mt-3 space-y-2 px-0.5">
                       <div className="flex items-center justify-between text-[10px] font-mono tracking-wide">
-                        <span className="font-extrabold uppercase text-orange-500 dark:text-orange-400">
+                        <span suppressHydrationWarning className="font-extrabold uppercase text-orange-500 dark:text-orange-400">
                           {currentLang === 'en' ? item.industryEn || 'Digital Product' : item.industryBn || 'ডিজিটাল প্রোডাক্ট'}
                         </span>
-                        <span className="text-neutral-400 dark:text-neutral-500 font-medium bg-neutral-50 dark:bg-neutral-900 px-2 py-0.5 rounded border border-neutral-100 dark:border-neutral-800">
+                        <span suppressHydrationWarning className="text-neutral-400 dark:text-neutral-500 font-medium bg-neutral-50 dark:bg-neutral-900 px-2 py-0.5 rounded border border-neutral-100 dark:border-neutral-800">
                           {item.duration}
                         </span>
                       </div>
 
-                      <h3 className="font-sans text-base md:text-lg font-bold text-neutral-900 dark:text-white group-hover:text-orange-500 dark:group-hover:text-orange-400 transition-colors duration-200 leading-snug line-clamp-1">
+                      <h3 suppressHydrationWarning className="font-sans text-base md:text-lg font-bold text-neutral-900 dark:text-white group-hover:text-orange-500 dark:group-hover:text-orange-400 transition-colors duration-200 leading-snug line-clamp-1">
                         {currentLang === 'en' ? item.titleEn : item.titleBn}
                       </h3>
 
-<p className="text-xs text-neutral-500 dark:text-neutral-400 leading-relaxed line-clamp-2">
+<p suppressHydrationWarning className="text-xs text-neutral-500 dark:text-neutral-400 leading-relaxed line-clamp-2">
                         {currentLang === 'en' ? item.descriptionEn : item.descriptionBn}
                       </p>
                     </div>
@@ -1248,7 +1246,7 @@ className="group cursor-pointer"
                       </div>
                       <div className="flex flex-wrap gap-1">
                         {item.technologies.slice(0, 4).map((tech) => (
-                          <span
+                          <span suppressHydrationWarning
                             key={tech}
                             className="rounded-full bg-neutral-50 dark:bg-neutral-900 border border-neutral-200/60 dark:border-neutral-700/60 text-[9px] font-bold text-neutral-500 dark:text-neutral-400 font-mono px-2 py-0.5 transition-colors duration-200"
                           >
@@ -1557,11 +1555,11 @@ className="group cursor-pointer"
                         : 'text-neutral-600 dark:text-neutral-300 hover:bg-gray-50 dark:bg-neutral-900 hover:text-neutral-950'
                     }`}
                   >
-                    <span className="text-sm shrink-0" role="img" aria-label={curr.name}>
+                    <span suppressHydrationWarning className="text-sm shrink-0" role="img" aria-label={curr.name}>
                       {curr.flag || '🏳️'}
                     </span>
-                    <span className="font-sans shrink-0">{curr.symbol}</span>
-                    <span className="font-mono uppercase tracking-wider shrink-0">{curr.code}</span>
+                    <span suppressHydrationWarning className="font-sans shrink-0">{curr.symbol}</span>
+                    <span suppressHydrationWarning className="font-mono uppercase tracking-wider shrink-0">{curr.code}</span>
                   </button>
                 );
               })}
@@ -1583,20 +1581,20 @@ className="group cursor-pointer"
                 }`}
               >
                 {pkg.popular && (
-                  <div className="absolute top-4 right-4 rounded-full bg-blue-600 px-3 py-0.5 text-[9px] font-bold text-white uppercase tracking-wider">
+                  <div suppressHydrationWarning className="absolute top-4 right-4 rounded-full bg-blue-600 px-3 py-0.5 text-[9px] font-bold text-white uppercase tracking-wider">
                     {currentLang === 'en' ? 'Most Popular' : 'জনপ্রিয়'}
                   </div>
                 )}
 
                 <div className="space-y-5">
                   <div className="space-y-1">
-                    <span className="text-xs font-bold text-blue-600 dark:text-orange-400 font-mono uppercase tracking-widest block">{pkg.category}</span>
-                    <h3 className="font-sans text-lg font-black text-gray-900 dark:text-white">{currentLang === 'en' ? pkg.nameEn : pkg.nameBn}</h3>
-                    <p className="text-xs text-gray-400 dark:text-neutral-500 leading-relaxed">{currentLang === 'en' ? pkg.descriptionEn : pkg.descriptionBn}</p>
+                    <span suppressHydrationWarning className="text-xs font-bold text-blue-600 dark:text-orange-400 font-mono uppercase tracking-widest block">{pkg.category}</span>
+                    <h3 suppressHydrationWarning className="font-sans text-lg font-black text-gray-900 dark:text-white">{currentLang === 'en' ? pkg.nameEn : pkg.nameBn}</h3>
+                    <p suppressHydrationWarning className="text-xs text-gray-400 dark:text-neutral-500 leading-relaxed">{currentLang === 'en' ? pkg.descriptionEn : pkg.descriptionBn}</p>
                   </div>
 
                   <div className="py-2 border-y border-gray-50 flex items-baseline space-x-1.5">
-                    <span className="text-3xl font-black text-gray-900 dark:text-white font-mono">{formatPrice(pkg.priceMonthly)}</span>
+                    <span suppressHydrationWarning className="text-3xl font-black text-gray-900 dark:text-white font-mono">{formatPrice(pkg.priceMonthly)}</span>
                     <span className="text-xs text-gray-400 dark:text-neutral-500">/ {currentLang === 'en' ? 'mo' : 'মাস'}</span>
                   </div>
 
@@ -1608,7 +1606,7 @@ className="group cursor-pointer"
                       {(currentLang === 'en' ? pkg.featuresEn : pkg.featuresBn).slice(0, 5).map((feat, fIdx) => (
                         <li key={fIdx} className="flex items-start space-x-2">
                           <Check className="h-4 w-4 text-blue-600 dark:text-orange-400 shrink-0 mt-0.5" />
-                          <span className="text-xs text-gray-600 dark:text-neutral-300 dark:text-neutral-600 leading-tight">{feat}</span>
+                          <span suppressHydrationWarning className="text-xs text-gray-600 dark:text-neutral-300 dark:text-neutral-600 leading-tight">{feat}</span>
                         </li>
                       ))}
                     </ul>
@@ -1616,7 +1614,7 @@ className="group cursor-pointer"
                 </div>
 
                 <div className="pt-6 border-t border-gray-50">
-                  <button
+                  <button suppressHydrationWarning
                     onClick={() => { setTab('pricing'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
                     className={`w-full rounded-xl py-3 text-xs font-bold transition duration-150 cursor-pointer text-center block ${
                       pkg.popular 
@@ -1679,7 +1677,7 @@ className="group cursor-pointer"
                   </div>
 
                   {/* Review Text */}
-                  <p className="text-xs text-neutral-600 dark:text-neutral-300 dark:text-neutral-600 leading-relaxed font-normal italic">
+                  <p suppressHydrationWarning className="text-xs text-neutral-600 dark:text-neutral-300 dark:text-neutral-600 leading-relaxed font-normal italic">
                     "{currentLang === 'en' ? item.feedbackEn : item.feedbackBn}"
                   </p>
                 </div>
@@ -1695,11 +1693,11 @@ className="group cursor-pointer"
                     />
                   </div>
                   <div className="min-w-0">
-                    <span className="block text-xs font-bold text-neutral-900 dark:text-white truncate">{item.name}</span>
-                    <span className="block text-[9px] text-neutral-400 dark:text-neutral-500 font-semibold uppercase tracking-wider truncate">
+                    <span suppressHydrationWarning className="block text-xs font-bold text-neutral-900 dark:text-white truncate">{item.name}</span>
+                    <span suppressHydrationWarning className="block text-[9px] text-neutral-400 dark:text-neutral-500 font-semibold uppercase tracking-wider truncate">
                       {currentLang === 'en' ? item.roleEn : item.roleBn}
                     </span>
-                    <span className="block text-[9px] text-blue-600 dark:text-orange-400 font-bold truncate">
+                    <span suppressHydrationWarning className="block text-[9px] text-blue-600 dark:text-orange-400 font-bold truncate">
                       {item.company}
                     </span>
                   </div>

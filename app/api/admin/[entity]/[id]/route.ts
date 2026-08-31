@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { requireStaff } from "@/lib/require-admin";
 
 const TABLE_MAP: Record<string, string> = {
   services: "services",
@@ -37,6 +38,9 @@ const TABLE_MAP: Record<string, string> = {
   "client-moments": "client_moments",
   products: "products",
   "product-images": "product_images",
+  "project-pricing": "project_pricing",
+  "monthly-pricing": "monthly_pricing",
+  "agency-packages": "agency_packages",
 };
 
 const SOFT_DELETE_TABLES = new Set([
@@ -44,6 +48,9 @@ const SOFT_DELETE_TABLES = new Set([
   "portfolio_items",
   "blog_posts",
   "products",
+  "project_pricing",
+  "monthly_pricing",
+  "agency_packages",
 ]);
 
 const SINGLETON_TABLES = new Set([
@@ -61,6 +68,11 @@ export async function PUT(
   { params }: { params: Promise<{ entity: string; id: string }> }
 ) {
   try {
+    const denied = await requireStaff();
+    if (denied) {
+      return NextResponse.json({ error: denied.error }, { status: denied.status });
+    }
+
     const { entity, id } = await params;
     const tableName = TABLE_MAP[entity];
     if (!tableName) {
@@ -91,6 +103,11 @@ export async function DELETE(
   { params }: { params: Promise<{ entity: string; id: string }> }
 ) {
   try {
+    const denied = await requireStaff();
+    if (denied) {
+      return NextResponse.json({ error: denied.error }, { status: denied.status });
+    }
+
     const { entity, id } = await params;
     const tableName = TABLE_MAP[entity];
     if (!tableName) {

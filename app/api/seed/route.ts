@@ -6,6 +6,9 @@ import {
   initialTechServiceCards
 } from "@/data/initialData";
 import {
+  initialProjectPricing, initialMonthlyPricing, initialAgencyPackages
+} from "@/data/pricingInitialData";
+import {
   initialCookieCategories, defaultCookieSettings, initialLegalPolicies, initialLegalRevisions
 } from "@/data/legalInitialData";
 import {
@@ -19,7 +22,8 @@ import {
   mapTestimonialVideo, mapClientMoment, mapTestimonialStatistics, mapClientLogo, mapSuccessStory,
   mapReviewSettings, mapLegalPolicy, mapLegalRevision, mapCookieCategory, mapCookieSettings,
   mapWhyChooseUsCard, mapWhyChooseUsStat, mapWhyChooseUsBadge, mapWhyChooseUsTech, mapWhyChooseUsCTA,
-  mapProcessStep, mapProcessCTA, mapTechServiceCard, mapContactMessage, mapSubscriber, mapPricingQuoteRequest
+  mapProcessStep, mapProcessCTA, mapTechServiceCard, mapContactMessage, mapSubscriber, mapPricingQuoteRequest,
+  mapProjectPricing, mapMonthlyPricing, mapAgencyPackage
 } from "@/lib/mappers";
 
 // Additional mock data arrays referenced in initDB()
@@ -290,6 +294,20 @@ export async function GET() {
     if (seedQuotes && seedQuotes.length > 0) {
       const itemsToInsert = seedQuotes.map((item: any) => mapPricingQuoteRequest.toDb(item));
       await supabase.from("pricing_quote_requests").upsert(itemsToInsert);
+    }
+
+    // 22. Seed Dynamic Pricing System (project / monthly / agency packages)
+    if (initialProjectPricing && initialProjectPricing.length > 0) {
+      const itemsToInsert = initialProjectPricing.map(item => mapProjectPricing.toDb(item));
+      await supabase.from("project_pricing").upsert(itemsToInsert);
+    }
+    if (initialMonthlyPricing && initialMonthlyPricing.length > 0) {
+      const itemsToInsert = initialMonthlyPricing.map(item => mapMonthlyPricing.toDb(item));
+      await supabase.from("monthly_pricing").upsert(itemsToInsert);
+    }
+    if (initialAgencyPackages && initialAgencyPackages.length > 0) {
+      const itemsToInsert = initialAgencyPackages.map(item => mapAgencyPackage.toDb(item));
+      await supabase.from("agency_packages").upsert(itemsToInsert);
     }
 
     return NextResponse.json(

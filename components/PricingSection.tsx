@@ -1,52 +1,66 @@
 ﻿"use client";
 /**
- * @license
- * SPDX-License-Identifier: Apache-2.0
+ * Public /pricing page component — dynamic pricing engine.
+ * Data comes from the Supabase backend via GET /api/pricing (published rows
+ * only). Rows are managed in the admin panel under Pricing Management.
+ * Requests land in pricing_quote_requests via POST /api/pricing/quotes.
  */
-
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { getLocalItem, setLocalItem } from '@/lib/utils';
-import { 
-  Check, 
-  HelpCircle, 
-  ShieldCheck, 
-  Sparkles, 
-  ArrowRight, 
-  Calculator, 
-  Layers, 
-  FileText, 
-  ChevronDown, 
-  Star, 
-  Clock, 
-  Upload, 
-  Flame, 
-  Zap, 
-  Award, 
-  Briefcase, 
-  AlertCircle,
-  Lock,
-  Palette,
-  Video,
-  Megaphone,
-  Brain,
-  Code,
+import {
+  Check,
+  ArrowRight,
+  Clock,
+  Sparkles,
+  ShieldCheck,
+  Layers,
+  Zap,
+  Target,
   Tag,
   Diamond,
-  Target
+  ChevronDown,
+  AlertCircle,
+  X,
+  Loader2,
+  PenTool,
+  Code,
+  Palette,
+  Megaphone,
+  Brain,
+  Search,
+  Video,
+  FolderOpen,
+  Send,
+  Calculator,
+  Table2,
+  Wallet,
+  Building2,
+  BadgeCheck,
+  CalendarClock,
+  Rocket,
+  Star,
+  Quote,
 } from 'lucide-react';
-import { translations } from '@/data/translations';
-import { 
-  getPricingPackages, 
-  getPricingAddons, 
-  getPricingComparisons, 
-  addPricingQuote,
+import {
   getFAQs,
-  getTestimonials,
+  addPricingQuote,
   getCurrencies,
-  getCurrencySettings
+  getCurrencySettings,
+  getWhyChooseUsCards,
+  getTestimonials,
 } from '@/lib/db';
-import { PricingPackage, PricingAddon, FAQ, Testimonial, Currency, CurrencySettings } from '@/types';
+import { getLocalItem, setLocalItem } from '@/lib/utils';
+import {
+  ProjectPricing,
+  MonthlyPricing,
+  AgencyPackage,
+  FAQ,
+  Testimonial,
+  PricingQuoteRequest,
+  Currency,
+  WhyChooseUsCard,
+} from '@/types';
+import { initialProjectPricing, initialMonthlyPricing, initialAgencyPackages } from '@/data/pricingInitialData';
 
 interface PricingSectionProps {
   currentLang: 'en' | 'bn';
@@ -54,302 +68,292 @@ interface PricingSectionProps {
   isFullPage?: boolean;
 }
 
+const SERVICES = [
+  'Web Development',
+  'UI/UX Design',
+  'Graphic Design',
+  'Video Editing',
+  'Digital Marketing',
+  'AI Services',
+  'SEO',
+] as const;
+
+const SERVICE_ICONS: Record<string, any> = {
+  'Web Development': Code,
+  'UI/UX Design': Palette,
+  'Graphic Design': PenTool,
+  'Video Editing': Video,
+  'Digital Marketing': Megaphone,
+  'AI Services': Brain,
+  'SEO': Search,
+};
+
+const fmtPrice = (n: number) => '$' + Number(n || 0).toLocaleString('en-US');
+
+const DEFAULT_FAQS: { question: string; answer: string }[] = [
+  {
+    question: 'How do your project-based prices work?',
+    answer: 'Every project card shows a flat, all-inclusive price for that service — no surprise charges. The price covers design, build, delivery and the listed support window. Timelines are shared before we start, and you only move to the next stage after approving the current one.',
+  },
+  {
+    question: 'What do the monthly plans include?',
+    answer: 'Monthly plans are recurring retainers covering ongoing production — marketing, SEO, design output, video content or site maintenance. You can pause or cancel with one month of notice, and everything you get each month is listed on the card.',
+  },
+  {
+    question: 'Which agency package should I choose?',
+    answer: 'Start with Starter Launchpad to launch fast, choose Growth Engine if you want design, web, marketing and SEO running together, and Scale Dominator when you need automation and full campaign management. Enterprise Alliance is tailored for larger teams with ongoing needs.',
+  },
+  {
+    question: 'Can I get a custom quote?',
+    answer: 'Yes. Use the "Get a Custom Quote" button and our team will reply within 24 hours with a tailored proposal, timeline and price for your specific project.',
+  },
+  {
+    question: 'Is there any hidden charge for revisions?',
+    answer: 'No. The revision and support scope is printed directly on every card. Anything inside that scope is free; anything beyond it is quoted in writing before we proceed.',
+  },
+];
+
+const CALC_ADDONS = [
+  { id: 'express', label: 'Express Delivery (48h Rush)', price: 149 },
+  { id: 'revisions', label: 'Extra Revision Rounds (x3)', price: 99 },
+  { id: 'seo', label: 'SEO Starter Audit', price: 199 },
+  { id: 'kit', label: 'Brand Visual Kit (Logo + UI Mockups)', price: 120 },
+  { id: 'social', label: 'Social Media Kit (12 Posts)', price: 249 },
+  { id: 'support', label: 'Extended Support +2 Months', price: 180 },
+];
+
+const WHY_ICONS: Record<string, any> = {
+  zap: Zap,
+  layers: Layers,
+  shield: ShieldCheck,
+  target: Target,
+  rocket: Rocket,
+  star: Star,
+  badge: BadgeCheck,
+  check: Check,
+  tag: Tag,
+  diamond: Diamond,
+  code: Code,
+};
+
 export default function PricingSection({ currentLang, setTab, isFullPage = false }: PricingSectionProps) {
-  const t = translations[currentLang];
   const [billingPeriod, setBillingPeriod] = useState<'project' | 'monthly'>('project');
-  const [valueTab, setValueTab] = useState<'mvp' | 'saas' | 'enterprise'>('mvp');
-  const [activeSpectrum, setActiveSpectrum] = useState<'all' | 'design' | 'dev' | 'video' | 'marketing' | 'ai'>('all');
+  const [activeService, setActiveService] = useState<string>('All Services');
+  const [activeFaqId, setActiveFaqId] = useState<string | null>(null);
+  const [quoteModal, setQuoteModal] = useState<{ open: boolean; service: string; planLabel: string }>({ open: false, service: 'Web Development', planLabel: '' });
 
-  const handleSpectrumSelect = (service: 'all' | 'design' | 'dev' | 'video' | 'marketing' | 'ai') => {
-    setActiveSpectrum(service);
-    if (service === 'design') {
-      setValueTab('mvp');
-    } else if (service === 'dev' || service === 'video' || service === 'marketing') {
-      setValueTab('saas');
-    } else if (service === 'ai') {
-      setValueTab('enterprise');
-    }
-  };
+  // Budget estimator state (restored calculator section)
+  const [estType, setEstType] = useState<'project' | 'monthly'>('project');
+  const [estBaseId, setEstBaseId] = useState<string>('');
+  const [chosenAddons, setChosenAddons] = useState<string[]>([]);
 
-  // Load Currencies
-  const currencies = useMemo(() => getCurrencies().filter(c => c.enabled !== false).sort((a, b) => a.sortOrder - b.sortOrder), []);
+  // Backend data
+  const [pricingData, setPricingData] = useState<{ project: ProjectPricing[]; monthly: MonthlyPricing[]; agency: AgencyPackage[]; configured: boolean } | null>(null);
+  const [dataError, setDataError] = useState(false);
+
+  // ---- Currency handling (restored classic switcher) ----
+  const currencies = useMemo(
+    () => getCurrencies().filter((c) => c.enabled !== false).sort((a, b) => (a.sortOrder || 0) - (b.sortOrder || 0)),
+    []
+  );
   const currencySettings = useMemo(() => getCurrencySettings(), []);
 
-  // Selected Currency State
   const [selectedCurrency, setSelectedCurrency] = useState<Currency | null>(() => {
     const storedCode = getLocalItem('next_solution_selected_currency_code');
-    const allCurrs = getCurrencies().filter(c => c.enabled !== false).sort((a, b) => a.sortOrder - b.sortOrder);
     if (storedCode) {
-      const found = allCurrs.find(c => c.code === storedCode);
+      const found = currencies.find((c) => c.code === storedCode);
       if (found) return found;
     }
-    const settings = getCurrencySettings();
-    const defaultCode = settings.defaultCurrencyCode || 'USD';
-    const defaultCurr = allCurrs.find(c => c.code === defaultCode);
-    if (defaultCurr) return defaultCurr;
-
-    if (allCurrs.length > 0) return allCurrs[0];
-
-    return {
-      id: 'default-usd',
-      name: 'US Dollar',
-      code: 'USD',
-      symbol: '$',
-      flag: '🇺🇸',
-      exchangeRate: 1.0,
-      enabled: true,
-      isDefault: true,
-      sortOrder: 0
-    };
+    const defaultCode = currencySettings.defaultCurrencyCode || 'USD';
+    const def = currencies.find((c) => c.code === defaultCode);
+    return def || currencies[0] || null;
   });
 
-  // Live Exchange Rates
   const [liveRates, setLiveRates] = useState<Record<string, number>>({});
 
   useEffect(() => {
     if (currencySettings.enableLiveRates) {
       fetch('https://open.er-api.com/v6/latest/USD')
-        .then(res => res.json())
-        .then(data => {
-          if (data && data.rates) {
-            setLiveRates(data.rates);
-          }
+        .then((res) => res.json())
+        .then((data) => {
+          if (data && data.rates) setLiveRates(data.rates);
         })
-        .catch(err => console.warn('Could not fetch live exchange rates:', err));
+        .catch((err) => console.warn('Could not fetch live exchange rates:', err));
     }
   }, [currencySettings.enableLiveRates]);
 
   const activeExchangeRate = useMemo(() => {
     if (!selectedCurrency) return 1.0;
-    if (currencySettings.enableLiveRates && liveRates[selectedCurrency.code]) {
-      return liveRates[selectedCurrency.code];
-    }
-    return selectedCurrency.exchangeRate;
+    if (currencySettings.enableLiveRates && liveRates[selectedCurrency.code]) return liveRates[selectedCurrency.code];
+    return selectedCurrency.exchangeRate || 1;
   }, [selectedCurrency, liveRates, currencySettings.enableLiveRates]);
 
-  // Save selected currency
   const handleCurrencyChange = (curr: Currency) => {
     setSelectedCurrency(curr);
     setLocalItem('next_solution_selected_currency_code', curr.code);
   };
 
-  // Helper to format prices
   const formatPrice = (usdAmount: number) => {
-    if (!selectedCurrency) return `$${usdAmount.toLocaleString()}`;
-    const rate = activeExchangeRate;
-    const amount = usdAmount * rate;
-    const formattedAmount = amount.toLocaleString(undefined, {
-      minimumFractionDigits: currencySettings.decimalPrecision ?? 0,
-      maximumFractionDigits: currencySettings.decimalPrecision ?? 0,
+    if (!selectedCurrency) return `$${Number(usdAmount || 0).toLocaleString('en-US')}`;
+    const rate = activeExchangeRate || 1;
+    const precision = currencySettings.decimalPrecision ?? 0;
+    const amount = (Number(usdAmount || 0) * rate).toLocaleString(undefined, {
+      minimumFractionDigits: precision,
+      maximumFractionDigits: precision,
     });
-    return `${selectedCurrency.symbol}${formattedAmount}`;
+    return `${selectedCurrency.symbol}${amount}`;
   };
 
-  // Helper to format addon price strings
-  const formatAddonPrice = (addonPriceStr: string) => {
-    const match = addonPriceStr.match(/\$(\d+)/);
-    if (match && match[1]) {
-      const usdAmount = parseInt(match[1], 10);
-      const converted = formatPrice(usdAmount);
-      return addonPriceStr.replace(/\$\d+/, converted);
+  useEffect(() => {
+    let cancelled = false;
+    fetch('/api/pricing')
+      .then((res) => (res.ok ? res.json() : Promise.reject(new Error('pricing fetch failed'))))
+      .then((json) => {
+        if (!cancelled) {
+          setPricingData({
+            project: json.project || [],
+            monthly: json.monthly || [],
+            agency: json.agency || [],
+            configured: !!json.configured,
+          });
+        }
+      })
+      .catch(() => {
+        if (!cancelled) setDataError(true);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const loading = !pricingData && !dataError;
+  // If the backend is unreachable, fall back to the bundled starter data.
+  const fallback = dataError;
+
+  const projectList = useMemo(() => {
+    if (fallback) return initialProjectPricing;
+    return pricingData?.project || [];
+  }, [pricingData, fallback]);
+
+  const monthlyList = useMemo(() => {
+    if (fallback) return initialMonthlyPricing;
+    return pricingData?.monthly || [];
+  }, [pricingData, fallback]);
+
+  const agencyList = useMemo(() => {
+    if (fallback) return initialAgencyPackages;
+    return pricingData?.agency || [];
+  }, [pricingData, fallback]);
+
+  const configured = fallback ? true : !!pricingData?.configured;
+
+  const filteredProject = useMemo(() => {
+    return projectList
+      .filter((p) => p.enabled !== false)
+      .filter((p) => activeService === 'All Services' || p.service === activeService)
+      .sort((a, b) => (a.sortOrder || 0) - (b.sortOrder || 0));
+  }, [projectList, activeService]);
+
+  const filteredMonthly = useMemo(() => {
+    return monthlyList
+      .filter((p) => p.enabled !== false)
+      .filter((p) => activeService === 'All Services' || p.service === activeService)
+      .sort((a, b) => (a.sortOrder || 0) - (b.sortOrder || 0));
+  }, [monthlyList, activeService]);
+
+  // Budget estimator derived state
+  const estBaseOptions = useMemo(() => (estType === 'project' ? filteredProject : filteredMonthly), [estType, filteredProject, filteredMonthly]);
+  const estBase = estBaseOptions.find((o) => o.id === estBaseId) || estBaseOptions[0];
+  const estAddonItems = CALC_ADDONS.filter((a) => chosenAddons.includes(a.id));
+  const estTotal = (estBase?.price || 0) + estAddonItems.reduce((s, a) => s + a.price, 0);
+
+  useEffect(() => {
+    const options = estType === 'project' ? filteredProject : filteredMonthly;
+    if (options.length === 0) {
+      setEstBaseId('');
+    } else if (!options.some((o) => o.id === estBaseId)) {
+      setEstBaseId(options[0].id);
     }
-    return addonPriceStr;
-  };
-  
-  // DB States
-  const allPackages = useMemo(() => getPricingPackages(), []);
-  const allAddons = useMemo(() => getPricingAddons(), []);
-  const allComparisons = useMemo(() => getPricingComparisons(), []);
+  }, [estType, filteredProject, filteredMonthly, estBaseId]);
+
   const faqs = useMemo(() => {
     const list = getFAQs();
-    // Prioritize pricing FAQs
-    return list.filter(f => 
-      f.categoryEn.toLowerCase().includes('pricing') || 
-      f.categoryEn.toLowerCase().includes('service') ||
-      f.categoryBn.includes('প্রাইসিং')
-    ).slice(0, 5);
+    try {
+      const pricingFaqs = list
+        .filter((f: FAQ) => f.categoryEn.toLowerCase() === 'pricing')
+        .slice(0, 8);
+      if (pricingFaqs.length >= 5) return pricingFaqs;
+    } catch {
+      // fall through to defaults
+    }
+    return DEFAULT_FAQS;
   }, []);
-  const testimonials = useMemo(() => getTestimonials().slice(0, 3), []);
+  const t = (en: string, bn: string) => (currentLang === 'en' ? en : bn);
 
-  // Filter Categories
-  const categories = [
-    { key: 'Agency Packages', labelEn: 'All Works', labelBn: 'সব কাজ' },
-    { key: 'Web Development', labelEn: 'Web Development', labelBn: 'ওয়েব ডেভেলপমেন্ট' },
-    { key: 'UI/UX Design', labelEn: 'UI/UX Design', labelBn: 'ইউআই/ইউএক্স ডিজাইন' },
-    { key: 'Graphic Design', labelEn: 'Graphic Design', labelBn: 'গ্রাফিক ডিজাইন' },
-    { key: 'Video Editing', labelEn: 'Video Editing', labelBn: 'ভিডিও এডিটিং' },
-    { key: 'Digital Marketing', labelEn: 'Digital Marketing', labelBn: 'ডিজিটাল মার্কেটিং' },
-    { key: 'AI Services', labelEn: 'AI Services', labelBn: 'এআই সার্ভিস' },
-    { key: 'SEO', labelEn: 'SEO', labelBn: 'এসইও' }
-  ];
+  const openQuote = useCallback((service: string, planLabel?: string) => {
+    setQuoteModal({ open: true, service, planLabel: planLabel || '' });
+  }, []);
 
-  const [selectedCategory, setSelectedCategory] = useState<string>('Agency Packages');
-
-  // Filter Packages
-  const activePackages = useMemo(() => {
-    return allPackages
-      .filter(p => p.category === selectedCategory && p.enabled !== false)
-      .sort((a, b) => (a.sortOrder || 0) - (b.sortOrder || 0));
-  }, [allPackages, selectedCategory]);
-
-  // Dynamic Calculator States
-  const [selectedAddonIds, setSelectedAddonIds] = useState<string[]>([]);
-  const [calculatorBasePlan, setCalculatorBasePlan] = useState<string>('agency-business');
-
-  const selectedBasePackage = useMemo(() => {
-    return allPackages.find(p => p.id === calculatorBasePlan);
-  }, [allPackages, calculatorBasePlan]);
-
-  const calculatedTotal = useMemo(() => {
-    if (!selectedBasePackage) return 0;
-    const basePrice = billingPeriod === 'project' ? selectedBasePackage.priceYearly : selectedBasePackage.priceMonthly;
-    
-    let addonsCost = 0;
-    selectedAddonIds.forEach(id => {
-      const addon = allAddons.find(a => a.id === id);
-      if (addon) {
-        // Parse numerical price from addon price string like "$150 / page" or "$299 / month"
-        const match = addon.price.match(/\$(\d+)/);
-        if (match && match[1]) {
-          addonsCost += parseInt(match[1], 10);
-        }
-      }
-    });
-
-    return basePrice + addonsCost;
-  }, [selectedBasePackage, selectedAddonIds, allAddons, billingPeriod]);
-
-  // Quote Request Form States
-  const [quoteForm, setQuoteForm] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    company: '',
-    industry: '',
-    service: 'Web App',
-    budget: '$10,000 - $25,000',
-    timeline: '2-3 months',
-    description: '',
-    attachmentName: '',
-    attachmentData: ''
-  });
-
-  const [submittingQuote, setSubmittingQuote] = useState(false);
-  const [submitSuccess, setSubmitSuccess] = useState(false);
-  const [errorMessage, setErrorMessage] = useState('');
-  const [selectedFileName, setSelectedFileName] = useState('');
-
-  // Active FAQ state
-  const [activeFaqId, setActiveFaqId] = useState<string | null>(null);
-
-  // CTA Package Pick
-  const handleSelectPlan = (pkg: PricingPackage) => {
-    const periodStr = billingPeriod === 'project' ? 'Project Basis' : 'Monthly Billing';
-    const localizedName = currentLang === 'en' ? pkg.nameEn : pkg.nameBn;
-    const localizedPrice = billingPeriod === 'project' ? pkg.priceYearly : pkg.priceMonthly;
-    
-    // Autofill quote form with chosen package
-    setQuoteForm(prev => ({
-      ...prev,
-      service: pkg.category,
-      budget: `${formatPrice(localizedPrice)} / month (${periodStr})`,
-      description: `Hi Next Solution, I am highly interested in the "${localizedName}" package under the "${pkg.category}" category.`
-    }));
-
-    // Scroll to Custom Quote Request section smoothly
-    const element = document.getElementById('quote-form-section');
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
+  const scrollToPlans = () => {
+    document.getElementById('pricing-plans-grid-section')?.scrollIntoView({ behavior: 'smooth' });
   };
 
-  // Toggle addon helper
-  const handleToggleAddon = (addonId: string) => {
-    setSelectedAddonIds(prev => 
-      prev.includes(addonId) 
-        ? prev.filter(id => id !== addonId) 
-        : [...prev, addonId]
-    );
+  const scrollToQuote = () => {
+    document.getElementById('pricing-quote-form-section')?.scrollIntoView({ behavior: 'smooth' });
   };
 
-  // Mock File Upload (Transforms to base64 for localstorage persistence safely)
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      if (file.size > 2 * 1024 * 1024) {
-        alert(currentLang === 'en' ? 'File is too large. Max size is 2MB.' : 'ফাইলটি অনেক বড়। সর্বোচ্চ ২ মেগাবাইট ফাইল আপলোড করতে পারবেন।');
-        return;
-      }
-      setSelectedFileName(file.name);
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setQuoteForm(prev => ({
-          ...prev,
-          attachmentName: file.name,
-          attachmentData: reader.result as string
-        }));
-      };
-      reader.readAsDataURL(file);
-    }
-  };
+  const ServiceFilterChips = () => (
+    <div className="flex flex-wrap justify-center gap-2">
+      {['All Services', ...SERVICES].map((s) => {
+        const active = activeService === s;
+        return (
+          <button
+            key={s}
+            onClick={() => setActiveService(s)}
+            className={`group flex items-center space-x-2 rounded-full px-4 py-2 text-xs font-bold transition-all duration-200 cursor-pointer ${
+              active
+                ? 'bg-orange-500 text-white shadow-md shadow-orange-500/20'
+                : 'border border-neutral-200 dark:border-neutral-700 text-neutral-600 dark:text-neutral-300 hover:border-orange-500/50 hover:text-orange-500 dark:hover:text-orange-400 bg-white dark:bg-[#141414]'
+            }`}
+          >
+            {SERVICE_ICONS[s] ? (() => { const Icon = SERVICE_ICONS[s]; return <Icon className={`h-3.5 w-3.5 ${active ? 'text-white' : 'text-orange-500/70 group-hover:text-orange-500'}`} />; })() : (
+              <FolderOpen className={`h-3.5 w-3.5 ${active ? 'text-white' : 'text-orange-500/70'}`} />
+            )}
+            <span>{s}</span>
+          </button>
+        );
+      })}
+    </div>
+  );
 
-  // Form submit handler
-  const handleSubmitQuote = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!quoteForm.name || !quoteForm.email || !quoteForm.description) {
-      setErrorMessage(currentLang === 'en' ? 'Please fill out all required fields.' : 'দয়া করে সব প্রয়োজনীয় তথ্য পূরণ করুন।');
-      return;
-    }
-
-    setSubmittingQuote(true);
-    setErrorMessage('');
-
-    setTimeout(() => {
-      try {
-        addPricingQuote({
-          name: quoteForm.name,
-          email: quoteForm.email,
-          phone: quoteForm.phone,
-          company: quoteForm.company,
-          industry: quoteForm.industry,
-          service: quoteForm.service,
-          budget: quoteForm.budget,
-          timeline: quoteForm.timeline,
-          description: quoteForm.description,
-          attachmentName: quoteForm.attachmentName || undefined,
-          attachmentData: quoteForm.attachmentData || undefined
-        });
-
-        setSubmitSuccess(true);
-        setQuoteForm({
-          name: '',
-          email: '',
-          phone: '',
-          company: '',
-          industry: '',
-          service: 'Web App',
-          budget: '$10,000 - $25,000',
-          timeline: '2-3 months',
-          description: '',
-          attachmentName: '',
-          attachmentData: ''
-        });
-        setSelectedFileName('');
-      } catch (err) {
-        console.error(err);
-        setErrorMessage(currentLang === 'en' ? 'An unexpected error occurred. Please try again.' : 'একটি সমস্যা হয়েছে। দয়া করে আবার চেষ্টা করুন।');
-      } finally {
-        setSubmittingQuote(false);
-      }
-    }, 1200);
-  };
+  const EmptyState = ({ title, subtitle, cta }: { title: string; subtitle: string; cta?: string }) => (
+    <motion.div
+      initial={{ opacity: 0, y: 16 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="col-span-full rounded-2xl border border-dashed border-neutral-300 dark:border-neutral-700 bg-white/60 dark:bg-[#141414]/60 px-6 py-14 text-center"
+    >
+      <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-orange-500/10">
+        <Sparkles className="h-5 w-5 text-orange-500" />
+      </div>
+      <h4 className="text-sm font-black text-neutral-900 dark:text-white">{title}</h4>
+      <p className="mx-auto mt-2 max-w-md text-xs text-neutral-500 dark:text-neutral-400 leading-relaxed">{subtitle}</p>
+      {cta && (
+        <button
+          onClick={() => openQuote(activeService === 'All Services' ? 'Web Development' : activeService)}
+          className="mt-6 inline-flex items-center space-x-2 rounded-xl bg-orange-500 hover:bg-orange-600 px-6 py-3 text-xs font-bold text-white shadow-lg shadow-orange-500/20 transition-all duration-300 cursor-pointer"
+        >
+          <span>{cta}</span>
+          <ArrowRight className="h-3.5 w-3.5" />
+        </button>
+      )}
+    </motion.div>
+  );
 
   return (
-    <section id="pricing-page-root" data-space-page className={`bg-neutral-50/60 selection:bg-blue-600 selection:text-white ${isFullPage ? 'pt-0 pb-20' : 'py-20'}`}>
-      
-      {/* 1. HERO SECTION — Big Impact. Small Investment. */}
+    <section id="pricing-page-root" data-space-page className={`bg-neutral-50/60 selection:bg-orange-500 selection:text-white ${isFullPage ? 'pt-0 pb-20' : 'py-20'}`}>
+
+      {/* 1. HERO SECTION */}
       <section data-space-hero className="relative min-h-screen flex items-center overflow-hidden bg-[#050607]">
-        {/* Dark atmospheric layers */}
         <div className="absolute inset-0 bg-gradient-to-br from-[#050607] via-[#0a0b0d] to-[#08090b]" />
         <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(ellipse_80%_50%_at_70%_50%,rgba(255,102,0,0.06),transparent)]" />
         <div className="absolute bottom-0 right-0 w-[800px] h-[800px] rounded-full bg-[radial-gradient(circle,rgba(255,102,0,0.08),transparent_70%)] blur-3xl pointer-events-none" />
@@ -361,7 +365,6 @@ export default function PricingSection({ currentLang, setTab, isFullPage = false
             {/* LEFT SIDE — Content */}
             <div className="space-y-6 md:space-y-7 lg:pr-8">
 
-              {/* Label pill */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -370,12 +373,11 @@ export default function PricingSection({ currentLang, setTab, isFullPage = false
                 <span className="inline-flex items-center space-x-2 rounded-full border border-orange-500/30 bg-orange-500/5 px-3.5 py-1.5">
                   <span className="h-1.5 w-1.5 rounded-full bg-orange-500 animate-pulse" />
                   <span className="text-[10px] font-black uppercase tracking-[0.2em] text-orange-500">
-                    {currentLang === 'en' ? 'PRICING & PACKAGES' : 'মূল্য ও প্যাকেজ'}
+                    {t('PRICING & PACKAGES', 'মূল্য ও প্যাকেজ')}
                   </span>
                 </span>
               </motion.div>
 
-              {/* Headline */}
               <motion.div
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -383,31 +385,26 @@ export default function PricingSection({ currentLang, setTab, isFullPage = false
                 className="space-y-1"
               >
                 <h1 className="font-sans text-[clamp(2.8rem,5.5vw,5.2rem)] font-black leading-[1.05] tracking-tight text-white">
-                  {currentLang === 'en' ? 'Big Impact.' : 'বড় প্রভাব।'}
+                  {t('Big Impact.', 'বড় প্রভাব।')}
                   <br />
-                  <span className="text-white">
-                    {currentLang === 'en' ? 'Small ' : 'ছোট '}
-                  </span>
-                  <span className="text-orange-500">
-                    {currentLang === 'en' ? 'Investment.' : 'বিনিয়োগ।'}
-                  </span>
+                  <span className="text-white">{t('Small ', 'ছোট ')}</span>
+                  <span className="text-orange-500">{t('Investment.', 'বিনিয়োগ।')}</span>
                 </h1>
-                {/* Hand-drawn underline SVG */}
                 <svg className="w-48 md:w-56 h-4 mt-1 text-orange-500" viewBox="0 0 200 12" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M2 8 C30 2, 60 2, 100 6 S160 10, 198 4" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
               </motion.div>
 
-              {/* Description */}
               <motion.p
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: 0.35 }}
                 className="text-base md:text-lg text-neutral-400 leading-relaxed max-w-lg"
               >
-                {currentLang === 'en'
-                  ? 'Premium digital solutions that deliver maximum results without stretching your budget.'
-                  : 'আপনার বাজেট না বাড়িয়ে সর্বোচ্চ ফলাফল প্রদানকারী প্রিমিয়াম ডিজিটাল সমাধান।'}
+                {t(
+                  'Transparent, all-inclusive pricing across project work, monthly subscriptions and complete agency packages.',
+                  'প্রজেক্ট, মাসিক প্ল্যান ও সম্পূর্ণ এজেন্সি প্যাকেজে স্বচ্ছ, অল-ইনক্লুসিভ মূল্য।'
+                )}
               </motion.p>
 
               {/* Three Value Points */}
@@ -417,50 +414,41 @@ export default function PricingSection({ currentLang, setTab, isFullPage = false
                 transition={{ duration: 0.5, delay: 0.45 }}
                 className="grid grid-cols-3 gap-0 max-w-lg"
               >
-                {/* Affordable Pricing */}
                 <div className="flex flex-col items-start pr-5 relative">
                   <div className="rounded-full border border-orange-500/30 bg-orange-500/5 p-2.5 mb-3">
                     <Tag className="h-5 w-5 text-orange-500" />
                   </div>
                   <span className="text-sm font-bold text-white leading-tight mb-1.5">
-                    {currentLang === 'en' ? 'Affordable' : 'সাশ্রয়ী'}
-                    <br />
-                    {currentLang === 'en' ? 'Pricing' : 'মূল্য'}
+                    {t('Affordable', 'সাশ্রয়ী')}<br />{t('Pricing', 'মূল্য')}
                   </span>
                   <span className="text-xs text-neutral-500 leading-snug">
-                    {currentLang === 'en' ? 'Plans that fit your budget perfectly.' : 'আপনার বাজেটে ফিটিং প্ল্যান।'}
+                    {t('Plans that fit your budget perfectly.', 'আপনার বাজেটে ফিটিং প্ল্যান।')}
                   </span>
                   <div className="absolute right-0 top-0 bottom-0 w-px bg-gradient-to-b from-transparent via-neutral-700 to-transparent" />
                 </div>
 
-                {/* Best Value */}
                 <div className="flex flex-col items-start px-5 relative">
                   <div className="rounded-full border border-orange-500/30 bg-orange-500/5 p-2.5 mb-3">
                     <Diamond className="h-5 w-5 text-orange-500" />
                   </div>
                   <span className="text-sm font-bold text-white leading-tight mb-1.5">
-                    {currentLang === 'en' ? 'Best' : 'সেরা'}
-                    <br />
-                    {currentLang === 'en' ? 'Value' : 'মূল্য'}
+                    {t('Best', 'সেরা')}<br />{t('Value', 'মূল্য')}
                   </span>
                   <span className="text-xs text-neutral-500 leading-snug">
-                    {currentLang === 'en' ? 'Top quality service at the best price.' : 'সেরা দামে সেরা সেবা।'}
+                    {t('Top quality service at the best price.', 'সেরা দামে সেরা সেবা।')}
                   </span>
                   <div className="absolute right-0 top-0 bottom-0 w-px bg-gradient-to-b from-transparent via-neutral-700 to-transparent" />
                 </div>
 
-                {/* Max Results */}
                 <div className="flex flex-col items-start pl-5">
                   <div className="rounded-full border border-orange-500/30 bg-orange-500/5 p-2.5 mb-3">
                     <Target className="h-5 w-5 text-orange-500" />
                   </div>
                   <span className="text-sm font-bold text-white leading-tight mb-1.5">
-                    {currentLang === 'en' ? 'Max' : 'সর্বোচ্চ'}
-                    <br />
-                    {currentLang === 'en' ? 'Results' : 'ফলাফল'}
+                    {t('Max', 'সর্বোচ্চ')}<br />{t('Results', 'ফলাফল')}
                   </span>
                   <span className="text-xs text-neutral-500 leading-snug">
-                    {currentLang === 'en' ? 'Real, measurable growth focus.' : 'প্রকৃত, পরিমাপযোগ্য বৃদ্ধি।'}
+                    {t('Real, measurable growth focus.', 'প্রকৃত, পরিমাপযোগ্য বৃদ্ধি।')}
                   </span>
                 </div>
               </motion.div>
@@ -473,21 +461,17 @@ export default function PricingSection({ currentLang, setTab, isFullPage = false
                 className="flex flex-wrap gap-3 pt-1"
               >
                 <button
-                  onClick={() => {
-                    document.getElementById('pricing-plans-grid-section')?.scrollIntoView({ behavior: 'smooth' });
-                  }}
+                  onClick={scrollToPlans}
                   className="group rounded-xl bg-orange-500 hover:bg-orange-600 px-7 py-4 text-sm font-bold text-white shadow-lg shadow-orange-500/20 hover:shadow-orange-500/30 hover:-translate-y-0.5 transition-all duration-300 cursor-pointer flex items-center space-x-2"
                 >
-                  <span>{currentLang === 'en' ? 'View Pricing Plans' : 'প্রাইসিং প্ল্যান দেখুন'}</span>
+                  <span>{t('View Pricing Plans', 'প্রাইসিং প্ল্যান দেখুন')}</span>
                   <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform duration-200" />
                 </button>
                 <button
-                  onClick={() => {
-                    document.getElementById('pricing-matrix-section')?.scrollIntoView({ behavior: 'smooth' });
-                  }}
+                  onClick={scrollToQuote}
                   className="rounded-xl border border-orange-500/30 bg-transparent hover:bg-orange-500/5 px-7 py-4 text-sm font-bold text-white hover:text-orange-400 transition-all duration-300 cursor-pointer flex items-center space-x-2"
                 >
-                  <span>{currentLang === 'en' ? 'Compare Plans' : 'প্ল্যান তুলনা করুন'}</span>
+                  <span>{t('Get a Custom Quote', 'কাস্টম কোটেশন নিন')}</span>
                   <ArrowRight className="h-4 w-4" />
                 </button>
               </motion.div>
@@ -500,12 +484,10 @@ export default function PricingSection({ currentLang, setTab, isFullPage = false
               transition={{ duration: 0.8, delay: 0.3, ease: 'easeOut' }}
               className="relative flex items-center justify-center lg:justify-end"
             >
-              {/* Atmospheric orange glow behind image */}
               <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                 <div className="w-[500px] h-[500px] rounded-full bg-[radial-gradient(circle,rgba(255,102,0,0.12),transparent_70%)] blur-2xl" />
               </div>
 
-{/* Handwritten text top-right - moved higher */}
               <motion.div
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -514,15 +496,11 @@ export default function PricingSection({ currentLang, setTab, isFullPage = false
               >
                 <div className="relative">
                   <span className="font-['Caveat',cursive] text-lg md:text-xl text-white italic leading-tight block">
-                    {currentLang === 'en' ? 'Best Results' : 'সেরা ফলাফল'}
-                    <br />
-                    {currentLang === 'en' ? 'Lower Cost' : 'কম খরচ'}
+                    {t('Best Results', 'সেরা ফলাফল')}<br />{t('Lower Cost', 'কম খরচ')}
                   </span>
-                  {/* Orange underline */}
                   <svg className="w-28 h-3 mt-0.5 text-orange-500" viewBox="0 0 120 10" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M2 6 C20 2, 50 2, 80 6 S100 8, 118 4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
                   </svg>
-                  {/* Curved arrow pointing down */}
                   <svg className="w-10 h-10 text-orange-500/60 -mt-1 ml-4" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M10 4 C10 4, 15 20, 20 28 S28 36, 30 32" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" fill="none" />
                     <path d="M26 30 L30 34 L32 28" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none" />
@@ -530,7 +508,6 @@ export default function PricingSection({ currentLang, setTab, isFullPage = false
                 </div>
               </motion.div>
 
-              {/* Floating animation wrapper */}
               <motion.div
                 animate={{ y: [0, -8, 0] }}
                 transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
@@ -543,7 +520,6 @@ export default function PricingSection({ currentLang, setTab, isFullPage = false
                 />
               </motion.div>
 
-              {/* Bottom-right badge */}
               <motion.div
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
@@ -553,7 +529,7 @@ export default function PricingSection({ currentLang, setTab, isFullPage = false
                 <div className="flex items-center space-x-2 rounded-xl border border-orange-500/20 bg-[#0a0b0d]/80 backdrop-blur-md px-3.5 py-3.5 shadow-xl shadow-black/30">
                   <Zap className="h-3.5 w-3.5 text-orange-500 shrink-0" />
                   <span className="text-[11px] md:text-[12px] font-bold text-neutral-300 leading-tight">
-                    {currentLang === 'en' ? 'Maximum Results, Minimum Budget.' : 'সর্বোচ্চ ফলাফল, ন্যূনতম বাজেট।'}
+                    {t('Maximum Results, Minimum Budget.', 'সর্বোচ্চ ফলাফল, ন্যূনতম বাজেট।')}
                   </span>
                 </div>
               </motion.div>
@@ -562,46 +538,74 @@ export default function PricingSection({ currentLang, setTab, isFullPage = false
           </div>
         </div>
 
-        {/* Bottom gradient fade into next section */}
         <div className="absolute bottom-0 left-0 w-full h-32 bg-gradient-to-t from-[#050607] to-transparent pointer-events-none" />
       </section>
-      {/* 2. ALL-IN-ONE & SERVICE PRICING MODULE */}
+
+      {/* 2. PRICING PLANS — PROJECT / MONTHLY */}
       <div id="pricing-plans-grid-section" className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-20">
-        
-        {/* Billing and Categories Switchers */}
+
         <div className="flex flex-col space-y-10 items-center text-center">
-          
-          <div className="space-y-4 max-w-3xl">
-            <span className="inline-flex items-center space-x-1.5 rounded-full bg-blue-50 dark:bg-orange-500/10 px-3.5 py-1 text-xs font-bold text-blue-600 dark:text-orange-400 border border-blue-100 dark:border-orange-500/20">
-              {currentLang === 'en' ? '💎 Flexible Pricing' : '💎 নমনীয় প্রাইসিং'}
+          <div className="space-y-3 max-w-3xl">
+            <span className="text-xs font-extrabold uppercase tracking-widest text-orange-500">
+              {t('SIMPLE, HONEST PRICING', 'সহজ, স্বচ্ছ মূল্য')}
             </span>
-            <h2 className="font-sans text-3xl md:text-5xl font-black tracking-tight text-neutral-900 dark:text-white leading-tight">
-              {currentLang === 'en' ? 'Predictable Packages for Scalable Growth' : 'পরিকল্পিত প্যাকেজ ও সহজ স্কেলিং'}
+            <h2 className="font-sans text-3xl font-black text-neutral-900 dark:text-white tracking-tight">
+              {t('Transparent Pricing For Every Service', 'প্রতিটি সেবার জন্য স্বচ্ছ মূল্য')}
             </h2>
-            <p className="text-sm md:text-base text-neutral-500 dark:text-neutral-400 dark:text-neutral-500 leading-relaxed max-w-2xl mx-auto">
-              {currentLang === 'en' 
-                ? 'Choose the perfect package for your business today and easily upgrade as your business grows.'
-                : 'আজই আপনার ব্যবসার জন্য নিখুঁত প্যাকেজ বেছে নিন এবং ব্যবসা বৃদ্ধির সাথে সাথে সহজেই আপগ্রেড করুন।'}
+            <p className="text-xs text-neutral-500 dark:text-neutral-400 leading-normal">
+              {t(
+                'Choose one-time project pricing or a monthly subscription — every card includes delivery time, revisions and support.',
+                'এককালীন প্রজেক্ট প্রাইস বা মাসিক সাবস্ক্রিপশন — প্রতিটি কার্ডে ডেলিভারি, রিভিশন ও সাপোর্টসহ।'
+              )}
             </p>
           </div>
 
-          {/* Currency Switcher */}
+          {/* Billing toggle */}
+          <div className="inline-flex items-center rounded-2xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-[#141414] p-1.5 shadow-sm">
+            {(['project', 'monthly'] as const).map((period) => {
+              const active = billingPeriod === period;
+              return (
+                <button
+                  key={period}
+                  onClick={() => setBillingPeriod(period)}
+                  className={`relative rounded-xl px-6 md:px-10 py-3.5 text-sm font-black transition-all duration-300 cursor-pointer ${
+                    active ? 'text-white' : 'text-neutral-500 dark:text-neutral-400 hover:text-neutral-800 dark:hover:text-neutral-200'
+                  }`}
+                >
+                  {active && (
+                    <motion.span
+                      layoutId="billing-pill"
+                      transition={{ type: 'spring', stiffness: 400, damping: 32 }}
+                      className="absolute inset-0 rounded-xl bg-orange-500 shadow-lg shadow-orange-500/25"
+                    />
+                  )}
+                  <span className="relative z-10">
+                    {period === 'project'
+                      ? t('PROJECT BASED', 'প্রজেক্ট ভিত্তিক')
+                      : t('MONTHLY', 'মাসিক')}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Currency Switcher — restored */}
           {currencies.length > 0 && (
-            <div className="flex flex-col items-center space-y-2">
+            <div className="flex flex-col items-center space-y-2.5">
               <span className="text-[10px] font-extrabold uppercase tracking-widest text-neutral-400 dark:text-neutral-500">
-                {currentLang === 'en' ? 'Select Preferred Currency' : 'পছন্দসই কারেন্সি সিলেক্ট করুন'}
+                {t('Select Preferred Currency', 'পছন্দের কারেন্সি বেছে নিন')}
               </span>
-              <div className="inline-flex flex-wrap items-center justify-center gap-1.5 bg-white dark:bg-[#141414] border border-neutral-100 dark:border-neutral-800 rounded-2xl p-1.5 shadow-sm">
+              <div className="inline-flex flex-wrap items-center justify-center gap-1.5 rounded-2xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-[#141414] p-1.5 shadow-sm">
                 {currencies.map((curr) => {
                   const isSelected = selectedCurrency?.code === curr.code;
                   return (
                     <button
                       key={curr.code}
                       onClick={() => handleCurrencyChange(curr)}
-                      className={`relative px-4 py-3.5 rounded-xl text-xs font-bold transition-all duration-300 cursor-pointer flex items-center space-x-2 ${
+                      className={`relative rounded-xl px-4 py-2.5 text-xs font-bold transition-all duration-300 cursor-pointer flex items-center space-x-2 ${
                         isSelected
-                          ? 'bg-blue-600 text-white shadow-md shadow-blue-600/10 scale-100'
-                          : 'text-neutral-600 dark:text-neutral-300 dark:text-neutral-600 hover:bg-neutral-50 dark:bg-neutral-900 hover:text-neutral-950'
+                          ? 'bg-orange-500 text-white shadow-md shadow-orange-500/20 scale-100'
+                          : 'text-neutral-600 dark:text-neutral-300 hover:bg-neutral-50 dark:hover:bg-neutral-800 hover:text-neutral-950 dark:hover:text-white'
                       }`}
                     >
                       <span className="text-sm shrink-0" role="img" aria-label={curr.name}>
@@ -616,941 +620,716 @@ export default function PricingSection({ currentLang, setTab, isFullPage = false
             </div>
           )}
 
-          {/* Billing Period Toggle */}
-          <div className="inline-flex items-center space-x-1 bg-white dark:bg-[#141414] border border-neutral-100 dark:border-neutral-800 rounded-2xl p-1.5 shadow-sm">
-            <button
-              onClick={() => setBillingPeriod('project')}
-              className={`px-5 py-3.5 rounded-xl text-xs font-bold transition-all duration-300 cursor-pointer flex items-center space-x-2 ${
-                billingPeriod === 'project'
-                  ? 'bg-orange-500 text-white shadow-md shadow-orange-500/20'
-                  : 'text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white'
-              }`}
-            >
-              <Briefcase className="h-3.5 w-3.5" />
-              <span>{currentLang === 'en' ? 'Project Basis' : 'প্রজেক্ট ভিত্তিক'}</span>
-            </button>
-            <button
-              onClick={() => setBillingPeriod('monthly')}
-              className={`px-5 py-3.5 rounded-xl text-xs font-bold transition-all duration-300 cursor-pointer flex items-center space-x-2 ${
-                billingPeriod === 'monthly'
-                  ? 'bg-orange-500 text-white shadow-md shadow-orange-500/20'
-                  : 'text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white'
-              }`}
-            >
-              <Clock className="h-3.5 w-3.5" />
-              <span>{currentLang === 'en' ? 'Monthly' : 'মাসিক'}</span>
-            </button>
-          </div>
+          <ServiceFilterChips />
+        </div>
 
-          {/* Category Switcher */}
-          <div className="flex flex-wrap items-center justify-center gap-2 max-w-4xl mt-4">
-            {categories.map((cat) => {
-              const isSelected = selectedCategory === cat.key;
+        {/* Cards */}
+        {loading ? (
+          <div className="mt-14 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {Array.from({ length: 8 }).map((_, i) => (
+              <div key={i} className="rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-[#141414] p-6 space-y-3">
+                <div className="h-3 w-24 rounded bg-neutral-100 dark:bg-neutral-800 animate-pulse" />
+                <div className="h-6 w-32 rounded bg-neutral-100 dark:bg-neutral-800 animate-pulse" />
+                <div className="h-9 w-28 rounded bg-orange-500/10 animate-pulse" />
+                <div className="space-y-2 pt-2">
+                  {[...Array(5)].map((__, j) => (
+                    <div key={j} className="h-2.5 w-full rounded bg-neutral-100 dark:bg-neutral-800 animate-pulse" />
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : billingPeriod === 'project' ? (
+          <div className="mt-14 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {filteredProject.map((p, i) => {
+              const Icon = SERVICE_ICONS[p.service] || FolderOpen;
               return (
-                <button
-                  key={cat.key}
-                  onClick={() => setSelectedCategory(cat.key)}
-                  className={`px-4.5 py-3.5 rounded-2xl text-xs font-bold transition-all duration-300 cursor-pointer ${
-                    isSelected
-                      ? 'bg-blue-600 text-white shadow-md shadow-blue-600/10 scale-100'
-                      : 'bg-white dark:bg-[#141414] text-neutral-600 dark:text-neutral-300 dark:text-neutral-600 border border-neutral-100 dark:border-neutral-800 hover:bg-neutral-50 dark:bg-neutral-900 hover:text-neutral-950'
-                  }`}
+                <motion.div
+                  key={p.id}
+                  initial={{ opacity: 0, y: 18 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.35, delay: i * 0.04 }}
+                  className="group relative flex flex-col rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-[#141414] p-6 hover:border-orange-500/50 hover:shadow-xl hover:shadow-orange-500/5 dark:hover:border-orange-500/60 dark:hover:shadow-[0_0_35px_-5px_rgba(255,90,0,0.25)] transition-all duration-300"
                 >
-                  {currentLang === 'en' ? cat.labelEn : cat.labelBn}
-                </button>
+                  {p.recommended && (
+                    <span className="absolute -top-3 right-5 rounded-full bg-orange-500 px-3 py-1 text-[9px] font-black uppercase tracking-wider text-white shadow-md shadow-orange-500/30">
+                      {t('BEST SELLER', 'সেরা পছন্দ')}
+                    </span>
+                  )}
+                  <div className="flex items-center space-x-2.5">
+                    <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-orange-500/10 text-orange-500">
+                      <Icon className="h-4 w-4" />
+                    </span>
+                    <span className="text-[10px] font-extrabold uppercase tracking-widest text-neutral-400 dark:text-neutral-500">
+                      {p.service}
+                    </span>
+                  </div>
+                  <h3 className="mt-4 text-base font-black text-neutral-900 dark:text-white">{p.projectType}</h3>
+                  <div className="mt-3 flex items-end gap-1">
+                    <span className="text-3xl font-black text-orange-500">{formatPrice(p.price)}</span>
+                    <span className="pb-1 text-[10px] font-bold text-neutral-400 dark:text-neutral-500">/ {t('project', 'প্রজেক্ট')}</span>
+                  </div>
+
+                  <div className="mt-4 grid grid-cols-1 gap-1.5 text-[10px] text-neutral-500 dark:text-neutral-400">
+                    {p.delivery && <span className="flex items-center space-x-1.5"><Clock className="h-3 w-3 text-orange-500/70" /><span>{p.delivery}</span></span>}
+                    {p.revisions && <span className="flex items-center space-x-1.5"><Layers className="h-3 w-3 text-orange-500/70" /><span>{p.revisions}</span></span>}
+                    {p.support && <span className="flex items-center space-x-1.5"><ShieldCheck className="h-3 w-3 text-orange-500/70" /><span>{p.support}</span></span>}
+                  </div>
+
+                  <ul className="mt-4 space-y-2 flex-1">
+                    {(p.features || []).slice(0, 6).map((f, j) => (
+                      <li key={j} className="flex items-start space-x-2 text-[11px] text-neutral-600 dark:text-neutral-300">
+                        <Check className="mt-0.5 h-3.5 w-3.5 shrink-0 text-orange-500" />
+                        <span>{f}</span>
+                      </li>
+                    ))}
+                  </ul>
+
+                  <button
+                    onClick={() => openQuote(p.service, p.projectType)}
+                    className="mt-6 w-full flex items-center justify-center space-x-2 rounded-xl bg-neutral-900 dark:bg-orange-500 text-white hover:bg-orange-500 dark:hover:bg-orange-400 px-4 py-3 text-xs font-black transition-all duration-300 cursor-pointer group/btn"
+                  >
+                    <span>{t('Get This Project', 'এই প্রজেক্ট নিন')}</span>
+                    <ArrowRight className="h-3.5 w-3.5 group-hover/btn:translate-x-1 transition-transform" />
+                  </button>
+                </motion.div>
               );
             })}
+            {!configured && filteredProject.length === 0 && (
+              <EmptyState
+                title={t('Project pricing is coming soon', 'প্রজেক্ট প্রাইসিং শীঘ্রই আসছে')}
+                subtitle={t('We are currently fine-tuning custom pricing for this category. Tell us about your project and we will send a tailored quote.', 'আমরা এই ক্যাটাগরির জন্য কাস্টম প্রাইসিং তৈরি করছি। আপনার প্রজেক্টের কথা জানান, আমরা সাজানো কোটেশন পাঠাবো।')}
+                cta={t('Get a Custom Quote', 'কাস্টম কোটেশন নিন')}
+              />
+            )}
+            {configured && filteredProject.length === 0 && (
+              <EmptyState
+                title={t('No options in this category yet', 'এই ক্যাটাগরিতে এখনও কিছু নেই')}
+                subtitle={t('Packages for this service are being prepared. Request a custom quote and our team will reply within 24 hours.', 'এই সেবার প্যাকেজ প্রস্তুত করা হচ্ছে। কাস্টম কোটেশন চান? আমাদের টিম ২৪ ঘণ্টার মধ্যে রিপ্লাই দেবে।')}
+                cta={t('Request a Quote', 'কোটেশন চান')}
+              />
+            )}
+          </div>
+        ) : (
+          <div className="mt-14 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {filteredMonthly.map((p, i) => {
+              const Icon = SERVICE_ICONS[p.service] || FolderOpen;
+              return (
+                <motion.div
+                  key={p.id}
+                  initial={{ opacity: 0, y: 18 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.35, delay: i * 0.04 }}
+                  className="group relative flex flex-col rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-[#141414] p-6 hover:border-orange-500/50 hover:shadow-xl hover:shadow-orange-500/5 dark:hover:border-orange-500/60 dark:hover:shadow-[0_0_35px_-5px_rgba(255,90,0,0.25)] transition-all duration-300"
+                >
+                  {p.recommended && (
+                    <span className="absolute -top-3 right-5 rounded-full bg-orange-500 px-3 py-1 text-[9px] font-black uppercase tracking-wider text-white shadow-md shadow-orange-500/30">
+                      {t('MOST POPULAR', 'সবচেয়ে জনপ্রিয়')}
+                    </span>
+                  )}
+                  <div className="flex items-center space-x-2.5">
+                    <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-orange-500/10 text-orange-500">
+                      <Icon className="h-4 w-4" />
+                    </span>
+                    <div>
+                      <p className="text-[10px] font-extrabold uppercase tracking-widest text-neutral-400 dark:text-neutral-500">{p.service}</p>
+                      <h3 className="text-sm font-black text-neutral-900 dark:text-white">{p.planName}</h3>
+                    </div>
+                  </div>
+                  <div className="mt-4 flex items-end gap-1">
+                    <span className="text-3xl font-black text-orange-500">{formatPrice(p.price)}</span>
+                    <span className="pb-1 text-[10px] font-bold text-neutral-400 dark:text-neutral-500">/ {t(p.billingType === 'yearly' ? 'year' : 'month', p.billingType === 'yearly' ? 'বছর' : 'মাস')}</span>
+                  </div>
+                  <p className="mt-3 text-[11px] text-neutral-500 dark:text-neutral-400 leading-relaxed">{p.description}</p>
+                  <ul className="mt-4 space-y-2 flex-1">
+                    {(p.features || []).slice(0, 6).map((f, j) => (
+                      <li key={j} className="flex items-start space-x-2 text-[11px] text-neutral-600 dark:text-neutral-300">
+                        <Check className="mt-0.5 h-3.5 w-3.5 shrink-0 text-orange-500" />
+                        <span>{f}</span>
+                      </li>
+                    ))}
+                  </ul>
+                  <button
+                    onClick={() => openQuote(p.service, p.planName)}
+                    className="mt-6 w-full flex items-center justify-center space-x-2 rounded-xl bg-neutral-900 dark:bg-orange-500 text-white hover:bg-orange-500 dark:hover:bg-orange-400 px-4 py-3 text-xs font-black transition-all duration-300 cursor-pointer group/btn"
+                  >
+                    <span>{t('Get This Plan', 'এই প্ল্যান নিন')}</span>
+                    <ArrowRight className="h-3.5 w-3.5 group-hover/btn:translate-x-1 transition-transform" />
+                  </button>
+                </motion.div>
+              );
+            })}
+            {!configured && filteredMonthly.length === 0 && (
+              <EmptyState
+                title={t('Monthly plans are coming soon', 'মাসিক প্ল্যান শীঘ্রই আসছে')}
+                subtitle={t('Recurring plans for this service are being prepared. Ask for a custom monthly retainer and we will structure it around your goals.', 'এই সেবার রিকারিং প্ল্যান তৈরি হচ্ছে। কাস্টম মাসিক রিটেইনার চাইলে আমাদের জানান।')}
+                cta={t('Get a Custom Quote', 'কাস্টম কোটেশন নিন')}
+              />
+            )}
+            {configured && filteredMonthly.length === 0 && (
+              <EmptyState
+                title={t('No monthly plans in this category yet', 'এই ক্যাটাগরিতে এখনও মাসিক প্ল্যান নেই')}
+                subtitle={t('We can build a monthly retainer that exactly matches your workflow. Request a quote and we will reply within 24 hours.', 'আমরা আপনার প্রয়োজনের জন্য কাস্টম মাসিক রিটেইনার বানাতে পারি। কোটেশন চান।')}
+                cta={t('Request a Quote', 'কোটেশন চান')}
+              />
+            )}
+          </div>
+        )}
+      </div>
+
+      {/* 3. AGENCY PACKAGES */}
+      <div id="pricing-agency-packages" className="bg-white dark:bg-[#141414] py-20">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="space-y-3 max-w-3xl mx-auto text-center mb-16">
+            <span className="text-xs font-extrabold uppercase tracking-widest text-orange-500">
+              {t('ALL-IN-ONE SOLUTIONS', 'অল-ইন-ওয়ান সমাধান')}
+            </span>
+            <h2 className="font-sans text-3xl font-black text-neutral-900 dark:text-white tracking-tight">
+              {t('Agency Packages — Everything Under One Roof', 'এজেন্সি প্যাকেজ — এক ছাদের নিচে সব')}
+            </h2>
+            <p className="text-xs text-neutral-500 dark:text-neutral-400 leading-normal">
+              {t('Design, development, marketing, video and AI — bundled with a single price and a single point of contact.', 'ডিজাইন, ডেভেলপমেন্ট, মার্কেটিং, ভিডিও ও AI — একটি মূল্যে সব।')}
+            </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 items-stretch mt-12">
-              {activePackages.map((pkg, idx) => {
-                const price = billingPeriod === 'project' ? pkg.priceYearly : pkg.priceMonthly;
-                const pkgName = currentLang === 'en' ? pkg.nameEn : pkg.nameBn;
-                
-                // Determine package tier based on index or popular status
-                const isStarter = idx === 0;
-                const isPro = idx === 1 || pkg.popular;
-                const isEnterprise = idx === 2;
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 items-stretch">
+            {agencyList.filter((p) => p.enabled !== false).map((pkg, i) => {
+              const popular = pkg.mostPopular;
+              const discount = pkg.discount ?? (pkg.originalPrice > 0 ? Math.round(((pkg.originalPrice - pkg.price) / pkg.originalPrice) * 100) : undefined);
+              return (
+                <motion.div
+                  key={pkg.id}
+                  initial={{ opacity: 0, y: 22 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.4, delay: i * 0.08 }}
+                  className={`relative flex flex-col rounded-2xl p-7 transition-all duration-300 ${
+                    popular
+                      ? 'border-2 border-orange-500 bg-neutral-950 text-white shadow-2xl shadow-orange-500/15 dark:bg-neutral-900 lg:-translate-y-3'
+                      : 'border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-[#141414] hover:border-orange-500/40'
+                  }`}
+                >
+                  {popular && (
+                    <span className="absolute -top-3.5 left-1/2 -translate-x-1/2 rounded-full bg-orange-500 px-4 py-1 text-[9px] font-black uppercase tracking-widest text-white shadow-lg shadow-orange-500/30 whitespace-nowrap">
+                      {t('MOST POPULAR', 'সবচেয়ে জনপ্রিয়')}
+                    </span>
+                  )}
+                  {!popular && discount && (
+                    <span className="absolute top-4 right-4 rounded-full bg-orange-500/10 border border-orange-500/30 px-2.5 py-1 text-[9px] font-black text-orange-500">
+                      {t('SAVE', 'সাশ্রয়')} {discount}%
+                    </span>
+                  )}
 
-                // Use admin-editable fields or sensible defaults
-                const deliveryTime = pkg.deliveryTimeEn
-                  ? (currentLang === 'en' ? pkg.deliveryTimeEn : pkg.deliveryTimeBn || pkg.deliveryTimeEn)
-                  : (currentLang === 'en' ? '7-30 Days Delivery' : '৭-৩০ দিন ডেলিভারি');
+                  <div>
+                    <h3 className={`text-lg font-black ${popular ? 'text-white' : 'text-neutral-900 dark:text-white'}`}>{pkg.name}</h3>
+                    <p className={`mt-1.5 text-[11px] leading-snug ${popular ? 'text-neutral-400' : 'text-neutral-500 dark:text-neutral-400'}`}>{pkg.tagline}</p>
+                  </div>
 
-                const supportPeriod = pkg.supportPeriodEn
-                  ? (currentLang === 'en' ? pkg.supportPeriodEn : pkg.supportPeriodBn || pkg.supportPeriodEn)
-                  : (currentLang === 'en' ? '1 Month Support' : '১ মাস সাপোর্ট');
-
-                const perfectFor = pkg.perfectForEn
-                  ? (currentLang === 'en' ? pkg.perfectForEn : pkg.perfectForBn || pkg.perfectForEn)
-                  : (currentLang === 'en' ? 'Perfect for all businesses' : 'সব ব্যবসার জন্য আদর্শ');
-
-                const moneyBack = isEnterprise 
-                  ? (currentLang === 'en' ? '100% Satisfaction Guarantee' : '১০০% সন্তুষ্টির নিশ্চয়তা')
-                  : (currentLang === 'en' ? '14-Day Money-Back Guarantee' : '১৪ দিনের মানি-ব্যাক গ্যারান্টি');
-
-                const badgeText = isPro 
-                  ? (currentLang === 'en' ? '🔥 MOST POPULAR' : '🔥 সবচেয়ে জনপ্রিয়')
-                  : isEnterprise 
-                    ? (currentLang === 'en' ? '👑 ENTERPRISE CHOICE' : '👑 এন্টারপ্রাইজ চয়েস')
-                    : (currentLang === 'en' ? '💎 RECOMMENDED' : '💎 রিকমেন্ডেড');
-
-                const icon = isStarter 
-                  ? <Zap className="h-6 w-6 text-indigo-500 shrink-0 group-hover:scale-110 transition-transform duration-300" />
-                  : isPro 
-                    ? <Flame className="h-6 w-6 text-amber-500 dark:text-amber-400 shrink-0 group-hover:scale-110 transition-transform duration-300 animate-pulse" />
-                    : <Award className="h-6 w-6 text-emerald-500 dark:text-emerald-400 shrink-0 group-hover:scale-110 transition-transform duration-300" />;
-
-                const buttonText = isStarter 
-                  ? (currentLang === 'en' ? 'Start Your Project' : 'প্রজেক্ট শুরু করুন')
-                  : isPro 
-                    ? (currentLang === 'en' ? 'Get Started' : 'শুরু করুন')
-                    : (currentLang === 'en' ? 'Book Consultation' : 'কনসালটেশন বুক করুন');
-
-                return (
-                  <motion.div
-                    key={pkg.id}
-                    id={`package-card-${pkg.id}`}
-                    initial={{ opacity: 0, y: 30 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5, delay: idx * 0.1 }}
-                    whileHover={{ y: -8, scale: isPro ? 1.05 : 1.02 }}
-                    className={`group relative rounded-2xl bg-white dark:bg-[#141414] border p-5 md:p-6 flex flex-col justify-between transition-all duration-300 ${
-                      isPro
-                        ? 'border-blue-600/80 ring-2 ring-blue-600/20 shadow-2xl shadow-blue-600/10 scale-100 lg:scale-[1.04] z-10'
-                        : 'border-neutral-200/90 shadow-sm hover:shadow-xl hover:border-neutral-300 dark:border-neutral-600'
-                    }`}
-                  >
-                    {/* Popular/Premium Badge */}
-                    {isPro ? (
-                      <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-gradient-to-r from-blue-600 dark:from-orange-500 to-indigo-600 dark:to-orange-400 px-4 py-1 text-[10px] font-black uppercase tracking-widest text-white shadow-lg shadow-blue-500/20 dark:shadow-orange-500/20">
-                        {badgeText}
-                      </span>
-                    ) : (
-                      <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-neutral-100 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 px-3.5 py-0.5 text-[9px] font-extrabold uppercase tracking-widest text-neutral-600 dark:text-neutral-300 dark:text-neutral-600">
-                        {badgeText}
+                  <div className={`mt-5 border-t pt-5 ${popular ? 'border-neutral-800' : 'border-neutral-100 dark:border-neutral-800'}`}>
+                    <div className="flex items-baseline gap-2">
+                      <span className={`text-3xl font-black ${popular ? 'text-orange-500' : 'text-orange-500'}`}>{formatPrice(pkg.price)}</span>
+                      {pkg.originalPrice > 0 && pkg.originalPrice > pkg.price && (
+                        <span className="text-xs font-bold text-neutral-400 line-through">{formatPrice(pkg.originalPrice)}</span>
+                      )}
+                    </div>
+                    {discount && discount > 0 && (
+                      <span className={`mt-1 inline-block text-[10px] font-black ${popular ? 'text-emerald-400' : 'text-emerald-600'}`}>
+                        {t('You save', 'আপনি সাশ্রয় করবেন')} {formatPrice(pkg.originalPrice - pkg.price)}
                       </span>
                     )}
+                  </div>
 
-                    <div className="space-y-4">
-                      {/* Badge and Icon header */}
-                      <div className="flex items-start justify-between">
-                        <div className="rounded-xl bg-neutral-50 dark:bg-neutral-900 p-2.5 border border-neutral-100 dark:border-neutral-800 group-hover:bg-blue-50/5 dark:bg-orange-500/50 group-hover:border-blue-100 dark:border-orange-500/20 transition-colors duration-300">
-                          {icon}
-                        </div>
-                        <div className="text-right">
-                          <span className="inline-flex items-center rounded-md bg-neutral-100 dark:bg-neutral-800 px-2 py-0.5 text-[9px] font-bold text-neutral-800 dark:text-neutral-100">
-                            {currentLang === 'en' ? pkg.badgeEn || 'Verified Plan' : pkg.badgeBn || 'যাচাইকৃত প্ল্যান'}
-                          </span>
-                          {pkg.techEn && (
-                            <span className="block text-[8px] font-mono text-neutral-400 dark:text-neutral-500 font-semibold max-w-[120px] truncate mt-1">
-                              {pkg.techEn}
-                            </span>
-                          )}
-                        </div>
-                      </div>
+                  <div className={`mt-4 space-y-1.5 text-[10px] ${popular ? 'text-neutral-400' : 'text-neutral-500 dark:text-neutral-400'}`}>
+                    {pkg.delivery && <span className="flex items-center space-x-1.5"><Clock className="h-3 w-3 text-orange-500/80" /><span>{pkg.delivery}</span></span>}
+                    {pkg.support && <span className="flex items-center space-x-1.5"><ShieldCheck className="h-3 w-3 text-orange-500/80" /><span>{pkg.support}</span></span>}
+                  </div>
 
-                      {/* Head info */}
-                      <div className="space-y-1">
-                        <h3 className="text-lg font-black text-neutral-900 dark:text-white tracking-tight group-hover:text-blue-600 dark:text-orange-400 transition-colors duration-200">
-                          {pkgName}
-                        </h3>
-                        <p className="text-[11px] text-neutral-500 dark:text-neutral-400 dark:text-neutral-500 leading-relaxed min-h-[32px]">
-                          {currentLang === 'en' ? pkg.descriptionEn : pkg.descriptionBn}
-                        </p>
-                      </div>
+                  <ul className={`mt-5 space-y-2.5 flex-1`}>
+                    {(pkg.features || []).slice(0, 8).map((f, j) => (
+                      <li key={j} className="flex items-start space-x-2 text-[11px]">
+                        <Check className={`mt-0.5 h-3.5 w-3.5 shrink-0 ${popular ? 'text-orange-500' : 'text-orange-500'}`} />
+                        <span className={popular ? 'text-neutral-300' : 'text-neutral-600 dark:text-neutral-300'}>{f}</span>
+                      </li>
+                    ))}
+                  </ul>
 
-                      {/* Perfect For Subtext */}
-                      <div className="text-[10px] font-bold text-blue-600/90 uppercase tracking-wider bg-blue-50/40 dark:bg-orange-500/5 border border-blue-100/30 rounded-lg px-2.5 py-1.5 inline-block">
-                        {perfectFor}
-                      </div>
-
-                      {/* Pricing block */}
-                      <div className="pt-3 border-t border-neutral-100 dark:border-neutral-800 space-y-1">
-                          <div className="flex flex-col items-baseline">
-                          <span className="text-[10px] font-black uppercase tracking-widest text-neutral-400 dark:text-neutral-500 mb-0.5">
-                            {currentLang === 'en' ? 'Starting From' : 'শুরুমাত্র'}
-                          </span>
-                          <div className="flex items-baseline">
-                            <span className="text-3xl md:text-4xl font-black tracking-tight text-gray-900 dark:text-white">
-                              {formatPrice(price)}
-                            </span>
-                            <span className="text-xs font-semibold text-neutral-400 dark:text-neutral-500 ml-1.5">
-                              {billingPeriod === 'monthly' ? (currentLang === 'en' ? '/mo' : '/মাস') : ''}
-                            </span>
-                          </div>
-                          <span className="text-[10px] font-bold text-neutral-400 dark:text-neutral-500 mt-1 uppercase tracking-widest font-mono">
-                            {billingPeriod === 'monthly'
-                              ? (currentLang === 'en' ? 'Monthly Billing' : 'মাসিক বিলিং')
-                              : (currentLang === 'en' ? 'One-time Project' : 'এককালীন প্রজেক্ট')
-                            }
-                          </span>
-                        </div>
-                      </div>
-
-                      {/* Delivery and Support meta cards */}
-                      <div className="grid grid-cols-2 gap-2 pt-1">
-                        <div className="rounded-lg border border-neutral-100 dark:border-neutral-800 bg-neutral-50/50 dark:bg-neutral-900/50 p-1.5 text-center">
-                          <span className="block text-[7px] font-bold uppercase tracking-widest text-neutral-400 dark:text-neutral-500">
-                            {currentLang === 'en' ? 'Delivery' : 'ডেলিভারি'}
-                          </span>
-                          <span className="text-[9px] font-extrabold text-neutral-800 dark:text-neutral-100 font-mono">
-                            {deliveryTime}
-                          </span>
-                        </div>
-                        <div className="rounded-lg border border-neutral-100 dark:border-neutral-800 bg-neutral-50/50 dark:bg-neutral-900/50 p-1.5 text-center">
-                          <span className="block text-[7px] font-bold uppercase tracking-widest text-neutral-400 dark:text-neutral-500">
-                            {currentLang === 'en' ? 'Support' : 'সাপোর্ট'}
-                          </span>
-                          <span className="text-[9px] font-extrabold text-neutral-800 dark:text-neutral-100 font-mono">
-                            {supportPeriod}
-                          </span>
-                        </div>
-                      </div>
-
-                      {/* Feature list */}
-                      <div className="space-y-2 pt-1">
-                        <span className="block text-[10px] font-extrabold uppercase tracking-widest text-neutral-400 dark:text-neutral-500">
-                          {currentLang === 'en' ? "Key Capabilities" : 'প্রধান সুবিধাসমূহ'}
+                  <div className="mt-5 flex flex-wrap gap-1.5">
+                    {(pkg.includedServices || []).map((s) => {
+                      const Icon = SERVICE_ICONS[s];
+                      return Icon ? (
+                        <span key={s} className={`inline-flex items-center space-x-1 rounded-md px-2 py-1 text-[9px] font-bold ${popular ? 'bg-neutral-800 text-neutral-300' : 'bg-neutral-100 dark:bg-neutral-800 text-neutral-500 dark:text-neutral-400'}`}>
+                          <Icon className="h-3 w-3" />
+                          <span>{s.split(' ')[0]}</span>
                         </span>
+                      ) : (
+                        <span key={s} className="rounded-md bg-neutral-100 dark:bg-neutral-800 px-2 py-1 text-[9px] font-bold text-neutral-500 dark:text-neutral-400"><span>{s.split(' ')[0]}</span></span>
+                      );
+                    })}
+                  </div>
 
-                        <ul className="space-y-1.5 text-xs">
-                          {(currentLang === 'en' ? pkg.featuresEn : pkg.featuresBn).map((feature, idx) => (
-                            <li key={idx} className="group/item relative flex items-start space-x-2 hover:text-blue-600 dark:text-orange-400 transition-colors py-0">
-                              <div className="rounded-full bg-blue-50 dark:bg-orange-500/10 p-0.5 text-blue-600 dark:text-orange-400 group-hover/item:bg-blue-100 dark:bg-orange-500/15 group-hover/item:scale-110 transition-all duration-200 mt-0.5 shrink-0">
-                                <Check className="h-3 w-3" />
-                              </div>
-                              <span className="leading-tight text-neutral-700 dark:text-neutral-200 group-hover/item:text-neutral-900 dark:text-white transition-colors font-medium">
-                                {feature}
+                  <button
+                    onClick={() => openQuote('Web Development', pkg.name)}
+                    className={`mt-6 w-full rounded-xl px-4 py-3.5 text-xs font-black transition-all duration-300 cursor-pointer flex items-center justify-center space-x-2 ${
+                      popular
+                        ? 'bg-orange-500 text-white hover:bg-orange-400 shadow-lg shadow-orange-500/25'
+                        : 'bg-neutral-900 dark:bg-orange-500 text-white hover:bg-orange-500 dark:hover:bg-orange-400'
+                    }`}
+                  >
+                    <span>{t('Choose Package', 'প্যাকেজ নির্বাচন করুন')}</span>
+                    <ArrowRight className="h-3.5 w-3.5" />
+                  </button>
+                </motion.div>
+              );
+            })}
+            {!configured && agencyList.length === 0 && (
+              <div className="col-span-full">
+                <EmptyState
+                  title={t('Agency packages are coming soon', 'এজেন্সি প্যাকেজ শীঘ্রই আসছে')}
+                  subtitle={t('Our all-in-one bundles are being finalized. Ask for a custom package and we will assemble the perfect service mix for your goals.', 'আমাদের অল-ইন-ওয়ান প্যাকেজ চূড়ান্ত করা হচ্ছে। কাস্টম প্যাকেজ চাইলে আমাদের জানান।')}
+                  cta={t('Get a Custom Quote', 'কাস্টম কোটেশন নিন')}
+                />
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+
+
+
+      {/* 4. INTERACTIVE BUDGET ESTIMATOR */}
+      <div id="pricing-budget-calculator" className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-20">
+        <div className="text-center space-y-3 mb-14">
+          <span className="text-xs font-extrabold uppercase tracking-widest text-orange-500">
+            {t('BUDGET ESTIMATOR', 'বাজেট এস্টিমেটর')}
+          </span>
+          <h2 className="font-sans text-3xl font-black text-neutral-900 dark:text-white tracking-tight">
+            {t('Build Your Own Estimate', 'নিজের এস্টিমেট তৈরি করুন')}
+          </h2>
+          <p className="text-xs text-neutral-500 dark:text-neutral-400 leading-normal max-w-2xl mx-auto">
+            {t('Pick a base package and stack optional add-ons to see a live estimate — instantly, in your preferred currency.', 'একটি বেস প্যাকেজ বাছাই করে অ্যাড-অন যোগ করুন — সাথে সাথে সাজানো এস্টিমেট দেখুন।')}
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 items-start">
+          {/* Left: options builder */}
+          <div className="lg:col-span-3 rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-[#141414] p-6 md:p-8 space-y-6">
+            <div className="flex items-center space-x-2.5">
+              <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-orange-500/10">
+                <Calculator className="h-5 w-5 text-orange-500" />
+              </span>
+              <div>
+                <h3 className="text-sm font-black text-neutral-900 dark:text-white">{t('Step 1 — Choose your base', 'ধাপ ১ — বেস বেছে নিন')}</h3>
+                <p className="text-[10px] text-neutral-500 dark:text-neutral-400 mt-0.5">{t('One-time project or a monthly retainer base.', 'এককালীন প্রজেক্ট বা মাসিক রিটেইনার বেস।')}</p>
+              </div>
+            </div>
+
+            <div className="inline-flex items-center rounded-xl border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-black/40 p-1">
+              {(['project', 'monthly'] as const).map((tp) => (
+                <button
+                  key={tp}
+                  onClick={() => setEstType(tp)}
+                  className={`rounded-lg px-4 py-2 text-[11px] font-black transition-all duration-200 cursor-pointer ${estType === tp ? 'bg-orange-500 text-white shadow-sm' : 'text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white'}`}
+                >
+                  {tp === 'project' ? t('One-Time Project', 'এককালীন প্রজেক্ট') : t('Monthly Retainer', 'মাসিক রিটেইনার')}
+                </button>
+              ))}
+            </div>
+
+            <div className="space-y-2">
+              <label className="block text-[10px] font-bold text-neutral-500 dark:text-neutral-400 uppercase tracking-wider">
+                {t('Select a package', 'প্যাকেজ নির্বাচন করুন')}
+              </label>
+              <select
+                value={estBase?.id || ''}
+                onChange={(e) => setEstBaseId(e.target.value)}
+                className="w-full rounded-xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 px-4 py-3 text-xs font-bold text-neutral-900 dark:text-neutral-100 focus:outline-none focus:ring-2 focus:ring-orange-500/30"
+              >
+                {estBaseOptions.map((opt) => (
+                  <option key={opt.id} value={opt.id}>
+                    {opt.service} — {estType === 'project' ? (opt as ProjectPricing).projectType : (opt as MonthlyPricing).planName} · {formatPrice(opt.price)}
+                    {estType === 'project' ? ` /${t('project', 'প্রজেক্ট')}` : ` /${t('month', 'মাস')}`}
+                  </option>
+                ))}
+              </select>
+              {estBase && (
+                <p className="text-[10px] text-neutral-400 dark:text-neutral-500 leading-relaxed">
+                  {estType === 'project' ? (estBase as ProjectPricing).delivery : (estBase as MonthlyPricing).description}
+                </p>
+              )}
+            </div>
+
+            <div className="border-t border-neutral-100 dark:border-neutral-800 pt-5">
+              <div className="flex items-center space-x-2.5 mb-4">
+                <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-orange-500/10">
+                  <Layers className="h-5 w-5 text-orange-500" />
+                </span>
+                <div>
+                  <h3 className="text-sm font-black text-neutral-900 dark:text-white">{t('Step 2 — Stack add-ons', 'ধাপ ২ — অ্যাড-অন যোগ করুন')}</h3>
+                  <p className="text-[10px] text-neutral-500 dark:text-neutral-400 mt-0.5">{t('Optional extras, added straight to your estimate.', 'ঐচ্ছিক এক্সট্রা, সরাসরি এস্টিমেটে যোগ হয়ে যায়।')}</p>
+                </div>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                {CALC_ADDONS.map((a) => {
+                  const checked = chosenAddons.includes(a.id);
+                  return (
+                    <button
+                      key={a.id}
+                      onClick={() => setChosenAddons((list) => (checked ? list.filter((x) => x !== a.id) : [...list, a.id]))}
+                      className={`flex items-start justify-between space-x-2 rounded-xl border px-3.5 py-3 text-left transition-all duration-200 cursor-pointer ${checked ? 'border-orange-500 bg-orange-500/5' : 'border-neutral-200 dark:border-neutral-700 hover:border-orange-500/40'}`}
+                    >
+                      <span className="text-[11px] font-bold text-neutral-700 dark:text-neutral-200 leading-snug">{a.label}</span>
+                      <span className="shrink-0 flex items-center space-x-1.5">
+                        <span className="text-[11px] font-black text-neutral-500 dark:text-neutral-400">{formatPrice(a.price)}</span>
+                        <span className={`flex h-4 w-4 items-center justify-center rounded border transition-colors ${checked ? 'border-orange-500 bg-orange-500 text-white' : 'border-neutral-300 dark:border-neutral-600'}`}>
+                          {checked && <Check className="h-3 w-3" />}
+                        </span>
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+
+          {/* Right: live estimate display */}
+          <div className="lg:col-span-2 sticky lg:top-24 rounded-2xl bg-neutral-950 p-6 md:p-8 text-white shadow-xl border border-neutral-800 space-y-6">
+            <div className="flex items-center space-x-2.5">
+              <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-orange-500/15">
+                <Wallet className="h-5 w-5 text-orange-500" />
+              </span>
+              <div>
+                <p className="text-[10px] font-black uppercase tracking-widest text-neutral-500">{t('LIVE ESTIMATE', 'লাইভ এস্টিমেট')}</p>
+                <h3 className="text-sm font-black">
+                  {t('Your estimated ', 'আপনার আনুমানিক ')}
+                  <span className="text-orange-500">{estType === 'project' ? t('budget', 'বাজেট') : t('monthly cost', 'মাসিক খরচ')}</span>
+                </h3>
+              </div>
+            </div>
+
+            {estBase ? (
+              <>
+                <div className="space-y-3 border-t border-neutral-800 pt-5">
+                  <div className="flex items-center justify-between text-[11px] text-neutral-400">
+                    <span>{estType === 'project' ? (estBase as ProjectPricing).projectType : (estBase as MonthlyPricing).planName}</span>
+                    <span className="font-black text-white text-[13px]">{formatPrice(estBase.price)}</span>
+                  </div>
+                  {estAddonItems.map((a) => (
+                    <div key={a.id} className="flex items-start justify-between text-[11px] text-neutral-400 space-x-2">
+                      <span className="flex items-center space-x-1.5"><span className="h-1.5 w-1.5 rounded-full bg-orange-500/70 shrink-0" />{a.label}</span>
+                      <span className="font-bold text-neutral-200 shrink-0">+ {formatPrice(a.price)}</span>
+                    </div>
+                  ))}
+                  {estAddonItems.length === 0 && (
+                    <p className="text-[11px] text-neutral-600">{t('No add-ons selected yet.', 'এখনও কোনো অ্যাড-অন বাছাই করা হয়নি।')}</p>
+                  )}
+                </div>
+
+                <div className="rounded-xl bg-orange-500/10 border border-orange-500/20 px-4 py-3.5 flex items-center justify-between">
+                  <span className="text-[11px] font-black uppercase tracking-wider text-orange-300">{t('Estimated Total', 'মোট আনুমানিক')}</span>
+                  <span className="text-2xl font-black text-orange-500">{formatPrice(estTotal)}</span>
+                </div>
+                <p className="text-[10px] text-neutral-500 leading-relaxed">
+                  {t('The final quote may vary slightly with scope — our team confirms the exact price for free.', 'চূড়ান্ত কোট স্কোপ অনুযায়ী সামান্য পরিবর্তিত হতে পারে — দলটি বিনামূল্যে সঠিক দাম নিশ্চিত করে।')}
+                </p>
+                <button
+                  onClick={() => openQuote(
+                    estBase.service,
+                    (estType === 'project' ? (estBase as ProjectPricing).projectType : (estBase as MonthlyPricing).planName) + (estAddonItems.length ? ` + ${estAddonItems.length} add-on(s)` : '')
+                  )}
+                  className="w-full rounded-xl bg-orange-500 hover:bg-orange-400 px-5 py-3.5 text-xs font-black text-white shadow-lg shadow-orange-500/20 transition-all duration-300 cursor-pointer flex items-center justify-center space-x-2"
+                >
+                  <span>{t('Request This Estimate', 'এই এস্টিমেটটি চাই')}</span>
+                  <Send className="h-3.5 w-3.5" />
+                </button>
+              </>
+            ) : (
+              <p className="text-[11px] text-neutral-500 border-t border-neutral-800 pt-5">
+                {t('No packages available yet — request a custom quote below.', 'এখনও কোনো প্যাকেজ নেই — নিচে কাস্টম কোটের রিকোয়েস্ট করুন।')}
+              </p>
+            )}
+
+            <div className="flex items-center space-x-2 pt-1 border-t border-neutral-800">
+              <BadgeCheck className="h-4 w-4 text-emerald-400 shrink-0" />
+              <p className="text-[10px] text-neutral-400">{t('No obligation — estimates are free and answered within 24 hours.', 'কোনো বাধ্যবাধকতা নেই — এস্টিমেট ফ্রি, ২৪ ঘণ্টার মধ্যে রিপ্লাই।')}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* 5. FEATURE COMPARISON MATRIX */}
+      <div id="pricing-comparison-matrix" className="bg-white dark:bg-[#141414] py-20">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="text-center space-y-3 mb-12">
+            <span className="text-xs font-extrabold uppercase tracking-widest text-orange-500">
+              {t('COMPARE & CHOOSE', 'তুলনা করুন ও বেছে নিন')}
+            </span>
+            <h2 className="font-sans text-3xl font-black text-neutral-900 dark:text-white tracking-tight">
+              {t('Feature Comparison Matrix', 'ফিচার তুলনা ম্যাট্রিক্স')}
+            </h2>
+            <p className="text-xs text-neutral-500 dark:text-neutral-400 leading-normal max-w-2xl mx-auto">
+              {t('See how the flagship offers stack up side by side — pricing, delivery, support and scope at a glance.', 'প্রধান অফারগুলো পাশাপাশি দেখুন — দাম, ডেলিভারি, সাপোর্ট ও স্কোপ এক নজরে।')}
+            </p>
+          </div>
+
+          {agencyList.filter((p) => p.enabled !== false).length === 0 ? (
+            <div className="rounded-2xl border border-dashed border-neutral-300 dark:border-neutral-700 bg-white/60 dark:bg-[#141414]/60 p-10 text-center">
+              <p className="text-xs text-neutral-500 dark:text-neutral-400">{t('No comparison data yet — request a custom quote below.', 'তুলনার জন্য এখনও ডেটা নেই — নিচে কাস্টম কোটের রিকোয়েস্ট করুন।')}</p>
+              <button onClick={scrollToQuote} className="mt-5 inline-flex items-center space-x-2 rounded-xl bg-orange-500 hover:bg-orange-600 px-6 py-3 text-xs font-bold text-white shadow-lg shadow-orange-500/20 transition-all duration-300 cursor-pointer">
+                <span>{t('Get a Custom Quote', 'কাস্টম কোটেশন নিন')}</span>
+                <ArrowRight className="h-3.5 w-3.5" />
+              </button>
+            </div>
+          ) : (
+            <div className="overflow-x-auto -mx-4 px-4">
+              <table className="w-full min-w-[880px] border-separate border-spacing-0">
+                <thead>
+                  <tr>
+                    <th className="min-w-[220px] text-left align-bottom px-4 pb-4 text-[10px] font-black uppercase tracking-widest text-neutral-400 dark:text-neutral-500">
+                      {t('Feature', 'ফিচার')}
+                    </th>
+                    {agencyList.filter((p) => p.enabled !== false).slice(0, 5).map((pkg) => {
+                      const popular = pkg.mostPopular;
+                      return (
+                        <th
+                          key={pkg.id}
+                          className={`px-4 pb-4 align-bottom rounded-t-2xl border ${popular ? 'bg-orange-500/10 border-orange-500/40' : 'border-transparent'}`}
+                        >
+                          <div className="text-left">
+                            {popular && (
+                              <span className="inline-block mb-1.5 rounded-full bg-orange-500 px-2.5 py-0.5 text-[8px] font-black uppercase tracking-wider text-white">
+                                {t('MOST POPULAR', 'সবচেয়ে জনপ্রিয়')}
                               </span>
-                              {/* Simple CSS-based Micro Tooltip */}
-                              <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1.5 w-40 scale-0 rounded bg-neutral-900 p-1.5 text-[9px] text-white transition-all duration-200 group-hover/item:scale-100 z-30 shadow-xl pointer-events-none text-center leading-normal">
-                                {currentLang === 'en' ? 'Verified inclusion' : 'যাচাইকৃত অন্তর্ভুক্ত'}
-                                <div className="absolute top-full left-1/2 -translate-x-1/2 -mt-1 border-4 border-transparent border-t-neutral-900" />
+                            )}
+                            <p className="text-xs font-black text-neutral-900 dark:text-white">{pkg.name}</p>
+                            <p className="text-[9px] text-neutral-500 dark:text-neutral-400 mt-0.5 leading-snug">{pkg.tagline}</p>
+                            <p className="mt-2 text-lg font-black text-orange-500">{formatPrice(pkg.price)}</p>
+                            {pkg.originalPrice > 0 && pkg.originalPrice > pkg.price && (
+                              <p className="text-[10px] font-bold text-neutral-400 line-through">{formatPrice(pkg.originalPrice)}</p>
+                            )}
+                          </div>
+                        </th>
+                      );
+                    })}
+                  </tr>
+                </thead>
+                <tbody>
+                  {(['delivery', 'support', 'scope', 'features'] as const).map((rowKey) => (
+                    <tr key={rowKey}>
+                      <td className="px-4 py-4 border-t border-neutral-100 dark:border-neutral-800 text-[11px] font-black text-neutral-500 dark:text-neutral-400 uppercase tracking-wider">
+                        {rowKey === 'delivery' ? t('Delivery', 'ডেলিভারি') : rowKey === 'support' ? t('Support', 'সাপোর্ট') : rowKey === 'scope' ? t('Services Included', 'অন্তর্ভুক্ত সেবা') : t('Features', 'ফিচার')}
+                      </td>
+                      {agencyList.filter((p) => p.enabled !== false).slice(0, 5).map((pkg) => {
+                        const popular = pkg.mostPopular;
+                        const tdCls = `px-4 py-4 border-t align-top ${popular ? 'bg-orange-500/[0.04] border-orange-500/30' : 'border-neutral-100 dark:border-neutral-800'}`;
+                        if (rowKey === 'delivery') {
+                          return <td key={pkg.id} className={tdCls}><span className="text-[11px] font-bold text-neutral-700 dark:text-neutral-200">{pkg.delivery || '—'}</span></td>;
+                        }
+                        if (rowKey === 'support') {
+                          return <td key={pkg.id} className={tdCls}><span className="text-[11px] font-bold text-neutral-700 dark:text-neutral-200">{pkg.support || '—'}</span></td>;
+                        }
+                        if (rowKey === 'scope') {
+                          return (
+                            <td key={pkg.id} className={tdCls}>
+                              <div className="flex flex-wrap gap-1">
+                                {(pkg.includedServices || []).map((s) => (
+                                  <span key={s} className="rounded-md bg-neutral-100 dark:bg-neutral-800 px-1.5 py-0.5 text-[9px] font-bold text-neutral-600 dark:text-neutral-300">{s.split(' ')[0]}</span>
+                                ))}
                               </div>
-                            </li>
-                          ))}
-                        </ul>
-
-                        {/* Not Included Section if available */}
-                        {pkg.notIncludedEn && pkg.notIncludedEn.length > 0 && (
-                          <div className="pt-2 border-t border-neutral-100 dark:border-neutral-800">
-                            <ul className="space-y-2 text-xs text-neutral-400 dark:text-neutral-500">
-                              {(currentLang === 'en' ? pkg.notIncludedEn : pkg.notIncludedBn || []).map((not, idx) => (
-                                <li key={idx} className="flex items-start space-x-2.5 line-through">
-                                  <span className="text-neutral-300 dark:text-neutral-600 font-bold text-sm shrink-0 leading-none">×</span>
-                                  <span className="leading-tight">{not}</span>
+                            </td>
+                          );
+                        }
+                        return (
+                          <td key={pkg.id} className={tdCls}>
+                            <ul className="space-y-1">
+                              {(pkg.features || []).slice(0, 4).map((f, j) => (
+                                <li key={j} className="flex items-start space-x-1.5 text-[10px] text-neutral-600 dark:text-neutral-300">
+                                  <Check className="mt-0.5 h-3 w-3 shrink-0 text-orange-500" />
+                                  <span>{f}</span>
                                 </li>
                               ))}
                             </ul>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-
-                    <div className="space-y-2.5 pt-4">
-                      {/* Choose CTA */}
-                      <button
-                        onClick={() => handleSelectPlan(pkg)}
-                        className={`w-full rounded-xl py-3 text-center text-xs font-bold transition duration-300 border cursor-pointer relative overflow-hidden flex items-center justify-center space-x-2 ${
-                          isPro
-                            ? 'bg-gradient-to-r from-blue-600 dark:from-orange-500 to-indigo-600 dark:to-orange-400 hover:from-blue-700 hover:to-indigo-700 text-white shadow-xl shadow-blue-600/10 border-transparent hover:shadow-blue-600/20'
-                            : 'bg-white dark:bg-[#141414] border-neutral-200 dark:border-neutral-700 hover:bg-neutral-50 dark:bg-neutral-900 text-neutral-700 dark:text-neutral-200 hover:text-neutral-950'
-                        }`}
-                      >
-                        <span>{pkg.ctaEn ? (currentLang === 'en' ? pkg.ctaEn : pkg.ctaBn) : buttonText}</span>
-                        <ArrowRight className="h-4 w-4 transform group-hover:translate-x-1 transition-transform" />
-                      </button>
-
-                      {/* Money back Badge */}
-                      <div className="flex items-center justify-center space-x-1.5 text-[10px] font-bold text-neutral-400 dark:text-neutral-500 font-mono">
-                        <ShieldCheck className="h-4 w-4 text-emerald-500 dark:text-emerald-400 shrink-0" />
-                        <span>{moneyBack}</span>
-                      </div>
-                    </div>
-                  </motion.div>
-                );
-              })}
-            </div>
-
-          {/* Trust Elements row */}
-          <div className="mt-16 pt-8">
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6 text-center">
-              <div className="flex flex-col items-center space-y-2">
-                <div className="rounded-full bg-emerald-50 dark:bg-emerald-500/10 p-2 text-emerald-600 dark:text-emerald-400">
-                  <ShieldCheck className="h-5 w-5" />
-                </div>
-                <span className="text-[11px] font-bold text-neutral-800 dark:text-neutral-100 uppercase tracking-wider">
-                  {currentLang === 'en' ? 'No Hidden Fees' : 'কোনো গোপন চার্জ নেই'}
-                </span>
-              </div>
-              <div className="flex flex-col items-center space-y-2">
-                <div className="rounded-full bg-blue-50 dark:bg-orange-500/10 p-2 text-blue-600 dark:text-orange-400">
-                  <HelpCircle className="h-5 w-5" />
-                </div>
-                <span className="text-[11px] font-bold text-neutral-800 dark:text-neutral-100 uppercase tracking-wider">
-                  {currentLang === 'en' ? 'Free Consultation' : 'ফ্রি কনসালটেশন'}
-                </span>
-              </div>
-              <div className="flex flex-col items-center space-y-2">
-                <div className="rounded-full bg-amber-50 dark:bg-amber-500/10 p-2 text-amber-600 dark:text-amber-400">
-                  <Sparkles className="h-5 w-5" />
-                </div>
-                <span className="text-[11px] font-bold text-neutral-800 dark:text-neutral-100 uppercase tracking-wider">
-                  {currentLang === 'en' ? 'Transparent Pricing' : 'স্বচ্ছ প্রাইসিং'}
-                </span>
-              </div>
-              <div className="flex flex-col items-center space-y-2">
-                <div className="rounded-full bg-indigo-50 dark:bg-orange-500/10 p-2 text-indigo-600 dark:text-orange-400">
-                  <Lock className="h-5 w-5" />
-                </div>
-                <span className="text-[11px] font-bold text-neutral-800 dark:text-neutral-100 uppercase tracking-wider">
-                  {currentLang === 'en' ? 'Secure Payment' : 'নিরাপদ পেমেন্ট'}
-                </span>
-              </div>
-              <div className="flex flex-col items-center space-y-2">
-                <div className="rounded-full bg-purple-50 dark:bg-purple-500/10 p-2 text-purple-600 dark:text-purple-400 dark:text-purple-300">
-                  <Award className="h-5 w-5" />
-                </div>
-                <span className="text-[11px] font-bold text-neutral-800 dark:text-neutral-100 uppercase tracking-wider">
-                  {currentLang === 'en' ? 'Satisfaction Guaranteed' : 'শতভাগ সন্তুষ্টির নিশ্চয়তা'}
-                </span>
-              </div>
-              <div className="flex flex-col items-center space-y-2">
-                <div className="rounded-full bg-rose-50 dark:bg-rose-500/10 p-2 text-rose-600 dark:text-rose-400">
-                  <Clock className="h-5 w-5" />
-                </div>
-                <span className="text-[11px] font-bold text-neutral-800 dark:text-neutral-100 uppercase tracking-wider">
-                  {currentLang === 'en' ? 'Dedicated Support' : 'ডেডিকেটেড সাপোর্ট'}
-                </span>
-              </div>
-            </div>
-          </div>
-
-          {/* Premium CTA: Need Something Custom? */}
-          <div className="mt-16 bg-neutral-950 text-white rounded-3xl p-8 md:p-12 relative overflow-hidden shadow-2xl border border-neutral-800">
-            <div className="absolute top-0 right-0 h-64 w-64 bg-blue-600/15 rounded-full blur-3xl pointer-events-none" />
-            <div className="absolute bottom-0 left-0 h-64 w-64 bg-indigo-600/15 rounded-full blur-3xl pointer-events-none" />
-            
-            <div className="relative z-10 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-8 text-left">
-              <div className="space-y-3 max-w-2xl">
-                <span className="inline-flex items-center space-x-1.5 rounded-full bg-blue-500/10 px-3 py-1 text-[10px] font-extrabold uppercase tracking-wider text-blue-400 dark:text-orange-300 border border-blue-500/20">
-                  <Sparkles className="h-3.5 w-3.5 animate-pulse" />
-                  <span>{currentLang === 'en' ? 'Bespoke Solutions' : 'কাস্টম সলিউশন'}</span>
-                </span>
-                <h3 className="text-2xl md:text-3xl font-black tracking-tight text-white">
-                  {currentLang === 'en' ? 'Need Something Custom?' : 'কাস্টম সলিউশন প্রয়োজন?'}
-                </h3>
-                <p className="text-xs md:text-sm text-neutral-400 dark:text-neutral-500 leading-relaxed">
-                  {currentLang === 'en' 
-                    ? "Every business is unique. Let's build a custom solution tailored to your goals. Get a bespoke scope of work tailored precisely to your budget and deadlines."
-                    : "প্রতিটি ব্যবসাই অনন্য। আপনার নির্দিষ্ট উদ্দেশ্য ও লক্ষ্যের ওপর ভিত্তি করে কাস্টম সলিউশন তৈরি করুন। আপনার বাজেট ও সময়ের সাথে সামঞ্জস্যপূর্ণ ফরমাল কার্যপরিধি লাভ করুন।"}
-                </p>
-              </div>
-              <div className="flex flex-wrap items-center gap-4 shrink-0">
-                <button
-                  onClick={() => {
-                    const el = document.getElementById('quote-form-section');
-                    if (el) el.scrollIntoView({ behavior: 'smooth' });
-                  }}
-                  className="px-6 py-3.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold transition duration-200 cursor-pointer shadow-lg shadow-blue-600/20 flex items-center space-x-2"
-                >
-                  <span>{currentLang === 'en' ? 'Request Custom Quote' : 'কাস্টম কোটেশন পাঠান'}</span>
-                  <ArrowRight className="h-4 w-4" />
-                </button>
-                <button
-                  onClick={() => {
-                    setTab('contact');
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
-                  }}
-                  className="px-6 py-3.5 rounded-xl bg-neutral-900 border border-neutral-800 hover:border-neutral-700 hover:bg-neutral-800 text-neutral-200 hover:text-white text-xs font-bold transition duration-200 cursor-pointer"
-                >
-                  {currentLang === 'en' ? 'Schedule a Meeting' : 'মিটিং শিডিউল করুন'}
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* 3. INTERACTIVE BUDGET ESTIMATION CALCULATOR */}
-      <div id="dynamic-calculator-section" className="bg-white dark:bg-[#141414] py-20">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          
-          <div className="grid grid-cols-1 gap-12 lg:grid-cols-12 lg:items-start">
-            
-            {/* Left Options builder */}
-            <div className="lg:col-span-7 space-y-8">
-              <div className="space-y-3">
-                <div className="inline-flex items-center space-x-1.5 rounded-full bg-neutral-100 dark:bg-neutral-800 px-3 py-1 text-[10px] font-extrabold uppercase tracking-wider text-neutral-600 dark:text-neutral-300 dark:text-neutral-600">
-                  <Calculator className="h-3.5 w-3.5" />
-                  <span>{currentLang === 'en' ? 'Interactive Budget Builder' : 'ইন্টারেক্টিভ বাজেট বিল্ডার'}</span>
-                </div>
-                <h2 className="font-sans text-2xl font-black tracking-tight text-neutral-900 dark:text-white sm:text-3xl">
-                  {currentLang === 'en' ? 'Construct Your Tailored Budget' : 'আপনার কাস্টম বাজেট তৈরি করুন'}
-                </h2>
-                <p className="text-xs text-neutral-500 dark:text-neutral-400 dark:text-neutral-500">
-                  {currentLang === 'en' 
-                    ? 'Pick an initial base configuration tier and select from our available modular add-ons to synthesize a highly accurate ballpark estimate.'
-                    : 'একটি মূল সার্ভিস ক্যাটাগরি সিলেক্ট করুন এবং আমাদের মডুলার অ্যাড-অনগুলো থেকে আপনার প্রয়োজনীয় ফিচার যোগ করে লাইভ বাজেট হিসেব করুন।'}
-                </p>
-              </div>
-
-              {/* Base Pack dropdown */}
-              <div className="space-y-3">
-                <label className="block text-xs font-bold text-neutral-700 dark:text-neutral-200 uppercase tracking-wider">
-                  {currentLang === 'en' ? '1. Select Base Plan' : '১. বেস প্ল্যান সিলেক্ট করুন'}
-                </label>
-                <div className="relative">
-                  <select 
-                    value={calculatorBasePlan}
-                    onChange={(e) => setCalculatorBasePlan(e.target.value)}
-                    className="w-full appearance-none rounded-xl border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-900 px-4.5 py-3.5 text-xs font-bold text-neutral-800 dark:text-neutral-100 focus:outline-none focus:ring-1 focus:ring-blue-600 cursor-pointer"
-                  >
-                    {allPackages.filter(p => p.enabled !== false).map(p => {
-                      const optPrice = billingPeriod === 'project' ? p.priceYearly : p.priceMonthly;
-                      return (
-                        <option key={p.id} value={p.id}>
-                          [{p.category}] {currentLang === 'en' ? p.nameEn : p.nameBn} - {formatPrice(optPrice)} / {currentLang === 'en' ? 'mo' : 'মাস'}
-                        </option>
-                      );
-                    })}
-                  </select>
-                  <ChevronDown className="absolute right-4.5 top-1/2 -translate-y-1/2 h-4 w-4 text-neutral-400 dark:text-neutral-500 pointer-events-none" />
-                </div>
-              </div>
-
-              {/* Add-ons Checklist */}
-              <div className="space-y-4">
-                <label className="block text-xs font-bold text-neutral-700 dark:text-neutral-200 uppercase tracking-wider">
-                  {currentLang === 'en' ? '2. Select Modular Add-on Services' : '২. অতিরিক্ত অ্যাড-অন সার্ভিসেস যোগ করুন'}
-                </label>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {allAddons.filter(a => a.enabled !== false).map(addon => {
-                    const isChecked = selectedAddonIds.includes(addon.id);
-                    return (
-                      <div
-                        key={addon.id}
-                        onClick={() => handleToggleAddon(addon.id)}
-                        className={`p-4 border rounded-2xl cursor-pointer transition-all duration-200 flex items-start space-x-3 text-left ${
-                          isChecked 
-                            ? 'bg-blue-50/5 dark:bg-orange-500/50 border-blue-500/80 ring-1 ring-blue-500/10'
-                            : 'bg-neutral-50/20 border-neutral-200 dark:border-neutral-700 hover:border-neutral-300 dark:border-neutral-600'
-                        }`}
-                      >
-                        <div className={`mt-0.5 rounded-md border h-4.5 w-4.5 shrink-0 flex items-center justify-center transition-colors ${
-                          isChecked ? 'bg-blue-600 border-blue-600 text-white' : 'border-neutral-300 dark:border-neutral-600 bg-white dark:bg-[#141414]'
-                        }`}>
-                          {isChecked && <Check className="h-3 w-3" />}
-                        </div>
-                        <div className="space-y-1">
-                          <div className="flex items-center justify-between gap-2.5">
-                            <span className="text-xs font-extrabold text-neutral-900 dark:text-white leading-tight">
-                              {currentLang === 'en' ? addon.nameEn : addon.nameBn}
-                            </span>
-                            <span className="text-[10px] font-mono font-black text-blue-600 dark:text-orange-400 bg-blue-50 dark:bg-orange-500/10 px-2 py-0.5 rounded-sm">
-                              {formatAddonPrice(addon.price)}
-                            </span>
-                          </div>
-                          <p className="text-[10px] text-neutral-500 dark:text-neutral-400 dark:text-neutral-500 leading-normal">
-                            {currentLang === 'en' ? addon.descriptionEn : addon.descriptionBn}
-                          </p>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-
-            </div>
-
-            {/* Right Estimator Display Card */}
-            <div className="lg:col-span-5 sticky top-28">
-              <div className="rounded-3xl border border-neutral-900 bg-neutral-950 p-6 md:p-8 text-white shadow-xl">
-                
-                <h3 className="text-xs font-black uppercase tracking-widest text-neutral-400 dark:text-neutral-500 mb-6 flex items-center gap-2">
-                  <Calculator className="h-4 w-4 text-blue-400 dark:text-orange-300" />
-                  <span>{currentLang === 'en' ? 'ESTIMATION OVERVIEW' : 'বাজেট সামারি'}</span>
-                </h3>
-
-                <div className="space-y-5 border-b border-neutral-800 pb-6">
-                  {/* Selected Base tier */}
-                  {selectedBasePackage && (
-                    <div className="flex justify-between text-xs">
-                      <div>
-                        <span className="text-neutral-400 dark:text-neutral-500">{currentLang === 'en' ? 'Base Configuration:' : 'মূল সার্ভিস কনফিগ:'}</span>
-                        <div className="font-bold text-white mt-0.5">
-                          {currentLang === 'en' ? selectedBasePackage.nameEn : selectedBasePackage.nameBn} ({selectedBasePackage.category})
-                        </div>
-                      </div>
-                      <span className="font-mono font-bold text-neutral-100">
-                        {formatPrice(billingPeriod === 'project' ? selectedBasePackage.priceYearly : selectedBasePackage.priceMonthly)}
-                      </span>
-                    </div>
-                  )}
-
-                  {/* Addons selected */}
-                  {selectedAddonIds.length > 0 && (
-                    <div className="space-y-2.5">
-                      <span className="text-[10px] font-bold text-neutral-500 dark:text-neutral-400 dark:text-neutral-500 uppercase tracking-wider block">
-                        {currentLang === 'en' ? 'Modular Add-ons Added:' : 'সংযুক্ত অ্যাড-অন সার্ভিস সমূহ:'}
-                      </span>
-                      {selectedAddonIds.map(addonId => {
-                        const addon = allAddons.find(a => a.id === addonId);
-                        if (!addon) return null;
-                        return (
-                          <div key={addon.id} className="flex justify-between text-xs">
-                            <span className="text-neutral-400 dark:text-neutral-500 font-medium truncate max-w-[220px]">
-                              + {currentLang === 'en' ? addon.nameEn : addon.nameBn}
-                            </span>
-                            <span className="font-mono text-neutral-300 dark:text-neutral-600 font-semibold">{formatAddonPrice(addon.price)}</span>
-                          </div>
+                          </td>
                         );
                       })}
-                    </div>
-                  )}
-                </div>
-
-                <div className="mt-6 pt-2 flex items-baseline justify-between">
-                  <span className="text-xs font-black text-neutral-400 dark:text-neutral-500 uppercase tracking-widest">
-                    {currentLang === 'en' ? 'Estimated Total:' : 'আনুমানিক মোট খরচ:'}
-                  </span>
-                  <div className="text-right">
-                    <span className="text-4xl font-black tracking-tight text-blue-400 dark:text-orange-300">{formatPrice(calculatedTotal)}</span>
-                    <span className="text-[10px] text-neutral-400 dark:text-neutral-500 font-semibold block mt-0.5">
-                      / {currentLang === 'en' ? 'month estimation' : 'মাসিক আনুমানিক হিসেব'}
-                    </span>
-                  </div>
-                </div>
-
-                <button
-                  onClick={() => {
-                    const compiledNotes = `Calculated Estimate: ${formatPrice(calculatedTotal)}/month. Base package chosen: ${selectedBasePackage?.nameEn} (${selectedBasePackage?.category}). Addons included: ${selectedAddonIds.map(id => allAddons.find(a => a.id === id)?.nameEn).join(', ')}`;
-                    setQuoteForm(prev => ({
-                      ...prev,
-                      description: prev.description + '\n\n' + compiledNotes
-                    }));
-                    const el = document.getElementById('quote-form-section');
-                    if (el) el.scrollIntoView({ behavior: 'smooth' });
-                  }}
-                  className="mt-8 w-full cursor-pointer rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold py-3.5 text-xs text-center transition duration-200 shadow-md shadow-blue-600/10"
-                >
-                  {currentLang === 'en' ? 'Apply This Build to Quote Request' : 'এই বাজেটটি কোটেশন ফর্মে সংযুক্ত করুন'}
-                </button>
-              </div>
+                    </tr>
+                  ))}
+                  <tr>
+                    <td className="px-4 pt-4" />
+                    {agencyList.filter((p) => p.enabled !== false).slice(0, 5).map((pkg) => {
+                      const popular = pkg.mostPopular;
+                      return (
+                        <td key={pkg.id} className={`px-4 pt-4 ${popular ? 'bg-orange-500/[0.04]' : ''}`}>
+                          <button
+                            onClick={() => openQuote('Web Development', pkg.name)}
+                            className={`w-full rounded-xl px-3 py-2.5 text-[11px] font-black transition-all duration-300 cursor-pointer ${popular ? 'bg-orange-500 text-white hover:bg-orange-400' : 'bg-neutral-900 dark:bg-orange-500 text-white hover:bg-orange-500 dark:hover:bg-orange-400'}`}
+                          >
+                            {t('Select', 'নির্বাচন')}
+                          </button>
+                        </td>
+                      );
+                    })}
+                  </tr>
+                </tbody>
+              </table>
             </div>
-
-          </div>
-
+          )}
         </div>
       </div>
 
-      {/* 4. FEATURE COMPARISON MATRIX */}
-      <div id="pricing-matrix-section" className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-20">
-        
-        <div className="text-center space-y-3 max-w-3xl mx-auto mb-12">
-          <span className="text-xs font-extrabold uppercase tracking-widest text-blue-600 dark:text-orange-400">
-            {currentLang === 'en' ? 'DEEP DIVE DETAILS' : 'বিস্তারিত ফিচার ম্যাট্রিক্স'}
-          </span>
-          <h2 className="font-sans text-2xl font-black text-neutral-900 dark:text-white tracking-tight sm:text-3xl">
-            {currentLang === 'en' ? 'Side-by-Side Capability Checklist' : 'পাশাপাশি সব সুবিধা ও সক্ষমতা তুলনা'}
-          </h2>
-          <p className="text-xs text-neutral-500 dark:text-neutral-400 dark:text-neutral-500 leading-normal">
-            {currentLang === 'en' 
-              ? 'Examine precise service level agreements (SLAs), design features, backends limits, and security frameworks.'
-              : 'সার্ভিস লেভেল এগ্রিমেন্ট (SLA), ডিজাইন কোয়ালিটি, ব্যাকএন্ড আর্কিটেকচার এবং নিরাপত্তা ফিচারের তুলনামূলক তথ্য দেখে নিন।'}
-          </p>
+      {/* 6. CUSTOM QUOTE FORM */}
+      <div id="pricing-quote-form-section" className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-20">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
+          <div className="space-y-6 lg:sticky lg:top-24">
+            <span className="text-xs font-extrabold uppercase tracking-widest text-orange-500">
+              {t('GET A FREE CUSTOM QUOTE', 'ফ্রি কাস্টম কোটেশন নিন')}
+            </span>
+            <h2 className="font-sans text-3xl font-black text-neutral-900 dark:text-white tracking-tight">
+              {t('Tell Us About Your Project', 'আপনার প্রজেক্টের কথা বলুন')}
+            </h2>
+            <p className="text-xs text-neutral-500 dark:text-neutral-400 leading-relaxed max-w-md">
+              {t(
+                'Share your goals and we will send a tailored proposal — scope, deliverables, timeline and a fixed price — within 24 hours. In Bengali',
+                'আপনার লক্ষ্য জানান — আমরা ২৪ ঘণ্টার মধ্যে সুসংগঠিত প্রস্তাব পাঠাবো (স্কোপ, ডেলিভারেবল, টাইমলাইন ও নির্দিষ্ট দামসহ)।'
+              )}
+            </p>
+            <div className="space-y-3">
+              {[
+                t('Free estimate, no obligation', 'ফ্রি এস্টিমেট, কোনো বাধ্যবাধকতা নেই'),
+                t('Reply within 24 hours on working days', 'কাজের দিনে ২৪ ঘণ্টার মধ্যে রিপ্লাই'),
+                t('No hidden fees — the quoted price is the price', 'লুকানো চার্জ নেই — উদ্ধৃত দামই চূড়ান্ত দাম'),
+                t('100% confidential project details', '১০০% গোপনীয় প্রজেক্টের তথ্য'),
+              ].map((text) => (
+                <div key={text} className="flex items-center space-x-2.5 rounded-xl bg-white dark:bg-[#141414] border border-neutral-200 dark:border-neutral-800 px-4 py-3">
+                  <BadgeCheck className="h-4 w-4 text-emerald-500 shrink-0" />
+                  <span className="text-[11px] font-bold text-neutral-700 dark:text-neutral-200">{text}</span>
+                </div>
+              ))}
+            </div>
+            <div className="flex items-center space-x-2 text-[10px] text-neutral-400 dark:text-neutral-500">
+              <CalendarClock className="h-4 w-4 shrink-0" />
+              <span>{t('Prefer WhatsApp? Our team is available on live chat.', 'হোয়াটসঅ্যাপ পছন্দ করেন? লাইভ চ্যাটেও আমরা আছি।')}</span>
+            </div>
+          </div>
+
+          <QuoteFormSection currentLang={currentLang} fallbackSave={(q) => addPricingQuote(q)} />
         </div>
+      </div>
 
-        {/* Matrix Table */}
-        <div className="border border-neutral-100 dark:border-neutral-800 rounded-2xl bg-white dark:bg-[#141414] overflow-hidden shadow-xs overflow-x-auto">
-          <table className="w-full text-left border-collapse min-w-[700px]">
-            <thead>
-              <tr className="border-b border-neutral-100 dark:border-neutral-800 bg-neutral-50/50 dark:bg-neutral-900/50 text-[10px] font-extrabold text-neutral-400 dark:text-neutral-500 uppercase tracking-widest">
-                <th className="p-4 md:p-5 w-[35%]">{currentLang === 'en' ? 'Capabilities & Specs' : 'ফিচার ও কারিগরি বিবরণ'}</th>
-                <th className="p-4 md:p-5 text-center w-[21%]">Starter Scale</th>
-                <th className="p-4 md:p-5 text-center w-[21%]">Enterprise Business</th>
-                <th className="p-4 md:p-5 text-center w-[21%]">Custom Elite</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-neutral-100 text-xs text-neutral-600 dark:text-neutral-300 dark:text-neutral-600">
-              {allComparisons.map((comp) => {
-                const category = currentLang === 'en' ? comp.categoryEn : comp.categoryBn;
-                const feature = currentLang === 'en' ? comp.featureEn : comp.featureBn;
-                const starter = currentLang === 'en' ? comp.starterEn : comp.starterBn;
-                const business = currentLang === 'en' ? comp.businessEn : comp.businessBn;
-                const enterprise = currentLang === 'en' ? comp.enterpriseEn : comp.enterpriseBn;
+      {/* 7. WHY CHOOSE NEXT SOLUTION */}
+      <div id="pricing-why-us" className="bg-neutral-50/80 dark:bg-black/20 py-20">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
+          <div className="space-y-3 max-w-3xl mx-auto mb-16">
+            <span className="text-xs font-extrabold uppercase tracking-widest text-orange-500">
+              {t('UNCOMPROMISING STANDARDS', 'আমাদের অনন্য মানদণ্ড')}
+            </span>
+            <h2 className="font-sans text-3xl font-black text-neutral-900 dark:text-white tracking-tight">
+              {t('Designed for Absolute Integrity', 'ডিজাইন করা হয়েছে স্বচ্ছতা ও সততার সাথে')}
+            </h2>
+            <p className="text-xs text-neutral-500 dark:text-neutral-400 leading-normal">
+              {t('Why top international brands and high-growth startups confidently partner with Next Solution.', 'যে কারণে শীর্ষ আন্তর্জাতিক ব্র্যান্ড এবং দ্রুত বর্ধনশীল স্টার্টআপগুলো আমাদের উপর আস্থা রাখে।')}
+            </p>
+          </div>
 
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-left">
+            {getWhyChooseUsCards()
+              .filter((c) => c.visible !== false)
+              .sort((a, b) => a.displayOrder - b.displayOrder)
+              .slice(0, 6)
+              .map((card: WhyChooseUsCard) => {
+                const Icon = WHY_ICONS[card.icon?.toLowerCase()] || Sparkles;
+                const title = currentLang === 'en' ? card.titleEn : card.titleBn;
+                const desc = (currentLang === 'en' ? card.descEn || card.descriptionEn : card.descBn || card.descriptionBn) || '';
+                const badge = currentLang === 'en' ? card.badgeTextEn : card.badgeTextBn;
                 return (
-                  <tr key={comp.id} className="hover:bg-neutral-50/40 transition-colors">
-                    <td className="p-4 md:p-5 font-semibold text-neutral-800 dark:text-neutral-100">
-                      <div className="flex flex-col">
-                        <span className="text-[9px] text-blue-600 dark:text-orange-400 font-extrabold uppercase tracking-wide mb-0.5">
-                          {category}
-                        </span>
-                        <span>{feature}</span>
-                      </div>
-                    </td>
-                    <td className="p-4 md:p-5 text-center text-neutral-500 dark:text-neutral-400 dark:text-neutral-500 font-medium">{starter}</td>
-                    <td className="p-4 md:p-5 text-center text-neutral-800 dark:text-neutral-100 font-semibold">{business}</td>
-                    <td className="p-4 md:p-5 text-center text-blue-700 font-bold bg-blue-50/10 dark:bg-orange-500/5">{enterprise}</td>
-                  </tr>
+                  <div key={card.id} className="bg-white dark:bg-[#141414] border border-neutral-200 dark:border-neutral-800 p-6 md:p-8 rounded-2xl space-y-4 hover:border-orange-500/40 transition-all duration-300">
+                    <div className="flex items-center justify-between">
+                      <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-orange-500/10">
+                        <Icon className="h-5 w-5 text-orange-500" />
+                      </span>
+                      {badge && (
+                        <span className="rounded-full bg-orange-500/10 border border-orange-500/30 px-2.5 py-1 text-[9px] font-black text-orange-500">{badge}</span>
+                      )}
+                    </div>
+                    <h3 className="text-sm font-bold text-neutral-900 dark:text-white">{title}</h3>
+                    {desc && <p className="text-xs text-neutral-500 dark:text-neutral-400 leading-relaxed">{desc}</p>}
+                  </div>
                 );
               })}
-            </tbody>
-          </table>
-        </div>
-
-      </div>
-
-      {/* 5. POSTGRES/LOCALSTORAGE BACKED CUSTOM QUOTE FORM */}
-      <div id="quote-form-section" className="bg-neutral-900 text-white py-24 border-t border-neutral-800 relative overflow-hidden">
-        <div className="absolute bottom-0 left-0 h-96 w-96 rounded-full bg-blue-900/10 blur-3xl pointer-events-none" />
-        
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="grid grid-cols-1 gap-12 lg:grid-cols-12 lg:items-start">
-            
-            {/* Left Texts */}
-            <div className="lg:col-span-5 space-y-6 text-left">
-              <div className="inline-flex items-center space-x-1.5 rounded-full bg-blue-500/10 px-3 py-1 text-xs font-semibold text-blue-400 dark:text-orange-300">
-                <FileText className="h-4 w-4" />
-                <span>{currentLang === 'en' ? 'ZERO-TRUST CONTACT FLOW' : 'সুরক্ষিত কাস্টম কোটেশন'}</span>
-              </div>
-
-              <h2 className="font-sans text-3xl font-black tracking-tight text-white sm:text-4xl">
-                {currentLang === 'en' ? 'Have a Bespoke Vision? Request a Quote.' : 'কাস্টম ডিজাইন বা সার্ভিস লাগবে? আমাদের জানান।'}
-              </h2>
-
-              <p className="text-xs text-neutral-400 dark:text-neutral-500 leading-relaxed">
-                {currentLang === 'en'
-                  ? 'Submit your project credentials and requirements directly. Our architectural staff reviews all applications within 4 business hours to supply a formal scope of work.'
-                  : 'আপনার প্রজেক্টের যাবতীয় ফাইল ও বিবরণ আমাদের কাছে পাঠিয়ে দিন। আমাদের টেকনিক্যাল টিম সর্বোচ্চ ৪ ঘণ্টার মধ্যে বিস্তারিত প্রজেক্ট আর্কিটেকচার রিভিউ প্রদান করবে।'}
-              </p>
-
-              {/* Trust badges inside form */}
-              <div className="space-y-3.5 pt-4">
-                <div className="flex items-center space-x-2.5 text-xs font-semibold text-neutral-300 dark:text-neutral-600">
-                  <Check className="h-4.5 w-4.5 text-blue-400 dark:text-orange-300" />
-                  <span>{currentLang === 'en' ? 'NDA & Non-Disclosure Agreements ready' : 'এনডিএ (NDA) চুক্তির শতভাগ নিশ্চয়তা'}</span>
-                </div>
-                <div className="flex items-center space-x-2.5 text-xs font-semibold text-neutral-300 dark:text-neutral-600">
-                  <Check className="h-4.5 w-4.5 text-blue-400 dark:text-orange-300" />
-                  <span>{currentLang === 'en' ? 'Sub-4 Hours guaranteed callback' : '৪ ঘণ্টার নিচে গ্যারান্টিড রেসপন্স'}</span>
-                </div>
-                <div className="flex items-center space-x-2.5 text-xs font-semibold text-neutral-300 dark:text-neutral-600">
-                  <Check className="h-4.5 w-4.5 text-blue-400 dark:text-orange-300" />
-                  <span>{currentLang === 'en' ? 'Detailed PDF scope of work blueprints' : 'ডিটেইলড প্রজেক্ট পিডিএফ ব্লুপ্রিন্ট'}</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Right Form Card */}
-            <div className="lg:col-span-7">
-              <div className="rounded-3xl border border-neutral-800 bg-neutral-950/80 p-6 md:p-8 shadow-2xl">
-                
-                {submitSuccess ? (
-                  <div className="text-center py-10 space-y-4">
-                    <div className="inline-flex h-12 w-12 items-center justify-center rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 mb-2">
-                      <Check className="h-6 w-6" />
-                    </div>
-                    <h3 className="text-base font-bold text-white">
-                      {currentLang === 'en' ? 'Quote Request Logged Successfully!' : 'কোটেশন রিকোয়েস্ট সফলভাবে জমা হয়েছে!'}
-                    </h3>
-                    <p className="text-xs text-neutral-400 dark:text-neutral-500 max-w-md mx-auto leading-normal">
-                      {currentLang === 'en' 
-                        ? 'Your custom quote request has been saved securely to our local database system. A lead engineer will contact you shortly.'
-                        : 'আপনার কাস্টম কোটেশন রিকোয়েস্টটি আমাদের সুরক্ষিত ডাটাবেসে সফলভাবে সংরক্ষিত হয়েছে। একজন প্রকৌশলী খুব দ্রুত আপনার সাথে যোগাযোগ করবেন।'}
-                    </p>
-                    <button
-                      onClick={() => setSubmitSuccess(false)}
-                      className="mt-4 inline-flex rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold px-5 py-3.5 text-xs transition duration-200 cursor-pointer"
-                    >
-                      {currentLang === 'en' ? 'Submit Another Application' : 'নতুন কোটেশন পাঠান'}
-                    </button>
-                  </div>
-                ) : (
-                  <form onSubmit={handleSubmitQuote} className="space-y-5 text-left">
-                    
-                    {errorMessage && (
-                      <div className="rounded-xl bg-red-500/10 border border-red-500/20 p-3.5 text-xs text-red-400 font-semibold flex items-center space-x-2">
-                        <AlertCircle className="h-4 w-4 shrink-0" />
-                        <span>{errorMessage}</span>
-                      </div>
-                    )}
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                      {/* Name */}
-                      <div className="space-y-1.5">
-                        <label className="block text-[11px] font-bold text-neutral-400 dark:text-neutral-500 uppercase tracking-wider">
-                          {currentLang === 'en' ? 'Full Name *' : 'পূর্ণ নাম *'}
-                        </label>
-                        <input
-                          type="text"
-                          required
-                          placeholder="John Doe"
-                          value={quoteForm.name}
-                          onChange={(e) => setQuoteForm({ ...quoteForm, name: e.target.value })}
-                          className="w-full rounded-xl border border-neutral-800 bg-neutral-900/60 px-4 py-3 text-xs text-white focus:outline-none focus:ring-1 focus:ring-blue-600"
-                        />
-                      </div>
-
-                      {/* Email */}
-                      <div className="space-y-1.5">
-                        <label className="block text-[11px] font-bold text-neutral-400 dark:text-neutral-500 uppercase tracking-wider">
-                          {currentLang === 'en' ? 'Corporate Email *' : 'কর্পোরেট ইমেল *'}
-                        </label>
-                        <input
-                          type="email"
-                          required
-                          placeholder="john@company.com"
-                          value={quoteForm.email}
-                          onChange={(e) => setQuoteForm({ ...quoteForm, email: e.target.value })}
-                          className="w-full rounded-xl border border-neutral-800 bg-neutral-900/60 px-4 py-3 text-xs text-white focus:outline-none focus:ring-1 focus:ring-blue-600"
-                        />
-                      </div>
-                    </div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                      {/* Phone */}
-                      <div className="space-y-1.5">
-                        <label className="block text-[11px] font-bold text-neutral-400 dark:text-neutral-500 uppercase tracking-wider">
-                          {currentLang === 'en' ? 'Phone Number' : 'ফোন নম্বর'}
-                        </label>
-                        <input
-                          type="text"
-                          placeholder="+1 (555) 000-0000"
-                          value={quoteForm.phone}
-                          onChange={(e) => setQuoteForm({ ...quoteForm, phone: e.target.value })}
-                          className="w-full rounded-xl border border-neutral-800 bg-neutral-900/60 px-4 py-3 text-xs text-white focus:outline-none focus:ring-1 focus:ring-blue-600"
-                        />
-                      </div>
-
-                      {/* Company & Industry */}
-                      <div className="space-y-1.5">
-                        <label className="block text-[11px] font-bold text-neutral-400 dark:text-neutral-500 uppercase tracking-wider">
-                          {currentLang === 'en' ? 'Company Name & Industry' : 'প্রতিষ্ঠানের নাম ও ইন্ডাস্ট্রি'}
-                        </label>
-                        <input
-                          type="text"
-                          placeholder="Acme Corp (Fintech)"
-                          value={quoteForm.company}
-                          onChange={(e) => setQuoteForm({ ...quoteForm, company: e.target.value })}
-                          className="w-full rounded-xl border border-neutral-800 bg-neutral-900/60 px-4 py-3 text-xs text-white focus:outline-none focus:ring-1 focus:ring-blue-600"
-                        />
-                      </div>
-                    </div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-                      {/* Target Category */}
-                      <div className="space-y-1.5">
-                        <label className="block text-[11px] font-bold text-neutral-400 dark:text-neutral-500 uppercase tracking-wider">
-                          {currentLang === 'en' ? 'Target Category' : 'সার্ভিস ক্যাটাগরি'}
-                        </label>
-                        <select
-                          value={quoteForm.service}
-                          onChange={(e) => setQuoteForm({ ...quoteForm, service: e.target.value })}
-                          className="w-full rounded-xl border border-neutral-800 bg-neutral-900/60 px-3.5 py-3 text-xs text-white focus:outline-none focus:ring-1 focus:ring-blue-600 cursor-pointer"
-                        >
-                          <option value="Web Development">{currentLang === 'en' ? 'Web Development' : 'ওয়েব ডেভেলপমেন্ট'}</option>
-                          <option value="Web App">{currentLang === 'en' ? 'Web Application' : 'ওয়েব অ্যাপস'}</option>
-                          <option value="UI/UX Design">{currentLang === 'en' ? 'UI/UX Design' : 'ইউআই/ইউএক্স ডিজাইন'}</option>
-                          <option value="Graphic Design">{currentLang === 'en' ? 'Graphic Design' : 'গ্রাফিক ডিজাইন'}</option>
-                          <option value="Digital Marketing">{currentLang === 'en' ? 'Digital Marketing' : 'ডিজিটাল মার্কেটিং'}</option>
-                          <option value="SEO">{currentLang === 'en' ? 'SEO Search' : 'এসইও সার্চ'}</option>
-                          <option value="AI Services">{currentLang === 'en' ? 'AI Services' : 'এআই সার্ভিস'}</option>
-                          <option value="Video Editing">{currentLang === 'en' ? 'Video Editing' : 'ভিডিও এডিটিং'}</option>
-                        </select>
-                      </div>
-
-                      {/* Ballpark Budget */}
-                      <div className="space-y-1.5">
-                        <label className="block text-[11px] font-bold text-neutral-400 dark:text-neutral-500 uppercase tracking-wider">
-                          {currentLang === 'en' ? 'Budget Range' : 'আনুমানিক বাজেট'}
-                        </label>
-                        <select
-                          value={quoteForm.budget}
-                          onChange={(e) => setQuoteForm({ ...quoteForm, budget: e.target.value })}
-                          className="w-full rounded-xl border border-neutral-800 bg-neutral-900/60 px-3.5 py-3 text-xs text-white focus:outline-none focus:ring-1 focus:ring-blue-600 cursor-pointer"
-                        >
-                          <option value="Under $5,000">{currentLang === 'en' ? 'Under $5,000' : '৫,০০০ ডলারের নিচে'}</option>
-                          <option value="$5,000 - $10,000">$5,000 - $10,000</option>
-                          <option value="$10,000 - $25,000">$10,000 - $25,000</option>
-                          <option value="$25,000 - $50,000">$25,000 - $50,000</option>
-                          <option value="$50,000+">$50,000+</option>
-                        </select>
-                      </div>
-
-                      {/* Expected Timeline */}
-                      <div className="space-y-1.5">
-                        <label className="block text-[11px] font-bold text-neutral-400 dark:text-neutral-500 uppercase tracking-wider">
-                          {currentLang === 'en' ? 'Expected Timeline' : 'আকাঙ্ক্ষিত সময়সীমা'}
-                        </label>
-                        <select
-                          value={quoteForm.timeline}
-                          onChange={(e) => setQuoteForm({ ...quoteForm, timeline: e.target.value })}
-                          className="w-full rounded-xl border border-neutral-800 bg-neutral-900/60 px-3.5 py-3 text-xs text-white focus:outline-none focus:ring-1 focus:ring-blue-600 cursor-pointer"
-                        >
-                          <option value="Under 1 month">{currentLang === 'en' ? 'Under 1 Month' : '১ মাসের কম'}</option>
-                          <option value="1-2 months">1-2 Months</option>
-                          <option value="2-3 months">2-3 Months</option>
-                          <option value="3-6 months">3-6 Months</option>
-                          <option value="Flexible / Long Term">{currentLang === 'en' ? 'Flexible / Long Term' : 'দীর্ঘমেয়াদী'}</option>
-                        </select>
-                      </div>
-                    </div>
-
-                    {/* Description */}
-                    <div className="space-y-1.5">
-                      <label className="block text-[11px] font-bold text-neutral-400 dark:text-neutral-500 uppercase tracking-wider">
-                        {currentLang === 'en' ? 'Project Requirements Description *' : 'প্রজেক্টের বিবরণ ও প্রয়োজনীয়তা *'}
-                      </label>
-                      <textarea
-                        required
-                        rows={4}
-                        placeholder={currentLang === 'en' ? 'Outline your primary target audiences, essential features, references, and core technical goals...' : 'আপনার প্রজেক্টের প্রধান লক্ষ্য, প্রয়োজনীয় ফিচার, রেফারেন্স এবং উদ্দেশ্যসমূহ লিখুন...'}
-                        value={quoteForm.description}
-                        onChange={(e) => setQuoteForm({ ...quoteForm, description: e.target.value })}
-                        className="w-full rounded-xl border border-neutral-800 bg-neutral-900/60 px-4 py-3 text-xs text-white focus:outline-none focus:ring-1 focus:ring-blue-600 resize-none"
-                      />
-                    </div>
-
-                    {/* Mock File Attachment support */}
-                    <div className="space-y-2">
-                      <label className="block text-[11px] font-bold text-neutral-400 dark:text-neutral-500 uppercase tracking-wider">
-                        {currentLang === 'en' ? 'Project Wireframe or Brief (Max 2MB)' : 'প্রজেক্ট ওয়্যারফ্রেম বা ব্রিফ (সর্বোচ্চ ২ মেগাবাইট)'}
-                      </label>
-                      <div className="relative border border-dashed border-neutral-800 hover:border-neutral-700 bg-neutral-900/40 rounded-xl p-4 transition text-center cursor-pointer">
-                        <input
-                          type="file"
-                          accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.zip"
-                          onChange={handleFileChange}
-                          className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                        />
-                        <div className="flex flex-col items-center justify-center space-y-1 text-xs">
-                          <Upload className="h-5 w-5 text-neutral-500 dark:text-neutral-400 dark:text-neutral-500 mb-1" />
-                          {selectedFileName ? (
-                            <span className="text-blue-400 dark:text-orange-300 font-bold">{selectedFileName}</span>
-                          ) : (
-                            <>
-                              <span className="text-neutral-300 dark:text-neutral-600 font-medium">
-                                {currentLang === 'en' ? 'Click or drag files here to attach' : 'ফাইল আপলোড করতে এখানে ক্লিক করুন'}
-                              </span>
-                              <span className="text-[10px] text-neutral-500 dark:text-neutral-400 dark:text-neutral-500">PDF, JPG, PNG, DOC, ZIP</span>
-                            </>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Submit Btn */}
-                    <button
-                      type="submit"
-                      disabled={submittingQuote}
-                      className="w-full rounded-xl bg-blue-600 hover:bg-blue-700 disabled:bg-neutral-800 disabled:text-neutral-500 dark:text-neutral-400 dark:text-neutral-500 text-white font-bold py-4 text-xs transition duration-200 cursor-pointer shadow-lg shadow-blue-600/15"
-                    >
-                      {submittingQuote 
-                        ? (currentLang === 'en' ? 'Processing Secure Submission...' : 'প্রক্রিয়াধীন রয়েছে...') 
-                        : (currentLang === 'en' ? 'Submit Secure Project Application' : 'প্রজেক্ট অ্যাপ্লিকেশন জমা দিন')}
-                    </button>
-
-                  </form>
-                )}
-
-              </div>
-            </div>
-
           </div>
         </div>
       </div>
 
-      {/* 6. WHY CHOOSE NEXT SOLUTION */}
-      <div id="pricing-why-us" className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-20 text-center">
-        <div className="space-y-3 max-w-3xl mx-auto mb-16">
-          <span className="text-xs font-extrabold uppercase tracking-widest text-blue-600 dark:text-orange-400">
-            {currentLang === 'en' ? 'UNCOMPROMISING STANDARDS' : 'আমাদের অনন্য মানদণ্ড'}
-          </span>
-          <h2 className="font-sans text-3xl font-black text-neutral-900 dark:text-white tracking-tight">
-            {currentLang === 'en' ? 'Designed for Absolute Integrity' : 'ডিজাইন করা হয়েছে স্বচ্ছতা ও সততার সাথে'}
-          </h2>
-          <p className="text-xs text-neutral-500 dark:text-neutral-400 dark:text-neutral-500 leading-normal">
-            {currentLang === 'en'
-              ? 'Why top international brands and high-growth startups confidently partner with Next Solution.'
-              : 'যে কারণে শীর্ষ আন্তর্জাতিক ব্র্যান্ড এবং দ্রুত বর্ধনশীল স্টার্টআপসমূহ আমাদের উপর আস্থা রাখে।'}
-          </p>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          <div className="bg-white dark:bg-[#141414] border border-neutral-150 p-6 md:p-8 rounded-2xl text-left space-y-4">
-            <div className="rounded-xl bg-blue-50/70 p-3 text-blue-600 dark:text-orange-400 w-11 h-11 flex items-center justify-center">
-              <Zap className="h-5 w-5" />
-            </div>
-            <h3 className="text-sm font-bold text-neutral-900 dark:text-white">{currentLang === 'en' ? 'Velocity & Hyper-Speed Delivery' : 'গতিময় এজাইল স্প্রিন্ট'}</h3>
-            <p className="text-xs text-neutral-500 dark:text-neutral-400 dark:text-neutral-500 leading-relaxed">
-              {currentLang === 'en'
-                ? 'We launch initial functional views in days instead of months. Our agile workflow structure deploys interactive builds every single Friday.'
-                : 'আমরা মাসের পর মাস অপেক্ষা না করে কয়েক দিনেই সচল ভিউ সরবরাহ করি। প্রতি শুক্রবারেই আমাদের ইন্টারেক্টিভ কাস্টম বিল্ড ডেপ্লয় করা হয়।'}
-            </p>
-          </div>
-
-          <div className="bg-white dark:bg-[#141414] border border-neutral-150 p-6 md:p-8 rounded-2xl text-left space-y-4">
-            <div className="rounded-xl bg-blue-50/70 p-3 text-blue-600 dark:text-orange-400 w-11 h-11 flex items-center justify-center">
-              <Layers className="h-5 w-5" />
-            </div>
-            <h3 className="text-sm font-bold text-neutral-900 dark:text-white">{currentLang === 'en' ? 'Absolute Coding Autonomy' : 'শতভাগ সোর্স কোড স্বাধীনতা'}</h3>
-            <p className="text-xs text-neutral-500 dark:text-neutral-400 dark:text-neutral-500 leading-relaxed">
-              {currentLang === 'en'
-                ? 'No vendor lock-ins or black-box servers. You receive structured Git repository handoffs, standard infrastructure code, and comprehensive redlines.'
-                : 'কোনো ভেন্ডর লক-ইন বা অস্পষ্ট কোডিং নেই। আপনি পাবেন সম্পূর্ণ কাঠামোবদ্ধ গিট রিপোজিটরি, স্ট্যান্ডার্ড ইনফ্রাস্ট্রাকচার হ্যান্ডওভার এবং রেডলাইন স্পেক্স।'}
-            </p>
-          </div>
-
-          <div className="bg-white dark:bg-[#141414] border border-neutral-150 p-6 md:p-8 rounded-2xl text-left space-y-4">
-            <div className="rounded-xl bg-blue-50/70 p-3 text-blue-600 dark:text-orange-400 w-11 h-11 flex items-center justify-center">
-              <ShieldCheck className="h-5 w-5" />
-            </div>
-            <h3 className="text-sm font-bold text-neutral-900 dark:text-white">{currentLang === 'en' ? 'Extreme Performance SLA' : 'কোর ওয়েব ভাইটালস গ্যারান্টি'}</h3>
-            <p className="text-xs text-neutral-500 dark:text-neutral-400 dark:text-neutral-500 leading-relaxed">
-              {currentLang === 'en'
-                ? 'We target sub-second initial paints. Every platform we build undergoes extensive performance audits to hit a flawless 95%+ Core Web Vitals score.'
-                : 'আমরা ১ সেকেন্ডের কম পেইন্টিং স্পিড টার্গেট করি। আমাদের তৈরি প্রতিটি সাইট Core Web Vitals অডিটে ৯৫% এর বেশি স্কোর অর্জন নিশ্চিত করে।'}
-            </p>
-          </div>
-        </div>
-      </div>
-
-      {/* 7. FAQS */}
-      <div id="pricing-faqs" className="bg-white dark:bg-[#141414] py-20">
-        <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
-          
-          <div className="text-center space-y-3 mb-16">
-            <span className="text-xs font-extrabold uppercase tracking-widest text-blue-600 dark:text-orange-400">
-              {currentLang === 'en' ? 'COMMON QUESTIONS' : 'সাধারণ জিজ্ঞাসাসমূহ'}
+      {/* 8. TESTIMONIALS */}
+      <div id="pricing-testimonials" className="py-20">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
+          <div className="space-y-3 max-w-3xl mx-auto mb-16">
+            <span className="text-xs font-extrabold uppercase tracking-widest text-orange-500">
+              {t('CLIENT SUCCESS STORIES', 'গ্রাহক পর্যালোচনা')}
             </span>
             <h2 className="font-sans text-2xl font-black text-neutral-900 dark:text-white tracking-tight sm:text-3xl">
-              {currentLang === 'en' ? 'Frequently Answered Agreements' : 'পেমেন্ট ও পিরিয়ড সংক্রান্ত প্রশ্নোত্তর'}
+              {t('Praise From Trusted Partners', 'আমাদের প্রতি তাদের আস্থা ও ভালোবাসা')}
+            </h2>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-left">
+            {getTestimonials()
+              .slice(0, 6)
+              .map((test) => (
+                <div key={test.id} className="bg-white dark:bg-[#141414] border border-neutral-200 dark:border-neutral-800 p-6 md:p-8 rounded-3xl space-y-4">
+                  <Quote className="h-5 w-5 text-orange-500/40" />
+                  <div className="flex space-x-1">
+                    {[...Array(test.rating || 5)].map((_, i) => (
+                      <Star key={i} className="h-4 w-4 text-amber-400 fill-amber-400" />
+                    ))}
+                  </div>
+                  <p className="text-xs text-neutral-600 dark:text-neutral-300 leading-relaxed italic">
+                    "{t(test.feedbackEn, test.feedbackBn)}"
+                  </p>
+                  <div className="flex items-center space-x-3.5 pt-2">
+                    {test.avatar ? (
+                      <img src={test.avatar} className="h-10 w-10 rounded-full border object-cover" alt={test.name} />
+                    ) : (
+                      <span className="flex h-10 w-10 items-center justify-center rounded-full bg-orange-500/10 text-orange-500 font-black text-sm">{test.name?.[0] || 'T'}</span>
+                    )}
+                    <div>
+                      <h4 className="text-xs font-extrabold text-neutral-900 dark:text-white">{test.name}</h4>
+                      <p className="text-[10px] text-neutral-400 font-bold uppercase tracking-wide mt-0.5">
+                        {t(test.roleEn, test.roleBn)}, {test.company}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+          </div>
+        </div>
+      </div>
+
+      {/* 9. FAQS */}
+      <div id="pricing-faqs" className="bg-white dark:bg-[#141414] py-20">
+        <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
+          <div className="text-center space-y-3 mb-16">
+            <span className="text-xs font-extrabold uppercase tracking-widest text-orange-500">
+              {t('COMMON QUESTIONS', 'সাধারণ জিজ্ঞাসাসমূহ')}
+            </span>
+            <h2 className="font-sans text-2xl font-black text-neutral-900 dark:text-white tracking-tight sm:text-3xl">
+              {t('Frequently Asked Questions', 'পেমেন্ট ও পিরিয়ড সংক্রান্ত প্রশ্নোত্তর')}
             </h2>
           </div>
 
           <div className="space-y-4 text-left">
-            {faqs.map((faq) => {
-              const isOpen = activeFaqId === faq.id;
-              const question = currentLang === 'en' ? faq.questionEn : faq.questionBn;
-              const answer = currentLang === 'en' ? faq.answerEn : faq.answerBn;
-
+            {faqs.map((faq, idx) => {
+              const id = (faq as any).id || `faq-${idx}`;
+              const isOpen = activeFaqId === id;
+              const question = (faq as any).questionEn || (faq as any).question;
+              const answer = (faq as any).answerEn || (faq as any).answer;
               return (
-                <div 
-                  key={faq.id} 
-                  className="border border-neutral-200/90 rounded-2xl overflow-hidden transition-all duration-200"
-                >
+                <div key={id} className="border border-neutral-200/90 rounded-2xl overflow-hidden transition-all duration-200">
                   <button
-                    onClick={() => setActiveFaqId(isOpen ? null : faq.id)}
-                    className="w-full flex items-center justify-between p-5 text-left text-xs font-bold text-neutral-900 dark:text-white hover:bg-neutral-50/50 dark:bg-neutral-900/50 cursor-pointer bg-transparent border-none outline-none"
+                    onClick={() => setActiveFaqId(isOpen ? null : id)}
+                    className="w-full flex items-center justify-between p-5 text-left text-xs font-bold text-neutral-900 dark:text-white hover:bg-neutral-50/50 dark:hover:bg-neutral-900/50 cursor-pointer bg-transparent border-none outline-none"
                   >
                     <span>{question}</span>
-                    <ChevronDown className={`h-4.5 w-4.5 text-neutral-400 dark:text-neutral-500 shrink-0 transition-transform duration-200 ${isOpen ? 'rotate-180 text-blue-600 dark:text-orange-400' : ''}`} />
+                    <ChevronDown className={`h-4.5 w-4.5 text-neutral-400 dark:text-neutral-500 shrink-0 transition-transform duration-200 ${isOpen ? 'rotate-180 text-orange-500' : ''}`} />
                   </button>
-                  
                   <AnimatePresence initial={false}>
                     {isOpen && (
                       <motion.div
@@ -1559,7 +1338,7 @@ export default function PricingSection({ currentLang, setTab, isFullPage = false
                         exit={{ height: 0, opacity: 0 }}
                         transition={{ duration: 0.2 }}
                       >
-                        <div className="p-5 pt-0 text-xs text-neutral-500 dark:text-neutral-400 dark:text-neutral-500 leading-relaxed border-t border-neutral-50 dark:border-neutral-800 bg-neutral-50/20">
+                        <div className="p-5 pt-0 text-xs text-neutral-500 dark:text-neutral-400 leading-relaxed border-t border-neutral-50 dark:border-neutral-800 bg-neutral-50/20">
                           {answer}
                         </div>
                       </motion.div>
@@ -1569,83 +1348,438 @@ export default function PricingSection({ currentLang, setTab, isFullPage = false
               );
             })}
           </div>
-
         </div>
       </div>
 
-      {/* 8. TESTIMONIALS SECTOR */}
-      <div id="pricing-testimonials" className="bg-neutral-50/50 dark:bg-neutral-900/50 py-20">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
-          
-          <div className="space-y-3 max-w-3xl mx-auto mb-16">
-            <span className="text-xs font-extrabold uppercase tracking-widest text-blue-600 dark:text-orange-400">
-              {currentLang === 'en' ? 'CLIENT SUCCESS STORIES' : 'গ্রাহক পর্যালোচনা'}
-            </span>
-            <h2 className="font-sans text-2xl font-black text-neutral-900 dark:text-white tracking-tight sm:text-3xl">
-              {currentLang === 'en' ? 'Praise From Trusted Partners' : 'আমাদের প্রতি তাদের আস্থা ও ভালোবাসা'}
-            </h2>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-left">
-            {testimonials.map((test) => (
-              <div key={test.id} className="bg-white dark:bg-[#141414] border border-neutral-150 p-6 md:p-8 rounded-3xl space-y-4 shadow-xs relative">
-                <div className="flex space-x-1">
-                  {[...Array(test.rating)].map((_, i) => (
-                    <Star key={i} className="h-4 w-4 text-amber-400 fill-amber-400" />
-                  ))}
-                </div>
-                <p className="text-xs text-neutral-600 dark:text-neutral-300 dark:text-neutral-600 leading-relaxed italic">
-                  "{currentLang === 'en' ? test.feedbackEn : test.feedbackBn}"
-                </p>
-                <div className="flex items-center space-x-3.5 pt-2">
-                  <img src={test.avatar} className="h-10 w-10 rounded-full ring-2 ring-neutral-50 border object-cover" alt={test.name} />
-                  <div>
-                    <h4 className="text-xs font-extrabold text-neutral-900 dark:text-white">{test.name}</h4>
-                    <p className="text-[10px] text-neutral-400 dark:text-neutral-500 font-bold uppercase tracking-wide mt-0.5">
-                      {currentLang === 'en' ? test.roleEn : test.roleBn}, {test.company}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-
-        </div>
-      </div>
-
-      {/* 9. FINAL CTA SECTION */}
+      {/* 10. FINAL CTA */}
       <div id="pricing-final-cta" className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-20">
         <div className="relative rounded-3xl bg-neutral-950 p-8 md:p-16 text-center text-white overflow-hidden shadow-xl border border-neutral-800">
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 h-80 w-80 rounded-full bg-blue-500/10 blur-3xl" />
-          
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 h-80 w-80 rounded-full bg-orange-500/10 blur-3xl" />
           <div className="relative z-10 max-w-2xl mx-auto space-y-6">
             <h2 className="font-sans text-3xl font-black tracking-tight sm:text-4xl">
-              {currentLang === 'en' ? 'Launch Your Digital Breakthrough' : 'আপনার নতুন ডিজিটাল মাইলস্টোন শুরু করুন'}
+              {t('Launch Your Digital Breakthrough', 'আপনার নতুন ডিজিটাল মাইলস্টোন শুরু করুন')}
             </h2>
-            <p className="text-xs text-neutral-400 dark:text-neutral-500 leading-relaxed max-w-lg mx-auto">
-              {currentLang === 'en'
-                ? 'Join force with our senior engineers and elite designer squads to synthesize the digital product of your dream.'
-                : 'আজই আমাদের সিনিয়র ইঞ্জিনিয়ার ও ডিজাইনারদের সাথে যুক্ত হয়ে আপনার স্বপ্নের ডিজিটাল প্রজেক্ট চালু করুন।'}
+            <p className="text-xs text-neutral-400 leading-relaxed max-w-lg mx-auto">
+              {t(
+                'Join force with our senior engineers and elite designer squads to synthesize the digital product of your dream.',
+                'আজই আমাদের সিনিয়র ইঞ্জিনিয়ার ও ডিজাইনারদের সাথে যুক্ত হয়ে আপনার স্বপ্নের ডিজিটাল প্রজেক্ট চালু করুন।'
+              )}
             </p>
-            
             <div className="pt-4 flex flex-wrap justify-center gap-4">
               <button
                 onClick={() => { setTab('contact'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-                className="rounded-xl bg-blue-600 hover:bg-blue-700 font-bold px-7 py-4 text-xs text-white shadow-lg shadow-blue-600/15 cursor-pointer border-none outline-none"
+                className="rounded-xl bg-orange-500 hover:bg-orange-400 font-bold px-7 py-4 text-xs text-white shadow-lg shadow-orange-500/15 cursor-pointer border-none outline-none transition-all duration-300"
               >
-                {currentLang === 'en' ? 'Contact Solutions Specialist' : 'বিশেষজ্ঞের পরামর্শ নিন'}
+                {t('Contact Solutions Specialist', 'বিশেষজ্ঞের পরামর্শ নিন')}
               </button>
-              <a
-                href="#quote-form-section"
-                className="rounded-xl border border-neutral-800 bg-neutral-900/40 hover:bg-neutral-900 hover:border-neutral-700 text-white font-semibold px-7 py-4 text-xs cursor-pointer"
+              <button
+                onClick={scrollToQuote}
+                className="rounded-xl border border-neutral-800 bg-neutral-900/40 hover:bg-neutral-900 hover:border-orange-500/40 text-white font-semibold px-7 py-4 text-xs cursor-pointer transition-all duration-300"
               >
-                {currentLang === 'en' ? 'Calculate Customized Pricing' : 'কাস্টম কোটেশন পাঠান'}
-              </a>
+                {t('Get a Custom Quote', 'কাস্টম কোটেশন পাঠান')}
+              </button>
             </div>
           </div>
         </div>
       </div>
 
+      <InquiryModal
+        open={quoteModal.open}
+        service={quoteModal.service}
+        planLabel={quoteModal.planLabel}
+        currentLang={currentLang}
+        onClose={() => setQuoteModal((m) => ({ ...m, open: false }))}
+        fallbackSave={(quote) => addPricingQuote(quote)}
+      />
+
     </section>
+  );
+}
+
+interface InquiryModalProps {
+  open: boolean;
+  service: string;
+  planLabel?: string;
+  currentLang: 'en' | 'bn';
+  onClose: () => void;
+  fallbackSave: (quote: Omit<PricingQuoteRequest, 'id' | 'createdAt' | 'status'>) => PricingQuoteRequest;
+}
+
+function InquiryModal({ open, service, planLabel, currentLang, onClose, fallbackSave }: InquiryModalProps) {
+  const [form, setForm] = useState({
+    name: '', email: '', phone: '', company: '', industry: '',
+    service, budget: '$1,000 - $5,000', timeline: 'Within 2 weeks', description: '',
+  });
+  const [status, setStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle');
+  const [errorMsg, setErrorMsg] = useState('');
+
+  useEffect(() => {
+    if (open) {
+      setForm((f) => ({ ...f, service }));
+      setStatus('idle');
+      setErrorMsg('');
+    }
+  }, [open, service]);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setStatus('sending');
+    try {
+      const payload = {
+        ...form,
+        service: planLabel ? `${form.service} — ${planLabel}` : form.service,
+      };
+      const res = await fetch('/api/pricing/quotes', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+      const json = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(json.error || 'Failed to send');
+      setStatus('success');
+    } catch (err: any) {
+      // Fallback: keep the inquiry in localStorage so it still reaches the team.
+      try {
+        fallbackSave({
+          name: form.name,
+          email: form.email,
+          phone: form.phone,
+          company: form.company,
+          industry: form.industry,
+          service: planLabel ? `${form.service} — ${planLabel}` : form.service,
+          budget: form.budget,
+          timeline: form.timeline,
+          description: form.description,
+        });
+        setStatus('success');
+      } catch {
+        setErrorMsg(err.message || 'Something went wrong. Please try again.');
+        setStatus('error');
+      }
+    }
+  };
+
+  const inputCls =
+    'w-full rounded-lg border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 px-3 py-2.5 text-xs text-neutral-900 dark:text-neutral-100 placeholder-neutral-400 focus:outline-none focus:ring-2 focus:ring-orange-500/30';
+
+  return (
+    <AnimatePresence>
+      {open && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4"
+          onClick={onClose}
+        >
+          <motion.div
+            initial={{ opacity: 0, scale: 0.96, y: 14 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.96, y: 14 }}
+            transition={{ duration: 0.2 }}
+            className="relative w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-2xl bg-white dark:bg-[#141414] border border-neutral-200 dark:border-neutral-700 shadow-2xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              onClick={onClose}
+              className="absolute top-4 right-4 rounded-full bg-neutral-100 dark:bg-neutral-800 p-2 text-neutral-500 dark:text-neutral-400 hover:text-neutral-800 dark:hover:text-white cursor-pointer"
+              aria-label="Close"
+            >
+              <X className="h-4 w-4" />
+            </button>
+
+            {status === 'success' ? (
+              <div className="p-8 text-center space-y-4">
+                <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-emerald-100 dark:bg-emerald-500/15">
+                  <Check className="h-6 w-6 text-emerald-600 dark:text-emerald-400" />
+                </div>
+                <h3 className="text-base font-black text-neutral-900 dark:text-white">
+                  {currentLang === 'en' ? 'Request received!' : 'রিকোয়েস্ট গৃহীত হয়েছে!'}
+                </h3>
+                <p className="text-xs text-neutral-500 dark:text-neutral-400 leading-relaxed">
+                  {currentLang === 'en'
+                    ? 'Our team will review your project details and get back to you within 24 hours with a tailored estimate.'
+                    : 'আমাদের টিম আপনার প্রজেক্টের বিবরণ দেখে ২৪ ঘণ্টার মধ্যে কাস্টম এস্টিমেটসহ যোগাযোগ করবে।'}
+                </p>
+                <button
+                  onClick={onClose}
+                  className="mt-2 rounded-xl bg-orange-500 hover:bg-orange-600 px-6 py-3 text-xs font-bold text-white cursor-pointer"
+                >
+                  {currentLang === 'en' ? 'Done' : 'সম্পন্ন'}
+                </button>
+              </div>
+            ) : (
+              <>
+                <div className="border-b border-neutral-100 dark:border-neutral-800 px-7 py-5">
+                  <span className="text-[9px] font-black uppercase tracking-widest text-orange-500">
+                    {currentLang === 'en' ? 'Pricing Inquiry' : 'প্রাইসিং ইনকোয়ারি'}
+                  </span>
+                  <h3 className="mt-1 text-lg font-black text-neutral-900 dark:text-white">
+                    {currentLang === 'en' ? 'Get a Custom Quote' : 'কাস্টম কোটেশন নিন'}
+                  </h3>
+                  <p className="text-[11px] text-neutral-500 dark:text-neutral-400 mt-0.5">
+                    {planLabel
+                      ? currentLang === 'en' ? `Interested in: ${planLabel}` : `আগ্রহী: ${planLabel}`
+                      : currentLang === 'en' ? `Service: ${service}` : `সেবা: ${service}`}
+                  </p>
+                </div>
+
+                <form onSubmit={handleSubmit} className="px-7 py-6 space-y-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="space-y-1.5">
+                      <label className="block text-[10px] font-bold text-neutral-500 dark:text-neutral-400">Name *</label>
+                      <input required value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder="Your full name" className={inputCls} />
+                    </div>
+                    <div className="space-y-1.5">
+                      <label className="block text-[10px] font-bold text-neutral-500 dark:text-neutral-400">Email *</label>
+                      <input type="email" required value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} placeholder="you@company.com" className={inputCls} />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="space-y-1.5">
+                      <label className="block text-[10px] font-bold text-neutral-500 dark:text-neutral-400">Phone</label>
+                      <input value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} placeholder="+880 1XXX-XXXXXX" className={inputCls} />
+                    </div>
+                    <div className="space-y-1.5">
+                      <label className="block text-[10px] font-bold text-neutral-500 dark:text-neutral-400">Company</label>
+                      <input value={form.company} onChange={(e) => setForm({ ...form, company: e.target.value })} placeholder="Your company" className={inputCls} />
+                    </div>
+                  </div>
+
+                  <div className="space-y-1.5">
+                    <label className="block text-[10px] font-bold text-neutral-500 dark:text-neutral-400">Industry</label>
+                    <input value={form.industry} onChange={(e) => setForm({ ...form, industry: e.target.value })} placeholder="e.g. E-Commerce, Healthcare, SaaS" className={inputCls} />
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="space-y-1.5">
+                      <label className="block text-[10px] font-bold text-neutral-500 dark:text-neutral-400">Budget Range</label>
+                      <select value={form.budget} onChange={(e) => setForm({ ...form, budget: e.target.value })} className={inputCls}>
+                        {['< $500', '$500 - $1,000', '$1,000 - $5,000', '$5,000 - $10,000', '$10,000 - $25,000', '$25,000+'].map((b) => <option key={b}>{b}</option>)}
+                      </select>
+                    </div>
+                    <div className="space-y-1.5">
+                      <label className="block text-[10px] font-bold text-neutral-500 dark:text-neutral-400">Timeline</label>
+                      <select value={form.timeline} onChange={(e) => setForm({ ...form, timeline: e.target.value })} className={inputCls}>
+                        {['ASAP', 'Within 2 weeks', 'Within a month', '1-3 months', 'Not sure yet'].map((b) => <option key={b}>{b}</option>)}
+                      </select>
+                    </div>
+                  </div>
+
+                  <div className="space-y-1.5">
+                    <label className="block text-[10px] font-bold text-neutral-500 dark:text-neutral-400">Project Details</label>
+                    <textarea rows={3} value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} placeholder="Tell us briefly about your goals, scope and any special requirements..." className={inputCls} />
+                  </div>
+
+                  {status === 'error' && (
+                    <div className="flex items-start space-x-2 rounded-lg bg-red-50 dark:bg-red-500/10 border border-red-100 dark:border-red-500/20 px-3 py-2.5 text-[11px] text-red-600 dark:text-red-400">
+                      <AlertCircle className="h-3.5 w-3.5 mt-0.5 shrink-0" />
+                      <span>{errorMsg}</span>
+                    </div>
+                  )}
+
+                  <button
+                    type="submit"
+                    disabled={status === 'sending'}
+                    className="w-full flex items-center justify-center space-x-2 rounded-xl bg-orange-500 hover:bg-orange-600 disabled:opacity-60 px-5 py-3.5 text-xs font-black text-white shadow-lg shadow-orange-500/20 transition-all duration-300 cursor-pointer"
+                  >
+                    {status === 'sending' ? (
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                    ) : (
+                      <Send className="h-4 w-4" />
+                    )}
+                    <span>{currentLang === 'en' ? 'Send Inquiry' : 'ইনকোয়ারি পাঠান'}</span>
+                  </button>
+                </form>
+              </>
+            )}
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+}
+
+interface QuoteFormSectionProps {
+  currentLang: 'en' | 'bn';
+  fallbackSave: (quote: Omit<PricingQuoteRequest, 'id' | 'createdAt' | 'status'>) => PricingQuoteRequest;
+}
+
+function QuoteFormSection({ currentLang, fallbackSave }: QuoteFormSectionProps) {
+  const [form, setForm] = useState<{
+    name: string;
+    email: string;
+    phone: string;
+    company: string;
+    industry: string;
+    service: string;
+    engagement: string;
+    budget: string;
+    timeline: string;
+    description: string;
+  }>({
+    name: '', email: '', phone: '', company: '', industry: '',
+    service: SERVICES[0], engagement: 'One-Time Project', budget: '$1,000 - $5,000', timeline: 'Within 2 weeks', description: '',
+  });
+  const [status, setStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle');
+  const [errorMsg, setErrorMsg] = useState('');
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setStatus('sending');
+    try {
+      const payload = {
+        ...form,
+        service: `${form.service} (${form.engagement})`,
+      };
+      const res = await fetch('/api/pricing/quotes', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+      const json = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(json.error || 'Failed to send');
+      setStatus('success');
+    } catch (err: any) {
+      try {
+        fallbackSave({
+          name: form.name,
+          email: form.email,
+          phone: form.phone,
+          company: form.company,
+          industry: form.industry,
+          service: `${form.service} (${form.engagement})`,
+          budget: form.budget,
+          timeline: form.timeline,
+          description: form.description,
+        });
+        setStatus('success');
+      } catch {
+        setErrorMsg(err.message || 'Something went wrong. Please try again.');
+        setStatus('error');
+      }
+    }
+  };
+
+  const inputCls =
+    'w-full rounded-lg border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 px-3 py-2.5 text-xs text-neutral-900 dark:text-neutral-100 placeholder-neutral-400 focus:outline-none focus:ring-2 focus:ring-orange-500/30';
+  const labelCls = 'block text-[10px] font-bold text-neutral-500 dark:text-neutral-400';
+  const en = currentLang === 'en';
+
+  if (status === 'success') {
+    return (
+      <div className="rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-[#141414] p-8 md:p-10 text-center space-y-4">
+        <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-emerald-100 dark:bg-emerald-500/15">
+          <Check className="h-6 w-6 text-emerald-600 dark:text-emerald-400" />
+        </div>
+        <h3 className="text-base font-black text-neutral-900 dark:text-white">{en ? 'Request received!' : 'রিকোয়েস্ট গৃহীত হয়েছে!'}</h3>
+        <p className="text-xs text-neutral-500 dark:text-neutral-400 leading-relaxed max-w-sm mx-auto">
+          {en
+            ? 'Our team will review your project details and get back to you within 24 hours with a tailored estimate.'
+            : 'আমাদের টিম আপনার প্রজেক্টের বিবরণ দেখে ২৪ ঘণ্টার মধ্যে কাস্টম এস্টিমেটসহ যোগাযোগ করবে।'}
+        </p>
+        <button
+          onClick={() => setStatus('idle')}
+          className="rounded-xl bg-orange-500 hover:bg-orange-600 px-6 py-3 text-xs font-bold text-white cursor-pointer"
+        >
+          {en ? 'Send Another Request' : 'আরেকটি রিকোয়েস্ট পাঠান'}
+        </button>
+      </div>
+    );
+  }
+
+  return (
+    <form onSubmit={handleSubmit} className="rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-[#141414] p-6 md:p-8 space-y-4 shadow-sm">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="space-y-1.5">
+          <label className={labelCls}>Name *</label>
+          <input required value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder={en ? 'Your full name' : 'আপনার পুরো নাম'} className={inputCls} />
+        </div>
+        <div className="space-y-1.5">
+          <label className={labelCls}>Email *</label>
+          <input type="email" required value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} placeholder="you@company.com" className={inputCls} />
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="space-y-1.5">
+          <label className={labelCls}>{en ? 'Phone' : 'ফোন'}</label>
+          <input value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} placeholder="+880 1XXX-XXXXXX" className={inputCls} />
+        </div>
+        <div className="space-y-1.5">
+          <label className={labelCls}>{en ? 'Company' : 'কোম্পানি'}</label>
+          <input value={form.company} onChange={(e) => setForm({ ...form, company: e.target.value })} placeholder={en ? 'Your company' : 'আপনার কোম্পানি'} className={inputCls} />
+        </div>
+      </div>
+
+      <div className="space-y-1.5">
+        <label className={labelCls}>{en ? 'Industry' : 'ইন্ডাস্ট্রি'}</label>
+        <input value={form.industry} onChange={(e) => setForm({ ...form, industry: e.target.value })} placeholder={en ? 'e.g. E-Commerce, Healthcare, SaaS' : 'যেমন: ই-কমার্স, হেলথকেয়ার, SaaS'} className={inputCls} />
+      </div>
+
+      <div className="space-y-1.5">
+        <label className={labelCls}>{en ? 'Service you are interested in' : 'আগ্রহী সেবা'}</label>
+        <select value={form.service} onChange={(e) => setForm({ ...form, service: e.target.value })} className={inputCls}>
+          {SERVICES.map((s) => <option key={s}>{s}</option>)}
+        </select>
+      </div>
+
+      <div className="space-y-1.5">
+        <label className={labelCls}>{en ? 'Engagement type' : 'কাজের ধরন'}</label>
+        <div className="grid grid-cols-2 gap-2">
+          {['One-Time Project', 'Monthly Retainer', 'Agency Package', 'Not Sure Yet'].map((opt) => (
+            <button
+              key={opt}
+              type="button"
+              onClick={() => setForm({ ...form, engagement: opt })}
+              className={`rounded-lg border px-3 py-2.5 text-[11px] font-bold transition-all duration-200 cursor-pointer ${form.engagement === opt ? 'border-orange-500 bg-orange-500/5 text-orange-600 dark:text-orange-400' : 'border-neutral-200 dark:border-neutral-700 text-neutral-600 dark:text-neutral-300 hover:border-orange-500/40'}`}
+            >
+              {en ? opt : opt === 'One-Time Project' ? 'এককালীন প্রজেক্ট' : opt === 'Monthly Retainer' ? 'মাসিক রিটেইনার' : opt === 'Agency Package' ? 'এজেন্সি প্যাকেজ' : 'নিশ্চিত নই'}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="space-y-1.5">
+          <label className={labelCls}>{en ? 'Budget Range' : 'বাজেট রেঞ্জ'}</label>
+          <select value={form.budget} onChange={(e) => setForm({ ...form, budget: e.target.value })} className={inputCls}>
+            {['< $500', '$500 - $1,000', '$1,000 - $5,000', '$5,000 - $10,000', '$10,000 - $25,000', '$25,000+'].map((b) => <option key={b}>{b}</option>)}
+          </select>
+        </div>
+        <div className="space-y-1.5">
+          <label className={labelCls}>{en ? 'Timeline' : 'টাইমলাইন'}</label>
+          <select value={form.timeline} onChange={(e) => setForm({ ...form, timeline: e.target.value })} className={inputCls}>
+            {['ASAP', 'Within 2 weeks', 'Within a month', '1-3 months', 'Not sure yet'].map((b) => <option key={b}>{b}</option>)}
+          </select>
+        </div>
+      </div>
+
+      <div className="space-y-1.5">
+        <label className={labelCls}>{en ? 'Project Details' : 'প্রজেক্টের বিবরণ'} *</label>
+        <textarea required rows={4} value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} placeholder={en ? 'Tell us about your goals, scope and any special requirements...' : 'আপনার লক্ষ্য, স্কোপ এবং বিশেষ প্রয়োজনীয়তার কথা জানান...'} className={inputCls} />
+      </div>
+
+      {status === 'error' && (
+        <div className="flex items-start space-x-2 rounded-lg bg-red-50 dark:bg-red-500/10 border border-red-100 dark:border-red-500/20 px-3 py-2.5 text-[11px] text-red-600 dark:text-red-400">
+          <AlertCircle className="h-3.5 w-3.5 mt-0.5 shrink-0" />
+          <span>{errorMsg}</span>
+        </div>
+      )}
+
+      <button
+        type="submit"
+        disabled={status === 'sending'}
+        className="w-full flex items-center justify-center space-x-2 rounded-xl bg-orange-500 hover:bg-orange-600 disabled:opacity-60 px-5 py-4 text-xs font-black text-white shadow-lg shadow-orange-500/20 transition-all duration-300 cursor-pointer"
+      >
+        {status === 'sending' ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
+        <span>{en ? 'Send Free Quote Request' : 'ফ্রি কোটেশন রিকোয়েস্ট পাঠান'}</span>
+      </button>
+
+      <p className="text-center text-[10px] text-neutral-400 dark:text-neutral-500">
+        {en ? 'We reply within 24 hours on working days. Your details stay confidential.' : 'কাজের দিনে ২৪ ঘণ্টার মধ্যে রিপ্লাই পাবেন। আপনার তথ্য গোপন থাকবে।'}
+      </p>
+    </form>
   );
 }

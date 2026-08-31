@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { requireStaff } from "@/lib/require-admin";
 import {
   mapService, mapPortfolioItem, mapBlogPost, mapFAQ, mapTestimonial,
   mapContactMessage, mapSubscriber, mapSiteSettings, mapPricingPackage,
@@ -10,7 +11,8 @@ import {
   mapCookieCategory, mapCookieSettings, mapWhyChooseUsCard,
   mapWhyChooseUsStat, mapWhyChooseUsBadge, mapWhyChooseUsTech,
   mapWhyChooseUsCTA, mapProcessStep, mapProcessCTA, mapTechServiceCard,
-  mapClientMoment, mapProduct, mapProductImage
+  mapClientMoment, mapProduct, mapProductImage,
+  mapProjectPricing, mapMonthlyPricing, mapAgencyPackage
 } from "@/lib/mappers";
 
 const TABLE_MAP: Record<string, string> = {
@@ -49,6 +51,9 @@ const TABLE_MAP: Record<string, string> = {
   "client-moments": "client_moments",
   products: "products",
   "product-images": "product_images",
+  "project-pricing": "project_pricing",
+  "monthly-pricing": "monthly_pricing",
+  "agency-packages": "agency_packages",
 };
 
 const SINGLETON_TABLES = new Set([
@@ -73,6 +78,9 @@ const SORT_ORDER_TABLES = new Set([
   "pricing_comparisons",
   "currencies",
   "cookie_categories",
+  "project_pricing",
+  "monthly_pricing",
+  "agency_packages",
 ]);
 
 // Tables that order by their "display_order" column instead.
@@ -138,6 +146,9 @@ const TO_DB_MAP: Record<string, (item: any) => any> = {
   "client-moments": (i) => mapClientMoment.toDb(i),
   products: (i) => mapProduct.toDb(i),
   "product-images": (i) => mapProductImage.toDb(i),
+  "project-pricing": (i) => mapProjectPricing.toDb(i),
+  "monthly-pricing": (i) => mapMonthlyPricing.toDb(i),
+  "agency-packages": (i) => mapAgencyPackage.toDb(i),
 };
 
 // Map entity slug → mapper.fromDb function (DB snake_case → admin camelCase).
@@ -177,6 +188,9 @@ const FROM_DB_MAP: Record<string, (row: any) => any> = {
   "client-moments": (r) => mapClientMoment.fromDb(r),
   products: (r) => mapProduct.fromDb(r),
   "product-images": (r) => mapProductImage.fromDb(r),
+  "project-pricing": (r) => mapProjectPricing.fromDb(r),
+  "monthly-pricing": (r) => mapMonthlyPricing.fromDb(r),
+  "agency-packages": (r) => mapAgencyPackage.fromDb(r),
 };
 
 export async function GET(
@@ -184,6 +198,11 @@ export async function GET(
   { params }: { params: Promise<{ entity: string }> }
 ) {
   try {
+    const denied = await requireStaff();
+    if (denied) {
+      return NextResponse.json({ error: denied.error }, { status: denied.status });
+    }
+
     const { entity } = await params;
     const tableName = TABLE_MAP[entity];
     if (!tableName) {
@@ -193,7 +212,13 @@ export async function GET(
     const supabase = createAdminClient();
     let query = supabase.from(tableName).select("*");
 
-    if (tableName === "services" || tableName === "portfolio_items") {
+    if (
+      tableName === "services" ||
+      tableName === "portfolio_items" ||
+      tableName === "project_pricing" ||
+      tableName === "monthly_pricing" ||
+      tableName === "agency_packages"
+    ) {
       query = query.is("deleted_at", null).order("sort_order", { ascending: true });
     } else if (tableName === "blog_posts") {
       query = query.is("deleted_at", null).order("published_at", { ascending: false });
@@ -228,6 +253,11 @@ export async function POST(
   { params }: { params: Promise<{ entity: string }> }
 ) {
   try {
+    const denied = await requireStaff();
+    if (denied) {
+      return NextResponse.json({ error: denied.error }, { status: denied.status });
+    }
+
     const { entity } = await params;
     const tableName = TABLE_MAP[entity];
     if (!tableName) {

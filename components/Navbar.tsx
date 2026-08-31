@@ -59,7 +59,7 @@ export default function Navbar({
   };
 
   return (
-    <header id="app-navbar" className="sticky top-0 z-50 w-full border-b border-gray-100 bg-white/80 backdrop-blur-md transition-colors duration-300 dark:border-neutral-800 dark:bg-[#0A0A0A]/80">
+    <header id="app-navbar" className="sticky top-0 z-50 w-full bg-white/80 backdrop-blur-md transition-colors duration-300 dark:bg-[#0A0A0A]/80">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}

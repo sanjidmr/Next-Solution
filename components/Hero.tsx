@@ -13,6 +13,7 @@ import {
   Clock,
   Users,
 } from "lucide-react";
+import { TRUSTED_BY as trustedBy } from '@/data/trustedBy';
 
 interface HeroProps {
   currentLang: "en" | "bn";
@@ -43,16 +44,6 @@ export default function Hero({ currentLang, setTab }: HeroProps) {
       label: isEn ? "Happy Clients" : "সন্তুষ্ট ক্লায়েন্ট",
       icon: Users,
     },
-  ];
-
-  const trustedBy = [
-    "Madani board",
-    "Horof group",
-    "Fasion Hub",
-    "Laziiz",
-    "stranger styles",
-    "email marcket",
-    "nockrek",
   ];
 
   return (
@@ -556,24 +547,22 @@ export default function Hero({ currentLang, setTab }: HeroProps) {
           </div>
         </div>
 
-        <div className="relative z-40 mt-6 pb-16 lg:mt-8">
+        <div className="relative z-40 mt-4 pb-10 lg:mt-6">
           <div className="flex items-center justify-center gap-4">
-            <span className="h-px w-10 bg-gradient-to-r from-transparent to-orange-500/60 sm:w-16" />
             <p className="text-center text-xs font-black uppercase tracking-[0.25em] text-gray-500 dark:text-neutral-400 sm:text-sm">
               {isEn ? "Trusted by Industry Leaders" : "আস্থার সাথে কাজ করেছে"}
             </p>
-            <span className="h-px w-10 bg-gradient-to-l from-transparent to-orange-500/60 sm:w-16" />
           </div>
 
-          <div className="relative mt-8 overflow-hidden py-2">
+          <div className="relative mt-5 overflow-hidden py-2">
             <div className="trusted-marquee flex w-max items-center">
               {[...trustedBy, ...trustedBy].map((name, i) => (
                 <div
                   key={i}
-                  className="group mx-3 flex items-center gap-3 rounded-2xl border border-gray-200/80 bg-white/70 px-7 py-4 shadow-sm backdrop-blur-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-orange-500/60 hover:shadow-[0_14px_35px_-14px_rgba(255,77,0,0.45)] dark:border-neutral-800 dark:bg-[#141414]/80 sm:mx-4 sm:px-8"
+                  className="group mx-2 flex items-center gap-2 rounded-xl border border-gray-200/80 bg-white/70 px-4 py-2.5 shadow-sm backdrop-blur-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-orange-500/60 hover:shadow-[0_14px_35px_-14px_rgba(255,77,0,0.45)] dark:border-neutral-800 dark:bg-[#141414]/80 sm:mx-3 sm:px-5"
                 >
-                  <span className="h-2 w-2 shrink-0 rounded-full bg-orange-500/70 transition-transform duration-300 group-hover:scale-125" />
-                  <span className="whitespace-nowrap text-xl font-extrabold tracking-tight text-gray-700 transition-colors duration-300 group-hover:text-orange-600 dark:text-neutral-200 dark:group-hover:text-orange-400 sm:text-2xl">
+                  <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-orange-500/70 transition-transform duration-300 group-hover:scale-125" />
+                  <span className="whitespace-nowrap text-base font-extrabold tracking-tight text-gray-700 transition-colors duration-300 group-hover:text-orange-600 dark:text-neutral-200 dark:group-hover:text-orange-400 sm:text-lg">
                     {name}
                   </span>
                 </div>

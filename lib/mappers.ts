@@ -9,7 +9,8 @@ import {
   TestimonialCategory, TestimonialVideo, TestimonialStatistics, ClientLogo, SuccessStory, ReviewSettings,
   LegalPolicy, LegalRevision, CookieCategory, CookieSettings, WhyChooseUsCard, WhyChooseUsStat,
   WhyChooseUsBadge, WhyChooseUsTech, WhyChooseUsCTA, ProcessStep, ProcessCTA, TechServiceCard, ClientMoment,
-  Product, ProductImage
+  Product, ProductImage,
+  ProjectPricing, MonthlyPricing, AgencyPackage
 } from "@/types";
 
 // Helper to convert arrays of strings, objects to JSON strings/parsed JSON or keep arrays as JSONB arrays.
@@ -620,6 +621,117 @@ export const mapPricingQuoteRequest = {
       timeline: row.timeline || '',
       status: row.status || 'pending',
       createdAt: row.created_at || new Date().toISOString(),
+    };
+  }
+};
+
+export const mapProjectPricing = {
+  toDb(item: ProjectPricing) {
+    return {
+      id: item.id,
+      service: item.service,
+      project_type: item.projectType,
+      price: item.price,
+      currency: item.currency || "USD",
+      billing_type: item.billingType || "one-time",
+      delivery: item.delivery || "",
+      revisions: item.revisions || "",
+      support: item.support || "",
+      features: item.features || [],
+      recommended: item.recommended || false,
+      enabled: item.enabled ?? true,
+      sort_order: item.sortOrder || 0,
+    };
+  },
+  fromDb(row: any): ProjectPricing {
+    return {
+      id: row.id,
+      service: row.service,
+      projectType: row.project_type,
+      price: Number(row.price),
+      currency: row.currency || "USD",
+      billingType: row.billing_type || "one-time",
+      delivery: row.delivery || "",
+      revisions: row.revisions || "",
+      support: row.support || "",
+      features: row.features || [],
+      recommended: row.recommended,
+      enabled: row.enabled,
+      sortOrder: row.sort_order,
+    };
+  }
+};
+
+export const mapMonthlyPricing = {
+  toDb(item: MonthlyPricing) {
+    return {
+      id: item.id,
+      plan_name: item.planName,
+      service: item.service,
+      description: item.description || "",
+      price: item.price,
+      currency: item.currency || "USD",
+      billing_type: item.billingType || "monthly",
+      delivery: item.delivery || "",
+      features: item.features || [],
+      recommended: item.recommended || false,
+      enabled: item.enabled ?? true,
+      sort_order: item.sortOrder || 0,
+    };
+  },
+  fromDb(row: any): MonthlyPricing {
+    return {
+      id: row.id,
+      planName: row.plan_name,
+      service: row.service,
+      description: row.description || "",
+      price: Number(row.price),
+      currency: row.currency || "USD",
+      billingType: row.billing_type || "monthly",
+      delivery: row.delivery || "",
+      features: row.features || [],
+      recommended: row.recommended,
+      enabled: row.enabled,
+      sortOrder: row.sort_order,
+    };
+  }
+};
+
+export const mapAgencyPackage = {
+  toDb(item: AgencyPackage) {
+    return {
+      id: item.id,
+      name: item.name,
+      tagline: item.tagline || "",
+      original_price: item.originalPrice,
+      price: item.price,
+      discount: item.discount ?? null,
+      billing_type: item.billingType || "one-time",
+      delivery: item.delivery || "",
+      support: item.support || "",
+      features: item.features || [],
+      included_services: item.includedServices || [],
+      most_popular: item.mostPopular || false,
+      enabled: item.enabled ?? true,
+      sort_order: item.sortOrder || 0,
+    };
+  },
+  fromDb(row: any): AgencyPackage {
+    return {
+      id: row.id,
+      name: row.name,
+      tagline: row.tagline || "",
+      originalPrice: Number(row.original_price),
+      price: Number(row.price),
+      discount: row.discount ?? undefined,
+      billingType: row.billing_type || "one-time",
+      delivery: row.delivery || "",
+      support: row.support || "",
+      features: row.features || [],
+      includedServices: row.included_services || [],
+      mostPopular: row.most_popular,
+      enabled: row.enabled,
+      sortOrder: row.sort_order,
     };
   }
 };

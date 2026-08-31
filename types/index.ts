@@ -301,6 +301,54 @@ export interface PricingQuoteRequest {
   createdAt: string;
 }
 
+export interface ProjectPricing {
+  id: string;
+  service: string; // Web Development | UI/UX Design | Graphic Design | Video Editing | Digital Marketing | AI Services | SEO
+  projectType: string;
+  price: number;
+  currency: string;
+  billingType: string; // one-time | monthly | yearly
+  delivery: string;
+  revisions: string;
+  support: string;
+  features: string[];
+  recommended?: boolean;
+  enabled?: boolean;
+  sortOrder?: number;
+}
+
+export interface MonthlyPricing {
+  id: string;
+  planName: string;
+  service: string;
+  description: string;
+  price: number;
+  currency: string;
+  billingType: string; // monthly | yearly
+  delivery: string;
+  features: string[];
+  recommended?: boolean;
+  enabled?: boolean;
+  sortOrder?: number;
+}
+
+export interface AgencyPackage {
+  id: string;
+  name: string;
+  tagline: string;
+  originalPrice: number;
+  price: number;
+  discount?: number; // % saved
+  billingType: string; // one-time | monthly | yearly
+  delivery: string;
+  support: string;
+  features: string[];
+  includedServices: string[];
+  mostPopular?: boolean;
+  enabled?: boolean;
+  sortOrder?: number;
+}
+
 export interface Currency {
   id: string;
   name: string;

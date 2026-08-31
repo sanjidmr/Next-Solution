@@ -172,7 +172,7 @@ export default function Footer({ currentLang, setTab }: FooterProps) {
         </div>
 
         {/* Newsletter Section */}
-        <div id="footer-newsletter-row" className="mt-12 pt-12 border-t border-white/10 grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
+        <div id="footer-newsletter-row" className="mt-12 pt-12 grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
           <div className="md:col-span-6 space-y-1">
             <h4 className="text-sm font-bold text-white">{t.footerNewsletterTitle}</h4>
             <p className="text-xs text-gray-400">{t.footerNewsletterSub}</p>
@@ -203,7 +203,7 @@ export default function Footer({ currentLang, setTab }: FooterProps) {
         </div>
 
         {/* Bottom copyright / policy row */}
-        <div id="footer-bottom-row" className="mt-16 pt-8 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div id="footer-bottom-row" className="mt-16 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="text-xs text-gray-400">
             &copy; {new Date().getFullYear()} Next Solution. {t.footerRights}
           </p>

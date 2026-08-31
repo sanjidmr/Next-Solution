@@ -6,10 +6,11 @@ import {
 } from 'lucide-react';
 import { 
   getTestimonials, saveTestimonial, getTestimonialCategories, 
-  getTestimonialVideos, getTestimonialStatistics, getClientLogos, 
+  getTestimonialVideos, getTestimonialStatistics, 
   getSuccessStories, getReviewSettings, getFAQs, getClientMoments
 } from '@/lib/db';
-import { Testimonial, TestimonialCategory, TestimonialVideo, SuccessStory, ClientLogo, FAQ, ClientMoment } from '@/types';
+import { Testimonial, TestimonialCategory, TestimonialVideo, SuccessStory, FAQ, ClientMoment } from '@/types';
+import { TRUSTED_BY } from '@/data/trustedBy';
 import { motion, AnimatePresence } from 'motion/react';
 import { getLocalItem } from '@/lib/utils';
 import TestimonialsAdmin from '@/components/TestimonialsAdmin';
@@ -25,7 +26,6 @@ export default function TestimonialsPage({ currentLang, setTab }: TestimonialsPa
   const [categories, setCategories] = useState<TestimonialCategory[]>([]);
   const [videos, setVideos] = useState<TestimonialVideo[]>([]);
   const [statistics, setStatistics] = useState<any>(null);
-  const [logos, setLogos] = useState<ClientLogo[]>([]);
   const [stories, setStories] = useState<SuccessStory[]>([]);
   const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
   const [faqs, setFaqs] = useState<FAQ[]>([]);
@@ -68,7 +68,6 @@ export default function TestimonialsPage({ currentLang, setTab }: TestimonialsPa
     setCategories(getTestimonialCategories());
     setVideos(getTestimonialVideos().filter(v => v.featured !== false));
     setStatistics(getTestimonialStatistics());
-    setLogos(getClientLogos());
     setStories(getSuccessStories());
     setFaqs(getFAQs());
     setTestimonials(getTestimonials().filter(t => t.status === 'approved' || !t.status));
@@ -341,7 +340,7 @@ export default function TestimonialsPage({ currentLang, setTab }: TestimonialsPa
       )}
 
       {/* 08. CLIENT LOGOS SCROLLING WALL */}
-      {sectionVisibility.logos && logos.length > 0 && (
+      {sectionVisibility.logos && (
         <section className="py-12 bg-slate-50/50 dark:bg-[#0c0c0c] overflow-hidden">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <span className="text-[10px] font-bold text-slate-400 dark:text-neutral-500 uppercase tracking-widest text-center block mb-8">
@@ -354,11 +353,13 @@ export default function TestimonialsPage({ currentLang, setTab }: TestimonialsPa
               <div className="absolute left-0 top-0 bottom-0 w-24 bg-gradient-to-r from-slate-50/50 dark:from-[#0c0c0c] to-transparent z-10 pointer-events-none" />
               <div className="absolute right-0 top-0 bottom-0 w-24 bg-gradient-to-l from-slate-50/50 dark:from-[#0c0c0c] to-transparent z-10 pointer-events-none" />
               
-              <div className="flex space-x-16 animate-marquee whitespace-nowrap hover:[animation-play-state:paused] py-2">
-                {[...logos, ...logos, ...logos].map((logo, idx) => (
-                  <div key={`${logo.id}-${idx}`} className="flex items-center space-x-3 filter grayscale hover:grayscale-0 opacity-60 hover:opacity-100 transition duration-300 flex-shrink-0">
-                    <div className="h-2.5 w-2.5 rounded-full bg-blue-600 flex-shrink-0"></div>
-                    <span className="font-display font-bold text-sm tracking-tight text-slate-700 dark:text-neutral-300">{logo.name}</span>
+              <div className="animate-marquee hover:[animation-play-state:paused] py-2">
+                {[...TRUSTED_BY, ...TRUSTED_BY, ...TRUSTED_BY].map((name, idx) => (
+                  <div key={`${name}-${idx}`} className="group mx-2 flex items-center gap-2 rounded-xl border border-gray-200/80 bg-white/70 px-4 py-2.5 shadow-sm backdrop-blur-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-orange-500/60 hover:shadow-[0_14px_35px_-14px_rgba(255,77,0,0.45)] dark:border-neutral-800 dark:bg-[#141414]/80 sm:mx-3 sm:px-5 flex-shrink-0">
+                    <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-orange-500/70 transition-transform duration-300 group-hover:scale-125" />
+                    <span className="whitespace-nowrap text-base font-extrabold tracking-tight text-gray-700 transition-colors duration-300 group-hover:text-orange-600 dark:text-neutral-200 dark:group-hover:text-orange-400 sm:text-lg">
+                      {name}
+                    </span>
                   </div>
                 ))}
               </div>

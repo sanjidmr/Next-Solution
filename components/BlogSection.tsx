@@ -570,7 +570,7 @@ export default function BlogSection({ currentLang, setTab, isFullPage = false }:
     <section id="blogs-section" className={`bg-[#FAFAFA] text-gray-800 dark:text-neutral-100 ${isFullPage ? 'pt-0 pb-20' : ''}`}>
       
       {/* 1. HERO SECTION */}
-      <div className="bg-white dark:bg-[#141414] border-b border-gray-100 dark:border-neutral-800 pt-10 pb-16 md:pt-12 md:pb-20 relative overflow-hidden">
+      <div className="bg-white dark:bg-[#141414] pt-10 pb-16 md:pt-12 md:pb-20 relative overflow-hidden">
         {/* Subtle geometric grid & abstract premium ambient lights */}
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#8080800a_1px,transparent_1px),linear-gradient(to_bottom,#8080800a_1px,transparent_1px)] bg-[size:14px_24px] opacity-75" />
         <div className="absolute -top-40 -left-40 h-[450px] w-[450px] rounded-full bg-radial from-violet-400/10 via-purple-200/5 to-transparent blur-3xl pointer-events-none" />

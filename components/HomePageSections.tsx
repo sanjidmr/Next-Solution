@@ -598,7 +598,7 @@ export default function HomePageSections({ currentLang, setTab, portfolioData }:
       {/* ========================================================
           SECTION 9: TECHNOLOGIES WE USE (PREMIUM INTERACTIVE STACK)
          ======================================================== */}
-      <section id="technologies" className="relative overflow-hidden py-12 border-y border-neutral-100 dark:border-neutral-800 bg-linear-to-b from-white via-[#FAFAFA]/40 to-white">
+      <section id="technologies" className="relative overflow-hidden py-12 bg-linear-to-b from-white via-[#FAFAFA]/40 to-white">
         {/* Modern subtle ambient gradients in background */}
         <div className="absolute top-1/4 left-1/2 -translate-x-1/2 h-[500px] w-[500px] bg-blue-100/20 dark:bg-orange-500/5 rounded-full blur-3xl pointer-events-none"></div>
         <div className="absolute bottom-10 left-10 h-72 w-72 bg-indigo-50/30 dark:bg-orange-500/5 rounded-full blur-3xl pointer-events-none"></div>
@@ -831,7 +831,7 @@ export default function HomePageSections({ currentLang, setTab, portfolioData }:
       {/* ========================================================
           SECTION: WHY CHOOSE US (PREMIUM WORLD-CLASS DESIGN)
          ======================================================== */}
-<section id="why-choose-us" className="relative overflow-hidden bg-white dark:bg-[#0B0A08] dark:bg-gradient-to-b dark:from-[#0C0A08] dark:via-[#13100C] dark:to-[#090807] text-neutral-900 dark:text-white border-y border-neutral-100 dark:border-neutral-800">
+<section id="why-choose-us" className="relative overflow-hidden bg-white dark:bg-[#0B0A08] dark:bg-gradient-to-b dark:from-[#0C0A08] dark:via-[#13100C] dark:to-[#090807] text-neutral-900 dark:text-white">
 
         {/* Ambient warm glow - dark mode only (behind the visual) */}
         <div className="pointer-events-none absolute left-1/2 top-1/2 -z-0 h-[720px] w-[1100px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-orange-500/[0.14] dark:bg-orange-500/[0.10] blur-[130px] hidden dark:block"></div>
@@ -892,7 +892,7 @@ export default function HomePageSections({ currentLang, setTab, portfolioData }:
       {/* ========================================================
           SECTION 6: OUR PROCESS (PREMIUM TIMELINE)
          ======================================================== */}
-      <section id="our-process" className="relative bg-white dark:bg-[#141414] py-16 sm:py-20 overflow-hidden border-y border-gray-100 dark:border-neutral-800">
+      <section id="our-process" className="relative bg-white dark:bg-[#141414] py-16 sm:py-20 overflow-hidden">
         {/* Ambient Gradient Background Orbs */}
         <div className="absolute top-1/4 left-[10%] w-96 h-96 bg-blue-50/40 dark:bg-orange-500/5 rounded-full blur-3xl -z-10 animate-pulse" style={{ animationDuration: '10s' }}></div>
         <div className="absolute bottom-1/4 right-[10%] w-96 h-96 bg-indigo-50/30 dark:bg-orange-500/5 rounded-full blur-3xl -z-10 animate-pulse" style={{ animationDuration: '8s' }}></div>
@@ -1527,7 +1527,7 @@ className="group cursor-pointer"
       {/* ========================================================
           SECTION 10: PRICING PREVIEW (TRANSPARENT RATES)
          ======================================================== */}
-      <section id="pricing-preview" className="bg-gray-50/30 border-y border-gray-100 dark:border-neutral-800 py-12">
+      <section id="pricing-preview" className="bg-gray-50/30 py-12">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-10">
           <div className="text-center space-y-4 max-w-2xl mx-auto">
             <span className="text-xs font-bold uppercase tracking-wider text-blue-600 dark:text-orange-400">

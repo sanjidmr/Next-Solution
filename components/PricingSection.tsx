@@ -874,7 +874,7 @@ export default function PricingSection({ currentLang, setTab, isFullPage = false
             </div>
 
           {/* Trust Elements row */}
-          <div className="mt-16 border-t border-neutral-100 dark:border-neutral-800 pt-8">
+          <div className="mt-16 pt-8">
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6 text-center">
               <div className="flex flex-col items-center space-y-2">
                 <div className="rounded-full bg-emerald-50 dark:bg-emerald-500/10 p-2 text-emerald-600 dark:text-emerald-400">
@@ -974,7 +974,7 @@ export default function PricingSection({ currentLang, setTab, isFullPage = false
       </div>
 
       {/* 3. INTERACTIVE BUDGET ESTIMATION CALCULATOR */}
-      <div id="dynamic-calculator-section" className="bg-white dark:bg-[#141414] border-y border-neutral-100 dark:border-neutral-800 py-20">
+      <div id="dynamic-calculator-section" className="bg-white dark:bg-[#141414] py-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           
           <div className="grid grid-cols-1 gap-12 lg:grid-cols-12 lg:items-start">
@@ -1520,7 +1520,7 @@ export default function PricingSection({ currentLang, setTab, isFullPage = false
       </div>
 
       {/* 7. FAQS */}
-      <div id="pricing-faqs" className="bg-white dark:bg-[#141414] border-t border-neutral-100 dark:border-neutral-800 py-20">
+      <div id="pricing-faqs" className="bg-white dark:bg-[#141414] py-20">
         <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
           
           <div className="text-center space-y-3 mb-16">
@@ -1574,7 +1574,7 @@ export default function PricingSection({ currentLang, setTab, isFullPage = false
       </div>
 
       {/* 8. TESTIMONIALS SECTOR */}
-      <div id="pricing-testimonials" className="bg-neutral-50/50 dark:bg-neutral-900/50 py-20 border-t border-neutral-100 dark:border-neutral-800">
+      <div id="pricing-testimonials" className="bg-neutral-50/50 dark:bg-neutral-900/50 py-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
           
           <div className="space-y-3 max-w-3xl mx-auto mb-16">

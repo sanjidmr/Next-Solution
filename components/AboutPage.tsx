@@ -4,10 +4,10 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { 
-  Target, Eye, ShieldCheck, Sparkles, Award, ArrowRight, ArrowUpRight, 
+  Target, Eye, ShieldCheck, Sparkles, ArrowRight, ArrowUpRight, 
   ChevronDown, ChevronUp, Heart, Smile, Users, Palette, TrendingUp, 
   Lightbulb, CheckCircle2, Globe, Clock, Code2, Database, Terminal, 
   Cpu, Star, Zap, Check, MessageSquare, Quote, Server, Layers,
@@ -216,14 +216,14 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
       roleEn: 'Founder & CEO',
       roleBn: 'প্রতিষ্ঠাতা ও সিইও',
       portrait: sanjidImage ,
-      bioEn: 'Visionary technologist driving the mission of Next Solution. Specializing in high-scale web sites, predictive Web devolopment pipelines, and robust enterprise strategies.',
-      bioBn: 'নেক্সট সলিউশনের রূপকল্প পরিচালনাকারী স্বপ্নদর্শী টেকনোলজিস্ট ও প্রতিষ্ঠাতা। তিনি হাই-স্কেল ক্লাউড সিস্টেম, প্রেডিক্টিভ এআই সার্ভিস পাইপলাইন এবং শক্তিশালী ব্যবসায়িক কৌশল বাস্তবায়নে পারদর্শী।',
-      experienceEn: '4+ Years of Tech Experience',
-      experienceBn: '4+ বছরের প্রযুক্তি অভিজ্ঞতা',
+      bioEn: 'Founder of Next Solution and a dedicated web development expert. He architects high-performance websites and scalable web applications using React, Next.js and TypeScript — ensuring every build delivers blazing-fast speed, pixel-perfect responsiveness and revenue-focused engineering.',
+      bioBn: 'নেক্সট সলিউশনের প্রতিষ্ঠাতা এবং নিবেদিতপ্রাণ ওয়েব ডেভেলপমেন্ট এক্সপার্ট। তিনি রিয়্যাক্ট, নেক্সট.জেএস ও টাইপস্ক্রিপ্ট ব্যবহার করে উচ্চ-ক্ষমতাসম্পন্ন ওয়েবসাইট এবং স্কেলেবল ওয়েব অ্যাপ্লিকেশন ডিজাইন করেন — প্রতিটি প্রজেক্টে ব্লেজিং-ফাস্ট স্পিড, পিক্সেল-পারফেক্ট রেসপনসিভ ডিজাইন এবং রাজস্ব-কেন্দ্রিক ইঞ্জিনিয়ারিং নিশ্চিত করেন।',
+      experienceEn: '4+ Years of Web Development',
+      experienceBn: '৪+ বছরের ওয়েব ডেভেলপমেন্ট অভিজ্ঞতা',
       mottoEn: 'Our mission is to build digital solutions that create lasting business impact.',
       mottoBn: 'এমন ডিজিটাল সলিউশন তৈরি করা যা স্থায়ী ব্যবসায়িক প্রভাব ফেলে।',
-      skillsEn: ['Business Strategy', 'Technology', 'Web devolopment'],
-      skillsBn: ['বিজনেস স্ট্র্যাটেজি', 'প্রযুক্তি', 'এআই সার্ভিস'],
+      skillsEn: ['Web Development', 'React & Next.js', 'Business Strategy'],
+      skillsBn: ['ওয়েব ডেভেলপমেন্ট', 'রিয়্যাক্ট ও নেক্সট.জেএস', 'বিজনেস স্ট্র্যাটেজি'],
       email: 'mushfiqurrahmansanjid@gmail.com',
       linkedin: 'https://linkedin.com/',
       statusEn: 'Available for Advisory',
@@ -231,19 +231,19 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
     },
     {
       id: 'co-founder',
-      nameEn: 'Saad ibne bashar',
-      nameBn: 'সাদ ইবনে বাসার',
-      roleEn: 'Co-Founder & Chief Architect',
-      roleBn: 'সহ-প্রতিষ্ঠাতা ও প্রধান আর্কিটেক্ট',
+      nameEn: "Saa'd ibna bashar",
+      nameBn: 'সা\u2019দ ইবনা বাশার',
+      roleEn: 'Co-Founder & MD',
+      roleBn: 'সহ-প্রতিষ্ঠাতা ও এমডি',
       portrait: sadi,
-      bioEn: 'Spearheading the core marcketing division. Obsessed with fb ads buissness grouth , marcketing stratigy, and sub-millisecond response times.',
-      bioBn: 'আমাদের মূল ইঞ্জিনিয়ারিং বিভাগের প্রধান। তিনি উচ্চ-ক্ষমতাসম্পন্ন রিঅ্যাক্ট ডিজাইন টোকেন, ডাটাবেস স্কিমা সুরক্ষা এবং সাব-মিলি-সেকেন্ড রেসপন্স টাইম অর্জনে নিবেদিত।',
-      experienceEn: '4+ Years in marcketing',
-      experienceBn: '৮+ বছরের ফুলস্ট্যাক অভিজ্ঞতা',
+      bioEn: 'Co-Founder & Managing Director of Next Solution and an AI-integrated digital marketing expert. He blends data-driven campaign strategy with AI-powered automation, Meta & Google Ads optimization and conversion funnels that turn clicks into measurable revenue.',
+      bioBn: 'নেক্সট সলিউশনের সহ-প্রতিষ্ঠাতা ও ম্যানেজিং ডিরেক্টর এবং এআই-ইন্টিগ্রেটেড ডিজিটাল মার্কেটিং এক্সপার্ট। তিনি ডেটা-চালিত ক্যাম্পেইন স্ট্র্যাটেজির সাথে এআই-চালিত অটোমেশন, মেটা ও গুগল অ্যাডস অপ্টিমাইজেশন এবং কনভার্সন ফানেল যুক্ত করেন, যা ক্লিককে পরিমাপযোগ্য রাজস্বে রূপান্তর করে।',
+      experienceEn: '4+ Years in Digital Marketing',
+      experienceBn: '৪+ বছরের ডিজিটাল মার্কেটিং অভিজ্ঞতা',
       mottoEn: 'Innovation begins with understanding human experience.',
       mottoBn: 'উদ্ভাবনের সূচনা হয় মানুষের অভিজ্ঞতা অনুধাবনের মধ্য দিয়ে।',
-      skillsEn: ['Digital marcketing', 'graphic design', 'Branding'],
-      skillsBn: ['ওয়েব ডেভেলপমেন্ট', 'ইউআই/ইউএক্স ডিজাইন', 'ব্র্যান্ডিং'],
+      skillsEn: ['AI-Integrated Marketing', 'Digital Marketing', 'Branding'],
+      skillsBn: ['এআই ইন্টিগ্রেটেড মার্কেটিং', 'ডিজিটাল মার্কেটিং', 'ব্র্যান্ডিং'],
       email: 'saadibnebashar@gmail.com',
       linkedin: 'https://linkedin.com/',
       statusEn: 'Designing Solutions',
@@ -253,17 +253,17 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
       id: 'md',
       nameEn: 'Al Amin Jisan',
       nameBn: 'আল আমিন জিসান',
-      roleEn: 'Managing Director',
-      roleBn: 'ম্যানেজিং ডিরেক্টর',
+      roleEn: 'General Manager & SEO Expert',
+      roleBn: 'জেনারেল ম্যানেজার ও এসইও এক্সপার্ট',
       portrait: jisan,
-      bioEn: 'Overseeing company growth, daily operations, and partner alignment. Committed to delivering seamless execution, transparency, and operational excellence.',
-      bioBn: 'কোম্পানির প্রবৃদ্ধি, দৈনিক অপারেশন এবং অংশীদারদের সমন্বয় তদারকি করছেন। সকল প্রজেক্টে স্বচ্ছতা, নিখুঁত বাস্তবায়ন এবং কার্যক্ষমতার উৎকর্ষতা বজায় রাখতে তিনি প্রতিজ্ঞ।',
-      experienceEn: '4+ Years of Operations',
-      experienceBn: '৭+ বছরের অপারেশনস অভিজ্ঞতা',
+      bioEn: 'General Manager of Next Solution and a seasoned SEO expert. He masters technical SEO, on-page optimization, keyword strategy and authority link building — pushing brands to the top of Google and compounding organic traffic over time.',
+      bioBn: 'নেক্সট সলিউশনের জেনারেল ম্যানেজার এবং দক্ষ এসইও এক্সপার্ট। তিনি টেকনিক্যাল এসইও, অন-পেজ অপ্টিমাইজেশন, কিওয়ার্ড স্ট্র্যাটেজি এবং অথরিটি লিংক বিল্ডিংয়ে পারদর্শী — যা ব্র্যান্ডকে গুগলের শীর্ষে পৌঁছে দেয় এবং অর্গানিক ট্রাফিককে ধারাবাহিকভাবে বৃদ্ধি করে।',
+      experienceEn: '4+ Years of SEO & Operations',
+      experienceBn: '৪+ বছরের এসইও ও অপারেশনস অভিজ্ঞতা',
       mottoEn: 'We don\'t just complete projects—we build long-term trust.',
       mottoBn: 'আমরা শুধু প্রজেক্ট সম্পন্ন করি না—আমরা দীর্ঘমেয়াদী বিশ্বাস তৈরি করি।',
-      skillsEn: ['Project Management', 'Business Growth', 'marcketing'],
-      skillsBn: ['প্রজেক্ট ম্যানেজমেন্ট', 'বিজনেস গ্রোথ', 'নেতৃত্ব'],
+      skillsEn: ['Technical SEO', 'Keyword Strategy', 'Project Management'],
+      skillsBn: ['টেকনিক্যাল এসইও', 'কিওয়ার্ড স্ট্র্যাটেজি', 'প্রজেক্ট ম্যানেজমেন্ট'],
       email: 'alaminjisan@gmail.com',
       linkedin: 'https://linkedin.com/',
       statusEn: 'Consulting Partners',
@@ -273,90 +273,21 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
       id: 'gm',
       nameEn: 'Mustafizur Rahman',
       nameBn: 'মুস্তাফিজুর রহমান',
-      roleEn: 'General Manager',
-      roleBn: 'জেনারেল ম্যানেজার',
+      roleEn: 'Chief Architect',
+      roleBn: 'চিফ আর্কিটেক্ট',
       portrait: mustafiz,
-      bioEn: 'Coordinating cross-functional squads to ensure pixel-perfect design standards, successful milestone tracking, and high-impact marketing results.',
-      bioBn: 'ক্রস-ফাংশনাল স্কোয়াড সমন্বয় করে পিক্সেল-পারফেক্ট ডিজাইনের মানদণ্ড বজায় রাখা, মাইলস্টোন ট্র্যাকিং এবং উচ্চ-প্রভাবশালী মার্কেটিং ফলাফল নিশ্চিত করছেন।',
-      experienceEn: '4+ Years of Leadership',
-      experienceBn: '৬+ বছরের লিডারশিপ অভিজ্ঞতা',
+      bioEn: 'Chief Architect of Next Solution and an expert graphic designer. He crafts premium brand identities, memorable logos and pixel-perfect visuals — fusing design systems, color psychology and typography into interfaces that truly convert.',
+      bioBn: 'নেক্সট সলিউশনের চিফ আর্কিটেক্ট এবং অভিজ্ঞ গ্রাফিক ডিজাইনার। তিনি প্রিমিয়াম ব্র্যান্ড আইডেন্টিটি, স্মরণীয় লোগো এবং পিক্সেল-পারফেক্ট ভিজ্যুয়াল ডিজাইন করেন — ডিজাইন সিস্টেম, কালার সাইকোলজি ও টাইপোগ্রাফি মিলিয়ে এমন ইন্টারফেস তৈরি করেন যা সত্যিই কনভার্ট করে।',
+      experienceEn: '4+ Years of Design & Architecture',
+      experienceBn: '৪+ বছরের ডিজাইন ও আর্কিটেকচার অভিজ্ঞতা',
       mottoEn: 'Every pixel, every strategy, every decision should drive ROI.',
       mottoBn: 'প্রতিটি পিক্সেল, প্রতিটি স্ট্র্যাটেজি এবং প্রতিটি সিদ্ধান্ত আরও প্রবৃদ্ধি বয়ে আনবে।',
-      skillsEn: ['SEO', 'Digital Marketing', 'Innovation'],
-      skillsBn: ['এসইও', 'ডিজিটাল মার্কেটিং', 'ইনোভেশন'],
+      skillsEn: ['Graphic Design', 'Brand Identity', 'Design Systems'],
+      skillsBn: ['গ্রাফিক ডিজাইন', 'ব্র্যান্ড আইডেন্টিটি', 'ডিজাইন সিস্টেম'],
       email: 'mustafiz@gmail.com',
       linkedin: 'https://linkedin.com/',
       statusEn: 'Managing Milestones',
       statusBn: 'মাইলস্টোন পরিচালনায় ব্যস্ত'
-    }
-  ], []);
-
-  const deliverySquad = useMemo(() => [
-    { 
-      nameEn: 'Sabbir Ahmed', 
-      nameBn: 'সাব্বির আহমেদ', 
-      roleEn: 'Senior React Developer', 
-      roleBn: 'সিনিয়র রিঅ্যাক্ট ডেভেলপার', 
-      deptEn: 'Development', 
-      deptBn: 'ডেভেলপমেন্ট',
-      image: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&q=80&w=400',
-      descEn: 'Expert in crafting ultra-fast interactive React applications and state performance optimization.',
-      descBn: 'অতি-দ্রুত ইন্টারেক্টিভ রিঅ্যাক্ট অ্যাপ্লিকেশন এবং স্টেট পারফরম্যান্স অপ্টিমাইজেশনে পারদর্শী।'
-    },
-    { 
-      nameEn: 'Fahmida Riya', 
-      nameBn: 'ফাহমিদা রিয়া', 
-      roleEn: 'Creative Art Director', 
-      roleBn: 'সৃজনশীল আর্ট ডিরেক্টর', 
-      deptEn: 'Design', 
-      deptBn: 'ডিজাইন',
-      image: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=400',
-      descEn: 'Crafting premium visual styles, design systems, and responsive layouts that convert users.',
-      descBn: 'প্রিমিয়াম ভিজ্যুয়াল স্টাইল, ডিজাইন সিস্টেম এবং আকর্ষণীয় রেসপনসিভ লেআউট তৈরিতে অভিজ্ঞ।'
-    },
-    { 
-      nameEn: 'Asif Zaman', 
-      nameBn: 'আসিফ জামান', 
-      roleEn: 'AI Integration Specialist', 
-      roleBn: 'এআই ইন্টিগ্রেশন স্পেশালিস্ট', 
-      deptEn: 'AI Services', 
-      deptBn: 'এআই সার্ভিস',
-      image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=400',
-      descEn: 'Building modern cognitive agent structures, custom LLM pipelines, and automated integrations.',
-      descBn: 'আধুনিক কগনিটিভ এজেন্ট স্ট্রাকচার, কাস্টম এলএলএম পাইপলাইন এবং স্বয়ংক্রিয় এআই ইন্টিগ্রেশন বিল্ডার।'
-    },
-    { 
-      nameEn: 'Farhana Parveen', 
-      nameBn: 'ফারহানা পারভীন', 
-      roleEn: 'Lead UX Copywriter', 
-      roleBn: 'লিড ইউএক্স কপিরাইটার', 
-      deptEn: 'Content Strategy', 
-      deptBn: 'কনটেন্ট স্ট্র্যাটেজি',
-      image: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=400',
-      descEn: 'Structuring strategic high-conversion copy, messaging hierarchies, and content frameworks.',
-      descBn: 'হাই-কনভার্সন কপিরাইটিং, স্ট্র্যাটেজিক মেসেজিং এবং আকর্ষণীয় ব্র্যান্ড কনটেন্ট তৈরিতে পারদর্শী।'
-    },
-    { 
-      nameEn: 'Imran Khan', 
-      nameBn: 'ইমরান খান', 
-      roleEn: 'Senior SEO Strategist', 
-      roleBn: 'সিনিয়র এসইও স্ট্র্যাটেজিস্ট', 
-      deptEn: 'Growth & SEO', 
-      deptBn: 'এসইও ও প্রবৃদ্ধি',
-      image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=400',
-      descEn: 'Driving exponential organic growth through advanced ranking setups and semantic content strategies.',
-      descBn: 'অ্যাডভান্সড র‌্যাঙ্কিং সেটআপ এবং সার্চ ইঞ্জিন ফ্রেন্ডলি কনটেন্ট স্ট্র্যাটেজির মাধ্যমে অর্গানিক প্রবৃদ্ধি নিশ্চিতকারী।'
-    },
-    { 
-      nameEn: 'Zeeshan Ali', 
-      nameBn: 'জিশান আলী', 
-      roleEn: 'Cloud Infrastructure Architect', 
-      roleBn: 'ক্লাউড ইনফ্রাস্ট্রাকচার আর্কিটেক্ট', 
-      deptEn: 'Cloud & DevOps', 
-      deptBn: 'ক্লাউড ও ডেভঅপ্স',
-      image: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&q=80&w=400',
-      descEn: 'Deploying robust serverless cloud structures and high-availability container network channels.',
-      descBn: 'রোবস্ট সার্ভারলেস ক্লাউড আর্কিটেকচার এবং হাই-অ্যাভেলেবিলিটি কনটেইনার নেটওয়ার্ক চ্যানেল পরিচালনায় পারদর্শী।'
     }
   ], []);
 
@@ -366,8 +297,6 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
   // Selected Ecosystem Category
   const [selectedEcosystemCategory, setSelectedEcosystemCategory] = useState<'all' | 'dev' | 'design' | 'ai' | 'marketing'>('all');
 
-  // Selected Squad Category for Meet Our Team filtering
-  const [selectedSquadCategory, setSelectedSquadCategory] = useState<string>('all');
 
   // FAQ Accordion State
   const [activeFaq, setActiveFaq] = useState<string | null>(null);
@@ -527,6 +456,7 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
   const servicesList = useMemo(() => [
     {
       id: 'web-dev',
+      slug: 'web-development',
       category: 'dev',
       icon: Code2,
       nameEn: 'Web Development',
@@ -539,6 +469,7 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
     },
     {
       id: 'ui-ux',
+      slug: 'ui-ux-design',
       category: 'design',
       icon: Layers,
       nameEn: 'UI/UX Design',
@@ -551,6 +482,7 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
     },
     {
       id: 'seo',
+      slug: 'seo',
       category: 'marketing',
       icon: Search,
       nameEn: 'SEO Optimization',
@@ -563,6 +495,7 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
     },
     {
       id: 'marketing',
+      slug: 'digital-marketing',
       category: 'marketing',
       icon: Rocket,
       nameEn: 'Digital Marketing',
@@ -575,6 +508,7 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
     },
     {
       id: 'graphic-design',
+      slug: 'graphic-design',
       category: 'design',
       icon: Palette,
       nameEn: 'Graphic Design',
@@ -587,6 +521,7 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
     },
     {
       id: 'ai-automation',
+      slug: 'ai-automation',
       category: 'ai',
       icon: Cpu,
       nameEn: 'AI Services',
@@ -599,6 +534,7 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
     },
     {
       id: 'ai-agents',
+      slug: 'ai-automation',
       category: 'ai',
       icon: BrainCircuit,
       nameEn: 'AI Agents',
@@ -611,6 +547,7 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
     },
     {
       id: 'video-editing',
+      slug: 'video-editing',
       category: 'design',
       icon: Play,
       nameEn: 'Video Editing',
@@ -623,6 +560,7 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
     },
     {
       id: 'branding',
+      slug: 'graphic-design',
       category: 'design',
       icon: Sparkles,
       nameEn: 'Branding & Identity',
@@ -800,41 +738,6 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
       solutionBn: 'আমরা রিলেশনাল ট্রানজেকশন, অপ্টিমিস্টিক লেজার লক এবং ক্লাউডফ্লেয়ার এজ ক্যাшением সমন্বয়ে তাদের এপিআই পুনর্নির্মাণ করি।',
       resultsEn: 'Zero duplicate billing occurrences. Processing latency dropped by 64%, completely eliminating lost transaction sales.',
       resultsBn: 'পেমেন্ট আটকে যাওয়া বা ডুপ্লিকেট হওয়া সম্পূর্ণ বন্ধ হয়ে যায়। প্রসেসিং লেটেন্সি ৬৪% কমে যায় যা ব্যবসায়িক লস পুরোপুরি দূর করে।'
-    }
-  ], []);
-
-  // Awards/Badges Wall Data
-  const awardsList = useMemo(() => [
-    { title: '99+ Lighthouse Core Web Vitals Audited', issuer: 'Performance Excellence Badge' },
-    { title: 'Google Certified Professional Cloud Architects', issuer: 'Enterprise Deployment Standard' },
-    { title: 'Typesafe Certified React & Node.js Engineers', issuer: 'Absolute Code Integrity' },
-    { title: 'Awwwards Honoree Digital Design Standards', issuer: 'Elite UI/UX Aesthetics' },
-    { title: 'Verified Shopify & WordPress Partner Devs', issuer: 'Secure E-commerce Deployments' },
-    { title: 'Top-Rated Digital Growth Agency Award', issuer: 'Client ROI Excellence' }
-  ], []);
-
-  // Community Contribution Data
-  const communityContributions = useMemo(() => [
-    {
-      titleEn: 'Open Source Code Contributions',
-      titleBn: 'ওপেন সোর্স কোড কন্ট্রিবিউশন',
-      descEn: 'We publish free Next.js layout blueprints and custom database utility scripts that help over 15,000 developers worldwide build products faster.',
-      descBn: 'আমরা বিশ্বব্যাপী ১৫,০০০-এর বেশি ডেভেলপারদের জন্য বিনামূল্যে নেক্সট.জেএস লেআউট ব্লুপ্রিন্ট এবং ডাটাবেস ইউটিলিটি স্ক্রিপ্ট প্রকাশ করেছি।',
-      metric: '1.2K+ GitHub Stars'
-    },
-    {
-      titleEn: 'Free Advanced Tech Education',
-      titleBn: 'বিনামূল্যে উন্নত প্রযুক্তি শিক্ষা',
-      descEn: 'We host monthly technical workshops and codelabs in Dhaka, teaching local students typescript structures, serverless paradigms, and AI model deployments.',
-      descBn: 'আমরা ঢাকায় প্রতি মাসে টেকনিক্যাল কর্মশালা আয়োজন করে শিক্ষার্থীদের টাইপস্ক্রিপ্ট, সার্ভারলেস টেকনোলজি এবং এআই মডেল ইন্টিগ্রেশন শেখাই।',
-      metric: '500+ Students Mentored'
-    },
-    {
-      titleEn: 'Pro-Bono NGO Digitalization',
-      titleBn: 'স্বেচ্ছাসেবী আইটি সহায়তা',
-      descEn: 'Every quarter, Next Solution builds and deploys high-quality charity tracking portals for local non-profit organizations completely free of cost.',
-      descBn: 'প্রতি তিন মাস অন্তর আমরা স্থানীয় অলাভজনক বা সামাজিক সংস্থাকে সম্পূর্ণ বিনামূল্যে চমৎকার চ্যারিটি ট্র্যাকিং পোর্টাল তৈরি করে দিই।',
-      metric: '4 NGO Portals Launched'
     }
   ], []);
 
@@ -1122,28 +1025,28 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
                 </motion.button>
               </div>
 
-              {/* Four Stats Row */}
-              <div className="flex flex-wrap items-center gap-x-5 gap-y-4 pt-4">
+{/* Key Metrics Row */}
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-3">
                 {[
-                  { icon: Users, value: '20+', labelEn: 'Happy Clients', labelBn: 'সুখী ক্লায়েন্ট' },
-                  { icon: Rocket, value: '50+', labelEn: 'Projects Done', labelBn: 'প্রজেক্ট সম্পন্ন' },
-                  { icon: Globe, value: 'Global', labelEn: 'Service Provider', labelBn: 'সেবা প্রদানকারী' },
-                  { icon: BrainCircuit, value: 'AI', labelEn: 'Automation Experts', labelBn: 'অটোমেশন বিশেষজ্ঞ' },
+                  { value: '2+', labelEn: 'Years Technical', labelBn: 'বছরের অভিজ্ঞতা' },
+                  { value: '2+', labelEn: 'Years Agency', labelBn: 'বছরের এজেন্সি' },
+                  { value: '50+', labelEn: 'Projects', labelBn: 'প্রজেক্ট' },
+                  { value: '20+', labelEn: 'Clients', labelBn: 'ক্লায়েন্ট' },
+                  { value: '5+', labelEn: 'Team Members', labelBn: 'টিম মেম্বার' },
+                  { value: '8+', labelEn: 'Digital Services', labelBn: 'ডিজিটাল সেবা' },
+                  { value: '20+', labelEn: 'Industries Served', labelBn: 'ইন্ডাস্ট্রি' },
                 ].map((s, i) => (
-                  <React.Fragment key={i}>
-                    {i > 0 && <div className="hidden sm:block w-px h-8 bg-neutral-200 dark:bg-neutral-700" />}
-                    <div className="flex items-center space-x-2.5">
-                      <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[#FF5A00]/10 shrink-0">
-                        <s.icon className="h-3.5 w-3.5 text-[#FF5A00]" />
-                      </span>
-                      <div>
-                        <span className="block text-[13px] font-black text-neutral-900 dark:text-white leading-tight">{s.value}</span>
-                        <span className="block text-[10px] sm:text-[11px] text-neutral-400 dark:text-neutral-500 font-medium leading-tight">
-                          {currentLang === 'en' ? s.labelEn : s.labelBn}
-                        </span>
-                      </div>
-                    </div>
-                  </React.Fragment>
+                  <div
+                    key={i}
+                    className="group rounded-xl border border-neutral-200/60 dark:border-neutral-700/60 bg-white/70 dark:bg-white/[0.04] backdrop-blur-sm px-3 py-2.5 text-center hover:border-[#FF5A00]/50 hover:bg-[#FF5A00]/5 hover:shadow-[0_8px_24px_-8px_rgba(255,90,0,0.3)] transition-all duration-300"
+                  >
+                    <span className="block text-[15px] font-black text-neutral-900 dark:text-white group-hover:text-[#FF5A00] transition-colors duration-300 leading-none">
+                      {s.value}
+                    </span>
+                    <span className="mt-1 block text-[8.5px] font-bold uppercase tracking-widest text-neutral-500 dark:text-neutral-400 group-hover:text-neutral-700 dark:group-hover:text-neutral-300 transition-colors duration-300">
+                      {currentLang === 'en' ? s.labelEn : s.labelBn}
+                    </span>
+                  </div>
                 ))}
               </div>
             </div>
@@ -1177,34 +1080,13 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
                 <div className="hidden lg:block">
                 </div>
 
-              </div>
-            </div>
-
-            {/* ── Mobile Floating Cards ── */}
-            <div className="col-span-full lg:hidden grid grid-cols-2 gap-3 mt-2">
-              {[
-                { icon: Users, value: '20+', labelEn: 'Happy Clients', labelBn: 'সুখী ক্লায়েন্ট' },
-                { icon: Rocket, value: '50+', labelEn: 'Projects Done', labelBn: 'প্রজেক্ট সম্পন্ন' },
-                { icon: Globe, value: 'Global', labelEn: 'Service Provider', labelBn: 'সেবা প্রদানকারী' },
-                { icon: BrainCircuit, value: 'AI', labelEn: 'Automation Experts', labelBn: 'অটোমেশন বিশেষজ্ঞ' },
-              ].map((c, i) => (
-                <div key={i} className="bg-white dark:bg-[#111418] rounded-xl border border-neutral-100 dark:border-neutral-700/50 p-3.5 shadow-md flex items-center space-x-3">
-                  <span className="flex h-9 w-9 items-center justify-center rounded-full bg-[#FF5A00] shrink-0">
-                    <c.icon className="h-4 w-4 text-white" />
-                  </span>
-                  <div>
-                    <span className="block text-sm font-black text-neutral-900 dark:text-white leading-tight">{c.value}</span>
-                    <span className="block text-[10px] text-neutral-400 dark:text-[#b5b5b5] leading-tight">
-                      {currentLang === 'en' ? c.labelEn : c.labelBn}
-                    </span>
-                  </div>
-                </div>
-              ))}
+</div>
             </div>
 
           </div>
         </div>
       </section>
+
       {/* ========================================================
           02. WHO WE ARE
          ======================================================== */}
@@ -1423,7 +1305,7 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
       {/* ========================================================
           03.5. MEET THE MINDS BEHIND NEXT SOLUTION (Leadership Showcase)
          ======================================================== */}
-      <section id="about-leadership" className="border-t border-neutral-100 dark:border-neutral-800 bg-white dark:bg-[#141414] py-24 relative z-10 overflow-hidden">
+      <section id="about-leadership" className="bg-white dark:bg-[#141414] py-24 relative z-10 overflow-hidden">
         
         {/* Abstract Background Design Elements */}
         <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-gradient-to-tr from-blue-400/5 via-teal-400/5 to-purple-400/5 rounded-full blur-[120px] pointer-events-none" />
@@ -1530,169 +1412,9 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
       </section>
 
       {/* ========================================================
-          03.6. THE ENTIRE CREW (Our Team Gallery Section)
-         ======================================================== */}
-      <section id="about-squad" className="border-t border-neutral-100 dark:border-neutral-800 bg-neutral-50/25 py-20 relative z-10">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          
-          <div className="text-center space-y-3 max-w-2xl mx-auto mb-10">
-            <span className="inline-flex items-center space-x-1 px-2.5 py-0.5 rounded-full bg-indigo-50 dark:bg-blue-500/10 text-indigo-600 dark:text-blue-400 text-[9px] font-bold uppercase tracking-wider">
-              <span>👥 {currentLang === 'en' ? 'OUR TEAM EXPERTS' : 'আমাদের টিম বিশেষজ্ঞরা'}</span>
-            </span>
-            <h3 className="font-sans text-xl sm:text-2xl lg:text-3xl font-black text-neutral-900 dark:text-white leading-tight">
-              {currentLang === 'en' ? 'Meet our team' : 'আমাদের টিম'}
-            </h3>
-            <p className="text-xs text-neutral-400 dark:text-neutral-500 max-w-md mx-auto">
-              {currentLang === 'en'
-                ? 'The highly specialized builders, pixel craftsman, and growth strategists transforming code into business success.'
-                : 'অভিজ্ঞ বিল্ডার্স, পিক্সেল ক্রাফটসম্যান এবং গ্রোথ স্ট্র্যাটেজিস্টরা যারা কোডকে নিশ্চিত ব্যবসায়িক সফলতায় রূপান্তর করে।'}
-            </p>
-          </div>
-
-          {/* Team Stats Row */}
-       
-
-          {/* Interactive Team Categories Filter */}
-          <div className="flex flex-wrap justify-center gap-2 mb-12 max-w-4xl mx-auto">
-            {[
-              { id: 'all', labelEn: 'All Departments', labelBn: 'সকল ডিপার্টমেন্ট' },
-              { id: 'Development', labelEn: 'Development', labelBn: 'ডেভেলপমেন্ট' },
-              { id: 'Design', labelEn: 'Design', labelBn: 'ডিজাইন' },
-              { id: 'AI Services', labelEn: 'AI Services', labelBn: 'এআই সার্ভিস' },
-              { id: 'Content Strategy', labelEn: 'Content Strategy', labelBn: 'কনটেন্ট স্ট্র্যাটেজি' },
-              { id: 'Growth & SEO', labelEn: 'Growth & SEO', labelBn: 'এসইও ও প্রবৃদ্ধি' },
-              { id: 'Cloud & DevOps', labelEn: 'Cloud & DevOps', labelBn: 'ক্লাউড ও ডেভঅপ্স' }
-            ].map((cat) => {
-              const count = cat.id === 'all' 
-                ? deliverySquad.length 
-                : deliverySquad.filter(m => m.deptEn === cat.id).length;
-              
-              const isActive = selectedSquadCategory === cat.id;
-
-              return (
-                <button
-                  key={cat.id}
-                  onClick={() => setSelectedSquadCategory(cat.id)}
-                  className={`text-[10px] font-extrabold uppercase tracking-wider px-3.5 py-2 rounded-xl border transition-all duration-300 flex items-center space-x-1.5 cursor-pointer hover:scale-[1.02] ${
-                    isActive 
-                      ? 'bg-neutral-950 border-neutral-950 text-white shadow-md' 
-                      : 'bg-white dark:bg-[#141414] border-neutral-100 dark:border-neutral-800 text-neutral-500 dark:text-neutral-400 dark:text-neutral-500 hover:text-neutral-900 dark:text-white hover:border-neutral-200 dark:border-neutral-700'
-                  }`}
-                >
-                  <span>{currentLang === 'en' ? cat.labelEn : cat.labelBn}</span>
-                  <span className={`inline-flex items-center justify-center h-4 px-1.5 rounded-full text-[8px] font-bold ${
-                    isActive ? 'bg-white/20 text-white' : 'bg-neutral-100 dark:bg-neutral-800 text-neutral-500 dark:text-neutral-400 dark:text-neutral-500'
-                  }`}>
-                    {count}
-                  </span>
-                </button>
-              );
-            })}
-          </div>
-
-          {/* 4-Columns Team Grid with Animation */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
-            <AnimatePresence mode="popLayout">
-              {deliverySquad
-                .filter(member => selectedSquadCategory === 'all' || member.deptEn === selectedSquadCategory)
-                .map((member, i) => {
-                  return (
-                    <motion.div
-                      key={member.nameEn}
-                      layout
-                      initial={{ opacity: 0, scale: 0.9 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      exit={{ opacity: 0, scale: 0.9 }}
-                      transition={{ duration: 0.25 }}
-                      whileHover={{ y: -6 }}
-                      className="bg-white dark:bg-[#141414] border border-neutral-150/60 rounded-2xl overflow-hidden shadow-sm hover:shadow-xl hover:border-blue-500/15 transition-all duration-300 flex flex-col group h-full"
-                    >
-                      {/* Image on top */}
-                      <div className="relative aspect-[4/3] w-full overflow-hidden bg-neutral-100 dark:bg-neutral-800 shrink-0">
-                        <img 
-                          src={member.image} 
-                          alt={member.nameEn}
-                          className="h-full w-full object-cover object-center group-hover:scale-[1.05] transition duration-500"
-                          referrerPolicy="no-referrer"
-                        />
-                        <div className="absolute top-3 right-3">
-                          <span className="inline-flex items-center px-2 py-0.5 rounded-md bg-neutral-900/80 backdrop-blur-sm text-[8px] font-mono font-black text-white uppercase tracking-wider">
-                            {currentLang === 'en' ? member.deptEn : member.deptBn}
-                          </span>
-                        </div>
-                      </div>
-
-                      {/* Content underneath */}
-                      <div className="p-4 flex flex-col flex-1 justify-between space-y-3">
-                        <div className="space-y-1">
-                          <div className="flex items-center justify-between">
-                            <h4 className="text-sm font-black text-neutral-900 dark:text-white group-hover:text-blue-600 dark:text-blue-400 transition-colors">
-                              {currentLang === 'en' ? member.nameEn : member.nameBn}
-                            </h4>
-                            <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 shrink-0" title="Active" />
-                          </div>
-                          
-                          <p className="text-[10px] font-bold text-neutral-400 dark:text-neutral-500 font-mono uppercase tracking-wider">
-                            {currentLang === 'en' ? member.roleEn : member.roleBn}
-                          </p>
-                        </div>
-
-                        <p className="text-[11px] text-neutral-500 dark:text-neutral-400 dark:text-neutral-500 leading-relaxed font-normal">
-                          {currentLang === 'en' ? member.descEn : member.descBn}
-                        </p>
-                      </div>
-                    </motion.div>
-                  );
-                })}
-            </AnimatePresence>
-          </div>
-
-        </div>
-      </section>
-
-
-         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-7 gap-4 max-w-6xl mx-auto mb-14">
-            {[
-              { value: '2+', label: currentLang === 'en' ? 'Years Technical' : 'বছর টেকনিক্যাল', color: 'from-blue-500 dark:from-blue-500 to-indigo-500', bg: 'bg-blue-50/60', border: 'border-blue-100/60', textColor: 'text-blue-600 dark:text-blue-400' },
-              { value: '2+', label: currentLang === 'en' ? 'Years Agency' : 'বছর এজেন্সি', color: 'from-violet-500 to-purple-500', bg: 'bg-violet-50/60', border: 'border-violet-100/60', textColor: 'text-violet-600 dark:text-blue-400' },
-              { value: '50+', label: currentLang === 'en' ? 'Projects' : 'প্রজেক্ট', color: 'from-emerald-500 to-teal-500', bg: 'bg-emerald-50/60', border: 'border-emerald-100/60', textColor: 'text-emerald-600 dark:text-emerald-400' },
-              { value: '20+', label: currentLang === 'en' ? 'Clients' : 'ক্লায়েন্ট', color: 'from-rose-500 to-pink-500', bg: 'bg-rose-50/60', border: 'border-rose-100/60', textColor: 'text-rose-600 dark:text-rose-400' },
-              { value: '5+', label: currentLang === 'en' ? 'Team Members' : 'টিম মেম্বার', color: 'from-blue-500 to-indigo-500', bg: 'bg-amber-50/60', border: 'border-amber-100/60', textColor: 'text-blue-600 dark:text-blue-400' },
-              { value: '8+', label: currentLang === 'en' ? 'Digital Services' : 'ডিজিটাল সেবা', color: 'from-cyan-500 to-sky-500', bg: 'bg-cyan-50/60', border: 'border-cyan-100/60', textColor: 'text-cyan-600 dark:text-cyan-400' },
-              { value: '20+', label: currentLang === 'en' ? 'Industries Served' : 'ইন্ডাস্ট্রি', color: 'from-slate-600 to-gray-500', bg: 'bg-slate-50/60', border: 'border-slate-100/60', textColor: 'text-slate-600' },
-            ].map((stat, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.06, duration: 0.4 }}
-                whileHover={{ y: -6, scale: 1.03 }}
-                className={`relative group ${stat.bg} backdrop-blur-sm border ${stat.border} rounded-2xl p-4 text-center overflow-hidden transition-shadow duration-300 hover:shadow-lg`}
-              >
-                <div className={`absolute top-0 inset-x-0 h-0.5 bg-gradient-to-r ${stat.color} opacity-60`} />
-                <span className={`block text-2xl sm:text-3xl font-black bg-gradient-to-r ${stat.color} bg-clip-text text-transparent tracking-tight leading-none mb-2`}>
-                  {stat.value}
-                </span>
-                <span className={`block text-[9px] sm:text-[10px] font-bold ${stat.textColor} uppercase tracking-widest leading-snug`}>
-                  {stat.label}
-                </span>
-              </motion.div>
-            ))}
-          </div>
-
-
-
-
-
-
-
-
-
-      {/* ========================================================
           04. CORE VALUES (Bento Grid)
          ======================================================== */}
-      <section id="core-values" className="border-y border-neutral-100 dark:border-neutral-800 bg-neutral-50/20 py-24 relative z-10">
+      <section id="core-values" className="bg-neutral-50/20 py-24 relative z-10">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-16">
           <div className="text-center space-y-4 max-w-2xl mx-auto">
             <span className="text-xs font-bold uppercase tracking-widest text-blue-600 dark:text-blue-400">
@@ -1844,7 +1566,14 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.95 }}
                 transition={{ duration: 0.3 }}
-                className="group relative rounded-2xl border border-neutral-100 dark:border-neutral-800 bg-white dark:bg-[#141414] p-6 space-y-5 hover:border-blue-500/20 hover:shadow-xl transition-all duration-300 flex flex-col justify-between"
+                onClick={() => {
+                  if (setTab && service.slug) {
+                    sessionStorage.setItem('selected_service_slug', service.slug);
+                    setTab('services');
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                  }
+                }}
+                className="group relative cursor-pointer rounded-2xl border border-neutral-100 dark:border-neutral-800 bg-white dark:bg-[#141414] p-6 space-y-5 hover:border-blue-500/20 hover:shadow-xl transition-all duration-300 flex flex-col justify-between hover:-translate-y-0.5"
               >
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
@@ -1887,7 +1616,7 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
       {/* ========================================================
           08. INDUSTRIES WE SERVE
          ======================================================== */}
-      <section id="industries-serve" className="border-t border-neutral-100 dark:border-neutral-800 bg-neutral-50/20 py-24 relative z-10">
+      <section id="industries-serve" className="bg-neutral-50/20 py-24 relative z-10">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-16">
           <div className="text-center space-y-4 max-w-2xl mx-auto">
             <span className="text-xs font-bold uppercase tracking-widest text-blue-600 dark:text-blue-400">
@@ -1990,7 +1719,7 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
                   </p>
                 </div>
 
-                <div className="pt-8 mt-8 border-t border-neutral-100 dark:border-neutral-800 flex items-center justify-between text-xs text-neutral-400 dark:text-neutral-500">
+                <div className="pt-8 mt-8 flex items-center justify-between text-xs text-neutral-400 dark:text-neutral-500">
                   <span className="flex items-center space-x-1.5 font-bold">
                     <CheckCircle2 className="h-4 w-4 text-emerald-500 dark:text-emerald-400" />
                     <span>Quality Audited Milestone</span>
@@ -2007,7 +1736,7 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
       {/* ========================================================
           10. TECHNOLOGIES POWERING NEXT SOLUTION
          ======================================================== */}
-      <section id="tech-powering" className="border-t border-neutral-100 dark:border-neutral-800 bg-neutral-50/20 py-24 relative z-10">
+      <section id="tech-powering" className="bg-neutral-50/20 py-24 relative z-10">
         {/* Continuous Train Animation Keyframes */}
         <style dangerouslySetInnerHTML={{ __html: `
           @keyframes marquee-left {
@@ -2163,36 +1892,6 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
       </section>
 
       {/* ========================================================
-          14. AWARDS & CERTIFICATIONS (Future-ready Certificates Wall)
-         ======================================================== */}
-      <section id="awards-certifications" className="border-t border-neutral-100 dark:border-neutral-800 bg-neutral-50/20 py-24 relative z-10">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-16">
-          <div className="text-center space-y-4 max-w-2xl mx-auto">
-            <span className="text-xs font-bold uppercase tracking-widest text-blue-600 dark:text-blue-400">
-              {currentLang === 'en' ? 'VERIFIED EXPERTISE' : 'যাচাইকৃত সনদপত্র'}
-            </span>
-            <h2 className="font-sans text-3xl font-black text-neutral-900 dark:text-white leading-tight">
-              {currentLang === 'en' ? 'Awards & Professional Certifications' : 'আমাদের অর্জন ও পেশাদার সার্টিফিকেটসমূহ'}
-            </h2>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
-            {awardsList.map((aw, i) => (
-              <div key={i} className="group border border-neutral-100/70 bg-white dark:bg-[#141414] p-6 rounded-2xl shadow-sm hover:shadow-md transition-shadow flex items-start space-x-4">
-                <div className="h-10 w-10 rounded-xl bg-blue-50 dark:bg-blue-500/10 text-blue-600 dark:text-blue-400 flex items-center justify-center shrink-0">
-                  <Award className="h-5 w-5" />
-                </div>
-                <div>
-                  <span className="block text-xs font-black text-neutral-900 dark:text-white group-hover:text-blue-600 dark:text-blue-400 transition-colors">{aw.title}</span>
-                  <span className="block text-[10px] text-neutral-400 dark:text-neutral-500 mt-1">{aw.issuer}</span>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ========================================================
           15. GLOBAL PRESENCE (Interactive Map Pin Representation)
          ======================================================== */}
       <section id="global-presence" className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-24 relative z-10">
@@ -2256,45 +1955,6 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
             </div>
           </div>
 
-        </div>
-      </section>
-
-      {/* ========================================================
-          16. COMMUNITY & INNOVATION (Contributions)
-         ======================================================== */}
-      <section id="community-contributions" className="border-t border-neutral-100 dark:border-neutral-800 bg-neutral-50/20 py-24 relative z-10">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-16">
-          <div className="text-center space-y-4 max-w-2xl mx-auto">
-            <span className="text-xs font-bold uppercase tracking-widest text-blue-600 dark:text-blue-400">
-              {currentLang === 'en' ? 'COMMUNITY & IMPACT' : 'সামাজিক অবদান ও উদ্ভাবন'}
-            </span>
-            <h2 className="font-sans text-3xl font-black text-neutral-900 dark:text-white leading-tight">
-              {currentLang === 'en' ? 'Our Contributions To Open Source & Technology' : 'প্রযুক্তি এবং তরুণদের দক্ষ করার জন্য আমাদের প্রয়াস'}
-            </h2>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-            {communityContributions.map((c, i) => (
-              <div key={i} className="border border-neutral-100 dark:border-neutral-800 bg-white dark:bg-[#141414] p-6 md:p-8 rounded-3xl shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between space-y-6">
-                <div className="space-y-3">
-                  <span className="text-[10px] font-black uppercase tracking-widest text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-500/10 px-2.5 py-1 rounded border border-blue-100/50">
-                    {c.metric}
-                  </span>
-                  <h4 className="text-sm font-extrabold text-neutral-900 dark:text-white pt-1">
-                    {currentLang === 'en' ? c.titleEn : c.titleBn}
-                  </h4>
-                  <p className="text-xs text-neutral-500 dark:text-neutral-400 dark:text-neutral-500 leading-relaxed font-normal">
-                    {currentLang === 'en' ? c.descEn : c.descBn}
-                  </p>
-                </div>
-
-                <div className="pt-4 border-t border-neutral-50 dark:border-neutral-800 text-[10px] font-bold text-neutral-400 dark:text-neutral-500 uppercase tracking-widest flex items-center justify-between">
-                  <span>Next Solution Impact</span>
-                  <CheckCircle2 className="h-4 w-4 text-emerald-500 dark:text-emerald-400" />
-                </div>
-              </div>
-            ))}
-          </div>
         </div>
       </section>
 

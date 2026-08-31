@@ -342,7 +342,7 @@ export default function TestimonialsPage({ currentLang, setTab }: TestimonialsPa
 
       {/* 08. CLIENT LOGOS SCROLLING WALL */}
       {sectionVisibility.logos && logos.length > 0 && (
-        <section className="py-12 border-b border-slate-100 dark:border-neutral-800 bg-slate-50/50 dark:bg-[#0c0c0c] overflow-hidden">
+        <section className="py-12 bg-slate-50/50 dark:bg-[#0c0c0c] overflow-hidden">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <span className="text-[10px] font-bold text-slate-400 dark:text-neutral-500 uppercase tracking-widest text-center block mb-8">
               {currentLang === 'en' ? 'POWERING GLOBAL PRODUCT LEADING TEAMS' : 'বিশ্ববিখ্যাত ব্র্যান্ডগুলোর বিশ্বস্ত পার্টনার'}
@@ -426,7 +426,7 @@ export default function TestimonialsPage({ currentLang, setTab }: TestimonialsPa
 
       {/* 03. FEATURED CLIENT STORIES (CASE STUDIES) */}
       {sectionVisibility.stories && stories.length > 0 && (
-        <section id="success-stories-section" className="py-20 bg-slate-50 dark:bg-[#0c0c0c] border-y border-slate-100 dark:border-neutral-800">
+        <section id="success-stories-section" className="py-20 bg-slate-50 dark:bg-[#0c0c0c]">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-12">
             <div className="text-center max-w-xl mx-auto space-y-2">
               <span className="text-xs font-bold text-blue-600 dark:text-orange-400 uppercase tracking-widest">03. PROVEN CASE STORIES</span>
@@ -619,7 +619,7 @@ export default function TestimonialsPage({ currentLang, setTab }: TestimonialsPa
 
       {/* 05 & 06. TESTIMONIALS WALL WITH FILTER SYSTEM */}
       {sectionVisibility.wall && (
-        <section id="reviews-feed-section" className="py-20 bg-slate-50/75 dark:bg-[#0c0c0c] border-y border-slate-100 dark:border-neutral-800">
+        <section id="reviews-feed-section" className="py-20 bg-slate-50/75 dark:bg-[#0c0c0c]">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-10">
             <div className="text-center max-w-xl mx-auto space-y-2">
               <span className="text-xs font-bold text-blue-600 dark:text-orange-400 uppercase tracking-widest">05 & 06. VERIFIED LOGS FEED</span>
@@ -748,7 +748,7 @@ export default function TestimonialsPage({ currentLang, setTab }: TestimonialsPa
 
       {/* 07. REVIEW STATISTICS (ANALYTICS) */}
       {sectionVisibility.wall && (
-        <section id="review-statistics-section" className="py-20 bg-white dark:bg-[#0c0c0c] border-b border-slate-100 dark:border-neutral-800">
+        <section id="review-statistics-section" className="py-20 bg-white dark:bg-[#0c0c0c]">
           <div className="mx-auto max-w-4xl px-4 sm:px-6 space-y-8">
             <div className="text-center space-y-2">
               <span className="text-xs font-bold text-blue-600 dark:text-orange-400 uppercase tracking-widest">07. RATING DENSITY ANALYSIS</span>
@@ -792,7 +792,7 @@ export default function TestimonialsPage({ currentLang, setTab }: TestimonialsPa
 
       {/* 07. CLIENT MOMENTS SECTIONS */}
       {sectionVisibility.clientMoments && moments.length > 0 && (
-        <section id="client-moments-section" className="py-24 bg-slate-50 dark:bg-[#0c0c0c] border-t border-b border-slate-150 dark:border-neutral-800 relative overflow-hidden">
+        <section id="client-moments-section" className="py-24 bg-slate-50 dark:bg-[#0c0c0c] relative overflow-hidden">
           {/* Decorative ambient gradients */}
           <div className="absolute top-0 left-1/4 w-96 h-96 bg-blue-100/30 dark:bg-orange-500/5 rounded-full blur-3xl -z-10" />
           <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-purple-100/20 dark:bg-orange-500/5 rounded-full blur-3xl -z-10" />
@@ -922,7 +922,7 @@ export default function TestimonialsPage({ currentLang, setTab }: TestimonialsPa
       )}
 
       {/* 10 & 12. GLOBAL CLIENT MAP & CLIENT ACHIEVEMENTS (IMPORTED VISUALS) */}
-      <section className="py-20 bg-slate-50 dark:bg-[#0c0c0c] border-y border-slate-100 dark:border-neutral-800">
+      <section className="py-20 bg-slate-50 dark:bg-[#0c0c0c]">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <TestimonialsVisuals currentLang={currentLang} />
         </div>
@@ -1014,7 +1014,7 @@ export default function TestimonialsPage({ currentLang, setTab }: TestimonialsPa
 
       {/* 13. REVIEW SUBMISSION CTA & DRAWER FORM */}
       {sectionVisibility.submissionCta && (
-        <section id="review-submission-drawer" className="py-20 bg-slate-900 text-white relative overflow-hidden border-t border-slate-800">
+        <section id="review-submission-drawer" className="py-20 bg-slate-900 text-white relative overflow-hidden">
           <div className="absolute top-0 right-0 h-96 w-96 rounded-full bg-blue-500/10 blur-3xl -z-10"></div>
           <div className="mx-auto max-w-4xl px-4 sm:px-6 text-center space-y-8 relative z-10">
             

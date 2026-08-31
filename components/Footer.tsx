@@ -59,7 +59,7 @@ export default function Footer({ currentLang, setTab }: FooterProps) {
   };
 
   return (
-    <footer id="app-footer" className="bg-[#0A0A0A] text-gray-400 border-t border-white/10 transition-colors duration-300">
+    <footer id="app-footer" className="bg-[#0A0A0A] text-gray-400 transition-colors duration-300">
       <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 gap-12 lg:grid-cols-12">
           {/* Brand Info */}

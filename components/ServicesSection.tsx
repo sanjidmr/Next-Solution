@@ -136,15 +136,20 @@ export default function ServicesSection({ currentLang, setTab, isFullPage = fals
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  // Sync with session storage for preselected routing (e.g. from orbit dials)
+  // Sync with session storage for preselected routing (e.g. from orbit dials,
+  // home page bento cards and about page capability cards).
   useEffect(() => {
     const slug = sessionStorage.getItem('selected_service_slug');
     if (slug) {
-      const match = services.find(s => s.slug === slug);
+      const match =
+        services.find(s => s.slug === slug) ||
+        initialServices.find(s => s.slug === slug);
       if (match) {
         setSelectedService(match);
+        sessionStorage.removeItem('selected_service_slug');
       }
-      sessionStorage.removeItem('selected_service_slug');
+      // No match yet -> keep the slug in storage so this effect can retry
+      // once the services list finishes syncing from local storage.
     }
   }, [services]);
 
@@ -192,12 +197,12 @@ export default function ServicesSection({ currentLang, setTab, isFullPage = fals
   // ==========================================
   if (selectedService) {
     return (
-      <section id="services-section-detail" className="bg-white dark:bg-[#141414] min-h-screen py-24 animate-fadeIn text-zinc-900 font-sans selection:bg-blue-600 selection:text-white">
+      <section id="services-section-detail" className="bg-white dark:bg-[#141414] min-h-screen py-24 animate-fadeIn text-zinc-900 dark:text-zinc-100 font-sans selection:bg-blue-600 selection:text-white">
         <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
           
           {/* Breadcrumb Navigation */}
           <nav className="mb-8" aria-label="Breadcrumb">
-            <ol className="flex items-center space-x-2 text-xs font-semibold text-gray-400 dark:text-neutral-500">
+            <ol className="flex items-center space-x-2 text-xs font-semibold text-gray-400 dark:text-neutral-400">
               <li>
                 <button 
                   onClick={() => { setTab('home'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
@@ -229,21 +234,21 @@ export default function ServicesSection({ currentLang, setTab, isFullPage = fals
               setSelectedService(null);
               window.scrollTo({ top: 0, behavior: 'smooth' });
             }}
-            className="group inline-flex items-center space-x-2 text-xs font-bold text-gray-500 dark:text-neutral-400 dark:text-neutral-500 hover:text-blue-600 dark:text-orange-400 transition mb-8 cursor-pointer border border-gray-100 dark:border-neutral-800 rounded-full px-4 py-1.5 bg-gray-50/50 hover:bg-white dark:bg-[#141414]"
+            className="group inline-flex items-center space-x-2 text-xs font-bold text-gray-500 dark:text-neutral-300 hover:text-blue-600 dark:text-orange-400 transition mb-8 cursor-pointer border border-gray-100 dark:border-neutral-800 rounded-full px-4 py-1.5 bg-gray-50/50 hover:bg-white dark:bg-[#141414]"
           >
             <Icons.ArrowLeft className="h-3.5 w-3.5 group-hover:-translate-x-0.5 transition-transform" />
             <span>{currentLang === 'en' ? 'Back to Capabilities Catalog' : 'à¦¸à§‡à¦¬à¦¾ à¦•à§à¦¯à¦¾à¦Ÿà¦¾à¦²à¦—à§‡ à¦«à¦¿à¦°à§‡ à¦¯à¦¾à¦¨'}</span>
           </button>
 
           {/* Header Layout mimicking Stripe / Clay premium design */}
-          <div className="border-b border-gray-100 dark:border-neutral-800 pb-12 space-y-6">
+          <div className="pb-12 space-y-6">
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6">
               <div className="flex items-start sm:items-center space-x-4">
                 <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-blue-600 text-white shadow-xl shadow-blue-600/15">
                   {getIcon(selectedService.icon, "h-8 w-8")}
                 </div>
                 <div>
-                  <span className="inline-flex items-center rounded-md bg-blue-50 dark:bg-orange-500/10 px-2.5 py-0.5 text-xs font-bold text-blue-700 border border-blue-100/50">
+                  <span className="inline-flex items-center rounded-md bg-blue-50 dark:bg-orange-500/10 px-2.5 py-0.5 text-xs font-bold text-blue-700 dark:text-orange-400 border border-blue-100/50">
                     {selectedService.category}
                   </span>
                   <h1 className="text-3xl font-black text-gray-900 dark:text-white tracking-tight sm:text-4xl mt-1.5">
@@ -254,20 +259,20 @@ export default function ServicesSection({ currentLang, setTab, isFullPage = fals
 
               {/* Action and indicators overview */}
               <div className="flex flex-col sm:items-end justify-center">
-                <span className="text-[10px] uppercase font-extrabold tracking-widest text-gray-400 dark:text-neutral-500">
+                <span className="text-[10px] uppercase font-extrabold tracking-widest text-gray-400 dark:text-neutral-400">
                   {currentLang === 'en' ? 'Service Reference Code' : 'à¦¸à¦¾à¦°à§à¦­à¦¿à¦¸ à¦°à§‡à¦«à¦¾à¦°à§‡à¦¨à§à¦¸ à¦•à§‹à¦¡'}
                 </span>
                 <span className="text-sm font-extrabold text-blue-600 dark:text-orange-400 mt-1 font-mono">NS-{selectedService.slug.toUpperCase()}</span>
               </div>
             </div>
 
-            <p className="text-base sm:text-lg leading-relaxed text-gray-600 dark:text-neutral-300 dark:text-neutral-600 max-w-4xl">
+            <p className="text-base sm:text-lg leading-relaxed text-gray-600 dark:text-neutral-200 max-w-4xl">
               {currentLang === 'en' ? selectedService.descriptionEn : selectedService.descriptionBn}
             </p>
 
             {selectedService.subtitleEn && (
               <div className="rounded-xl border-l-4 border-blue-600 bg-blue-50/40 dark:bg-orange-500/5 p-4 max-w-4xl">
-                <p className="text-xs sm:text-sm font-medium text-blue-700 italic leading-relaxed">
+                <p className="text-xs sm:text-sm font-medium text-blue-700 dark:text-orange-300 italic leading-relaxed">
                   " {currentLang === 'en' ? selectedService.subtitleEn : selectedService.subtitleBn} "
                 </p>
               </div>
@@ -288,7 +293,7 @@ export default function ServicesSection({ currentLang, setTab, isFullPage = fals
 
           {/* Strategic Insight Columns: Why Need, Who For, Business Impact */}
           {(selectedService.whyNeedEn || selectedService.whoForEn || selectedService.businessImpactEn) && (
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 py-12 border-b border-gray-100 dark:border-neutral-800">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 py-12">
               {selectedService.whoForEn && (
                 <div className="rounded-2xl bg-white dark:bg-[#141414] border border-gray-100 dark:border-neutral-800 p-6 space-y-4 shadow-sm hover:border-gray-200 dark:border-neutral-700 transition">
                   <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-50 dark:bg-orange-500/10 text-blue-600 dark:text-orange-400 border border-blue-100/40">
@@ -297,7 +302,7 @@ export default function ServicesSection({ currentLang, setTab, isFullPage = fals
                   <h3 className="text-xs font-extrabold text-gray-900 dark:text-white uppercase tracking-widest">
                     {currentLang === 'en' ? 'Who is this for?' : 'à¦•à¦¾à¦° à¦œà¦¨à§à¦¯ à¦ªà§à¦°à¦¯à§‹à¦œà§à¦¯?'}
                   </h3>
-                  <p className="text-xs text-gray-500 dark:text-neutral-400 dark:text-neutral-500 leading-relaxed">
+                  <p className="text-xs text-gray-500 dark:text-neutral-300 leading-relaxed">
                     {currentLang === 'en' ? selectedService.whoForEn : selectedService.whoForBn}
                   </p>
                 </div>
@@ -311,7 +316,7 @@ export default function ServicesSection({ currentLang, setTab, isFullPage = fals
                   <h3 className="text-xs font-extrabold text-gray-900 dark:text-white uppercase tracking-widest">
                     {currentLang === 'en' ? 'Why you need this' : 'à¦•à§‡à¦¨ à¦à¦Ÿà¦¿ à¦ªà§à¦°à§Ÿà§‹à¦œà¦¨'}
                   </h3>
-                  <p className="text-xs text-gray-500 dark:text-neutral-400 dark:text-neutral-500 leading-relaxed">
+                  <p className="text-xs text-gray-500 dark:text-neutral-300 leading-relaxed">
                     {currentLang === 'en' ? selectedService.whyNeedEn : selectedService.whyNeedBn}
                   </p>
                 </div>
@@ -325,7 +330,7 @@ export default function ServicesSection({ currentLang, setTab, isFullPage = fals
                   <h3 className="text-xs font-extrabold text-gray-900 dark:text-white uppercase tracking-widest">
                     {currentLang === 'en' ? 'Expected Business Impact' : 'à¦ªà§à¦°à¦¤à§à¦¯à¦¾à¦¶à¦¿à¦¤ à¦¬à§à¦¯à¦¬à¦¸à¦¾à¦¯à¦¼à¦¿à¦• à¦ªà§à¦°à¦­à¦¾à¦¬'}
                   </h3>
-                  <p className="text-xs text-gray-500 dark:text-neutral-400 dark:text-neutral-500 leading-relaxed">
+                  <p className="text-xs text-gray-500 dark:text-neutral-300 leading-relaxed">
                     {currentLang === 'en' ? selectedService.businessImpactEn : selectedService.businessImpactBn}
                   </p>
                 </div>
@@ -340,13 +345,13 @@ export default function ServicesSection({ currentLang, setTab, isFullPage = fals
               const subServices = JSON.parse(selectedService.subServicesJson);
               if (!Array.isArray(subServices) || subServices.length === 0) return null;
               return (
-                <div className="py-12 border-b border-gray-100 dark:border-neutral-800 space-y-8">
+                <div className="py-12 space-y-8">
                   <div className="space-y-2">
                     <h2 className="text-xl font-bold text-gray-900 dark:text-white flex items-center space-x-2.5">
                       <Icons.Layers className="h-5 w-5 text-blue-600 dark:text-orange-400" />
                       <span>{currentLang === 'en' ? 'Specialized Sub-Services' : 'à¦¬à¦¿à¦¶à§‡à¦·à¦¾à¦¯à¦¼à¦¿à¦¤ à¦¸à¦¾à¦¬-à¦¸à¦¾à¦°à§à¦­à¦¿à¦¸ à¦¸à¦®à§‚à¦¹'}</span>
                     </h2>
-                    <p className="text-xs text-gray-400 dark:text-neutral-500">
+                    <p className="text-xs text-gray-400 dark:text-neutral-400">
                       {currentLang === 'en' ? 'Micro-capabilities we activate within this service group' : 'à¦à¦‡ à¦¸à¦¾à¦°à§à¦­à¦¿à¦¸ à¦—à§à¦°à§à¦ªà§‡à¦° à¦…à¦§à§€à¦¨à§‡ à¦¯à§‡ à¦›à§‹à¦Ÿ à¦¸à¦¾à¦¬-à¦¸à§‡à¦¬à¦¾à¦¸à¦®à§‚à¦¹ à¦†à¦®à¦°à¦¾ à¦ªà§à¦°à¦¦à¦¾à¦¨ à¦•à¦°à¦¿'}
                     </p>
                   </div>
@@ -357,7 +362,7 @@ export default function ServicesSection({ currentLang, setTab, isFullPage = fals
                           <span className="h-2 w-2 rounded-full bg-blue-600 shrink-0"></span>
                           <span>{currentLang === 'en' ? sub.titleEn : sub.titleBn}</span>
                         </h4>
-                        <p className="text-xs text-gray-500 dark:text-neutral-400 dark:text-neutral-500 leading-relaxed">
+                        <p className="text-xs text-gray-500 dark:text-neutral-300 leading-relaxed">
                           {currentLang === 'en' ? sub.descEn : sub.descBn}
                         </p>
                       </div>
@@ -372,7 +377,7 @@ export default function ServicesSection({ currentLang, setTab, isFullPage = fals
           })()}
 
           {/* Two Column Grid (Deliverables & Framework) */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 py-12 border-b border-gray-100 dark:border-neutral-800">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 py-12">
             
             {/* Column 1: Core Deliverables & Strategic Benefits */}
             <div className="space-y-12">
@@ -384,7 +389,7 @@ export default function ServicesSection({ currentLang, setTab, isFullPage = fals
                 </h2>
                 <ul className="space-y-4">
                   {(currentLang === 'en' ? selectedService.featuresEn : selectedService.featuresBn).map((f, idx) => (
-                    <li key={idx} className="flex items-start space-x-3 text-xs text-gray-600 dark:text-neutral-300 dark:text-neutral-600 leading-relaxed">
+                    <li key={idx} className="flex items-start space-x-3 text-xs text-gray-600 dark:text-neutral-200 leading-relaxed">
                       <Icons.CheckCircle className="h-4 w-4 text-emerald-500 dark:text-emerald-400 shrink-0 mt-0.5" />
                       <span>{f}</span>
                     </li>
@@ -400,7 +405,7 @@ export default function ServicesSection({ currentLang, setTab, isFullPage = fals
                 </h2>
                 <ul className="space-y-4">
                   {(currentLang === 'en' ? selectedService.benefitsEn : selectedService.benefitsBn).map((b, idx) => (
-                    <li key={idx} className="flex items-start space-x-3 text-xs text-gray-600 dark:text-neutral-300 dark:text-neutral-600 leading-relaxed">
+                    <li key={idx} className="flex items-start space-x-3 text-xs text-gray-600 dark:text-neutral-200 leading-relaxed">
                       <Icons.Plus className="h-4 w-4 text-blue-500 dark:text-orange-400 shrink-0 mt-0.5" />
                       <span>{b}</span>
                     </li>
@@ -423,7 +428,7 @@ export default function ServicesSection({ currentLang, setTab, isFullPage = fals
                       <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg bg-blue-50 dark:bg-orange-500/10 text-[10px] font-bold text-blue-600 dark:text-orange-400 border border-blue-100 dark:border-orange-500/20">
                         {idx + 1}
                       </span>
-                      <p className="text-gray-600 dark:text-neutral-300 dark:text-neutral-600 mt-0.5 leading-relaxed">{step}</p>
+                      <p className="text-gray-600 dark:text-neutral-200 mt-0.5 leading-relaxed">{step}</p>
                     </div>
                   ))}
                 </div>
@@ -454,13 +459,13 @@ export default function ServicesSection({ currentLang, setTab, isFullPage = fals
               const plans = JSON.parse(selectedService.pricingJson);
               if (!Array.isArray(plans) || plans.length === 0) return null;
               return (
-                <div className="py-12 border-b border-gray-100 dark:border-neutral-800 space-y-8">
+                <div className="py-12 space-y-8">
                   <div className="space-y-2">
                     <h2 className="text-xl font-bold text-gray-900 dark:text-white flex items-center space-x-2.5">
                       <Icons.Layers className="h-5 w-5 text-blue-600 dark:text-orange-400" />
                       <span>{currentLang === 'en' ? 'Scope & Execution Blueprints' : 'à¦ªà§à¦°à¦œà§‡à¦•à§à¦Ÿ à¦¡à§‡à¦²à¦¿à¦­à¦¾à¦°à¦¿ à¦¬à§à¦²à§à¦ªà§à¦°à¦¿à¦¨à§à¦Ÿ'}</span>
                     </h2>
-                    <p className="text-xs text-gray-400 dark:text-neutral-500">
+                    <p className="text-xs text-gray-400 dark:text-neutral-400">
                       {currentLang === 'en' ? 'Choose a structure matching your project volume and milestone speed' : 'à¦†à¦ªà¦¨à¦¾à¦° à¦ªà§à¦°à¦œà§‡à¦•à§à¦Ÿà§‡à¦° à¦­à¦²à¦¿à¦‰à¦® à¦“ à¦®à¦¾à¦‡à¦²à¦¸à§à¦Ÿà§‹à¦¨à§‡à¦° à¦¸à§à¦ªà¦¿à¦¡ à¦…à¦¨à§à¦¯à¦¾à§Ÿà§€ à¦¸à§‡à¦°à¦¾ à¦•à¦¾à¦ à¦¾à¦®à§‹à¦Ÿà¦¿ à¦¨à¦¿à¦°à§à¦¬à¦¾à¦šà¦¨ à¦•à¦°à§à¦¨'}
                     </p>
                   </div>
@@ -480,7 +485,7 @@ export default function ServicesSection({ currentLang, setTab, isFullPage = fals
                           {p.featuresEn && Array.isArray(p.featuresEn) && (
                             <ul className="space-y-3 pt-2">
                               {(currentLang === 'en' ? p.featuresEn : p.featuresBn).map((feat: string, fidx: number) => (
-                                <li key={fidx} className="flex items-start space-x-2.5 text-xs text-gray-600 dark:text-neutral-300 dark:text-neutral-600">
+                                <li key={fidx} className="flex items-start space-x-2.5 text-xs text-gray-600 dark:text-neutral-200">
                                   <Icons.Check className="h-4 w-4 text-emerald-500 dark:text-emerald-400 shrink-0 mt-0.5" />
                                   <span>{feat}</span>
                                 </li>
@@ -513,13 +518,13 @@ export default function ServicesSection({ currentLang, setTab, isFullPage = fals
               const sfaqs = JSON.parse(selectedService.faqsJson);
               if (!Array.isArray(sfaqs) || sfaqs.length === 0) return null;
               return (
-                <div className="py-12 border-b border-gray-100 dark:border-neutral-800 space-y-8">
+                <div className="py-12 space-y-8">
                   <div className="space-y-2">
                     <h2 className="text-xl font-bold text-gray-900 dark:text-white flex items-center space-x-2.5">
                       <Icons.HelpCircle className="h-5 w-5 text-blue-600 dark:text-orange-400" />
                       <span>{currentLang === 'en' ? 'Frequently Asked Questions' : 'à¦¸à¦¾à¦§à¦¾à¦°à¦£ à¦œà¦¿à¦œà§à¦žà¦¾à¦¸à¦¾'}</span>
                     </h2>
-                    <p className="text-xs text-gray-400 dark:text-neutral-500">
+                    <p className="text-xs text-gray-400 dark:text-neutral-400">
                       {currentLang === 'en' ? 'Answering specific details for this service' : 'à¦à¦‡ à¦¸à§‡à¦¬à¦¾à¦¸à¦®à§à¦ªà¦°à§à¦•à¦¿à¦¤ à¦•à¦¿à¦›à§ à¦¸à¦¾à¦§à¦¾à¦°à¦£ à¦ªà§à¦°à¦¶à§à¦¨à§‹à¦¤à§à¦¤à¦°'}
                     </p>
                   </div>
@@ -531,7 +536,7 @@ export default function ServicesSection({ currentLang, setTab, isFullPage = fals
                           <span className="h-1.5 w-1.5 rounded-full bg-blue-600"></span>
                           <span>{currentLang === 'en' ? f.questionEn : f.questionBn}</span>
                         </span>
-                        <p className="text-xs text-gray-500 dark:text-neutral-400 dark:text-neutral-500 leading-relaxed pl-3.5 border-l-2 border-gray-100 dark:border-neutral-800">
+                        <p className="text-xs text-gray-500 dark:text-neutral-300 leading-relaxed pl-3.5 border-l-2 border-gray-100 dark:border-neutral-800">
                           {currentLang === 'en' ? f.answerEn : f.answerBn}
                         </p>
                       </div>
@@ -611,7 +616,7 @@ export default function ServicesSection({ currentLang, setTab, isFullPage = fals
                 ].map((s, i) => (
                   <div key={i} className="space-y-0.5">
                     <span className="block text-2xl font-black text-orange-500 font-mono">{s.num}</span>
-                    <span className="block text-[10px] font-bold text-gray-400 dark:text-neutral-500 uppercase tracking-wider">{currentLang === 'en' ? s.labelEn : s.labelBn}</span>
+                    <span className="block text-[10px] font-bold text-gray-400 dark:text-neutral-400 uppercase tracking-wider">{currentLang === 'en' ? s.labelEn : s.labelBn}</span>
                   </div>
                 ))}
               </div>
@@ -727,7 +732,7 @@ export default function ServicesSection({ currentLang, setTab, isFullPage = fals
 
 
       {/* 2. SERVICES OVERVIEW GRID (LOADED DYNAMICALLY) */}
-      <section id="services-grid-list" className="py-24 border-b border-gray-50 bg-white dark:bg-[#141414]">
+      <section id="services-grid-list" className="py-24 bg-white dark:bg-[#141414]">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           
           <div className="text-center space-y-4 max-w-3xl mx-auto mb-16">
@@ -737,7 +742,7 @@ export default function ServicesSection({ currentLang, setTab, isFullPage = fals
             <h2 className="font-sans text-3xl font-extrabold tracking-tight text-gray-900 dark:text-white sm:text-4xl">
               {currentLang === 'en' ? 'Explore Specific Expertise' : 'à¦¬à¦¿à¦¶à§‡à¦·à¦¾à¦¯à¦¼à¦¿à¦¤ à¦¦à¦•à§à¦·à¦¤à¦¾à¦¸à¦®à§‚à¦¹ à¦…à¦¨à§à¦¬à§‡à¦·à¦£ à¦•à¦°à§à¦¨'}
             </h2>
-            <p className="text-sm text-gray-500 dark:text-neutral-400 dark:text-neutral-500 leading-relaxed">
+            <p className="text-sm text-gray-500 dark:text-neutral-300 leading-relaxed">
               {currentLang === 'en' ? (
                 'Manageable via active client consoles. Zero hardcoding. Click to access complete deliverable checklists, tech stacks, and plans.'
               ) : (
@@ -755,12 +760,12 @@ export default function ServicesSection({ currentLang, setTab, isFullPage = fals
                   setSelectedService(service);
                   window.scrollTo({ top: 0, behavior: 'smooth' });
                 }}
-                className="group cursor-pointer rounded-2xl border border-gray-100 dark:border-neutral-800 bg-[#FAFAFA]/40 p-6 shadow-sm hover:shadow-lg hover:border-blue-600 hover:bg-white dark:bg-[#141414] transition-all duration-300 transform hover:-translate-y-0.5 flex flex-col justify-between"
+                className="group cursor-pointer rounded-2xl border border-gray-100 dark:border-neutral-800 bg-[#FAFAFA]/40 p-6 shadow-sm hover:shadow-lg hover:border-blue-600 hover:bg-white dark:bg-[#141414] dark:hover:bg-white/[0.05] dark:hover:border-orange-500/60 dark:hover:shadow-[0_0_35px_-5px_rgba(255,90,0,0.35)] transition-all duration-300 transform hover:-translate-y-0.5 active:scale-[0.99] dark:active:shadow-[0_0_45px_-8px_rgba(255,90,0,0.5)] flex flex-col justify-between"
               >
                 <div className="space-y-4">
                   {/* Icon and Pricing Header */}
                   <div className="flex items-center justify-between">
-                    <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-50 dark:bg-orange-500/10 text-blue-600 dark:text-orange-400 group-hover:bg-blue-600 group-hover:text-white transition duration-300 border border-blue-100/50">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-50 dark:bg-orange-500/10 text-blue-600 dark:text-orange-400 group-hover:bg-blue-600 dark:group-hover:bg-orange-500 group-hover:text-white dark:group-hover:border-orange-500/40 transition duration-300 border border-blue-100/50">
                       {getIcon(service.icon)}
                     </div>
                     <div className="text-right">
@@ -776,18 +781,18 @@ export default function ServicesSection({ currentLang, setTab, isFullPage = fals
                   </h3>
 
                   {/* Description */}
-                  <p className="text-xs text-gray-500 dark:text-neutral-400 dark:text-neutral-500 leading-relaxed line-clamp-3">
+                  <p className="text-xs text-gray-500 dark:text-neutral-300 leading-relaxed line-clamp-3">
                     {currentLang === 'en' ? service.descriptionEn : service.descriptionBn}
                   </p>
 
                   {/* Key Benefits (Requested Checklist) */}
                   <div className="pt-3 border-t border-gray-100 dark:border-neutral-800 space-y-2">
-                    <span className="text-[9px] uppercase font-bold text-gray-400 dark:text-neutral-500 tracking-wider block">
+                    <span className="text-[9px] uppercase font-bold text-gray-400 dark:text-neutral-400 tracking-wider block">
                       {currentLang === 'en' ? 'Core Benefits' : 'à¦®à§‚à¦² à¦¸à§à¦¬à¦¿à¦§à¦¾ à¦¸à¦®à§‚à¦¹'}
                     </span>
                     <ul className="space-y-1.5">
                       {(currentLang === 'en' ? service.benefitsEn : service.benefitsBn).slice(0, 2).map((b, idx) => (
-                        <li key={idx} className="flex items-start space-x-2 text-[10px] text-gray-500 dark:text-neutral-400 dark:text-neutral-500">
+                        <li key={idx} className="flex items-start space-x-2 text-[10px] text-gray-500 dark:text-neutral-300">
                           <Icons.Check className="h-3 w-3 text-emerald-500 dark:text-emerald-400 shrink-0 mt-0.5" />
                           <span className="line-clamp-1">{b}</span>
                         </li>
@@ -799,7 +804,7 @@ export default function ServicesSection({ currentLang, setTab, isFullPage = fals
                 {/* Learn More Action Button */}
                 <div className="mt-6 pt-4 border-t border-gray-50 flex items-center justify-between text-xs font-bold text-blue-600 dark:text-orange-400 group-hover:text-blue-700">
                   <span>{currentLang === 'en' ? 'View Details & Plan' : 'à¦¬à¦¿à¦¸à§à¦¤à¦¾à¦°à¦¿à¦¤ à¦¬à¦¿à¦¬à¦°à¦£ à¦“ à¦ªà§à¦²à§à¦¯à¦¾à¦¨'}</span>
-                  <div className="flex h-6 w-6 items-center justify-center rounded-full bg-blue-50 dark:bg-orange-500/10 text-blue-600 dark:text-orange-400 group-hover:bg-blue-600 group-hover:text-white transition-all duration-300">
+                  <div className="flex h-6 w-6 items-center justify-center rounded-full bg-blue-50 dark:bg-orange-500/10 text-blue-600 dark:text-orange-400 group-hover:bg-blue-600 dark:group-hover:bg-orange-500 group-hover:text-white transition-all duration-300">
                     <Icons.ArrowRight className="h-3 w-3" />
                   </div>
                 </div>
@@ -811,7 +816,7 @@ export default function ServicesSection({ currentLang, setTab, isFullPage = fals
       </section>
 
       {/* 3. WHY CHOOSE OUR SERVICES (8 VALUE CARDS) */}
-      <section id="services-why-choose" className="py-24 bg-[#FAFAFA] dark:bg-[#0D0C0A] border-b border-gray-100 dark:border-neutral-800">
+      <section id="services-why-choose" className="py-24 bg-[#FAFAFA] dark:bg-[#0D0C0A]">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           
           <div className="text-center space-y-4 max-w-3xl mx-auto mb-16">
@@ -821,7 +826,7 @@ export default function ServicesSection({ currentLang, setTab, isFullPage = fals
             <h2 className="font-sans text-3xl font-extrabold tracking-tight text-gray-900 dark:text-white sm:text-4xl">
               {currentLang === 'en' ? 'Why Choose Next Solution?' : 'à¦•à§‡à¦¨ à¦†à¦®à¦¾à¦¦à§‡à¦° à¦¸à§‡à¦¬à¦¾ à¦¬à§‡à¦›à§‡ à¦¨à§‡à¦¬à§‡à¦¨?'}
             </h2>
-            <p className="text-sm text-gray-500 dark:text-neutral-400 dark:text-neutral-500 max-w-xl mx-auto leading-relaxed">
+            <p className="text-sm text-gray-500 dark:text-neutral-300 max-w-xl mx-auto leading-relaxed">
               {currentLang === 'en' ? (
                 'We set premium benchmarks in execution. We do not compromise, outsource, or delay.'
               ) : (
@@ -904,7 +909,7 @@ export default function ServicesSection({ currentLang, setTab, isFullPage = fals
                 <h3 className="text-sm font-bold text-gray-900 dark:text-white">
                   {currentLang === 'en' ? card.titleEn : card.titleBn}
                 </h3>
-                <p className="text-xs text-gray-500 dark:text-neutral-400 dark:text-neutral-500 leading-relaxed">
+                <p className="text-xs text-gray-500 dark:text-neutral-300 leading-relaxed">
                   {currentLang === 'en' ? card.descEn : card.descBn}
                 </p>
               </div>
@@ -914,109 +919,8 @@ export default function ServicesSection({ currentLang, setTab, isFullPage = fals
         </div>
       </section>
 
-      {/* 4. DEVELOPMENT PROCESS (8 INTERACTIVE STEPS) */}
-      <section id="services-process" className="py-24 bg-white dark:bg-[#141414] border-b border-gray-50">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          
-          <div className="text-center space-y-4 max-w-3xl mx-auto mb-16">
-            <span className="text-xs font-black uppercase tracking-widest text-blue-600 dark:text-orange-400">
-              {currentLang === 'en' ? 'OUR PIPELINE FRAMEWORK' : 'à¦†à¦®à¦¾à¦¦à§‡à¦° à¦•à¦¾à¦œà§‡à¦° à¦ªà¦¾à¦‡à¦ªà¦²à¦¾à¦‡à¦¨'}
-            </span>
-            <h2 className="font-sans text-3xl font-extrabold tracking-tight text-gray-900 dark:text-white sm:text-4xl">
-              {currentLang === 'en' ? '8 Phases to Perfect Release' : 'à¦¨à¦¿à¦–à§à¦à¦¤ à¦ªà§à¦°à¦•à¦¾à¦¶à§‡à¦° à§®à¦Ÿà¦¿ à¦¸à§à¦¤à¦°'}
-            </h2>
-            <p className="text-sm text-gray-500 dark:text-neutral-400 dark:text-neutral-500 max-w-xl mx-auto leading-relaxed">
-              {currentLang === 'en' ? (
-                'How we transform ideas from napkin designs into production-ready software systems.'
-              ) : (
-                'à¦†à¦®à¦°à¦¾ à¦•à§€à¦­à¦¾à¦¬à§‡ à¦†à¦ªà¦¨à¦¾à¦° à¦¸à¦¾à¦§à¦¾à¦°à¦£ à¦†à¦‡à¦¡à¦¿à§Ÿà¦¾à¦•à§‡ à¦®à¦¾à¦°à§à¦•à§‡à¦Ÿ-à¦¡à¦®à¦¿à¦¨à§‡à¦Ÿà¦¿à¦‚ à¦¡à¦¿à¦œà¦¿à¦Ÿà¦¾à¦² à¦¸à¦¿à¦¸à§à¦Ÿà§‡à¦®à§‡ à¦°à§‚à¦ªà¦¾à¦¨à§à¦¤à¦° à¦•à¦°à¦¿à¥¤'
-              )}
-            </p>
-          </div>
-
-          {/* Connected Steps Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 relative">
-            {[
-              { step: '01', titleEn: 'Consultation', titleBn: 'à¦ªà¦°à¦¾à¦®à¦°à§à¦¶ à¦“ à¦ªà¦°à¦¿à¦šà¦¿à¦¤à¦¿', descEn: 'Direct scoping call with Solutions Architect to understand key business metrics.', descBn: 'à¦¬à§à¦¯à¦¬à¦¸à¦¾à§Ÿà¦¿à¦• à¦²à¦•à§à¦·à§à¦¯ à¦“ à¦•à¦¾à¦°à¦¿à¦—à¦°à¦¿ à¦ªà¦°à¦¿à¦§à¦¿ à¦¬à§à¦à¦¤à§‡ à¦¸à¦²à¦¿à¦‰à¦¶à¦¨ à¦†à¦°à§à¦•à¦¿à¦Ÿà§‡à¦•à§à¦Ÿà§‡à¦° à¦¸à¦¾à¦¥à§‡ à¦†à¦²à§‹à¦šà¦¨à¦¾à¥¤' },
-              { step: '02', titleEn: 'Requirement Analysis', titleBn: 'à¦ªà§à¦°à§Ÿà§‹à¦œà¦¨à§€à§Ÿà¦¤à¦¾ à¦¬à¦¿à¦¶à§à¦²à§‡à¦·à¦£', descEn: 'Surgical software auditing, user stories, and comprehensive data pipeline modeling.', descBn: 'à¦¸à¦«à¦Ÿà¦“à§Ÿà§à¦¯à¦¾à¦° à¦•à§‹à¦¡ à¦…à¦¡à¦¿à¦Ÿ, à¦‡à¦‰à¦œà¦¾à¦° à¦œà¦¾à¦°à§à¦¨à¦¿ à¦¬à¦¿à¦¶à§à¦²à§‡à¦·à¦£ à¦à¦¬à¦‚ à¦¤à¦¥à§à¦¯ à¦ªà§à¦°à¦¬à¦¾à¦¹ à¦¡à¦¾à§Ÿà¦¾à¦—à§à¦°à¦¾à¦® à¦¤à§ˆà¦°à¦¿à¥¤' },
-              { step: '03', titleEn: 'Planning & Architecture', titleBn: 'à¦ªà¦°à¦¿à¦•à¦²à§à¦ªà¦¨à¦¾ à¦“ à¦¸à§à¦¥à¦¾à¦ªà¦¤à§à¦¯', descEn: 'Database schema diagrams, system wireframes, and secure API blueprints mapping.', descBn: 'à¦¡à¦¾à¦Ÿà¦¾à¦¬à§‡à¦¸ à¦¸à§à¦•à¦¿à¦®à¦¾ à¦¡à¦¿à¦œà¦¾à¦‡à¦¨, à¦¸à¦¿à¦¸à§à¦Ÿà§‡à¦® à¦°à¦¿à¦¡à¦¾à¦¨à¦¡à§à¦¯à¦¾à¦¨à§à¦¸à¦¿ à¦à¦¬à¦‚ à¦à¦ªà¦¿à¦†à¦‡ à¦¬à§à¦²à§à¦ªà§à¦°à¦¿à¦¨à§à¦Ÿ à¦¤à§ˆà¦°à¦¿à¥¤' },
-              { step: '04', titleEn: 'UI/UX Redesign', titleBn: 'à¦‡à¦‰à¦œà¦¾à¦° à¦‡à¦¨à§à¦Ÿà¦¾à¦°à¦«à§‡à¦¸ à¦¡à¦¿à¦œà¦¾à¦‡à¦¨', descEn: 'Creating beautiful high-fidelity component libraries with responsive motion rules.', descBn: 'à¦«à¦¿à¦¡à¦¬à§à¦¯à¦¾à¦• à¦²à§à¦ªà§‡à¦° à¦®à¦¾à¦§à§à¦¯à¦®à§‡ à¦«à¦¿à¦—à¦®à¦¾à¦¤à§‡ à¦šà¦®à§Žà¦•à¦¾à¦° à¦•à¦®à§à¦ªà§‹à¦¨à§‡à¦¨à§à¦Ÿ à¦¡à¦¿à¦œà¦¾à¦‡à¦¨ à¦“ à¦ªà§à¦°à§‹à¦Ÿà§‹à¦Ÿà¦¾à¦‡à¦ªà¦¿à¦‚à¥¤' },
-              { step: '05', titleEn: 'Development', titleBn: 'à¦•à§‹à¦¡à¦¿à¦‚ à¦“ à¦¡à§‡à¦­à§‡à¦²à¦ªà¦®à§‡à¦¨à§à¦Ÿ', descEn: 'Strict typesafe production-ready code execution on dedicated Git branches.', descBn: 'à¦¡à§‡à¦¡à¦¿à¦•à§‡à¦Ÿà§‡à¦¡ à¦—à¦¿à¦Ÿ à¦°à¦¿à¦ªà§‹à¦œà¦¿à¦Ÿà¦°à¦¿à¦¤à§‡ à¦Ÿà¦¾à¦‡à¦ªà¦¸à§‡à¦« à¦•à§‹à¦¡ à¦²à§‡à¦–à¦¾ à¦“ à¦¸à¦¾à¦°à§à¦­à¦¾à¦° à¦‡à¦¨à§à¦Ÿà¦¿à¦—à§à¦°à§‡à¦¶à¦¨à¥¤' },
-              { step: '06', titleEn: 'Rigorous Testing', titleBn: 'à¦¨à¦¿à¦¬à¦¿à§œ à¦ªà¦°à§€à¦•à§à¦·à¦£ à¦“ à¦Ÿà§‡à¦¸à§à¦Ÿà¦¿à¦‚', descEn: 'Continuous Integration automation, automated unit and user testing routines.', descBn: 'à¦¸à§à¦¬à¦¯à¦¼à¦‚à¦•à§à¦°à¦¿à¦¯à¦¼ à¦‡à¦‰à¦¨à¦¿à¦Ÿ à¦Ÿà§‡à¦¸à§à¦Ÿ à¦à¦¬à¦‚ à¦¸à¦®à§à¦ªà§‚à¦°à§à¦£ à¦‡à¦‰à¦œà¦¾à¦° à¦‡à¦¨à§à¦Ÿà¦¾à¦°à¦«à§‡à¦¸ à¦à¦•à§à¦¸à¦ªà§‡à¦°à¦¿à§Ÿà§‡à¦¨à§à¦¸ à¦Ÿà§‡à¦¸à§à¦Ÿà¦¿à¦‚à¥¤' },
-              { step: '07', titleEn: 'Production Deployment', titleBn: 'à¦¡à§‡à¦ªà§à¦²à¦¯à¦¼à¦®à§‡à¦¨à§à¦Ÿ à¦“ à¦ªà§à¦°à¦•à¦¾à¦¶', descEn: 'Secure Cloud orchestration, SSL provisioning, and global DNS routing setups.', descBn: 'à¦¨à¦¿à¦°à¦¾à¦ªà¦¦ à¦•à§à¦²à¦¾à¦‰à¦¡ à¦‡à¦¨à¦«à§à¦°à¦¾à¦¸à§à¦Ÿà§à¦°à¦¾à¦•à¦šà¦¾à¦°à§‡ à¦¡à§‡à¦ªà§à¦²à¦¯à¦¼à¦®à§‡à¦¨à§à¦Ÿ, à¦à¦¸à¦à¦¸à¦à¦² à¦“ à¦¸à¦¿à¦¡à¦¿à¦à¦¨ à¦…à¦ªà§à¦Ÿà¦¿à¦®à¦¾à¦‡à¦œà§‡à¦¶à¦¨à¥¤' },
-              { step: '08', titleEn: 'Maintenance & Support', titleBn: 'à¦°à¦•à§à¦·à¦£à¦¾à¦¬à§‡à¦•à§à¦·à¦£ à¦“ à¦¸à¦¾à¦ªà§‹à¦°à§à¦Ÿ', descEn: 'Continuous optimization checkups, backups, and proactive security monitoring.', descBn: 'à¦¨à¦¿à¦¯à¦¼à¦®à¦¿à¦¤ à¦¸à¦¿à¦•à¦¿à¦‰à¦°à¦¿à¦Ÿà¦¿ à¦†à¦ªà¦¡à§‡à¦Ÿ, à¦¡à¦¾à¦Ÿà¦¾à¦¬à§‡à¦¸ à¦¬à§à¦¯à¦¾à¦•à¦†à¦ª à¦à¦¬à¦‚ à¦ªà§à¦°à§‹à¦…à§à¦¯à¦¾à¦•à§à¦Ÿà¦¿à¦­ à¦®à¦¨à¦¿à¦Ÿà¦°à¦¿à¦‚à¥¤' }
-            ].map((p, idx) => (
-              <div key={idx} className="rounded-2xl border border-gray-100 dark:border-neutral-800 bg-white dark:bg-[#141414] p-6 space-y-4 shadow-sm relative group hover:border-blue-600 transition duration-300">
-                <div className="flex items-center justify-between">
-                  <span className="text-3xl font-black text-gray-100 group-hover:text-blue-600 dark:text-orange-400 transition duration-200">
-                    {p.step}
-                  </span>
-                  <div className="h-2 w-2 rounded-full bg-blue-600"></div>
-                </div>
-                <h3 className="text-sm font-bold text-gray-900 dark:text-white">
-                  {currentLang === 'en' ? p.titleEn : p.titleBn}
-                </h3>
-                <p className="text-xs text-gray-500 dark:text-neutral-400 dark:text-neutral-500 leading-relaxed">
-                  {currentLang === 'en' ? p.descEn : p.descBn}
-                </p>
-              </div>
-            ))}
-          </div>
-
-        </div>
-      </section>
-
-      {/* 5. INDUSTRIES WE SERVE (12 ELEGANT CARDS) */}
-      <section id="services-industries" className="py-24 bg-[#FAFAFA] dark:bg-[#0D0C0A] border-b border-gray-100 dark:border-neutral-800">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          
-          <div className="text-center space-y-4 max-w-3xl mx-auto mb-16">
-            <span className="text-xs font-black uppercase tracking-widest text-blue-600 dark:text-orange-400">
-              {currentLang === 'en' ? 'MARKET VERTICALS' : 'à¦®à¦¾à¦°à§à¦•à§‡à¦Ÿ à¦­à¦¾à¦°à§à¦Ÿà¦¿à¦•à¦¾à¦² à¦¸à¦®à§‚à¦¹'}
-            </span>
-            <h2 className="font-sans text-3xl font-extrabold tracking-tight text-gray-900 dark:text-white sm:text-4xl">
-              {currentLang === 'en' ? 'Industries We Serve' : 'à¦¯à§‡ à¦¸à¦•à¦² à¦¸à§‡à¦•à§à¦Ÿà¦°à§‡ à¦†à¦®à¦°à¦¾ à¦¸à§‡à¦¬à¦¾ à¦¦à¦¿à¦‡'}
-            </h2>
-            <p className="text-sm text-gray-500 dark:text-neutral-400 dark:text-neutral-500 max-w-xl mx-auto leading-relaxed">
-              {currentLang === 'en' ? (
-                'Tailored architectures designed specifically for compliance and user context of individual markets.'
-              ) : (
-                'à¦¨à¦¿à¦°à§à¦¦à¦¿à¦·à§à¦Ÿ à¦¬à¦¾à¦œà¦¾à¦°à§‡à¦° à¦¨à¦¿à§Ÿà¦®à¦•à¦¾à¦¨à§à¦¨ à¦à¦¬à¦‚ à¦¬à§à¦¯à¦¬à¦¹à¦¾à¦°à¦•à¦¾à¦°à§€à¦¦à§‡à¦° à¦…à¦­à¦¿à¦œà§à¦žà¦¤à¦¾à¦° à¦¸à¦¾à¦¥à§‡ à¦¸à¦¾à¦®à¦žà§à¦œà¦¸à§à¦¯à¦ªà§‚à¦°à§à¦£ à¦¬à¦¿à¦¶à§‡à¦·à¦¾à§Ÿà¦¿à¦¤ à¦•à¦¾à¦ à¦¾à¦®à§‹à¥¤'
-              )}
-            </p>
-          </div>
-
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
-            {[
-              { icon: 'ShoppingBag', labelEn: 'E-Commerce', labelBn: 'à¦‡-à¦•à¦®à¦¾à¦°à§à¦¸' },
-              { icon: 'Utensils', labelEn: 'Restaurant', labelBn: 'à¦°à§‡à¦¸à§à¦Ÿà§à¦°à§‡à¦¨à§à¦Ÿ à¦“ à¦«à§à¦¡' },
-              { icon: 'Heart', labelEn: 'Healthcare', labelBn: 'à¦¹à§‡à¦²à¦¥à¦•à§‡à§Ÿà¦¾à¦° à¦“ à¦®à§‡à¦¡à¦¿à¦¸à¦¿à¦¨' },
-              { icon: 'GraduationCap', labelEn: 'Education', labelBn: 'à¦¶à¦¿à¦•à§à¦·à¦¾ à¦“ à¦à¦¡à¦Ÿà§‡à¦•' },
-              { icon: 'Home', labelEn: 'Real Estate', labelBn: 'à¦°à¦¿à¦¯à¦¼à§‡à¦² à¦à¦¸à§à¦Ÿà§‡à¦Ÿ' },
-              { icon: 'Plane', labelEn: 'Travel & Tourism', labelBn: 'à¦­à§à¦°à¦®à¦£ à¦“ à¦ªà¦°à§à¦¯à¦Ÿà¦¨' },
-              { icon: 'Building', labelEn: 'Corporate Enterprises', labelBn: 'à¦•à¦°à§à¦ªà§‹à¦°à§‡à¦Ÿ à¦ªà§à¦°à¦¤à¦¿à¦·à§à¦ à¦¾à¦¨' },
-              { icon: 'Rocket', labelEn: 'High-Growth Startups', labelBn: 'à¦¸à§à¦Ÿà¦¾à¦°à§à¦Ÿà¦†à¦ª à¦“ à¦‰à¦¦à§à¦­à¦¾à¦¬à¦¨' },
-              { icon: 'Globe', labelEn: 'NGO & Non-Profits', labelBn: 'à¦à¦¨à¦œà¦¿à¦“ à¦“ à¦¸à¦¾à¦®à¦¾à¦œà¦¿à¦• à¦¸à¦‚à¦¸à§à¦¥à¦¾' },
-              { icon: 'Factory', labelEn: 'Manufacturing', labelBn: 'à¦‰à§Žà¦ªà¦¾à¦¦à¦¨ à¦“ à¦¶à¦¿à¦²à§à¦ª à¦•à¦¾à¦°à¦–à¦¾à¦¨à¦¾' },
-              { icon: 'Briefcase', labelEn: 'Law Firms', labelBn: 'à¦†à¦‡à¦¨à¦œà§€à¦¬à§€ à¦“ à¦«à¦¾à¦°à§à¦®' },
-              { icon: 'User', labelEn: 'Personal Brands', labelBn: 'à¦¬à§à¦¯à¦•à§à¦¤à¦¿à¦—à¦¤ à¦¬à§à¦°à§à¦¯à¦¾à¦¨à§à¦¡à¦¿à¦‚' }
-            ].map((ind, idx) => (
-              <div key={idx} className="rounded-xl border border-gray-100 dark:border-neutral-800 bg-white dark:bg-[#141414] p-5 flex items-center space-x-3 shadow-sm hover:border-blue-600/30 transition duration-300">
-                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-50 dark:bg-orange-500/10 text-blue-600 dark:text-orange-400 border border-blue-100/50">
-                  {getIcon(ind.icon, "h-4 w-4")}
-                </div>
-                <span className="text-xs font-bold text-gray-700 dark:text-neutral-200">
-                  {currentLang === 'en' ? ind.labelEn : ind.labelBn}
-                </span>
-              </div>
-            ))}
-          </div>
-
-        </div>
-      </section>
-
-      {/* 6. TECHNOLOGIES WE USE (CATEGORIZED TABS) */}
-      <section id="services-tech-stack" className="py-24 bg-white dark:bg-[#141414] border-b border-gray-50">
+      {/* 4. TECHNOLOGIES WE USE (CATEGORIZED TABS) */}
+      <section id="services-tech-stack" className="py-24 bg-white dark:bg-[#141414]">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           
           <div className="text-center space-y-4 max-w-3xl mx-auto mb-16">
@@ -1026,7 +930,7 @@ export default function ServicesSection({ currentLang, setTab, isFullPage = fals
             <h2 className="font-sans text-3xl font-extrabold tracking-tight text-gray-900 dark:text-white sm:text-4xl">
               {currentLang === 'en' ? 'Technology Ecosystem' : 'à¦ªà§à¦°à¦¯à§à¦•à§à¦¤à¦¿ à¦‡à¦•à§‹à¦¸à¦¿à¦¸à§à¦Ÿà§‡à¦®'}
             </h2>
-            <p className="text-sm text-gray-500 dark:text-neutral-400 dark:text-neutral-500 max-w-xl mx-auto leading-relaxed">
+            <p className="text-sm text-gray-500 dark:text-neutral-300 max-w-xl mx-auto leading-relaxed">
               {currentLang === 'en' ? (
                 'We write strict typesafe assemblies using industry leading stacks. Zero legacy dependencies.'
               ) : (
@@ -1051,7 +955,7 @@ export default function ServicesSection({ currentLang, setTab, isFullPage = fals
                 className={`rounded-full px-5 py-2 text-xs font-bold border transition ${
                   activeTechTab === tab.id 
                     ? 'bg-blue-600 border-blue-600 text-white shadow-md shadow-blue-600/10' 
-                    : 'bg-white dark:bg-[#141414] border-gray-100 dark:border-neutral-800 text-gray-500 dark:text-neutral-400 dark:text-neutral-500 hover:text-gray-700 dark:text-neutral-200 hover:border-gray-200 dark:border-neutral-700'
+                    : 'bg-white dark:bg-[#141414] border-gray-100 dark:border-neutral-800 text-gray-500 dark:text-neutral-300 hover:text-gray-700 dark:text-neutral-200 hover:border-gray-200 dark:border-neutral-700'
                 }`}
               >
                 {currentLang === 'en' ? tab.labelEn : tab.labelBn}
@@ -1065,7 +969,7 @@ export default function ServicesSection({ currentLang, setTab, isFullPage = fals
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 animate-fadeIn">
                 <div className="space-y-2">
                   <h4 className="text-sm font-extrabold text-gray-900 dark:text-white">React & Next.js Ecosystem</h4>
-                  <p className="text-xs text-gray-500 dark:text-neutral-400 dark:text-neutral-500 leading-relaxed">
+                  <p className="text-xs text-gray-500 dark:text-neutral-300 leading-relaxed">
                     We use Vite, React 18/19, and Next.js server component rendering to deliver exceptional load speeds (First Contentful Paint &lt; 0.4s).
                   </p>
                 </div>
@@ -1081,7 +985,7 @@ export default function ServicesSection({ currentLang, setTab, isFullPage = fals
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 animate-fadeIn">
                 <div className="space-y-2">
                   <h4 className="text-sm font-extrabold text-gray-900 dark:text-white">Cloud Run & Databases</h4>
-                  <p className="text-xs text-gray-500 dark:text-neutral-400 dark:text-neutral-500 leading-relaxed">
+                  <p className="text-xs text-gray-500 dark:text-neutral-300 leading-relaxed">
                     Strict RESTful configurations, secure Node.js APIs, database migrations via ORM models, and cloud-hosted data storage.
                   </p>
                 </div>
@@ -1097,7 +1001,7 @@ export default function ServicesSection({ currentLang, setTab, isFullPage = fals
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 animate-fadeIn">
                 <div className="space-y-2">
                   <h4 className="text-sm font-extrabold text-gray-900 dark:text-white">Editorial Figma Redesigns</h4>
-                  <p className="text-xs text-gray-500 dark:text-neutral-400 dark:text-neutral-500 leading-relaxed">
+                  <p className="text-xs text-gray-500 dark:text-neutral-300 leading-relaxed">
                     We design responsive design rules, atomic layout components, stylebooks, interactive click triggers, and visual prototypes.
                   </p>
                 </div>
@@ -1113,7 +1017,7 @@ export default function ServicesSection({ currentLang, setTab, isFullPage = fals
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 animate-fadeIn">
                 <div className="space-y-2">
                   <h4 className="text-sm font-extrabold text-gray-900 dark:text-white">AI Agents & Pipeline Loops</h4>
-                  <p className="text-xs text-gray-500 dark:text-neutral-400 dark:text-neutral-500 leading-relaxed">
+                  <p className="text-xs text-gray-500 dark:text-neutral-300 leading-relaxed">
                     Integrating Google Gemini models directly via server proxies, LangChain embeddings, vector search indexes, and n8n workflow loops.
                   </p>
                 </div>
@@ -1129,7 +1033,7 @@ export default function ServicesSection({ currentLang, setTab, isFullPage = fals
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 animate-fadeIn">
                 <div className="space-y-2">
                   <h4 className="text-sm font-extrabold text-gray-900 dark:text-white">Cinematic Video Ads & Reels</h4>
-                  <p className="text-xs text-gray-500 dark:text-neutral-400 dark:text-neutral-500 leading-relaxed">
+                  <p className="text-xs text-gray-500 dark:text-neutral-300 leading-relaxed">
                     Storyboards, advanced color grading, motion graphics, audio restoration, and ad integrations to drive click conversions.
                   </p>
                 </div>
@@ -1161,8 +1065,8 @@ export default function ServicesSection({ currentLang, setTab, isFullPage = fals
         </div>
       </section>
 
-      {/* 7. FAQ PREVIEW SECTION */}
-      <section id="services-faq-accordion" className="py-24 bg-white dark:bg-[#141414] border-b border-gray-100 dark:border-neutral-800">
+      {/* 5. FAQ PREVIEW SECTION */}
+      <section id="services-faq-accordion" className="py-24 bg-white dark:bg-[#141414]">
         <div className="mx-auto max-w-4xl px-4 sm:px-6">
           
           <div className="text-center space-y-4 max-w-3xl mx-auto mb-16">
@@ -1188,13 +1092,13 @@ export default function ServicesSection({ currentLang, setTab, isFullPage = fals
                     className="w-full px-6 py-5 flex items-center justify-between text-left font-bold text-xs sm:text-sm text-gray-900 dark:text-white hover:text-blue-600 dark:text-orange-400 transition"
                   >
                     <span>{currentLang === 'en' ? faq.qEn : faq.qBn}</span>
-                    <span className="flex h-6 w-6 items-center justify-center rounded-full bg-gray-50 dark:bg-neutral-900 text-gray-400 dark:text-neutral-500 group-hover:text-blue-600 dark:text-orange-400">
+                    <span className="flex h-6 w-6 items-center justify-center rounded-full bg-gray-50 dark:bg-neutral-900 text-gray-400 dark:text-neutral-400 group-hover:text-blue-600 dark:text-orange-400">
                       {isOpen ? <Icons.Minus className="h-4 w-4 text-blue-600 dark:text-orange-400" /> : <Icons.Plus className="h-4 w-4" />}
                     </span>
                   </button>
                   {isOpen && (
                     <div className="mt-4 pt-4 border-t border-gray-50 space-y-4">
-                      <p className="text-xs md:text-sm leading-relaxed text-gray-600 dark:text-neutral-300 dark:text-neutral-600">
+                      <p className="text-xs md:text-sm leading-relaxed text-gray-600 dark:text-neutral-200">
                         {currentLang === 'en' ? faq.aEn : faq.aBn}
                       </p>
                     </div>

@@ -945,7 +945,7 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-6 sm:pt-10 lg:pt-12 pb-0 relative z-10">
 
           {/* Breadcrumb */}
-          <nav className="flex items-center space-x-2 text-[10px] font-black text-neutral-400 dark:text-neutral-500 uppercase tracking-widest mb-10 lg:mb-14">
+          <nav className="flex items-center space-x-2 text-[10px] font-black text-neutral-400 dark:text-neutral-500 uppercase tracking-widest mb-6 lg:mb-14">
             <span className="hover:text-[#FF5A00] dark:hover:text-[#FF5A00] transition cursor-pointer" onClick={() => navigateToTab('home')}>
               {currentLang === 'en' ? 'Home' : 'হোম'}
             </span>
@@ -955,21 +955,36 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
             </span>
           </nav>
 
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-6 items-stretch">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-6 items-stretch">
 
             {/* ── LEFT COLUMN ── */}
-            <div className="lg:col-span-5 space-y-7 lg:space-y-8 relative z-10 flex flex-col justify-center py-10 lg:py-0">
+            <motion.div
+              initial={{ opacity: 0, x: -90 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.9, delay: 0.05, ease: [0.22, 1, 0.36, 1] }}
+              className="lg:col-span-5 space-y-5 lg:space-y-8 relative z-10 flex flex-col justify-center py-6 lg:py-0"
+            >
 
               {/* Label */}
-              <div className="inline-flex items-center space-x-2.5">
+              <motion.div
+                initial={{ opacity: 0, x: -40 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.7, delay: 0.18, ease: [0.22, 1, 0.36, 1] }}
+                className="inline-flex items-center space-x-2.5"
+              >
                 <span className="h-2.5 w-2.5 rounded-full bg-[#FF5A00] shrink-0" />
                 <span className="text-[11px] sm:text-xs font-bold uppercase tracking-[0.2em] text-[#FF5A00]">
                   {currentLang === 'en' ? 'About Us' : 'আমাদের সম্পর্কে'}
                 </span>
-              </div>
+              </motion.div>
 
               {/* Headline */}
-              <h1 className="font-sans text-[2rem] sm:text-[2.6rem] lg:text-[3.4rem] font-black tracking-tight leading-[1.02] text-neutral-900 dark:text-white">
+              <motion.h1
+                initial={{ opacity: 0, x: -50 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.8, delay: 0.28, ease: [0.22, 1, 0.36, 1] }}
+                className="font-sans text-[2rem] sm:text-[2.6rem] lg:text-[3.4rem] font-black tracking-tight leading-[1.02] text-neutral-900 dark:text-white"
+              >
                 {currentLang === 'en' ? (
                   <>
                     We Are Not Just<br />
@@ -985,20 +1000,35 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
                     <span className="text-[#FF5A00]">গ্রোথ পার্টনার</span>।
                   </>
                 )}
-              </h1>
+              </motion.h1>
 
               {/* Orange underline */}
-              <div className="w-[45px] h-[3.5px] rounded-full bg-[#FF5A00]" />
+              <motion.div
+                initial={{ opacity: 0, scaleX: 0 }}
+                animate={{ opacity: 1, scaleX: 1 }}
+                transition={{ duration: 0.6, delay: 0.42, ease: [0.22, 1, 0.36, 1] }}
+                className="w-[45px] h-[3.5px] rounded-full bg-[#FF5A00] origin-left"
+              />
 
               {/* Description */}
-              <p className="text-[15px] sm:text-[16px] leading-[1.65] text-[#555555] dark:text-[#b5b5b5] max-w-[460px]">
+              <motion.p
+                initial={{ opacity: 0, x: -36 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.7, delay: 0.5, ease: [0.22, 1, 0.36, 1] }}
+                className="text-[15px] sm:text-[16px] leading-[1.65] text-[#555555] dark:text-[#b5b5b5] max-w-[460px]"
+              >
                 {currentLang === 'en'
 ? 'At Next Solution, we combine creativity, technology and strategy to help businesses grow faster. From web development to AI Services, we deliver complete digital solutions under one roof.'
                   : 'নেক্সট সলিউশনে, আমরা সৃজনশীলতা, প্রযুক্তি এবং কৌশল একত্রিত করে ব্যবসাগুলোকে দ্রুত বৃদ্ধি পেতে সাহায্য করি। ওয়েব ডেভেলপমেন্ট থেকে AI সার্ভিস — আমরা এক ছাদের নিচে সম্পূর্ণ ডিজিটাল সমাধান প্রদান করি।'}
-              </p>
+              </motion.p>
 
               {/* CTA Buttons */}
-              <div className="flex flex-wrap items-center gap-4 pt-1">
+              <motion.div
+                initial={{ opacity: 0, x: -30 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.65, delay: 0.6, ease: [0.22, 1, 0.36, 1] }}
+                className="flex flex-wrap items-center gap-4 pt-1"
+              >
                 <motion.button
                   id="about-hero-btn-primary"
                   onClick={() => navigateToTab('services')}
@@ -1020,10 +1050,15 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
                   <span>{currentLang === 'en' ? 'Meet Our Team' : 'আমাদের টিম দেখুন'}</span>
                   <Users className="h-4 w-4" />
                 </motion.button>
-              </div>
+              </motion.div>
 
-{/* Key Metrics Row */}
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-3">
+              {/* Key Metrics Row */}
+              <motion.div
+                initial={{ opacity: 0, y: 24 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.7, delay: 0.72, ease: [0.22, 1, 0.36, 1] }}
+                className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-3"
+              >
                 {[
                   { value: '2+', labelEn: 'Years Technical', labelBn: 'বছরের অভিজ্ঞতা' },
                   { value: '2+', labelEn: 'Years Agency', labelBn: 'বছরের এজেন্সি' },
@@ -1045,11 +1080,16 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
                     </span>
                   </div>
                 ))}
-              </div>
-            </div>
+              </motion.div>
+            </motion.div>
 
             {/* ── RIGHT COLUMN — Team Visual ── */}
-            <div className="lg:col-span-7 relative z-10 flex justify-center lg:justify-end lg:items-end -mr-4 xl:-mr-12 2xl:-mr-20">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 1.1, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
+              className="lg:col-span-7 relative z-10 flex justify-center lg:justify-end lg:items-end -mr-4 xl:-mr-12 2xl:-mr-20"
+            >
               <div className="relative w-full max-w-[540px] lg:max-w-none ml-auto lg:ml-8 xl:ml-12">
 
                 {/* Circular glow frame */}
@@ -1078,7 +1118,7 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
                 </div>
 
 </div>
-            </div>
+            </motion.div>
 
           </div>
         </div>

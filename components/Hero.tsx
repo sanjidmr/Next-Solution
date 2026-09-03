@@ -13,7 +13,7 @@ import {
   Clock,
   Users,
 } from "lucide-react";
-import Reveal from '@/components/motion/Reveal';
+import { motion } from 'motion/react';
 import { TRUSTED_BY as trustedBy } from '@/data/trustedBy';
 
 interface HeroProps {
@@ -168,7 +168,6 @@ export default function Hero({ currentLang, setTab }: HeroProps) {
         aria-hidden="true"
       />
 
-      <Reveal direction="up">
       <div className="relative z-10 mx-auto flex min-h-[100svh] max-w-[1600px] flex-col justify-center px-5 sm:px-7 lg:px-10 xl:px-12">
         <div
           className="
@@ -188,8 +187,18 @@ export default function Hero({ currentLang, setTab }: HeroProps) {
             xl:grid-cols-[1.15fr_1fr]
           "
         >
-          <div className="relative z-30 order-1 text-center lg:pr-0 lg:text-left">
-            <div className="mb-5 flex items-center justify-center gap-3 lg:justify-start">
+          <motion.div
+            initial={{ opacity: 0, y: -110 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.9, delay: 0.05, ease: [0.22, 1, 0.36, 1] }}
+            className="relative z-30 order-1 text-center lg:pr-0 lg:text-left"
+          >
+            <motion.div
+              initial={{ opacity: 0, y: -34 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, delay: 0.18, ease: [0.22, 1, 0.36, 1] }}
+              className="mb-5 flex items-center justify-center gap-3 lg:justify-start"
+            >
               <span className="h-[2px] w-7 bg-orange-600" />
 
               <span className="text-[10px] font-bold uppercase tracking-[0.16em] text-orange-600 sm:text-xs">
@@ -197,9 +206,12 @@ export default function Hero({ currentLang, setTab }: HeroProps) {
                   ? "ONE AGENCY. ALL DIGITAL SOLUTIONS."
                   : "একটি এজেন্সি। সব ডিজিটাল সলিউশন।"}
               </span>
-            </div>
+            </motion.div>
 
-            <h1
+            <motion.h1
+              initial={{ opacity: 0, y: -40 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.75, delay: 0.28, ease: [0.22, 1, 0.36, 1] }}
               className="
                 max-w-[720px]
                 text-[2.15rem]
@@ -250,15 +262,25 @@ export default function Hero({ currentLang, setTab }: HeroProps) {
                   ডিজিটাল ফ্রেন্ড।
                 </>
               )}
-            </h1>
+            </motion.h1>
 
-            <p className="mx-auto mt-4 max-w-[560px] text-sm font-medium leading-6 text-gray-600 dark:text-neutral-400 sm:mt-7 sm:text-base lg:text-lg lg:mx-0">
+            <motion.p
+              initial={{ opacity: 0, y: -32 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, delay: 0.38, ease: [0.22, 1, 0.36, 1] }}
+              className="mx-auto mt-4 max-w-[560px] text-sm font-medium leading-6 text-gray-600 dark:text-neutral-400 sm:mt-7 sm:text-base lg:text-lg lg:mx-0"
+            >
               {isEn
                 ? "From powerful websites to digital growth strategies — we deliver complete solutions that drive real results."
                 : "শক্তিশালী ওয়েবসাইট থেকে ডিজিটাল গ্রোথ স্ট্র্যাটেজি — আমরা বাস্তব ফলাফল আনার জন্য সম্পূর্ণ সলিউশন দেই।"}
-            </p>
+            </motion.p>
 
-            <div className="mt-5 flex flex-wrap items-center justify-center gap-5 lg:mt-8 lg:justify-start">
+            <motion.div
+              initial={{ opacity: 0, y: -26 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.65, delay: 0.5, ease: [0.22, 1, 0.36, 1] }}
+              className="mt-5 flex flex-wrap items-center justify-center gap-5 lg:mt-8 lg:justify-start"
+            >
               <button
                 id="hero-primary-cta"
                 onClick={() => setTab("contact")}
@@ -339,10 +361,17 @@ export default function Hero({ currentLang, setTab }: HeroProps) {
                   </p>
                 </div>
               </div>
-            </div>
-          </div>
+            </motion.div>
+          </motion.div>
 
-          <div
+          <motion.div
+            initial={{ opacity: 0, x: 160 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{
+              duration: 1,
+              delay: 0.2,
+              ease: [0.22, 1, 0.36, 1],
+            }}
             className="
               relative
               z-20
@@ -464,7 +493,7 @@ export default function Hero({ currentLang, setTab }: HeroProps) {
                 style={{ animationDelay: "2.5s" }}
               />
             </div>
-          </div>
+          </motion.div>
         </div>
 
         <div className="relative z-40 mt-2 pb-8 lg:-mt-4">
@@ -578,7 +607,6 @@ export default function Hero({ currentLang, setTab }: HeroProps) {
           </div>
         </div>
       </div>
-    </Reveal>
     </section>
   );
 }

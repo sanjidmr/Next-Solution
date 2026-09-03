@@ -44,17 +44,31 @@ export default function Navbar({
 
   // The hero theme decides the navbar's text/icon contrast.
   // A dark hero -> light text; a light hero -> dark text.
-  const heroIsDark = theme ? theme === 'dark' : isDark;
+  // The site's heroes are white in light mode and near-black in dark mode,
+  // so over a "dark"-themed hero the navbar matches the actual rendered
+  // background (isDark) instead of assuming dark. Only a force-light hero
+  // pins the navbar to light contrast.
+  const heroIsDark = theme === 'light' ? false : isDark;
 
   // Frosted background only appears after the user scrolls past the hero,
-  // so the navbar floats transparently over the hero composition.
+  // so the navbar floats transparently over the hero composition and only
+  // takes on the "secondary" background colour once the hero is covered.
   useEffect(() => {
     const onScroll = () => {
-      setScrolled(window.scrollY > 24);
+      const hero = document.querySelector<HTMLElement>('[data-space-hero]');
+      const heroH = hero ? hero.offsetHeight : 0;
+      // The hero is considered "passed" once we have scrolled roughly one
+      // hero-height (the cover section has slid over it). If no hero is
+      // present, fall back to a small nudge.
+      setScrolled(window.scrollY > (heroH > 0 ? heroH : 24));
     };
     onScroll();
     window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
+    window.addEventListener('resize', onScroll, { passive: true });
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', onScroll);
+    };
   }, []);
 
   // Resolve active tab based on actual Next.js route path
@@ -67,7 +81,6 @@ export default function Navbar({
     { id: 'about', label: t.navAbout },
     { id: 'services', label: t.navServices },
     { id: 'portfolio', label: t.navPortfolio },
-    { id: 'reviews', label: t.navReviews },
     { id: 'contact', label: t.navContact },
   ];
 

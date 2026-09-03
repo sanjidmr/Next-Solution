@@ -18,7 +18,6 @@ export const heroThemeByPath: Record<string, HeroTheme> = {
   '/about': 'dark',
   '/services': 'dark',
   '/portfolio': 'dark',
-  '/reviews': 'dark',
 };
 
 /** @default 'dark' */

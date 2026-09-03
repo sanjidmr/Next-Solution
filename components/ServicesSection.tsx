@@ -11,6 +11,7 @@ import { getServices } from '@/lib/db';
 import { initialServices } from '@/data/initialData';
 import { Service } from '@/types';
 import Reveal from '@/components/motion/Reveal';
+import HeroEntrance from '@/components/motion/HeroEntrance';
 
 interface ServicesSectionProps {
   currentLang: 'en' | 'bn';
@@ -463,7 +464,8 @@ export default function ServicesSection({ currentLang, setTab, isFullPage = fals
         <div className="absolute bottom-1/4 right-1/3 w-[500px] h-[500px] bg-orange-400/[0.04] rounded-full blur-[140px] pointer-events-none" />
         <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: 'radial-gradient(circle, rgba(255,74,0,0.3) 1px, transparent 1px)', backgroundSize: '40px 40px' }} />
 
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10 w-full py-16 sm:py-24">
+        <HeroEntrance direction="left" distance={140} duration={1}>
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10 w-full py-10 sm:py-24">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-8 items-center">
 
             {/* Left Column: Copy & CTA */}
@@ -475,7 +477,7 @@ export default function ServicesSection({ currentLang, setTab, isFullPage = fals
                 </span>
               </div>
 
-              <h1 className="text-4xl sm:text-5xl lg:text-[4rem] font-black text-neutral-900 dark:text-white leading-[1.05] tracking-tight">
+              <h1 className="text-3xl sm:text-5xl lg:text-[4rem] font-black text-neutral-900 dark:text-white leading-[1.05] tracking-tight">
                 {currentLang === 'en' ? (
                   <>All Digital Problems.<br /><span className="text-orange-500">One Trusted Solution.</span></>
                 ) : (
@@ -608,6 +610,7 @@ export default function ServicesSection({ currentLang, setTab, isFullPage = fals
             </div>
           </div>
         </div>
+        </HeroEntrance>
       </section>
       </div>
 

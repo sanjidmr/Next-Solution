@@ -14,6 +14,7 @@ import {
   Users,
 } from "lucide-react";
 import { motion } from 'motion/react';
+import CountUp from '@/components/motion/CountUp';
 import { TRUSTED_BY as trustedBy } from '@/data/trustedBy';
 
 interface HeroProps {
@@ -567,7 +568,7 @@ export default function Hero({ currentLang, setTab }: HeroProps) {
 
                   <div className="text-left">
                     <p className="text-3xl font-black leading-none text-[#090909] dark:text-white sm:text-4xl">
-                      {stat.value}
+                      <CountUp value={stat.value} duration={1.8} />
                     </p>
 
                     <p className="mt-1.5 text-[10px] font-semibold uppercase tracking-wider text-orange-600/70 dark:text-orange-400/80 sm:text-xs">

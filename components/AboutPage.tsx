@@ -6,6 +6,7 @@
 
 import { useState, useMemo, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
+import CountUp from '@/components/motion/CountUp';
 import { 
   Target, Eye, ShieldCheck, Sparkles, ArrowRight, ArrowUpRight, 
   ChevronDown, ChevronUp, Heart, Smile, Users, Palette, TrendingUp, 
@@ -942,10 +943,10 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
           <div className="absolute top-40 right-12 w-[180px] h-[300px] rounded-l-full border-[2px] border-[#FF5A00]/8 dark:border-[#FF5A00]/6" />
         </div>
 
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-6 sm:pt-10 lg:pt-12 pb-0 relative z-10">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-4 sm:pt-6 lg:pt-8 pb-0 relative z-10">
 
           {/* Breadcrumb */}
-          <nav className="flex items-center space-x-2 text-[10px] font-black text-neutral-400 dark:text-neutral-500 uppercase tracking-widest mb-6 lg:mb-14">
+          <nav className="flex items-center space-x-2 text-[10px] font-black text-neutral-400 dark:text-neutral-500 uppercase tracking-widest mb-4 lg:mb-10">
             <span className="hover:text-[#FF5A00] dark:hover:text-[#FF5A00] transition cursor-pointer" onClick={() => navigateToTab('home')}>
               {currentLang === 'en' ? 'Home' : 'হোম'}
             </span>
@@ -1073,7 +1074,7 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
                     className="group rounded-xl border border-neutral-200/60 dark:border-neutral-700/60 bg-white/70 dark:bg-white/[0.04] backdrop-blur-sm px-3 py-2.5 text-center hover:border-[#FF5A00]/50 hover:bg-[#FF5A00]/5 hover:shadow-[0_8px_24px_-8px_rgba(255,90,0,0.3)] transition-all duration-300"
                   >
                     <span className="block text-[15px] font-black text-neutral-900 dark:text-white group-hover:text-[#FF5A00] transition-colors duration-300 leading-none">
-                      {s.value}
+                      <CountUp value={s.value} duration={1.8} />
                     </span>
                     <span className="mt-1 block text-[8.5px] font-bold uppercase tracking-widest text-neutral-500 dark:text-neutral-400 group-hover:text-neutral-700 dark:group-hover:text-neutral-300 transition-colors duration-300">
                       {currentLang === 'en' ? s.labelEn : s.labelBn}
@@ -1098,7 +1099,7 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
                 <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[240px] h-[240px] sm:w-[320px] sm:h-[320px] lg:w-[460px] lg:h-[460px] xl:w-[540px] xl:h-[540px] rounded-full bg-[#FF5A00]/[0.04] dark:bg-[#FF5A00]/[0.06] blur-[60px] pointer-events-none" />
 
                 {/* Team image */}
-                <div className="relative z-10">
+<div className="relative z-10 max-h-[400px] sm:max-h-[300px]">
                   <img
                     src="/about.png"
                     alt={currentLang === 'en' ? 'Next Solution Team' : 'নেক্সট সলিউশন টিম'}
@@ -1129,7 +1130,7 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
           02. WHO WE ARE
          ======================================================== */}
       <section id="who-we-are" className="stack-cover relative py-28 overflow-hidden z-10">
-        <div className="absolute inset-0 bg-gradient-to-br from-white via-orange-50/20 to-white dark:from-[#0A0908] dark:via-[#0F0E0C] dark:to-[#12100D]" />
+        <div className="absolute inset-0 bg-[#0A0A0A] dark:bg-[#0A0A0A]" />
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[600px] bg-orange-500/[0.03] rounded-full blur-[150px] pointer-events-none" />
         <div className="absolute bottom-0 right-0 w-[400px] h-[400px] bg-orange-500/[0.02] rounded-full blur-[120px] pointer-events-none" />
 
@@ -1241,7 +1242,7 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
           03. OUR GUIDING STARS (Mission & Vision)
          ======================================================== */}
       <section id="mission-vision" className="relative py-28 overflow-hidden z-10">
-        <div className="absolute inset-0 bg-gradient-to-br from-orange-50/30 via-white to-orange-50/20 dark:from-[#0A0908] dark:via-[#0F0E0C] dark:to-[#12100D]" />
+        <div className="absolute inset-0 bg-[#0A0A0A] dark:bg-[#0A0A0A]" />
         <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-orange-500/[0.04] dark:bg-orange-500/[0.02] rounded-full blur-[140px] pointer-events-none" />
         <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-orange-500/[0.03] dark:bg-orange-500/[0.015] rounded-full blur-[120px] pointer-events-none" />
         <div className="absolute top-10 left-10 w-[200px] h-[150px] pointer-events-none opacity-[0.06] dark:opacity-[0.04]"
@@ -1343,7 +1344,7 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
       {/* ========================================================
           03.5. MEET THE MINDS BEHIND NEXT SOLUTION (Leadership Showcase)
          ======================================================== */}
-      <section id="about-leadership" className="bg-white dark:bg-[#141414] py-24 relative z-10 overflow-hidden">
+      <section id="about-leadership" className="bg-white dark:bg-[#141414] py-24 relative z-10 overflow-hidden" data-space-page>
         
         {/* Abstract Background Design Elements */}
         <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-gradient-to-tr from-blue-400/5 via-teal-400/5 to-purple-400/5 rounded-full blur-[120px] pointer-events-none" />

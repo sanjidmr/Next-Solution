@@ -149,7 +149,7 @@ export default function PortfolioSection({ currentLang, setTab, isFullPage = fal
         <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-orange-500/[0.03] dark:bg-orange-500/[0.04] rounded-full blur-[180px] pointer-events-none" />
         <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-orange-400/[0.02] dark:bg-orange-400/[0.03] rounded-full blur-[150px] pointer-events-none" />
 
-        <HeroEntrance direction="up" distance={150} duration={1}>
+        <HeroEntrance direction="left" distance={150} duration={1} className="w-full">
         <div className="mx-auto max-w-[1400px] px-5 sm:px-8 lg:px-12 xl:px-16 py-10 sm:py-20 lg:py-28">
           {/* Mobile: text first, images second. Desktop: side by side */}
           <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-12 lg:gap-16 items-center">

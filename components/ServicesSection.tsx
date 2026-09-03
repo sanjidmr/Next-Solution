@@ -464,7 +464,7 @@ export default function ServicesSection({ currentLang, setTab, isFullPage = fals
         <div className="absolute bottom-1/4 right-1/3 w-[500px] h-[500px] bg-orange-400/[0.04] rounded-full blur-[140px] pointer-events-none" />
         <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: 'radial-gradient(circle, rgba(255,74,0,0.3) 1px, transparent 1px)', backgroundSize: '40px 40px' }} />
 
-        <HeroEntrance direction="left" distance={140} duration={1}>
+        <HeroEntrance direction="left" distance={140} duration={1} className="w-full">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10 w-full py-10 sm:py-24">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-8 items-center">
 

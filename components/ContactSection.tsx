@@ -11,6 +11,7 @@ import {
 } from 'lucide-react';
 import { translations } from '@/data/translations';
 import { addMessage, getServices } from '@/lib/db';
+import Reveal from '@/components/motion/Reveal';
 
 // Default services for server-side rendering fallback
 const defaultServices = [
@@ -117,14 +118,12 @@ export default function ContactSection({ currentLang, isFullPage = false }: Cont
     <section id="contact-section" data-space-page className={`bg-gradient-to-b from-white via-gray-50/50 to-gray-50 dark:from-[#080808] dark:via-[#080808] dark:to-[#0a0a0a] ${isFullPage ? 'min-h-screen' : 'py-20'}`}>
       
       {/* ─── HERO SECTION ─── */}
-      <div data-space-hero className="relative overflow-hidden bg-gradient-to-b from-white via-gray-50/50 to-gray-50 dark:from-[#080808] dark:via-[#080808] dark:to-[#0a0a0a]">
-        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-orange-500/[0.04] dark:bg-orange-500/[0.06] rounded-full blur-[140px] pointer-events-none" />
-        <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-blue-500/[0.03] dark:bg-orange-400/[0.04] rounded-full blur-[120px] pointer-events-none" />
-        
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-24 pb-16">
+      <div className="py-16">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
             
             {/* Left — Content */}
+            <Reveal direction="left">
             <div className="space-y-6">
               <div className="inline-flex items-center gap-2 rounded-full border border-orange-200 dark:border-orange-500/20 bg-orange-50 dark:bg-orange-500/5 px-4 py-1.5">
                 <span className="h-1.5 w-1.5 rounded-full bg-orange-500 animate-pulse" />
@@ -162,8 +161,10 @@ export default function ContactSection({ currentLang, isFullPage = false }: Cont
                 </div>
               </div>
             </div>
+            </Reveal>
 
             {/* Right — Info Cards */}
+            <Reveal direction="right">
             <div className="space-y-4">
               {/* Response time card */}
               <div className="bg-white dark:bg-white/[0.03] border border-gray-200 dark:border-white/10 rounded-2xl p-6 shadow-sm">
@@ -204,6 +205,7 @@ export default function ContactSection({ currentLang, isFullPage = false }: Cont
                 </div>
               </div>
             </div>
+            </Reveal>
           </div>
         </div>
       </div>

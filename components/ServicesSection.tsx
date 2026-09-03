@@ -10,6 +10,7 @@ import { translations } from '@/data/translations';
 import { getServices } from '@/lib/db';
 import { initialServices } from '@/data/initialData';
 import { Service } from '@/types';
+import Reveal from '@/components/motion/Reveal';
 
 interface ServicesSectionProps {
   currentLang: 'en' | 'bn';
@@ -24,7 +25,6 @@ export default function ServicesSection({ currentLang, setTab, isFullPage = fals
     setServices(getServices());
   }, []);
   const [selectedService, setSelectedService] = useState<Service | null>(null);
-  const [activeFAQIndex, setActiveFAQIndex] = useState<number | null>(null);
   const [activeTechTab, setActiveTechTab] = useState<'frontend' | 'backend' | 'design' | 'automation' | 'video' | 'marketing'>('frontend');
 
   // Interactive Service Blueprinter State
@@ -169,28 +169,6 @@ export default function ServicesSection({ currentLang, setTab, isFullPage = fals
     setTab('contact');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
-
-  // Modern FAQ list for the main services page
-  const mainFaqs = [
-    {
-      qEn: 'Do you charge on a fixed scope or hourly basis?',
-      qBn: 'à¦†à¦ªà¦¨à¦¾à¦°à¦¾ à¦•à¦¿ à¦¨à¦¿à¦°à§à¦¦à¦¿à¦·à§à¦Ÿ à¦¬à¦¾à¦œà§‡à¦Ÿà§‡ à¦¨à¦¾à¦•à¦¿ à¦˜à¦£à§à¦Ÿà¦¾à¦° à¦¹à¦¿à¦¸à¦¾à¦¬à§‡ à¦šà¦¾à¦°à§à¦œ à¦•à¦°à§‡à¦¨?',
-      aEn: 'We prefer transparent fixed-price milestones for clearly defined scopes. For agile startups needing rapid continuous pivots, we offer dedicated monthly sprint squads on a retainer basis.',
-      aBn: 'à¦†à¦®à¦°à¦¾ à¦¸à§à¦¨à¦¿à¦°à§à¦¦à¦¿à¦·à§à¦Ÿ à¦•à¦¾à¦œà§‡à¦° à¦ªà¦°à¦¿à¦§à¦¿à¦° à¦œà¦¨à§à¦¯ à¦¸à§à¦¬à¦šà§à¦› à¦«à¦¿à¦•à§à¦¸à¦¡-à¦ªà§à¦°à¦¾à¦‡à¦¸ à¦®à¦¾à¦‡à¦²à¦¸à§à¦Ÿà§‹à¦¨ à¦ªà¦›à¦¨à§à¦¦ à¦•à¦°à¦¿à¥¤ à¦¤à¦¬à§‡ à¦•à§à¦°à¦®à¦¾à¦—à¦¤ à¦ªà¦°à¦¿à¦¬à¦°à§à¦§à¦¨à¦¶à§€à¦² à¦¸à§à¦Ÿà¦¾à¦°à§à¦Ÿà¦†à¦ªà§‡à¦° à¦œà¦¨à§à¦¯ à¦†à¦®à¦°à¦¾ à¦°à¦¿à¦Ÿà§‡à¦‡à¦¨à¦¾à¦° à¦­à¦¿à¦¤à§à¦¤à¦¿à¦¤à§‡ à¦®à¦¾à¦¸à¦¿à¦• à¦¡à§‡à¦¡à¦¿à¦•à§‡à¦Ÿà§‡à¦¡ à¦¸à§à¦ªà§à¦°à¦¿à¦¨à§à¦Ÿ à¦¸à§à¦•à§‹à¦¯à¦¼à¦¾à¦¡ à¦…à¦«à¦¾à¦° à¦•à¦°à¦¿à¥¤'
-    },
-    {
-      qEn: 'Can we migrate our existing application to Next Solution?',
-      qBn: 'à¦†à¦®à¦°à¦¾ à¦•à¦¿ à¦†à¦®à¦¾à¦¦à§‡à¦° à¦¬à¦°à§à¦¤à¦®à¦¾à¦¨ à¦…à§à¦¯à¦¾à¦ªà§à¦²à¦¿à¦•à§‡à¦¶à¦¨ à¦¨à§‡à¦•à§à¦¸à¦Ÿ à¦¸à¦²à¦¿à¦‰à¦¶à¦¨à§‡ à¦®à¦¾à¦‡à¦—à§à¦°à§‡à¦Ÿ à¦•à¦°à¦¤à§‡ à¦ªà¦¾à¦°à¦¬?',
-      aEn: 'Absolutely. We specialize in legacy code refactoring, database normalization, and framework upgrades (e.g., migrating PHP/WordPress or raw HTML systems to secure React/Next.js and Cloud storage).',
-      aBn: 'à¦…à¦¬à¦¶à§à¦¯à¦‡à¥¤ à¦†à¦®à¦°à¦¾ à¦²à¦¿à¦—à§à¦¯à¦¾à¦¸à¦¿ à¦•à§‹à¦¡ à¦°à¦¿à¦«à§à¦¯à¦¾à¦•à§à¦Ÿà¦°à¦¿à¦‚, à¦¡à¦¾à¦Ÿà¦¾à¦¬à§‡à¦¸ à¦…à¦ªà§à¦Ÿà¦¿à¦®à¦¾à¦‡à¦œà§‡à¦¶à¦¨ à¦à¦¬à¦‚ à¦†à¦§à§à¦¨à¦¿à¦• à¦«à§à¦°à§‡à¦®à¦“à¦¯à¦¼à¦¾à¦°à§à¦• à¦†à¦ªà¦—à§à¦°à§‡à¦¡à§‡ à¦ªà¦¾à¦°à¦¦à¦°à§à¦¶à§€ (à¦¯à§‡à¦®à¦¨ à¦“à¦¯à¦¼à¦¾à¦°à§à¦¡à¦ªà§à¦°à§‡à¦¸ à¦¬à¦¾ à¦° à¦°à¦¿à§Ÿà§à¦¯à¦¾à¦•à§à¦Ÿ à¦¥à§‡à¦•à§‡ à¦¨à¦¿à¦°à¦¾à¦ªà¦¦ à¦“ à¦¦à§à¦°à§à¦¤à¦¤à¦° à¦•à§à¦²à¦¾à¦‰à¦¡ à¦†à¦°à§à¦•à¦¿à¦Ÿà§‡à¦•à¦šà¦¾à¦°à§‡ à¦¸à§à¦¥à¦¾à¦¨à¦¾à¦¨à§à¦¤à¦°à¦¿à¦¤ à¦•à¦°à¦¾)à¥¤'
-    },
-    {
-      qEn: 'Do you offer post-launch maintenance SLA guarantees?',
-      qBn: 'à¦†à¦ªà¦¨à¦¾à¦°à¦¾ à¦•à¦¿ à¦²à¦žà§à¦šà§‡à¦° à¦ªà¦° à¦®à§‡à¦‡à¦¨à¦Ÿà§‡à¦¨à§à¦¯à¦¾à¦¨à§à¦¸ à¦¬à¦¾ à¦à¦¸à¦à¦²à¦ à¦—à§à¦¯à¦¾à¦°à¦¾à¦¨à§à¦Ÿà¦¿ à¦¦à§‡à¦¨?',
-      aEn: 'Yes. Every project includes 30 days of complimentary hyper-care monitoring. Following that, we offer custom SLAs covering security audits, performance checkups, database backups, and instant bug fixes.',
-      aBn: 'à¦¹à§à¦¯à¦¾à¦à¥¤ à¦ªà§à¦°à¦¤à¦¿à¦Ÿà¦¿ à¦ªà§à¦°à¦œà§‡à¦•à§à¦Ÿà§‡ à§©à§¦ à¦¦à¦¿à¦¨à§‡à¦° à¦ªà§à¦°à¦¶à¦‚à¦¸à¦¾à¦®à§‚à¦²à¦• à¦¸à¦¾à¦ªà§‹à¦°à§à¦Ÿ à¦…à¦¨à§à¦¤à¦°à§à¦­à§à¦•à§à¦¤ à¦°à§Ÿà§‡à¦›à§‡à¥¤ à¦à¦°à¦ªà¦° à¦¨à¦¿à¦°à¦¾à¦ªà¦¤à§à¦¤à¦¾ à¦…à¦¡à¦¿à¦Ÿ, à¦ªà¦¾à¦°à¦«à¦°à¦®à§à¦¯à¦¾à¦¨à§à¦¸ à¦šà§‡à¦•à¦†à¦ª à¦à¦¬à¦‚ à¦¦à§à¦°à§à¦¤ à¦¬à¦¾à¦— à¦«à¦¿à¦•à§à¦¸à¦¸à¦¹ à¦•à¦¾à¦¸à§à¦Ÿà¦® à¦à¦¸à¦à¦²à¦ à¦šà§à¦•à§à¦¤à¦¿ à¦¬à¦¾à§Žà¦¸à¦°à¦¿à¦• à¦¬à¦¾ à¦®à¦¾à¦¸à¦¿à¦• à¦¨à§‡à¦“à§Ÿà¦¾ à¦¯à¦¾à§Ÿà¥¤'
-    }
-  ];
 
   // ==========================================
   // DETAIL VIEW: INDIVIDUAL SERVICE PAGE
@@ -452,104 +430,6 @@ export default function ServicesSection({ currentLang, setTab, isFullPage = fals
 
           </div>
 
-          {/* Service specific Pricing plans */}
-          {(() => {
-            if (!selectedService.pricingJson) return null;
-            try {
-              const plans = JSON.parse(selectedService.pricingJson);
-              if (!Array.isArray(plans) || plans.length === 0) return null;
-              return (
-                <div className="py-12 space-y-8">
-                  <div className="space-y-2">
-                    <h2 className="text-xl font-bold text-gray-900 dark:text-white flex items-center space-x-2.5">
-                      <Icons.Layers className="h-5 w-5 text-blue-600 dark:text-orange-400" />
-                      <span>{currentLang === 'en' ? 'Scope & Execution Blueprints' : 'à¦ªà§à¦°à¦œà§‡à¦•à§à¦Ÿ à¦¡à§‡à¦²à¦¿à¦­à¦¾à¦°à¦¿ à¦¬à§à¦²à§à¦ªà§à¦°à¦¿à¦¨à§à¦Ÿ'}</span>
-                    </h2>
-                    <p className="text-xs text-gray-400 dark:text-neutral-400">
-                      {currentLang === 'en' ? 'Choose a structure matching your project volume and milestone speed' : 'à¦†à¦ªà¦¨à¦¾à¦° à¦ªà§à¦°à¦œà§‡à¦•à§à¦Ÿà§‡à¦° à¦­à¦²à¦¿à¦‰à¦® à¦“ à¦®à¦¾à¦‡à¦²à¦¸à§à¦Ÿà§‹à¦¨à§‡à¦° à¦¸à§à¦ªà¦¿à¦¡ à¦…à¦¨à§à¦¯à¦¾à§Ÿà§€ à¦¸à§‡à¦°à¦¾ à¦•à¦¾à¦ à¦¾à¦®à§‹à¦Ÿà¦¿ à¦¨à¦¿à¦°à§à¦¬à¦¾à¦šà¦¨ à¦•à¦°à§à¦¨'}
-                    </p>
-                  </div>
-                  
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
-                    {plans.map((p: any, idx: number) => (
-                      <div key={idx} className="rounded-2xl border border-gray-100 dark:border-neutral-800 bg-white dark:bg-[#141414] p-6 space-y-6 shadow-sm relative overflow-hidden flex flex-col justify-between hover:border-blue-600 transition duration-300">
-                        <div className="space-y-4">
-                          <div className="flex justify-between items-start border-b border-gray-100 dark:border-neutral-800 pb-4">
-                            <div>
-                              <h3 className="text-sm font-extrabold text-gray-900 dark:text-white">{currentLang === 'en' ? p.nameEn : p.nameBn}</h3>
-                              <span className="text-[9px] text-blue-600 dark:text-orange-400 font-extrabold uppercase tracking-widest mt-1 block">
-                                {currentLang === 'en' ? p.periodEn : p.periodBn}
-                              </span>
-                            </div>
-                          </div>
-                          {p.featuresEn && Array.isArray(p.featuresEn) && (
-                            <ul className="space-y-3 pt-2">
-                              {(currentLang === 'en' ? p.featuresEn : p.featuresBn).map((feat: string, fidx: number) => (
-                                <li key={fidx} className="flex items-start space-x-2.5 text-xs text-gray-600 dark:text-neutral-200">
-                                  <Icons.Check className="h-4 w-4 text-emerald-500 dark:text-emerald-400 shrink-0 mt-0.5" />
-                                  <span>{feat}</span>
-                                </li>
-                              ))}
-                            </ul>
-                          )}
-                        </div>
-                        <button
-                          id={`select-plan-btn-${idx}`}
-                          onClick={() => handleBookService(`${selectedService.titleEn} (${p.nameEn})`)}
-                          className="w-full rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold py-3 transition mt-6 hover:scale-[1.01]"
-                        >
-                          {currentLang === 'en' ? 'Select Plan' : 'à¦ªà§à¦²à§à¦¯à¦¾à¦¨à¦Ÿà¦¿ à¦¬à§‡à¦›à§‡ à¦¨à¦¿à¦¨'}
-                        </button>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              );
-            } catch (err) {
-              console.error('Error parsing pricing JSON', err);
-              return null;
-            }
-          })()}
-
-          {/* Service specific FAQs */}
-          {(() => {
-            if (!selectedService.faqsJson) return null;
-            try {
-              const sfaqs = JSON.parse(selectedService.faqsJson);
-              if (!Array.isArray(sfaqs) || sfaqs.length === 0) return null;
-              return (
-                <div className="py-12 space-y-8">
-                  <div className="space-y-2">
-                    <h2 className="text-xl font-bold text-gray-900 dark:text-white flex items-center space-x-2.5">
-                      <Icons.HelpCircle className="h-5 w-5 text-blue-600 dark:text-orange-400" />
-                      <span>{currentLang === 'en' ? 'Frequently Asked Questions' : 'à¦¸à¦¾à¦§à¦¾à¦°à¦£ à¦œà¦¿à¦œà§à¦žà¦¾à¦¸à¦¾'}</span>
-                    </h2>
-                    <p className="text-xs text-gray-400 dark:text-neutral-400">
-                      {currentLang === 'en' ? 'Answering specific details for this service' : 'à¦à¦‡ à¦¸à§‡à¦¬à¦¾à¦¸à¦®à§à¦ªà¦°à§à¦•à¦¿à¦¤ à¦•à¦¿à¦›à§ à¦¸à¦¾à¦§à¦¾à¦°à¦£ à¦ªà§à¦°à¦¶à§à¦¨à§‹à¦¤à§à¦¤à¦°'}
-                    </p>
-                  </div>
-                  
-                  <div className="space-y-4">
-                    {sfaqs.map((f: any, idx: number) => (
-                      <div key={idx} className="rounded-2xl border border-gray-100 dark:border-neutral-800 bg-white dark:bg-[#141414] p-5 space-y-2.5 shadow-sm text-left">
-                        <span className="font-bold text-xs text-gray-900 dark:text-white flex items-center space-x-2">
-                          <span className="h-1.5 w-1.5 rounded-full bg-blue-600"></span>
-                          <span>{currentLang === 'en' ? f.questionEn : f.questionBn}</span>
-                        </span>
-                        <p className="text-xs text-gray-500 dark:text-neutral-300 leading-relaxed pl-3.5 border-l-2 border-gray-100 dark:border-neutral-800">
-                          {currentLang === 'en' ? f.answerEn : f.answerBn}
-                        </p>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              );
-            } catch (err) {
-              console.error('Error parsing FAQs JSON', err);
-              return null;
-            }
-          })()}
-
           {/* Return to capabilities footer */}
           <div className="mt-12 pt-8 flex justify-center">
             <button
@@ -575,7 +455,8 @@ export default function ServicesSection({ currentLang, setTab, isFullPage = fals
     <div id="services-page-root" data-space-page className="bg-white dark:bg-[#141414] min-h-screen font-sans selection:bg-blue-600 selection:text-white">
       
       {/* 1. HERO SECTION â€” Full Screen */}
-      <section id="services-hero" data-space-hero className="relative min-h-[auto] sm:min-h-screen flex items-center overflow-hidden bg-white dark:bg-[#0A0908] py-12 sm:py-0">
+      <div className="hero-stack">
+      <section id="services-hero" data-space-hero className="hero-sticky relative min-h-[100svh] flex items-center overflow-hidden bg-white dark:bg-[#0A0908] py-12 sm:py-0">
         {/* Unified background */}
         <div className="absolute inset-0 bg-gradient-to-b from-white via-orange-50/30 to-white dark:from-[#0A0908] dark:via-[#0F0E0C] dark:to-[#0A0908]" />
         <div className="absolute top-1/4 left-1/3 w-[700px] h-[700px] bg-orange-500/[0.06] rounded-full blur-[180px] pointer-events-none" />
@@ -728,13 +609,15 @@ export default function ServicesSection({ currentLang, setTab, isFullPage = fals
           </div>
         </div>
       </section>
+      </div>
 
 
 
       {/* 2. SERVICES OVERVIEW GRID (LOADED DYNAMICALLY) */}
-      <section id="services-grid-list" className="py-24 bg-white dark:bg-[#141414]">
+      <section id="services-grid-list" className="stack-cover py-24 bg-white dark:bg-[#141414]">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           
+<Reveal direction="up">
           <div className="text-center space-y-4 max-w-3xl mx-auto mb-16">
             <span className="text-xs font-black uppercase tracking-widest text-blue-600 dark:text-orange-400">
               {currentLang === 'en' ? 'OUR CAPABILITIES CATALOG' : 'à¦†à¦®à¦¾à¦¦à§‡à¦° à¦¸à§‡à¦¬à¦¾ à¦•à§à¦¯à¦¾à¦Ÿà¦¾à¦²à¦—'}
@@ -746,12 +629,13 @@ export default function ServicesSection({ currentLang, setTab, isFullPage = fals
               {currentLang === 'en' ? (
                 'Manageable via active client consoles. Zero hardcoding. Click to access complete deliverable checklists, tech stacks, and plans.'
               ) : (
-                'à¦…à§à¦¯à¦¾à¦¡à¦®à¦¿à¦¨ à¦•à¦¨à¦¸à§‹à¦² à¦¥à§‡à¦•à§‡ à¦¸à¦°à¦¾à¦¸à¦°à¦¿ à¦ªà¦°à¦¿à¦šà¦¾à¦²à¦¨à¦¾à¦¯à§‹à¦—à§à¦¯à¥¤ à¦•à§‹à¦¨à§‹ à¦¹à¦¾à¦°à§à¦¡à¦•à§‹à¦¡à§‡à¦¡ à¦¡à¦¾à¦Ÿà¦¾ à¦¨à§‡à¦‡à¥¤ à¦ªà§‚à¦°à§à¦£ à¦¬à¦¿à¦¬à¦°à¦£ à¦à¦¬à¦‚ à¦¡à§‡à¦²à¦¿à¦­à¦¾à¦°à¦¿ à¦ªà§à¦²à§à¦¯à¦¾à¦¨ à¦¦à§‡à¦–à¦¤à§‡ à¦¯à§‡à¦•à§‹à¦¨à§‹ à¦¸à§‡à¦¬à¦¾à¦¯à¦¼ à¦•à§à¦²à¦¿à¦• à¦•à¦°à§à¦¨à¥¤'
+                'à¦…à§à¦¯à¦¾à¦¡à¦®à¦¿à¦¨ à¦•à¦¨à¦¸à§‹à¦² à¦¥à§‡à¦•à§‡ à¦¸à¦°à¦¾à¦¸à¦°à¦¿ à¦ªà¦°à¦¿à¦šà¦¾à¦²à¦¨à¦¾à¦¯à¦¾à¦—à§à¦¯à¥¤ à¦•à§‹à¦¨à§‹ à¦¹à¦¾à¦°à§à¦¡à¦•à§‹à¦¡à§‡à¦¡ à¦¡à¦¾à¦Ÿà¦¾ à¦¨à§‡à¦‡à¥¤ à¦ªà§‚à¦°à§à¦£ à¦¬à¦¿à¦¬à¦°à¦£ à¦à¦¬à¦‚ à¦¡à§‡à¦²à¦¿à¦­à¦¾à¦°à¦¿ à¦ªà§à¦²à§à¦¯à¦¾à¦¨ à¦¦à§‡à¦–à¦¤à§‡ à¦¯à§‡à¦•à§‹à¦¨à§‹ à¦¸à§‡à¦¬à¦¾à¦¯à¦¼ à¦•à§à¦²à¦¿à¦• à¦•à¦°à§à¦¨à¥¤'
               )}
             </p>
           </div>
+          </Reveal>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <Reveal className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {services.map((service) => (
               <div
                 id={`service-card-${service.id}`}
@@ -810,7 +694,7 @@ export default function ServicesSection({ currentLang, setTab, isFullPage = fals
                 </div>
               </div>
             ))}
-          </div>
+          </Reveal>
 
         </div>
       </section>
@@ -819,6 +703,7 @@ export default function ServicesSection({ currentLang, setTab, isFullPage = fals
       <section id="services-why-choose" className="py-24 bg-[#FAFAFA] dark:bg-[#0D0C0A]">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           
+          <Reveal direction="up">
           <div className="text-center space-y-4 max-w-3xl mx-auto mb-16">
             <span className="text-xs font-black uppercase tracking-widest text-blue-600 dark:text-orange-400">
               {currentLang === 'en' ? 'AGENCY PRINCIPLES' : 'à¦à¦œà§‡à¦¨à§à¦¸à¦¿ à¦¨à§€à¦¤à¦¿à¦®à¦¾à¦²à¦¾'}
@@ -834,8 +719,9 @@ export default function ServicesSection({ currentLang, setTab, isFullPage = fals
               )}
             </p>
           </div>
+          </Reveal>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <Reveal className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {[
               {
                 icon: 'Award',
@@ -914,7 +800,7 @@ export default function ServicesSection({ currentLang, setTab, isFullPage = fals
                 </p>
               </div>
             ))}
-          </div>
+          </Reveal>
 
         </div>
       </section>
@@ -923,6 +809,7 @@ export default function ServicesSection({ currentLang, setTab, isFullPage = fals
       <section id="services-tech-stack" className="py-24 bg-white dark:bg-[#141414]">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           
+          <Reveal direction="up">
           <div className="text-center space-y-4 max-w-3xl mx-auto mb-16">
             <span className="text-xs font-black uppercase tracking-widest text-blue-600 dark:text-orange-400">
               {currentLang === 'en' ? 'OUR STACK ECOSYSTEM' : 'à¦†à¦®à¦¾à¦¦à§‡à¦° à¦ªà§à¦°à¦¯à§à¦•à§à¦¤à¦¿ à¦‡à¦•à§‹à¦¸à¦¿à¦¸à§à¦Ÿà§‡à¦®'}
@@ -938,6 +825,7 @@ export default function ServicesSection({ currentLang, setTab, isFullPage = fals
               )}
             </p>
           </div>
+          </Reveal>
 
           {/* Stack Tab selection */}
           <div className="flex overflow-x-auto items-center gap-2 sm:gap-3 mb-10 pb-2 -mx-4 px-4 sm:mx-0 sm:px-0 sm:flex-wrap sm:justify-center scrollbar-none">
@@ -1060,52 +948,6 @@ export default function ServicesSection({ currentLang, setTab, isFullPage = fals
                 </div>
               </div>
             )}
-          </div>
-
-        </div>
-      </section>
-
-      {/* 5. FAQ PREVIEW SECTION */}
-      <section id="services-faq-accordion" className="py-24 bg-white dark:bg-[#141414]">
-        <div className="mx-auto max-w-4xl px-4 sm:px-6">
-          
-          <div className="text-center space-y-4 max-w-3xl mx-auto mb-16">
-            <span className="text-xs font-black uppercase tracking-widest text-blue-600 dark:text-orange-400">
-              {currentLang === 'en' ? 'COMMON QUESTIONS' : 'à¦œà¦¿à¦œà§à¦žà¦¾à¦¸à¦¿à¦¤ à¦ªà§à¦°à¦¶à§à¦¨à¦¾à¦¬à¦²à§€'}
-            </span>
-            <h2 className="font-sans text-3xl font-extrabold tracking-tight text-gray-900 dark:text-white sm:text-4xl">
-              {currentLang === 'en' ? 'Frequently Asked Questions' : 'à¦¸à¦¾à¦§à¦¾à¦°à¦£ à¦œà¦¿à¦œà§à¦žà¦¾à¦¸à¦¾à¦¸à¦®à§‚à¦¹'}
-            </h2>
-          </div>
-
-          <div className="space-y-4 max-w-3xl mx-auto">
-            {mainFaqs.map((faq, idx) => {
-              const isOpen = activeFAQIndex === idx;
-              return (
-                <div key={idx} className={`
-  rounded-2xl border bg-white dark:bg-[#141414] p-5 cursor-pointer transition duration-300 ${
-    isOpen ? 'border-blue-500 shadow-md' : 'border-gray-200/60 hover:border-gray-300 shadow-sm'
-  }
-`}>
-                  <button
-                    onClick={() => setActiveFAQIndex(isOpen ? null : idx)}
-                    className="w-full px-6 py-5 flex items-center justify-between text-left font-bold text-xs sm:text-sm text-gray-900 dark:text-white hover:text-blue-600 dark:text-orange-400 transition"
-                  >
-                    <span>{currentLang === 'en' ? faq.qEn : faq.qBn}</span>
-                    <span className="flex h-6 w-6 items-center justify-center rounded-full bg-gray-50 dark:bg-neutral-900 text-gray-400 dark:text-neutral-400 group-hover:text-blue-600 dark:text-orange-400">
-                      {isOpen ? <Icons.Minus className="h-4 w-4 text-blue-600 dark:text-orange-400" /> : <Icons.Plus className="h-4 w-4" />}
-                    </span>
-                  </button>
-                  {isOpen && (
-                    <div className="mt-4 pt-4 border-t border-gray-50 space-y-4">
-                      <p className="text-xs md:text-sm leading-relaxed text-gray-600 dark:text-neutral-200">
-                        {currentLang === 'en' ? faq.aEn : faq.aBn}
-                      </p>
-                    </div>
-                  )}
-                </div>
-              );
-            })}
           </div>
 
         </div>

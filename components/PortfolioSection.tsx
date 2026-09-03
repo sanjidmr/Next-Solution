@@ -9,6 +9,7 @@ import {
 } from 'lucide-react';
 import { getPortfolio } from '@/lib/db';
 import { PortfolioItem } from '@/types';
+import Reveal from '@/components/motion/Reveal';
 
 interface PortfolioSectionProps {
   currentLang: 'en' | 'bn';
@@ -102,13 +103,33 @@ export default function PortfolioSection({ currentLang, setTab, isFullPage = fal
     return portfolio.find(p => p.featured) || portfolio[0] || null;
   }, [portfolio]);
 
-  const handleProjectClick = useCallback((item: PortfolioItem) => {
-    if (item.liveUrl) {
-      window.open(item.liveUrl, '_blank', 'noopener,noreferrer');
-    } else {
-      setModalProject(item);
-    }
+  const getItemHref = useCallback((item: PortfolioItem) => {
+    const isWebDev = item.category === "Web Development";
+    const externalUrl =
+      (isWebDev ? item.liveUrl : null) ||
+      item.projectData?.websiteUrl ||
+      item.projectData?.projectUrl ||
+      item.projectData?.demoUrl;
+
+    if (isWebDev && externalUrl) return { href: externalUrl, external: true as const };
+    if (item.slug) return { href: `/portfolio/${item.slug}`, external: false as const };
+    return { href: null, external: false as const };
   }, []);
+
+  const handleProjectClick = useCallback((item: PortfolioItem) => {
+    const target = getItemHref(item);
+    if (target.href) {
+      if (target.external) {
+        window.open(target.href, "_blank", "noopener,noreferrer");
+      } else {
+        window.location.href = target.href;
+      }
+      return;
+    }
+
+    // Fallback to the in-page modal if no slug/url exists yet.
+    setModalProject(item);
+  }, [getItemHref]);
 
   const gridRef = useScrollReveal();
   const caseStudyRef = useScrollReveal();
@@ -121,7 +142,8 @@ export default function PortfolioSection({ currentLang, setTab, isFullPage = fal
       {/* ========================================
           1. HERO SECTION
       ========================================= */}
-      <section data-space-hero className="relative overflow-hidden min-h-screen flex items-center bg-gradient-to-b from-gray-50 to-white dark:from-[#0A0908] dark:to-[#0E0D0B]">
+      <div className="hero-stack">
+      <section data-space-hero className="hero-sticky relative overflow-hidden min-h-[100svh] flex items-center bg-gradient-to-b from-gray-50 to-white dark:from-[#0A0908] dark:to-[#0E0D0B]">
         <div className="absolute inset-0 opacity-[0.015] dark:opacity-[0.03] pointer-events-none" style={{ backgroundImage: 'radial-gradient(circle, rgba(255,90,0,0.4) 1px, transparent 1px)', backgroundSize: '40px 40px' }} />
         <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-orange-500/[0.03] dark:bg-orange-500/[0.04] rounded-full blur-[180px] pointer-events-none" />
         <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-orange-400/[0.02] dark:bg-orange-400/[0.03] rounded-full blur-[150px] pointer-events-none" />
@@ -230,14 +252,16 @@ export default function PortfolioSection({ currentLang, setTab, isFullPage = fal
           </div>
         </div>
       </section>
+      </div>
 
 
       {/* ========================================
           PROJECT GRID — heading left + nav right
       ========================================= */}
-      <section id="project-grid" className="py-16 sm:py-20 lg:py-24 bg-white dark:bg-[#0A0908] transition-colors">
+      <section id="project-grid" className="stack-cover py-16 sm:py-20 lg:py-24 bg-white dark:bg-[#0A0908] transition-colors">
         <div className="mx-auto max-w-[1400px] px-5 sm:px-8 lg:px-12 xl:px-16">
 
+          <Reveal direction="up">
           {/* Header row: left-aligned title + right-side filter pills */}
           <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6 mb-12 sm:mb-16">
             {/* Left — title */}
@@ -271,6 +295,7 @@ export default function PortfolioSection({ currentLang, setTab, isFullPage = fal
               ))}
             </div>
           </div>
+          </Reveal>
 
           {filteredProjects.length === 0 ? (
             <div className="text-center py-20 space-y-4">
@@ -287,6 +312,8 @@ export default function PortfolioSection({ currentLang, setTab, isFullPage = fal
                   key={project.id}
                   project={project}
                   isEn={isEn}
+                  href={getItemHref(project).href}
+                  external={getItemHref(project).external}
                   onClick={() => handleProjectClick(project)}
                 />
               ))}
@@ -601,14 +628,16 @@ export default function PortfolioSection({ currentLang, setTab, isFullPage = fal
 /* ========================================
     PROJECT CARD COMPONENT
 ========================================= */
-function ProjectCard({ project, isEn, onClick }: { project: PortfolioItem; isEn: boolean; onClick: () => void }) {
+function ProjectCard({ project, isEn, href, external, onClick }: { project: PortfolioItem; isEn: boolean; href: string | null; external: boolean; onClick: () => void }) {
   const CatIcon = CATEGORY_ICONS[project.category] || Code2;
+  const isWebDev = project.category === "Web Development";
+  const meta = project.projectData || {};
+  const preview = isWebDev
+    ? (meta.builtWith && Array.isArray(meta.builtWith) ? meta.builtWith : project.technologies || [])
+    : project.technologies || [];
 
-  return (
-    <div
-      onClick={onClick}
-      className="group relative rounded-xl lg:rounded-2xl border border-gray-100 dark:border-white/[0.06] bg-white dark:bg-white/[0.02] overflow-hidden hover:border-orange-200 dark:hover:border-orange-500/20 transition-all duration-500 hover:shadow-[0_16px_48px_-12px_rgba(255,90,0,0.1)] dark:hover:shadow-[0_20px_60px_-15px_rgba(255,90,0,0.08)] cursor-pointer flex flex-col"
-    >
+  const inner = (
+    <>
       {/* Image */}
       <div className="relative overflow-hidden aspect-[16/10]">
         <img
@@ -628,11 +657,9 @@ function ProjectCard({ project, isEn, onClick }: { project: PortfolioItem; isEn:
               </span>
             )}
           </div>
-          {project.liveUrl && (
-            <div className="flex h-6 w-6 sm:h-7 sm:w-7 items-center justify-center rounded-full bg-orange-500 text-white opacity-0 group-hover:opacity-100 transition-all duration-300 group-hover:translate-x-0 translate-x-2">
-              <ArrowUpRight className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
-            </div>
-          )}
+          <div className="flex h-6 w-6 sm:h-7 sm:w-7 items-center justify-center rounded-full bg-orange-500 text-white opacity-0 group-hover:opacity-100 transition-all duration-300 group-hover:translate-x-0 translate-x-2">
+            <ArrowUpRight className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
+          </div>
         </div>
       </div>
 
@@ -645,24 +672,59 @@ function ProjectCard({ project, isEn, onClick }: { project: PortfolioItem; isEn:
           {isEn ? project.descriptionEn : project.descriptionBn}
         </p>
 
+        {/* Orange technology tags */}
+        {preview.length > 0 && (
+          <div className="flex flex-wrap gap-1 mb-3">
+            {preview.slice(0, 4).map((t, i) => (
+              <span
+                key={i}
+                className="text-[8px] sm:text-[9px] font-bold text-orange-600 dark:text-orange-400 bg-orange-50 dark:bg-orange-500/10 rounded-full px-1.5 sm:px-2 py-0.5 border border-orange-100 dark:border-orange-500/20"
+              >
+                {t}
+              </span>
+            ))}
+            {preview.length > 4 && (
+              <span className="text-[8px] font-bold text-gray-400 dark:text-gray-600 px-1 py-0.5">
+                +{preview.length - 4}
+              </span>
+            )}
+          </div>
+        )}
+
         <div className="flex items-center justify-between pt-2.5 sm:pt-3 border-t border-gray-100 dark:border-white/5">
           <div className="flex items-center gap-1.5 sm:gap-2">
             <CatIcon className="h-3 w-3 text-orange-400 dark:text-orange-500/60" />
-            <span className="text-[9px] sm:text-[10px] text-gray-400 dark:text-gray-500">{project.category}</span>
+            <span className="text-[9px] sm:text-[10px] text-gray-400 dark:text-gray-500">
+              {isWebDev ? "Visit Website" : "Case Study"}
+            </span>
           </div>
-          <div className="flex items-center gap-1 sm:gap-1.5">
-            {project.technologies?.slice(0, 2).map((t, i) => (
-              <span key={i} className="text-[8px] sm:text-[9px] text-gray-400 dark:text-gray-600 bg-gray-50 dark:bg-white/[0.03] rounded-full px-1.5 sm:px-2 py-0.5 border border-gray-100 dark:border-white/5">{t}</span>
-            ))}
-          </div>
-        </div>
-
-        <div className="flex items-center justify-end mt-2.5 sm:mt-3">
           <div className="flex h-7 w-7 sm:h-8 sm:w-8 items-center justify-center rounded-full border border-gray-200 dark:border-white/10 text-gray-300 dark:text-white/40 group-hover:border-orange-200 dark:group-hover:border-orange-500/30 group-hover:text-orange-500 dark:group-hover:text-orange-400 group-hover:bg-orange-50 dark:group-hover:bg-orange-500/5 transition-all duration-300">
             <ChevronRight className="h-3 w-3 sm:h-3.5 sm:w-3.5 transition-transform group-hover:translate-x-0.5" />
           </div>
         </div>
       </div>
+    </>
+  );
+
+  const cardClass =
+    "group relative rounded-xl lg:rounded-2xl border border-gray-100 dark:border-white/[0.06] bg-white dark:bg-white/[0.02] overflow-hidden hover:border-orange-200 dark:hover:border-orange-500/20 transition-all duration-500 hover:shadow-[0_16px_48px_-12px_rgba(255,90,0,0.1)] dark:hover:shadow-[0_20px_60px_-15px_rgba(255,90,0,0.08)] cursor-pointer flex flex-col";
+
+  if (href) {
+    const isExternal = external;
+    return isExternal ? (
+      <a href={href} target="_blank" rel="noopener noreferrer" className={cardClass}>
+        {inner}
+      </a>
+    ) : (
+      <a href={href} className={cardClass}>
+        {inner}
+      </a>
+    );
+  }
+
+  return (
+    <div onClick={onClick} className={cardClass}>
+      {inner}
     </div>
   );
 }

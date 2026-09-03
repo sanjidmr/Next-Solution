@@ -2,32 +2,25 @@ import { NextRequest, NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { requireStaff } from "@/lib/require-admin";
 import {
-  mapService, mapPortfolioItem, mapBlogPost, mapFAQ, mapTestimonial,
-  mapContactMessage, mapSubscriber, mapSiteSettings, mapPricingPackage,
-  mapPricingAddon, mapPricingComparison, mapPricingQuoteRequest,
+  mapService, mapPortfolioItem, mapBlogPost, mapTestimonial,
+  mapContactMessage, mapSubscriber, mapSiteSettings,
   mapCurrency, mapCurrencySettings,
   mapTestimonialVideo, mapTestimonialStatistics, mapClientLogo,
   mapSuccessStory, mapReviewSettings, mapLegalPolicy, mapLegalRevision,
   mapCookieCategory, mapCookieSettings, mapWhyChooseUsCard,
   mapWhyChooseUsStat, mapWhyChooseUsBadge, mapWhyChooseUsTech,
   mapWhyChooseUsCTA, mapProcessStep, mapProcessCTA, mapTechServiceCard,
-  mapClientMoment, mapProduct, mapProductImage,
-  mapProjectPricing, mapMonthlyPricing, mapAgencyPackage
+  mapClientMoment, mapProduct, mapProductImage
 } from "@/lib/mappers";
 
 const TABLE_MAP: Record<string, string> = {
   services: "services",
   portfolio: "portfolio_items",
   blogs: "blog_posts",
-  faqs: "faqs",
   testimonials: "testimonials",
   messages: "contact_messages",
   subscribers: "newsletter_subscribers",
   settings: "site_settings",
-  "pricing-packages": "pricing_packages",
-  "pricing-addons": "pricing_addons",
-  "pricing-comparisons": "pricing_comparisons",
-  "pricing-quotes": "pricing_quote_requests",
   currencies: "currencies",
   "currency-settings": "currency_settings",
   "testimonial-categories": "testimonial_categories",
@@ -51,9 +44,6 @@ const TABLE_MAP: Record<string, string> = {
   "client-moments": "client_moments",
   products: "products",
   "product-images": "product_images",
-  "project-pricing": "project_pricing",
-  "monthly-pricing": "monthly_pricing",
-  "agency-packages": "agency_packages",
 };
 
 const SINGLETON_TABLES = new Set([
@@ -74,13 +64,8 @@ const SORT_ORDER_TABLES = new Set([
   "testimonials",
   "products",
   "team_members",
-  "pricing_packages",
-  "pricing_comparisons",
   "currencies",
   "cookie_categories",
-  "project_pricing",
-  "monthly_pricing",
-  "agency_packages",
 ]);
 
 // Tables that order by their "display_order" column instead.
@@ -100,9 +85,6 @@ const DISPLAY_ORDER_TABLES = new Set([
 const NO_ORDER_TABLES = new Set([
   "newsletter_subscribers",
   "contact_messages",
-  "pricing_quote_requests",
-  "faqs",
-  "pricing_addons",
   "legal_revisions",
   "legal_policies",
   "product_images",
@@ -114,15 +96,10 @@ const TO_DB_MAP: Record<string, (item: any) => any> = {
   services: (i) => mapService.toDb(i),
   portfolio: (i) => mapPortfolioItem.toDb(i),
   blogs: (i) => mapBlogPost.toDb(i),
-  faqs: (i) => mapFAQ.toDb(i),
   testimonials: (i) => mapTestimonial.toDb(i),
   messages: (i) => mapContactMessage.toDb(i),
   subscribers: (i) => mapSubscriber.toDb(i),
   settings: (i) => mapSiteSettings.toDb(i),
-  "pricing-packages": (i) => mapPricingPackage.toDb(i),
-  "pricing-addons": (i) => mapPricingAddon.toDb(i),
-  "pricing-comparisons": (i) => mapPricingComparison.toDb(i),
-  "pricing-quotes": (i) => mapPricingQuoteRequest.toDb(i),
   currencies: (i) => mapCurrency.toDb(i),
   "currency-settings": (i) => mapCurrencySettings.toDb(i),
   "testimonial-categories": (i) => ({ id: i.id, name_en: i.nameEn, name_bn: i.nameBn, slug: i.slug }),
@@ -146,9 +123,6 @@ const TO_DB_MAP: Record<string, (item: any) => any> = {
   "client-moments": (i) => mapClientMoment.toDb(i),
   products: (i) => mapProduct.toDb(i),
   "product-images": (i) => mapProductImage.toDb(i),
-  "project-pricing": (i) => mapProjectPricing.toDb(i),
-  "monthly-pricing": (i) => mapMonthlyPricing.toDb(i),
-  "agency-packages": (i) => mapAgencyPackage.toDb(i),
 };
 
 // Map entity slug → mapper.fromDb function (DB snake_case → admin camelCase).
@@ -156,15 +130,10 @@ const FROM_DB_MAP: Record<string, (row: any) => any> = {
   services: (r) => mapService.fromDb(r),
   portfolio: (r) => mapPortfolioItem.fromDb(r),
   blogs: (r) => mapBlogPost.fromDb(r),
-  faqs: (r) => mapFAQ.fromDb(r),
   testimonials: (r) => mapTestimonial.fromDb(r),
   messages: (r) => mapContactMessage.fromDb(r),
   subscribers: (r) => mapSubscriber.fromDb(r),
   settings: (r) => mapSiteSettings.fromDb(r),
-  "pricing-packages": (r) => mapPricingPackage.fromDb(r),
-  "pricing-addons": (r) => mapPricingAddon.fromDb(r),
-  "pricing-comparisons": (r) => mapPricingComparison.fromDb(r),
-  "pricing-quotes": (r) => mapPricingQuoteRequest.fromDb(r),
   currencies: (r) => mapCurrency.fromDb(r),
   "currency-settings": (r) => mapCurrencySettings.fromDb(r),
   "testimonial-categories": (r) => ({ id: r.id, nameEn: r.name_en, nameBn: r.name_bn, slug: r.slug }),
@@ -188,9 +157,6 @@ const FROM_DB_MAP: Record<string, (row: any) => any> = {
   "client-moments": (r) => mapClientMoment.fromDb(r),
   products: (r) => mapProduct.fromDb(r),
   "product-images": (r) => mapProductImage.fromDb(r),
-  "project-pricing": (r) => mapProjectPricing.fromDb(r),
-  "monthly-pricing": (r) => mapMonthlyPricing.fromDb(r),
-  "agency-packages": (r) => mapAgencyPackage.fromDb(r),
 };
 
 export async function GET(
@@ -214,10 +180,7 @@ export async function GET(
 
     if (
       tableName === "services" ||
-      tableName === "portfolio_items" ||
-      tableName === "project_pricing" ||
-      tableName === "monthly_pricing" ||
-      tableName === "agency_packages"
+      tableName === "portfolio_items"
     ) {
       query = query.is("deleted_at", null).order("sort_order", { ascending: true });
     } else if (tableName === "blog_posts") {

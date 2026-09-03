@@ -16,7 +16,7 @@ import {
   Mail, Linkedin, Smartphone
 } from 'lucide-react';
 import { translations } from '@/data/translations';
-import { getSettings, getTestimonials, getFAQs } from '@/lib/db';
+import { getSettings, getTestimonials } from '@/lib/db';
 
 import sanjidImage from "../assets/images/sanjid.jpg";
 import jisan from "../assets/images/jisan.jpg";
@@ -206,7 +206,6 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
   const t = translations[currentLang];
   const settings = getSettings();
   const testimonials = getTestimonials();
-  const faqs = getFAQs();
 
   const leadershipTeam = useMemo(() => [
     {
@@ -297,9 +296,6 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
   // Selected Ecosystem Category
   const [selectedEcosystemCategory, setSelectedEcosystemCategory] = useState<'all' | 'dev' | 'design' | 'ai' | 'marketing'>('all');
 
-
-  // FAQ Accordion State
-  const [activeFaq, setActiveFaq] = useState<string | null>(null);
 
   // Active Process Step state
   const [activeProcessStep, setActiveProcessStep] = useState(0);
@@ -903,7 +899,7 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
   ], []);
 
   return (
-    <section id="about-page" data-space-page className="bg-white dark:bg-[#0F0E0C] dark:bg-gradient-to-b dark:from-[#12100D] dark:via-[#0F0E0C] dark:to-[#0A0908] text-neutral-900 dark:text-white overflow-hidden relative selection:bg-blue-500 dark:bg-blue-500 selection:text-white">
+    <section id="about-page" data-space-page className="bg-white dark:bg-[#0F0E0C] dark:bg-gradient-to-b dark:from-[#12100D] dark:via-[#0F0E0C] dark:to-[#0A0908] text-neutral-900 dark:text-white relative selection:bg-blue-500 dark:bg-blue-500 selection:text-white">
       
       {/* Scroll Progress Bar */}
       <div className="fixed top-0 left-0 right-0 h-1 bg-neutral-100 dark:bg-neutral-800 z-50">
@@ -923,7 +919,8 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
       {/* ========================================================
           01. HERO STORY — ABOUT US PREMIUM HERO
          ======================================================== */}
-      <section id="about-hero" data-space-hero className="relative overflow-hidden bg-white dark:bg-[#080a0d] min-h-[calc(100vh-72px)] lg:min-h-[110vh]">
+      <div className="hero-stack">
+      <section id="about-hero" data-space-hero className="hero-sticky relative overflow-hidden bg-white dark:bg-[#080a0d] min-h-[100svh]">
         
         {/* Background "NEXT SOLUTION" watermark typography */}
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none select-none z-0" aria-hidden="true">
@@ -1086,11 +1083,12 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
           </div>
         </div>
       </section>
+      </div>
 
       {/* ========================================================
           02. WHO WE ARE
          ======================================================== */}
-      <section id="who-we-are" className="relative py-28 overflow-hidden z-10">
+      <section id="who-we-are" className="stack-cover relative py-28 overflow-hidden z-10">
         <div className="absolute inset-0 bg-gradient-to-br from-white via-orange-50/20 to-white dark:from-[#0A0908] dark:via-[#0F0E0C] dark:to-[#12100D]" />
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[600px] bg-orange-500/[0.03] rounded-full blur-[150px] pointer-events-none" />
         <div className="absolute bottom-0 right-0 w-[400px] h-[400px] bg-orange-500/[0.02] rounded-full blur-[120px] pointer-events-none" />

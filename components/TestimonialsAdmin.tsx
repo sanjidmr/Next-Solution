@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { 
   X, Check, Trash2, Edit2, Plus, Sparkles, Settings, Eye, EyeOff, 
-  Layers, Video, BarChart2, MessageSquare, AlertCircle, RefreshCw, Globe, HelpCircle, Camera
+  Layers, Video, BarChart2, MessageSquare, AlertCircle, RefreshCw, Globe, Camera
 } from 'lucide-react';
 import { 
   getTestimonials, saveTestimonial, deleteTestimonial,
@@ -11,11 +11,11 @@ import {
   getTestimonialStatistics, saveTestimonialStatistics,
   getClientLogos, saveClientLogo, deleteClientLogo,
   getSuccessStories, saveSuccessStory, deleteSuccessStory,
-  getReviewSettings, saveReviewSettings, getFAQs, saveFAQ, deleteFAQ,
+  getReviewSettings, saveReviewSettings,
   getClientMoments, saveClientMoment, deleteClientMoment
 } from '@/lib/db';
 import { getLocalItem, setLocalItem } from '@/lib/utils';
-import { Testimonial, TestimonialCategory, TestimonialVideo, SuccessStory, ClientLogo, ReviewSettings, FAQ, ClientMoment } from '@/types';
+import { Testimonial, TestimonialCategory, TestimonialVideo, SuccessStory, ClientLogo, ReviewSettings, ClientMoment } from '@/types';
 
 interface TestimonialsAdminProps {
   currentLang: 'en' | 'bn';
@@ -24,7 +24,7 @@ interface TestimonialsAdminProps {
   onDataChanged: () => void;
 }
 
-type AdminTab = 'reviews' | 'stories' | 'videos' | 'client-moments' | 'stats-logos' | 'settings' | 'faqs';
+type AdminTab = 'reviews' | 'stories' | 'videos' | 'client-moments' | 'stats-logos' | 'settings';
 
 export default function TestimonialsAdmin({ currentLang, isOpen, onClose, onDataChanged }: TestimonialsAdminProps) {
   const [activeTab, setActiveTab] = useState<AdminTab>('reviews');
@@ -37,7 +37,6 @@ export default function TestimonialsAdmin({ currentLang, isOpen, onClose, onData
   const [logos, setLogos] = useState<ClientLogo[]>([]);
   const [stats, setStats] = useState<any>(null);
   const [reviewSettings, setReviewSettings] = useState<ReviewSettings | null>(null);
-  const [faqs, setFaqs] = useState<FAQ[]>([]);
   const [moments, setMoments] = useState<ClientMoment[]>([]);
 
   // Editing state variables
@@ -45,7 +44,6 @@ export default function TestimonialsAdmin({ currentLang, isOpen, onClose, onData
   const [editingStory, setEditingStory] = useState<Partial<SuccessStory> | null>(null);
   const [editingVideo, setEditingVideo] = useState<Partial<TestimonialVideo> | null>(null);
   const [editingLogo, setEditingLogo] = useState<Partial<ClientLogo> | null>(null);
-  const [editingFaq, setEditingFaq] = useState<Partial<FAQ> | null>(null);
   const [editingMoment, setEditingMoment] = useState<Partial<ClientMoment> | null>(null);
 
   // Section Visibility Settings (Stored in LocalStorage)
@@ -65,7 +63,6 @@ export default function TestimonialsAdmin({ currentLang, isOpen, onClose, onData
     setLogos(getClientLogos());
     setStats(getTestimonialStatistics());
     setReviewSettings(getReviewSettings());
-    setFaqs(getFAQs());
     setMoments(getClientMoments());
 
     // Load section visibility
@@ -86,7 +83,6 @@ export default function TestimonialsAdmin({ currentLang, isOpen, onClose, onData
         googleReviews: true,
         achievements: true,
         submissionCta: true,
-        faq: true,
       };
       setLocalItem('next_solution_sections_visibility', JSON.stringify(defaultVisibility));
       setSectionVisibility(defaultVisibility);
@@ -273,36 +269,6 @@ export default function TestimonialsAdmin({ currentLang, isOpen, onClose, onData
     }
   };
 
-  // FAQS CRUD
-  const handleSaveFaq = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!editingFaq) return;
-
-    const formatted: FAQ = {
-      id: editingFaq.id || `faq-${Date.now()}`,
-      categoryEn: editingFaq.categoryEn || 'General',
-      categoryBn: editingFaq.categoryBn || 'সাধারণ',
-      questionEn: editingFaq.questionEn || '',
-      questionBn: editingFaq.questionBn || '',
-      answerEn: editingFaq.answerEn || '',
-      answerBn: editingFaq.answerBn || '',
-      helpfulCount: editingFaq.helpfulCount || 0
-    };
-
-    saveFAQ(formatted);
-    setEditingFaq(null);
-    loadAllData();
-    onDataChanged();
-  };
-
-  const handleDeleteFaq = (id: string) => {
-    if (window.confirm('Are you sure you want to delete this FAQ?')) {
-      deleteFAQ(id);
-      loadAllData();
-      onDataChanged();
-    }
-  };
-
   // STATS & LOGOS SAVE
   const handleSaveStats = (e: React.FormEvent) => {
     e.preventDefault();
@@ -351,7 +317,7 @@ export default function TestimonialsAdmin({ currentLang, isOpen, onClose, onData
 
   return (
     <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-900/60 backdrop-blur-md flex justify-end animate-fadeIn">
-      <div className="w-full max-w-5xl bg-white dark:bg-[#141414] dark:bg-[#141414] min-h-screen shadow-2xl flex flex-col border-l border-slate-200 dark:border-neutral-700">
+      <div className="w-full max-w-5xl bg-white dark:bg-[#141414] min-h-screen shadow-2xl flex flex-col border-l border-slate-200 dark:border-neutral-700">
         
         {/* Admin Header */}
         <div className="bg-slate-900 text-white px-6 py-4 flex items-center justify-between border-b border-slate-800">
@@ -376,7 +342,7 @@ export default function TestimonialsAdmin({ currentLang, isOpen, onClose, onData
 
         {/* Admin Workspace Tabs */}
         <div className="flex bg-slate-100 dark:bg-slate-800 border-b border-slate-200 dark:border-neutral-700 overflow-x-auto scrollbar-none">
-          {(['reviews', 'stories', 'videos', 'client-moments', 'stats-logos', 'faqs', 'settings'] as AdminTab[]).map((tab) => (
+          {(['reviews', 'stories', 'videos', 'client-moments', 'stats-logos', 'settings'] as AdminTab[]).map((tab) => (
             <button
               key={tab}
               onClick={() => {
@@ -385,12 +351,11 @@ export default function TestimonialsAdmin({ currentLang, isOpen, onClose, onData
                 setEditingStory(null);
                 setEditingVideo(null);
                 setEditingLogo(null);
-                setEditingFaq(null);
                 setEditingMoment(null);
               }}
               className={`px-5 py-3.5 text-xs font-bold border-b-2 capitalize transition flex items-center space-x-2 whitespace-nowrap ${
                 activeTab === tab 
-                  ? 'border-blue-600 text-blue-600 dark:text-orange-400 bg-white dark:bg-[#141414] dark:bg-[#141414] font-extrabold' 
+                  ? 'border-blue-600 text-blue-600 dark:text-orange-400 bg-white dark:bg-[#141414] font-extrabold' 
                   : 'border-transparent text-slate-500 dark:text-neutral-400 dark:text-neutral-500 hover:text-slate-800 dark:text-neutral-100 hover:bg-slate-50 dark:hover:bg-slate-800/70 dark:bg-slate-900/60'
               }`}
             >
@@ -399,17 +364,16 @@ export default function TestimonialsAdmin({ currentLang, isOpen, onClose, onData
               {tab === 'videos' && <Video className="h-4 w-4" />}
               {tab === 'client-moments' && <Camera className="h-4 w-4" />}
               {tab === 'stats-logos' && <BarChart2 className="h-4 w-4" />}
-              {tab === 'faqs' && <HelpCircle className="h-4 w-4" />}
               {tab === 'settings' && <Settings className="h-4 w-4" />}
               <span>
-                {tab === 'stats-logos' ? 'Stats & Logos' : tab === 'reviews' ? 'Reviews Feed' : tab === 'stories' ? 'Success Stories' : tab === 'faqs' ? 'Manage FAQs' : tab === 'client-moments' ? 'Client Moments' : tab}
+                {tab === 'stats-logos' ? 'Stats & Logos' : tab === 'reviews' ? 'Reviews Feed' : tab === 'stories' ? 'Success Stories' : tab === 'client-moments' ? 'Client Moments' : tab}
               </span>
             </button>
           ))}
         </div>
 
         {/* Scrollable Container */}
-        <div className="flex-1 overflow-y-auto p-6 bg-slate-50 dark:bg-slate-900/60">
+        <div className="flex-1 overflow-y-auto p-6 bg-slate-50 dark:bg-neutral-900/70">
           
           {/* TAB 1: REVIEWS CRUD */}
           {activeTab === 'reviews' && (
@@ -430,13 +394,13 @@ export default function TestimonialsAdmin({ currentLang, isOpen, onClose, onData
 
               {/* Review Editor Form */}
               {editingReview && (
-                <form onSubmit={handleSaveReview} className="bg-white dark:bg-[#141414] dark:bg-[#141414] rounded-2xl border border-slate-200 dark:border-neutral-700 p-5 space-y-4 shadow-sm">
+                <form onSubmit={handleSaveReview} className="bg-white dark:bg-[#141414] rounded-2xl border border-slate-200 dark:border-neutral-700 p-5 space-y-4 shadow-sm">
                   <div className="flex items-center justify-between border-b border-slate-100 dark:border-neutral-800 pb-3">
                     <h4 className="font-bold text-sm text-slate-950 dark:text-white flex items-center space-x-1.5">
                       <Sparkles className="h-4 w-4 text-amber-500 dark:text-amber-400" />
                       <span>{editingReview.id ? 'Edit Review Testimonial' : 'Create New Testimonial'}</span>
                     </h4>
-                    <button type="button" onClick={() => setEditingReview(null)} className="text-slate-400 dark:text-neutral-500 hover:text-slate-600 dark:text-neutral-300 dark:text-neutral-600 text-xs">Cancel</button>
+                    <button type="button" onClick={() => setEditingReview(null)} className="text-slate-400 dark:text-neutral-500 hover:text-slate-600 dark:hover:text-neutral-300 text-xs">Cancel</button>
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -445,7 +409,7 @@ export default function TestimonialsAdmin({ currentLang, isOpen, onClose, onData
                       <input 
                         type="text" required value={editingReview.name || ''} 
                         onChange={e => setEditingReview({...editingReview, name: e.target.value})}
-                        className="w-full rounded-lg border border-slate-200 dark:border-neutral-700 px-3 py-1.5 text-xs focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500 focus:outline-none"
+                        className="w-full rounded-lg border border-slate-200 dark:border-neutral-700 px-3 py-1.5 text-xs bg-white dark:bg-[#141414] text-gray-900 dark:text-neutral-100 focus:border-blue-500 dark:focus:border-orange-500 focus:outline-none"
                         placeholder="Sarah Jenkins"
                       />
                     </div>
@@ -454,7 +418,7 @@ export default function TestimonialsAdmin({ currentLang, isOpen, onClose, onData
                       <input 
                         type="text" required value={editingReview.company || ''} 
                         onChange={e => setEditingReview({...editingReview, company: e.target.value})}
-                        className="w-full rounded-lg border border-slate-200 dark:border-neutral-700 px-3 py-1.5 text-xs focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500 focus:outline-none"
+                        className="w-full rounded-lg border border-slate-200 dark:border-neutral-700 px-3 py-1.5 text-xs bg-white dark:bg-[#141414] text-gray-900 dark:text-neutral-100 focus:border-blue-500 dark:focus:border-orange-500 focus:outline-none"
                         placeholder="Fintech Spark Inc."
                       />
                     </div>
@@ -466,7 +430,7 @@ export default function TestimonialsAdmin({ currentLang, isOpen, onClose, onData
                       <input 
                         type="text" required value={editingReview.roleEn || ''} 
                         onChange={e => setEditingReview({...editingReview, roleEn: e.target.value})}
-                        className="w-full rounded-lg border border-slate-200 dark:border-neutral-700 px-3 py-1.5 text-xs focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500 focus:outline-none"
+                        className="w-full rounded-lg border border-slate-200 dark:border-neutral-700 px-3 py-1.5 text-xs bg-white dark:bg-[#141414] text-gray-900 dark:text-neutral-100 focus:border-blue-500 dark:focus:border-orange-500 focus:outline-none"
                         placeholder="VP of Digital Experience"
                       />
                     </div>
@@ -478,7 +442,7 @@ export default function TestimonialsAdmin({ currentLang, isOpen, onClose, onData
                       <input 
                         type="text" value={editingReview.country || 'United States'} 
                         onChange={e => setEditingReview({...editingReview, country: e.target.value})}
-                        className="w-full rounded-lg border border-slate-200 dark:border-neutral-700 px-3 py-1.5 text-xs focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500 focus:outline-none"
+                        className="w-full rounded-lg border border-slate-200 dark:border-neutral-700 px-3 py-1.5 text-xs bg-white dark:bg-[#141414] text-gray-900 dark:text-neutral-100 focus:border-blue-500 dark:focus:border-orange-500 focus:outline-none"
                       />
                     </div>
                     <div>
@@ -486,7 +450,7 @@ export default function TestimonialsAdmin({ currentLang, isOpen, onClose, onData
                       <input 
                         type="text" value={editingReview.countryFlag || '🇺🇸'} 
                         onChange={e => setEditingReview({...editingReview, countryFlag: e.target.value})}
-                        className="w-full rounded-lg border border-slate-200 dark:border-neutral-700 px-3 py-1.5 text-xs text-center focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500 focus:outline-none"
+                        className="w-full rounded-lg border border-slate-200 dark:border-neutral-700 px-3 py-1.5 text-xs text-center bg-white dark:bg-[#141414] text-gray-900 dark:text-neutral-100 focus:border-blue-500 dark:focus:border-orange-500 focus:outline-none"
                       />
                     </div>
                     <div>
@@ -494,7 +458,7 @@ export default function TestimonialsAdmin({ currentLang, isOpen, onClose, onData
                       <select 
                         value={editingReview.rating || 5} 
                         onChange={e => setEditingReview({...editingReview, rating: Number(e.target.value)})}
-                        className="w-full rounded-lg border border-slate-200 dark:border-neutral-700 px-3 py-1.5 text-xs bg-white dark:bg-[#141414] dark:bg-[#141414] focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500 focus:outline-none"
+                        className="w-full rounded-lg border border-slate-200 dark:border-neutral-700 px-3 py-1.5 text-xs bg-white dark:bg-[#141414] focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500 focus:outline-none"
                       >
                         {[5, 4, 3, 2, 1].map(n => <option key={n} value={n}>{n} Stars</option>)}
                       </select>
@@ -507,7 +471,7 @@ export default function TestimonialsAdmin({ currentLang, isOpen, onClose, onData
                       <input 
                         type="url" value={editingReview.avatar || ''} 
                         onChange={e => setEditingReview({...editingReview, avatar: e.target.value})}
-                        className="w-full rounded-lg border border-slate-200 dark:border-neutral-700 px-3 py-1.5 text-xs focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500 focus:outline-none"
+                        className="w-full rounded-lg border border-slate-200 dark:border-neutral-700 px-3 py-1.5 text-xs bg-white dark:bg-[#141414] text-gray-900 dark:text-neutral-100 focus:border-blue-500 dark:focus:border-orange-500 focus:outline-none"
                         placeholder="https://images.unsplash.com/photo-..."
                       />
                     </div>
@@ -516,7 +480,7 @@ export default function TestimonialsAdmin({ currentLang, isOpen, onClose, onData
                       <select 
                         value={editingReview.category || 'web-development'} 
                         onChange={e => setEditingReview({...editingReview, category: e.target.value})}
-                        className="w-full rounded-lg border border-slate-200 dark:border-neutral-700 px-3 py-1.5 text-xs bg-white dark:bg-[#141414] dark:bg-[#141414] focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500 focus:outline-none"
+                        className="w-full rounded-lg border border-slate-200 dark:border-neutral-700 px-3 py-1.5 text-xs bg-white dark:bg-[#141414] focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500 focus:outline-none"
                       >
                         {categories.map(c => <option key={c.id} value={c.slug}>{c.nameEn}</option>)}
                       </select>
@@ -528,12 +492,12 @@ export default function TestimonialsAdmin({ currentLang, isOpen, onClose, onData
                     <textarea 
                       required rows={3} value={editingReview.feedbackEn || ''} 
                       onChange={e => setEditingReview({...editingReview, feedbackEn: e.target.value})}
-                      className="w-full rounded-lg border border-slate-200 dark:border-neutral-700 px-3 py-1.5 text-xs focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500 focus:outline-none"
+                      className="w-full rounded-lg border border-slate-200 dark:border-neutral-700 px-3 py-1.5 text-xs bg-white dark:bg-[#141414] text-gray-900 dark:text-neutral-100 focus:border-blue-500 dark:focus:border-orange-500 focus:outline-none"
                       placeholder="Next Solution operations are unmatched..."
                     />
                   </div>
 
-                  <div className="flex flex-wrap gap-6 bg-slate-50 dark:bg-slate-900/60 rounded-lg p-3">
+                  <div className="flex flex-wrap gap-6 bg-slate-50 dark:bg-neutral-900/70 rounded-lg p-3">
                     <label className="flex items-center space-x-2 text-xs font-semibold text-slate-700 dark:text-neutral-200 cursor-pointer">
                       <input 
                         type="checkbox" checked={editingReview.isVerified !== false} 
@@ -555,7 +519,7 @@ export default function TestimonialsAdmin({ currentLang, isOpen, onClose, onData
                       <select 
                         value={editingReview.status || 'approved'} 
                         onChange={e => setEditingReview({...editingReview, status: e.target.value as any})}
-                        className="rounded border border-slate-200 dark:border-neutral-700 px-2 py-0.5 text-xs bg-white dark:bg-[#141414] dark:bg-[#141414] focus:outline-none"
+                        className="rounded border border-slate-200 dark:border-neutral-700 px-2 py-0.5 text-xs bg-white dark:bg-[#141414] focus:outline-none"
                       >
                         <option value="approved">Approved</option>
                         <option value="pending">Pending</option>
@@ -567,7 +531,7 @@ export default function TestimonialsAdmin({ currentLang, isOpen, onClose, onData
                   <div className="flex justify-end space-x-2 pt-2">
                     <button 
                       type="button" onClick={() => setEditingReview(null)}
-                      className="rounded-lg border border-slate-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] hover:bg-slate-50 dark:hover:bg-slate-800/70 dark:bg-slate-900/60 text-slate-700 dark:text-neutral-200 px-4 py-2 text-xs font-bold transition"
+                      className="rounded-lg border border-slate-200 dark:border-neutral-700 bg-white dark:bg-[#141414] hover:bg-slate-50 dark:hover:bg-slate-800/70 dark:bg-slate-900/60 text-slate-700 dark:text-neutral-200 px-4 py-2 text-xs font-bold transition"
                     >
                       Cancel
                     </button>
@@ -582,7 +546,7 @@ export default function TestimonialsAdmin({ currentLang, isOpen, onClose, onData
               )}
 
               {/* Reviews Table Grid */}
-              <div className="bg-white dark:bg-[#141414] dark:bg-[#141414] rounded-2xl border border-slate-200 dark:border-neutral-700 overflow-hidden">
+              <div className="bg-white dark:bg-[#141414] rounded-2xl border border-slate-200 dark:border-neutral-700 overflow-hidden">
                 <div className="overflow-x-auto">
                   <table className="w-full text-left text-xs border-collapse">
                     <thead>
@@ -597,7 +561,7 @@ export default function TestimonialsAdmin({ currentLang, isOpen, onClose, onData
                     </thead>
                     <tbody className="divide-y divide-slate-100 dark:divide-neutral-800">
                       {testimonials.map((review) => (
-                        <tr key={review.id} className="hover:bg-slate-50/50 transition">
+                        <tr key={review.id} className="hover:bg-slate-50/50 dark:hover:bg-neutral-800/60 transition">
                           <td className="py-3 px-4">
                             <div className="flex items-center space-x-2.5">
                               <img src={review.avatar} alt="" className="h-8 w-8 rounded-full object-cover border border-slate-200 dark:border-neutral-700" />
@@ -609,9 +573,9 @@ export default function TestimonialsAdmin({ currentLang, isOpen, onClose, onData
                               </div>
                             </div>
                           </td>
-                          <td className="py-3 px-4 font-medium text-slate-600 dark:text-neutral-300 dark:text-neutral-600">
+                          <td className="py-3 px-4 font-medium text-slate-600 dark:text-neutral-400">
                             <span className="block font-bold text-slate-800 dark:text-neutral-100">{review.company}</span>
-                            <span className="text-[10px] bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-neutral-300 dark:text-neutral-600 px-1.5 py-0.5 rounded uppercase font-semibold">{review.category}</span>
+                            <span className="text-[10px] bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-neutral-300 px-1.5 py-0.5 rounded uppercase font-semibold">{review.category}</span>
                           </td>
                           <td className="py-3 px-4 font-semibold text-amber-500 dark:text-amber-400">
                             {'⭐'.repeat(review.rating)}
@@ -646,7 +610,7 @@ export default function TestimonialsAdmin({ currentLang, isOpen, onClose, onData
                           <td className="py-3 px-4 text-right space-x-1.5">
                             <button 
                               onClick={() => setEditingReview(review)}
-                              className="p-1 rounded bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-neutral-300 dark:text-neutral-600 hover:text-slate-900 dark:text-white transition inline-block"
+                              className="p-1 rounded bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-neutral-300 hover:text-slate-900 dark:hover:text-white transition inline-block"
                             >
                               <Edit2 className="h-3.5 w-3.5" />
                             </button>
@@ -685,12 +649,12 @@ export default function TestimonialsAdmin({ currentLang, isOpen, onClose, onData
 
               {/* Story Form */}
               {editingStory && (
-                <form onSubmit={handleSaveStory} className="bg-white dark:bg-[#141414] dark:bg-[#141414] rounded-2xl border border-slate-200 dark:border-neutral-700 p-5 space-y-4 shadow-sm">
+                <form onSubmit={handleSaveStory} className="bg-white dark:bg-[#141414] rounded-2xl border border-slate-200 dark:border-neutral-700 p-5 space-y-4 shadow-sm">
                   <div className="flex items-center justify-between border-b border-slate-100 dark:border-neutral-800 pb-3">
                     <h4 className="font-bold text-sm text-slate-950 dark:text-white">
                       {editingStory.id ? 'Edit Case Study Story' : 'Create Case Study Story'}
                     </h4>
-                    <button type="button" onClick={() => setEditingStory(null)} className="text-slate-400 dark:text-neutral-500 hover:text-slate-600 dark:text-neutral-300 dark:text-neutral-600 text-xs">Cancel</button>
+                    <button type="button" onClick={() => setEditingStory(null)} className="text-slate-400 dark:text-neutral-500 hover:text-slate-600 dark:hover:text-neutral-300 text-xs">Cancel</button>
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -699,7 +663,7 @@ export default function TestimonialsAdmin({ currentLang, isOpen, onClose, onData
                       <input 
                         type="text" required value={editingStory.companyName || ''} 
                         onChange={e => setEditingStory({...editingStory, companyName: e.target.value})}
-                        className="w-full rounded-lg border border-slate-200 dark:border-neutral-700 px-3 py-1.5 text-xs focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500 focus:outline-none"
+                        className="w-full rounded-lg border border-slate-200 dark:border-neutral-700 px-3 py-1.5 text-xs bg-white dark:bg-[#141414] text-gray-900 dark:text-neutral-100 focus:border-blue-500 dark:focus:border-orange-500 focus:outline-none"
                       />
                     </div>
                     <div>
@@ -707,7 +671,7 @@ export default function TestimonialsAdmin({ currentLang, isOpen, onClose, onData
                       <input 
                         type="text" required value={editingStory.industryEn || ''} 
                         onChange={e => setEditingStory({...editingStory, industryEn: e.target.value})}
-                        className="w-full rounded-lg border border-slate-200 dark:border-neutral-700 px-3 py-1.5 text-xs focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500 focus:outline-none"
+                        className="w-full rounded-lg border border-slate-200 dark:border-neutral-700 px-3 py-1.5 text-xs bg-white dark:bg-[#141414] text-gray-900 dark:text-neutral-100 focus:border-blue-500 dark:focus:border-orange-500 focus:outline-none"
                       />
                     </div>
                   </div>
@@ -718,7 +682,7 @@ export default function TestimonialsAdmin({ currentLang, isOpen, onClose, onData
                       <input 
                         type="text" value={editingStory.serviceEn || ''} 
                         onChange={e => setEditingStory({...editingStory, serviceEn: e.target.value})}
-                        className="w-full rounded-lg border border-slate-200 dark:border-neutral-700 px-3 py-1.5 text-xs focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500 focus:outline-none"
+                        className="w-full rounded-lg border border-slate-200 dark:border-neutral-700 px-3 py-1.5 text-xs bg-white dark:bg-[#141414] text-gray-900 dark:text-neutral-100 focus:border-blue-500 dark:focus:border-orange-500 focus:outline-none"
                       />
                     </div>
                   </div>
@@ -729,7 +693,7 @@ export default function TestimonialsAdmin({ currentLang, isOpen, onClose, onData
                       <input 
                         type="text" value={editingStory.beforeImage || ''} 
                         onChange={e => setEditingStory({...editingStory, beforeImage: e.target.value})}
-                        className="w-full rounded-lg border border-slate-200 dark:border-neutral-700 px-3 py-1.5 text-xs focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500 focus:outline-none"
+                        className="w-full rounded-lg border border-slate-200 dark:border-neutral-700 px-3 py-1.5 text-xs bg-white dark:bg-[#141414] text-gray-900 dark:text-neutral-100 focus:border-blue-500 dark:focus:border-orange-500 focus:outline-none"
                       />
                     </div>
                     <div>
@@ -737,7 +701,7 @@ export default function TestimonialsAdmin({ currentLang, isOpen, onClose, onData
                       <input 
                         type="text" value={editingStory.afterImage || ''} 
                         onChange={e => setEditingStory({...editingStory, afterImage: e.target.value})}
-                        className="w-full rounded-lg border border-slate-200 dark:border-neutral-700 px-3 py-1.5 text-xs focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500 focus:outline-none"
+                        className="w-full rounded-lg border border-slate-200 dark:border-neutral-700 px-3 py-1.5 text-xs bg-white dark:bg-[#141414] text-gray-900 dark:text-neutral-100 focus:border-blue-500 dark:focus:border-orange-500 focus:outline-none"
                       />
                     </div>
                   </div>
@@ -748,7 +712,7 @@ export default function TestimonialsAdmin({ currentLang, isOpen, onClose, onData
                       <input 
                         type="text" value={editingStory.clientName || ''} 
                         onChange={e => setEditingStory({...editingStory, clientName: e.target.value})}
-                        className="w-full rounded-lg border border-slate-200 dark:border-neutral-700 px-3 py-1.5 text-xs focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500 focus:outline-none"
+                        className="w-full rounded-lg border border-slate-200 dark:border-neutral-700 px-3 py-1.5 text-xs bg-white dark:bg-[#141414] text-gray-900 dark:text-neutral-100 focus:border-blue-500 dark:focus:border-orange-500 focus:outline-none"
                       />
                     </div>
                     <div>
@@ -756,7 +720,7 @@ export default function TestimonialsAdmin({ currentLang, isOpen, onClose, onData
                       <input 
                         type="text" value={editingStory.clientRoleEn || ''} 
                         onChange={e => setEditingStory({...editingStory, clientRoleEn: e.target.value})}
-                        className="w-full rounded-lg border border-slate-200 dark:border-neutral-700 px-3 py-1.5 text-xs focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500 focus:outline-none"
+                        className="w-full rounded-lg border border-slate-200 dark:border-neutral-700 px-3 py-1.5 text-xs bg-white dark:bg-[#141414] text-gray-900 dark:text-neutral-100 focus:border-blue-500 dark:focus:border-orange-500 focus:outline-none"
                       />
                     </div>
                     <div>
@@ -764,7 +728,7 @@ export default function TestimonialsAdmin({ currentLang, isOpen, onClose, onData
                       <input 
                         type="text" value={editingStory.timelineEn || '8 Weeks'} 
                         onChange={e => setEditingStory({...editingStory, timelineEn: e.target.value})}
-                        className="w-full rounded-lg border border-slate-200 dark:border-neutral-700 px-3 py-1.5 text-xs focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500 focus:outline-none"
+                        className="w-full rounded-lg border border-slate-200 dark:border-neutral-700 px-3 py-1.5 text-xs bg-white dark:bg-[#141414] text-gray-900 dark:text-neutral-100 focus:border-blue-500 dark:focus:border-orange-500 focus:outline-none"
                       />
                     </div>
                   </div>
@@ -774,7 +738,7 @@ export default function TestimonialsAdmin({ currentLang, isOpen, onClose, onData
                     <textarea 
                       required rows={2} value={editingStory.challengeEn || ''} 
                       onChange={e => setEditingStory({...editingStory, challengeEn: e.target.value})}
-                      className="w-full rounded-lg border border-slate-200 dark:border-neutral-700 px-3 py-1.5 text-xs focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500 focus:outline-none"
+                      className="w-full rounded-lg border border-slate-200 dark:border-neutral-700 px-3 py-1.5 text-xs bg-white dark:bg-[#141414] text-gray-900 dark:text-neutral-100 focus:border-blue-500 dark:focus:border-orange-500 focus:outline-none"
                     />
                   </div>
 
@@ -783,7 +747,7 @@ export default function TestimonialsAdmin({ currentLang, isOpen, onClose, onData
                     <textarea 
                       required rows={2} value={editingStory.solutionEn || ''} 
                       onChange={e => setEditingStory({...editingStory, solutionEn: e.target.value})}
-                      className="w-full rounded-lg border border-slate-200 dark:border-neutral-700 px-3 py-1.5 text-xs focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500 focus:outline-none"
+                      className="w-full rounded-lg border border-slate-200 dark:border-neutral-700 px-3 py-1.5 text-xs bg-white dark:bg-[#141414] text-gray-900 dark:text-neutral-100 focus:border-blue-500 dark:focus:border-orange-500 focus:outline-none"
                     />
                   </div>
 
@@ -792,7 +756,7 @@ export default function TestimonialsAdmin({ currentLang, isOpen, onClose, onData
                     <textarea 
                       required rows={2} value={editingStory.resultsEn || ''} 
                       onChange={e => setEditingStory({...editingStory, resultsEn: e.target.value})}
-                      className="w-full rounded-lg border border-slate-200 dark:border-neutral-700 px-3 py-1.5 text-xs focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500 focus:outline-none"
+                      className="w-full rounded-lg border border-slate-200 dark:border-neutral-700 px-3 py-1.5 text-xs bg-white dark:bg-[#141414] text-gray-900 dark:text-neutral-100 focus:border-blue-500 dark:focus:border-orange-500 focus:outline-none"
                       placeholder="e.g. site response dropped below 300ms, sales surged +35%..."
                     />
                   </div>
@@ -802,14 +766,14 @@ export default function TestimonialsAdmin({ currentLang, isOpen, onClose, onData
                     <textarea 
                       required rows={2} value={editingStory.clientQuoteEn || ''} 
                       onChange={e => setEditingStory({...editingStory, clientQuoteEn: e.target.value})}
-                      className="w-full rounded-lg border border-slate-200 dark:border-neutral-700 px-3 py-1.5 text-xs focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500 focus:outline-none"
+                      className="w-full rounded-lg border border-slate-200 dark:border-neutral-700 px-3 py-1.5 text-xs bg-white dark:bg-[#141414] text-gray-900 dark:text-neutral-100 focus:border-blue-500 dark:focus:border-orange-500 focus:outline-none"
                     />
                   </div>
 
                   <div className="flex justify-end space-x-2 pt-2">
                     <button 
                       type="button" onClick={() => setEditingStory(null)}
-                      className="rounded-lg border border-slate-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] hover:bg-slate-50 dark:hover:bg-slate-800/70 dark:bg-slate-900/60 text-slate-700 dark:text-neutral-200 px-4 py-2 text-xs font-bold transition"
+                      className="rounded-lg border border-slate-200 dark:border-neutral-700 bg-white dark:bg-[#141414] hover:bg-slate-50 dark:hover:bg-slate-800/70 dark:bg-slate-900/60 text-slate-700 dark:text-neutral-200 px-4 py-2 text-xs font-bold transition"
                     >
                       Cancel
                     </button>
@@ -826,7 +790,7 @@ export default function TestimonialsAdmin({ currentLang, isOpen, onClose, onData
               {/* Stories list */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {stories.map((story) => (
-                  <div key={story.id} className="bg-white dark:bg-[#141414] dark:bg-[#141414] rounded-2xl border border-slate-200 dark:border-neutral-700 p-4 shadow-sm flex flex-col justify-between space-y-4">
+                  <div key={story.id} className="bg-white dark:bg-[#141414] rounded-2xl border border-slate-200 dark:border-neutral-700 p-4 shadow-sm flex flex-col justify-between space-y-4">
                     <div className="flex justify-between items-start">
                       <div>
                         <span className="text-[10px] uppercase font-bold text-blue-600 dark:text-orange-400 tracking-wider bg-blue-50 dark:bg-orange-500/10 px-2 py-0.5 rounded">{story.industryEn}</span>
@@ -836,7 +800,7 @@ export default function TestimonialsAdmin({ currentLang, isOpen, onClose, onData
                       <div className="flex space-x-1">
                         <button 
                           onClick={() => setEditingStory(story)}
-                          className="p-1.5 rounded bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-neutral-300 dark:text-neutral-600 transition"
+                          className="p-1.5 rounded bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-neutral-300 transition"
                         >
                           <Edit2 className="h-3.5 w-3.5" />
                         </button>
@@ -884,12 +848,12 @@ export default function TestimonialsAdmin({ currentLang, isOpen, onClose, onData
 
               {/* Video form */}
               {editingVideo && (
-                <form onSubmit={handleSaveVideo} className="bg-white dark:bg-[#141414] dark:bg-[#141414] rounded-2xl border border-slate-200 dark:border-neutral-700 p-5 space-y-4 shadow-sm">
+                <form onSubmit={handleSaveVideo} className="bg-white dark:bg-[#141414] rounded-2xl border border-slate-200 dark:border-neutral-700 p-5 space-y-4 shadow-sm">
                   <div className="flex items-center justify-between border-b border-slate-100 dark:border-neutral-800 pb-3">
                     <h4 className="font-bold text-sm text-slate-950 dark:text-white">
                       {editingVideo.id ? 'Edit Video Review' : 'Create Video Review'}
                     </h4>
-                    <button type="button" onClick={() => setEditingVideo(null)} className="text-slate-400 dark:text-neutral-500 hover:text-slate-600 dark:text-neutral-300 dark:text-neutral-600 text-xs">Cancel</button>
+                    <button type="button" onClick={() => setEditingVideo(null)} className="text-slate-400 dark:text-neutral-500 hover:text-slate-600 dark:hover:text-neutral-300 text-xs">Cancel</button>
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -898,7 +862,7 @@ export default function TestimonialsAdmin({ currentLang, isOpen, onClose, onData
                       <input 
                         type="text" required value={editingVideo.titleEn || ''} 
                         onChange={e => setEditingVideo({...editingVideo, titleEn: e.target.value})}
-                        className="w-full rounded-lg border border-slate-200 dark:border-neutral-700 px-3 py-1.5 text-xs focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500 focus:outline-none"
+                        className="w-full rounded-lg border border-slate-200 dark:border-neutral-700 px-3 py-1.5 text-xs bg-white dark:bg-[#141414] text-gray-900 dark:text-neutral-100 focus:border-blue-500 dark:focus:border-orange-500 focus:outline-none"
                         placeholder="Fintech Spark: Design System Audit"
                       />
                     </div>
@@ -910,7 +874,7 @@ export default function TestimonialsAdmin({ currentLang, isOpen, onClose, onData
                       <input 
                         type="text" value={editingVideo.clientName || ''} 
                         onChange={e => setEditingVideo({...editingVideo, clientName: e.target.value})}
-                        className="w-full rounded-lg border border-slate-200 dark:border-neutral-700 px-3 py-1.5 text-xs focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500 focus:outline-none"
+                        className="w-full rounded-lg border border-slate-200 dark:border-neutral-700 px-3 py-1.5 text-xs bg-white dark:bg-[#141414] text-gray-900 dark:text-neutral-100 focus:border-blue-500 dark:focus:border-orange-500 focus:outline-none"
                       />
                     </div>
                     <div>
@@ -918,7 +882,7 @@ export default function TestimonialsAdmin({ currentLang, isOpen, onClose, onData
                       <input 
                         type="text" value={editingVideo.company || ''} 
                         onChange={e => setEditingVideo({...editingVideo, company: e.target.value})}
-                        className="w-full rounded-lg border border-slate-200 dark:border-neutral-700 px-3 py-1.5 text-xs focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500 focus:outline-none"
+                        className="w-full rounded-lg border border-slate-200 dark:border-neutral-700 px-3 py-1.5 text-xs bg-white dark:bg-[#141414] text-gray-900 dark:text-neutral-100 focus:border-blue-500 dark:focus:border-orange-500 focus:outline-none"
                       />
                     </div>
                     <div>
@@ -926,7 +890,7 @@ export default function TestimonialsAdmin({ currentLang, isOpen, onClose, onData
                       <select 
                         value={editingVideo.rating || 5} 
                         onChange={e => setEditingVideo({...editingVideo, rating: Number(e.target.value)})}
-                        className="w-full rounded-lg border border-slate-200 dark:border-neutral-700 px-3 py-1.5 text-xs bg-white dark:bg-[#141414] dark:bg-[#141414] focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500 focus:outline-none"
+                        className="w-full rounded-lg border border-slate-200 dark:border-neutral-700 px-3 py-1.5 text-xs bg-white dark:bg-[#141414] focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500 focus:outline-none"
                       >
                         {[5, 4, 3, 2, 1].map(n => <option key={n} value={n}>{n} Stars</option>)}
                       </select>
@@ -939,7 +903,7 @@ export default function TestimonialsAdmin({ currentLang, isOpen, onClose, onData
                       <input 
                         type="text" required value={editingVideo.videoUrl || ''} 
                         onChange={e => setEditingVideo({...editingVideo, videoUrl: e.target.value})}
-                        className="w-full rounded-lg border border-slate-200 dark:border-neutral-700 px-3 py-1.5 text-xs focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500 focus:outline-none"
+                        className="w-full rounded-lg border border-slate-200 dark:border-neutral-700 px-3 py-1.5 text-xs bg-white dark:bg-[#141414] text-gray-900 dark:text-neutral-100 focus:border-blue-500 dark:focus:border-orange-500 focus:outline-none"
                         placeholder="https://www.youtube.com/embed/dQw4w9WgXcQ"
                       />
                     </div>
@@ -948,7 +912,7 @@ export default function TestimonialsAdmin({ currentLang, isOpen, onClose, onData
                       <input 
                         type="text" required value={editingVideo.thumbnailUrl || ''} 
                         onChange={e => setEditingVideo({...editingVideo, thumbnailUrl: e.target.value})}
-                        className="w-full rounded-lg border border-slate-200 dark:border-neutral-700 px-3 py-1.5 text-xs focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500 focus:outline-none"
+                        className="w-full rounded-lg border border-slate-200 dark:border-neutral-700 px-3 py-1.5 text-xs bg-white dark:bg-[#141414] text-gray-900 dark:text-neutral-100 focus:border-blue-500 dark:focus:border-orange-500 focus:outline-none"
                         placeholder="https://images.unsplash.com/photo-..."
                       />
                     </div>
@@ -959,14 +923,14 @@ export default function TestimonialsAdmin({ currentLang, isOpen, onClose, onData
                     <textarea 
                       rows={2} value={editingVideo.shortDescriptionEn || ''} 
                       onChange={e => setEditingVideo({...editingVideo, shortDescriptionEn: e.target.value})}
-                      className="w-full rounded-lg border border-slate-200 dark:border-neutral-700 px-3 py-1.5 text-xs focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500 focus:outline-none"
+                      className="w-full rounded-lg border border-slate-200 dark:border-neutral-700 px-3 py-1.5 text-xs bg-white dark:bg-[#141414] text-gray-900 dark:text-neutral-100 focus:border-blue-500 dark:focus:border-orange-500 focus:outline-none"
                     />
                   </div>
 
                   <div className="flex justify-end space-x-2 pt-2">
                     <button 
                       type="button" onClick={() => setEditingVideo(null)}
-                      className="rounded-lg border border-slate-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] hover:bg-slate-50 dark:hover:bg-slate-800/70 dark:bg-slate-900/60 text-slate-700 dark:text-neutral-200 px-4 py-2 text-xs font-bold transition"
+                      className="rounded-lg border border-slate-200 dark:border-neutral-700 bg-white dark:bg-[#141414] hover:bg-slate-50 dark:hover:bg-slate-800/70 dark:bg-slate-900/60 text-slate-700 dark:text-neutral-200 px-4 py-2 text-xs font-bold transition"
                     >
                       Cancel
                     </button>
@@ -983,13 +947,13 @@ export default function TestimonialsAdmin({ currentLang, isOpen, onClose, onData
               {/* Videos list */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {videos.map((vid) => (
-                  <div key={vid.id} className="bg-white dark:bg-[#141414] dark:bg-[#141414] rounded-2xl border border-slate-200 dark:border-neutral-700 overflow-hidden shadow-sm flex flex-col justify-between">
+                  <div key={vid.id} className="bg-white dark:bg-[#141414] rounded-2xl border border-slate-200 dark:border-neutral-700 overflow-hidden shadow-sm flex flex-col justify-between">
                     <div className="relative aspect-video bg-slate-900">
                       <img src={vid.thumbnailUrl} alt="" className="h-full w-full object-cover opacity-80" />
                       <div className="absolute top-3 right-3 flex space-x-1.5 z-10">
                         <button 
                           onClick={() => setEditingVideo(vid)}
-                          className="p-1.5 rounded-lg bg-white/90 hover:bg-white dark:bg-[#141414] dark:bg-[#141414] text-slate-700 dark:text-neutral-200 transition"
+                          className="p-1.5 rounded-lg bg-white/90 hover:bg-white dark:bg-[#141414] text-slate-700 dark:text-neutral-200 transition"
                         >
                           <Edit2 className="h-3.5 w-3.5" />
                         </button>
@@ -1036,12 +1000,12 @@ export default function TestimonialsAdmin({ currentLang, isOpen, onClose, onData
 
               {/* Moment Form */}
               {editingMoment && (
-                <form onSubmit={handleSaveMoment} className="bg-white dark:bg-[#141414] dark:bg-[#141414] rounded-2xl border border-slate-200 dark:border-neutral-700 p-5 space-y-4 shadow-sm">
+                <form onSubmit={handleSaveMoment} className="bg-white dark:bg-[#141414] rounded-2xl border border-slate-200 dark:border-neutral-700 p-5 space-y-4 shadow-sm">
                   <div className="flex items-center justify-between border-b border-slate-100 dark:border-neutral-800 pb-3">
                     <h4 className="font-bold text-sm text-slate-950 dark:text-white">
                       {editingMoment.id ? 'Edit Client Moment' : 'Create Client Moment'}
                     </h4>
-                    <button type="button" onClick={() => setEditingMoment(null)} className="text-slate-400 dark:text-neutral-500 hover:text-slate-600 dark:text-neutral-300 dark:text-neutral-600 text-xs">Cancel</button>
+                    <button type="button" onClick={() => setEditingMoment(null)} className="text-slate-400 dark:text-neutral-500 hover:text-slate-600 dark:hover:text-neutral-300 text-xs">Cancel</button>
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -1050,7 +1014,7 @@ export default function TestimonialsAdmin({ currentLang, isOpen, onClose, onData
                       <input 
                         type="text" required value={editingMoment.titleEn || ''} 
                         onChange={e => setEditingMoment({...editingMoment, titleEn: e.target.value})}
-                        className="w-full rounded-lg border border-slate-200 dark:border-neutral-700 px-3 py-1.5 text-xs focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500 focus:outline-none"
+                        className="w-full rounded-lg border border-slate-200 dark:border-neutral-700 px-3 py-1.5 text-xs bg-white dark:bg-[#141414] text-gray-900 dark:text-neutral-100 focus:border-blue-500 dark:focus:border-orange-500 focus:outline-none"
                         placeholder="e.g. Project Handover with Apex"
                       />
                     </div>
@@ -1062,7 +1026,7 @@ export default function TestimonialsAdmin({ currentLang, isOpen, onClose, onData
                       <input 
                         type="text" required value={editingMoment.clientName || ''} 
                         onChange={e => setEditingMoment({...editingMoment, clientName: e.target.value})}
-                        className="w-full rounded-lg border border-slate-200 dark:border-neutral-700 px-3 py-1.5 text-xs focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500 focus:outline-none"
+                        className="w-full rounded-lg border border-slate-200 dark:border-neutral-700 px-3 py-1.5 text-xs bg-white dark:bg-[#141414] text-gray-900 dark:text-neutral-100 focus:border-blue-500 dark:focus:border-orange-500 focus:outline-none"
                         placeholder="Sajid Rahman"
                       />
                     </div>
@@ -1071,7 +1035,7 @@ export default function TestimonialsAdmin({ currentLang, isOpen, onClose, onData
                       <input 
                         type="text" value={editingMoment.company || ''} 
                         onChange={e => setEditingMoment({...editingMoment, company: e.target.value})}
-                        className="w-full rounded-lg border border-slate-200 dark:border-neutral-700 px-3 py-1.5 text-xs focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500 focus:outline-none"
+                        className="w-full rounded-lg border border-slate-200 dark:border-neutral-700 px-3 py-1.5 text-xs bg-white dark:bg-[#141414] text-gray-900 dark:text-neutral-100 focus:border-blue-500 dark:focus:border-orange-500 focus:outline-none"
                         placeholder="Apex Fashion Group"
                       />
                     </div>
@@ -1080,7 +1044,7 @@ export default function TestimonialsAdmin({ currentLang, isOpen, onClose, onData
                       <input 
                         type="number" value={editingMoment.displayOrder !== undefined ? editingMoment.displayOrder : 1} 
                         onChange={e => setEditingMoment({...editingMoment, displayOrder: Number(e.target.value)})}
-                        className="w-full rounded-lg border border-slate-200 dark:border-neutral-700 px-3 py-1.5 text-xs focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500 focus:outline-none"
+                        className="w-full rounded-lg border border-slate-200 dark:border-neutral-700 px-3 py-1.5 text-xs bg-white dark:bg-[#141414] text-gray-900 dark:text-neutral-100 focus:border-blue-500 dark:focus:border-orange-500 focus:outline-none"
                       />
                     </div>
                   </div>
@@ -1091,7 +1055,7 @@ export default function TestimonialsAdmin({ currentLang, isOpen, onClose, onData
                       <input 
                         type="text" required value={editingMoment.imageUrl || ''} 
                         onChange={e => setEditingMoment({...editingMoment, imageUrl: e.target.value})}
-                        className="w-full rounded-lg border border-slate-200 dark:border-neutral-700 px-3 py-1.5 text-xs focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500 focus:outline-none"
+                        className="w-full rounded-lg border border-slate-200 dark:border-neutral-700 px-3 py-1.5 text-xs bg-white dark:bg-[#141414] text-gray-900 dark:text-neutral-100 focus:border-blue-500 dark:focus:border-orange-500 focus:outline-none"
                         placeholder="https://images.unsplash.com/photo-..."
                       />
                     </div>
@@ -1103,7 +1067,7 @@ export default function TestimonialsAdmin({ currentLang, isOpen, onClose, onData
                       <textarea 
                         rows={2} value={editingMoment.descriptionEn || ''} 
                         onChange={e => setEditingMoment({...editingMoment, descriptionEn: e.target.value})}
-                        className="w-full rounded-lg border border-slate-200 dark:border-neutral-700 px-3 py-1.5 text-xs focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500 focus:outline-none"
+                        className="w-full rounded-lg border border-slate-200 dark:border-neutral-700 px-3 py-1.5 text-xs bg-white dark:bg-[#141414] text-gray-900 dark:text-neutral-100 focus:border-blue-500 dark:focus:border-orange-500 focus:outline-none"
                         placeholder="Describe the moment and collaboration highlights..."
                       />
                     </div>
@@ -1121,7 +1085,7 @@ export default function TestimonialsAdmin({ currentLang, isOpen, onClose, onData
                   <div className="flex justify-end space-x-2 pt-2">
                     <button 
                       type="button" onClick={() => setEditingMoment(null)}
-                      className="rounded-lg border border-slate-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] hover:bg-slate-50 dark:hover:bg-slate-800/70 dark:bg-slate-900/60 text-slate-700 dark:text-neutral-200 px-4 py-2 text-xs font-bold transition"
+                      className="rounded-lg border border-slate-200 dark:border-neutral-700 bg-white dark:bg-[#141414] hover:bg-slate-50 dark:hover:bg-slate-800/70 dark:bg-slate-900/60 text-slate-700 dark:text-neutral-200 px-4 py-2 text-xs font-bold transition"
                     >
                       Cancel
                     </button>
@@ -1138,13 +1102,13 @@ export default function TestimonialsAdmin({ currentLang, isOpen, onClose, onData
               {/* Moments List */}
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 {moments.map((mom) => (
-                  <div key={mom.id} className="bg-white dark:bg-[#141414] dark:bg-[#141414] rounded-2xl border border-slate-200 dark:border-neutral-700 overflow-hidden shadow-sm flex flex-col justify-between">
+                  <div key={mom.id} className="bg-white dark:bg-[#141414] rounded-2xl border border-slate-200 dark:border-neutral-700 overflow-hidden shadow-sm flex flex-col justify-between">
                     <div className="relative aspect-[4/3] bg-slate-100 dark:bg-slate-800">
                       <img src={mom.imageUrl} alt="" className="h-full w-full object-cover" />
                       <div className="absolute top-3 right-3 flex space-x-1.5 z-10">
                         <button 
                           onClick={() => setEditingMoment(mom)}
-                          className="p-1.5 rounded-lg bg-white/90 hover:bg-white dark:bg-[#141414] dark:bg-[#141414] text-slate-700 dark:text-neutral-200 transition"
+                          className="p-1.5 rounded-lg bg-white/90 hover:bg-white dark:bg-[#141414] text-slate-700 dark:text-neutral-200 transition"
                         >
                           <Edit2 className="h-3.5 w-3.5" />
                         </button>
@@ -1184,7 +1148,7 @@ export default function TestimonialsAdmin({ currentLang, isOpen, onClose, onData
               
               {/* Statistics update */}
               {stats && (
-                <form onSubmit={handleSaveStats} className="bg-white dark:bg-[#141414] dark:bg-[#141414] rounded-2xl border border-slate-200 dark:border-neutral-700 p-5 space-y-4 shadow-sm">
+                <form onSubmit={handleSaveStats} className="bg-white dark:bg-[#141414] rounded-2xl border border-slate-200 dark:border-neutral-700 p-5 space-y-4 shadow-sm">
                   <div>
                     <h3 className="font-display font-bold text-base text-slate-900 dark:text-white">Global Trust Statistics</h3>
                     <p className="text-xs text-slate-500 dark:text-neutral-400 dark:text-neutral-500">Update bento statistics displayed throughout the landing view</p>
@@ -1196,7 +1160,7 @@ export default function TestimonialsAdmin({ currentLang, isOpen, onClose, onData
                       <input 
                         type="number" value={stats.projectsCompleted || 300} 
                         onChange={e => setStats({...stats, projectsCompleted: Number(e.target.value)})}
-                        className="w-full rounded-lg border border-slate-200 dark:border-neutral-700 px-3 py-1.5 text-xs focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500 focus:outline-none"
+                        className="w-full rounded-lg border border-slate-200 dark:border-neutral-700 px-3 py-1.5 text-xs bg-white dark:bg-[#141414] text-gray-900 dark:text-neutral-100 focus:border-blue-500 dark:focus:border-orange-500 focus:outline-none"
                       />
                     </div>
                     <div>
@@ -1204,7 +1168,7 @@ export default function TestimonialsAdmin({ currentLang, isOpen, onClose, onData
                       <input 
                         type="number" value={stats.happyClients || 150} 
                         onChange={e => setStats({...stats, happyClients: Number(e.target.value)})}
-                        className="w-full rounded-lg border border-slate-200 dark:border-neutral-700 px-3 py-1.5 text-xs focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500 focus:outline-none"
+                        className="w-full rounded-lg border border-slate-200 dark:border-neutral-700 px-3 py-1.5 text-xs bg-white dark:bg-[#141414] text-gray-900 dark:text-neutral-100 focus:border-blue-500 dark:focus:border-orange-500 focus:outline-none"
                       />
                     </div>
                     <div>
@@ -1212,7 +1176,7 @@ export default function TestimonialsAdmin({ currentLang, isOpen, onClose, onData
                       <input 
                         type="number" value={stats.clientSatisfaction || 98} 
                         onChange={e => setStats({...stats, clientSatisfaction: Number(e.target.value)})}
-                        className="w-full rounded-lg border border-slate-200 dark:border-neutral-700 px-3 py-1.5 text-xs focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500 focus:outline-none"
+                        className="w-full rounded-lg border border-slate-200 dark:border-neutral-700 px-3 py-1.5 text-xs bg-white dark:bg-[#141414] text-gray-900 dark:text-neutral-100 focus:border-blue-500 dark:focus:border-orange-500 focus:outline-none"
                       />
                     </div>
                     <div>
@@ -1220,7 +1184,7 @@ export default function TestimonialsAdmin({ currentLang, isOpen, onClose, onData
                       <input 
                         type="number" step="0.1" value={stats.averageRating || 4.9} 
                         onChange={e => setStats({...stats, averageRating: Number(e.target.value)})}
-                        className="w-full rounded-lg border border-slate-200 dark:border-neutral-700 px-3 py-1.5 text-xs focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500 focus:outline-none"
+                        className="w-full rounded-lg border border-slate-200 dark:border-neutral-700 px-3 py-1.5 text-xs bg-white dark:bg-[#141414] text-gray-900 dark:text-neutral-100 focus:border-blue-500 dark:focus:border-orange-500 focus:outline-none"
                       />
                     </div>
                     <div>
@@ -1228,7 +1192,7 @@ export default function TestimonialsAdmin({ currentLang, isOpen, onClose, onData
                       <input 
                         type="number" value={stats.industriesServed || 20} 
                         onChange={e => setStats({...stats, industriesServed: Number(e.target.value)})}
-                        className="w-full rounded-lg border border-slate-200 dark:border-neutral-700 px-3 py-1.5 text-xs focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500 focus:outline-none"
+                        className="w-full rounded-lg border border-slate-200 dark:border-neutral-700 px-3 py-1.5 text-xs bg-white dark:bg-[#141414] text-gray-900 dark:text-neutral-100 focus:border-blue-500 dark:focus:border-orange-500 focus:outline-none"
                       />
                     </div>
                     <div>
@@ -1236,7 +1200,7 @@ export default function TestimonialsAdmin({ currentLang, isOpen, onClose, onData
                       <input 
                         type="number" value={stats.fiveStarReviews || 120} 
                         onChange={e => setStats({...stats, fiveStarReviews: Number(e.target.value)})}
-                        className="w-full rounded-lg border border-slate-200 dark:border-neutral-700 px-3 py-1.5 text-xs focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500 focus:outline-none"
+                        className="w-full rounded-lg border border-slate-200 dark:border-neutral-700 px-3 py-1.5 text-xs bg-white dark:bg-[#141414] text-gray-900 dark:text-neutral-100 focus:border-blue-500 dark:focus:border-orange-500 focus:outline-none"
                       />
                     </div>
                   </div>
@@ -1269,7 +1233,7 @@ export default function TestimonialsAdmin({ currentLang, isOpen, onClose, onData
                 </div>
 
                 {editingLogo && (
-                  <form onSubmit={handleSaveLogo} className="bg-white dark:bg-[#141414] dark:bg-[#141414] rounded-2xl border border-slate-200 dark:border-neutral-700 p-4 space-y-3 shadow-sm max-w-xl">
+                  <form onSubmit={handleSaveLogo} className="bg-white dark:bg-[#141414] rounded-2xl border border-slate-200 dark:border-neutral-700 p-4 space-y-3 shadow-sm max-w-xl">
                     <h4 className="font-bold text-xs text-slate-950 dark:text-white">Add Brand Partner Logo</h4>
                     <div>
                       <label className="block text-[10px] font-bold text-slate-500 dark:text-neutral-400 dark:text-neutral-500 mb-0.5">Brand Name *</label>
@@ -1296,7 +1260,7 @@ export default function TestimonialsAdmin({ currentLang, isOpen, onClose, onData
 
                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4">
                   {logos.map((logo) => (
-                    <div key={logo.id} className="bg-white dark:bg-[#141414] dark:bg-[#141414] rounded-xl border border-slate-200 dark:border-neutral-700 p-3 flex flex-col items-center justify-between space-y-3 hover:shadow-sm transition">
+                    <div key={logo.id} className="bg-white dark:bg-[#141414] rounded-xl border border-slate-200 dark:border-neutral-700 p-3 flex flex-col items-center justify-between space-y-3 hover:shadow-sm transition">
                       <img src={logo.logoUrl} alt={logo.name} className="h-8 max-w-full object-contain filter grayscale opacity-70" />
                       <div className="text-center">
                         <span className="text-[10px] font-bold text-slate-700 dark:text-neutral-200 block">{logo.name}</span>
@@ -1314,91 +1278,6 @@ export default function TestimonialsAdmin({ currentLang, isOpen, onClose, onData
             </div>
           )}
 
-          {/* TAB 5: FAQs CRUD */}
-          {activeTab === 'faqs' && (
-            <div className="space-y-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <h3 className="font-display font-bold text-base text-slate-900 dark:text-white">Manage FAQs Accordion</h3>
-                  <p className="text-xs text-slate-500 dark:text-neutral-400 dark:text-neutral-500">Edit frequently asked questions about verified review logs and calculation rules</p>
-                </div>
-                <button
-                  onClick={() => setEditingFaq({})}
-                  className="rounded-lg bg-blue-600 dark:bg-orange-500 hover:bg-blue-700 dark:hover:bg-orange-400 text-white px-3.5 py-1.5 text-xs font-bold transition flex items-center space-x-1"
-                >
-                  <Plus className="h-4 w-4" />
-                  <span>Add FAQ</span>
-                </button>
-              </div>
-
-              {/* FAQ Form */}
-              {editingFaq && (
-                <form onSubmit={handleSaveFaq} className="bg-white dark:bg-[#141414] dark:bg-[#141414] rounded-2xl border border-slate-200 dark:border-neutral-700 p-5 space-y-4 shadow-sm">
-                  <h4 className="font-bold text-sm text-slate-950 dark:text-white">
-                    {editingFaq.id ? 'Edit FAQ Item' : 'Create New FAQ'}
-                  </h4>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-[11px] font-bold text-slate-500 dark:text-neutral-400 dark:text-neutral-500 uppercase tracking-wider mb-1">Category (English) *</label>
-                      <input 
-                        type="text" required value={editingFaq.categoryEn || ''} 
-                        onChange={e => setEditingFaq({...editingFaq, categoryEn: e.target.value})}
-                        className="w-full rounded-lg border border-slate-200 dark:border-neutral-700 px-3 py-1.5 text-xs focus:outline-none"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-[11px] font-bold text-slate-500 dark:text-neutral-400 dark:text-neutral-500 uppercase tracking-wider mb-1">Question (English) *</label>
-                      <input 
-                        type="text" required value={editingFaq.questionEn || ''} 
-                        onChange={e => setEditingFaq({...editingFaq, questionEn: e.target.value})}
-                        className="w-full rounded-lg border border-slate-200 dark:border-neutral-700 px-3 py-1.5 text-xs focus:outline-none"
-                      />
-                    </div>
-                  </div>
-
-                  <div>
-                    <label className="block text-[11px] font-bold text-slate-500 dark:text-neutral-400 dark:text-neutral-500 uppercase tracking-wider mb-1">Answer (English) *</label>
-                    <textarea 
-                      required rows={3} value={editingFaq.answerEn || ''} 
-                      onChange={e => setEditingFaq({...editingFaq, answerEn: e.target.value})}
-                      className="w-full rounded-lg border border-slate-200 dark:border-neutral-700 px-3 py-1.5 text-xs focus:outline-none"
-                    />
-                  </div>
-
-                  <div className="flex justify-end space-x-2">
-                    <button type="button" onClick={() => setEditingFaq(null)} className="px-4 py-2 border rounded text-xs font-bold bg-white dark:bg-[#141414] dark:bg-[#141414]">Cancel</button>
-                    <button type="submit" className="px-4 py-2 bg-blue-600 dark:bg-orange-500 text-white rounded text-xs font-bold">Save FAQ</button>
-                  </div>
-                </form>
-              )}
-
-              {/* FAQs List */}
-              <div className="bg-white dark:bg-[#141414] dark:bg-[#141414] rounded-2xl border border-slate-200 dark:border-neutral-700 divide-y divide-slate-100 dark:divide-neutral-800 shadow-sm">
-                {faqs.map((faq) => (
-                  <div key={faq.id} className="p-4 flex items-start justify-between hover:bg-slate-50/50 transition">
-                    <div className="space-y-1 max-w-3xl">
-                      <span className="text-[10px] bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-neutral-300 dark:text-neutral-600 px-1.5 py-0.5 rounded font-bold uppercase">{faq.categoryEn}</span>
-                      <h4 className="font-bold text-slate-900 dark:text-white text-xs">{faq.questionEn}</h4>
-                      <p className="text-slate-500 dark:text-neutral-400 dark:text-neutral-500 text-[11px] leading-relaxed">{faq.answerEn}</p>
-                    </div>
-                    <div className="flex space-x-1.5">
-                      <button onClick={() => setEditingFaq(faq)} className="p-1 rounded bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-neutral-300 dark:text-neutral-600 transition">
-                        <Edit2 className="h-3 w-3" />
-                      </button>
-                      <button onClick={() => handleDeleteFaq(faq.id)} className="p-1 rounded bg-rose-50 dark:bg-rose-500/10 hover:bg-rose-100 dark:hover:bg-rose-500/20 text-rose-600 dark:text-rose-400 transition">
-                        <Trash2 className="h-3 w-3" />
-                      </button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
           {/* TAB 6: SETTINGS & VISIBILITY SECTION */}
           {activeTab === 'settings' && (
             <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
@@ -1406,7 +1285,7 @@ export default function TestimonialsAdmin({ currentLang, isOpen, onClose, onData
               {/* Review Queue Verification Config */}
               <div className="md:col-span-6 space-y-6">
                 {reviewSettings && (
-                  <form onSubmit={handleSaveReviewSettings} className="bg-white dark:bg-[#141414] dark:bg-[#141414] rounded-2xl border border-slate-200 dark:border-neutral-700 p-5 space-y-4 shadow-sm">
+                  <form onSubmit={handleSaveReviewSettings} className="bg-white dark:bg-[#141414] rounded-2xl border border-slate-200 dark:border-neutral-700 p-5 space-y-4 shadow-sm">
                     <div>
                       <h3 className="font-display font-bold text-base text-slate-900 dark:text-white">Review Gatekeeper Settings</h3>
                       <p className="text-xs text-slate-500 dark:text-neutral-400 dark:text-neutral-500">Configure public review submission permissions and vetting workflows</p>
@@ -1464,7 +1343,7 @@ export default function TestimonialsAdmin({ currentLang, isOpen, onClose, onData
 
               {/* 14 Sections Visibility control */}
               <div className="md:col-span-6">
-                <div className="bg-white dark:bg-[#141414] dark:bg-[#141414] rounded-2xl border border-slate-200 dark:border-neutral-700 p-5 space-y-4 shadow-sm">
+                <div className="bg-white dark:bg-[#141414] rounded-2xl border border-slate-200 dark:border-neutral-700 p-5 space-y-4 shadow-sm">
                   <div>
                     <h3 className="font-display font-bold text-base text-slate-900 dark:text-white">Landing Section Visibility</h3>
                     <p className="text-xs text-slate-500 dark:text-neutral-400 dark:text-neutral-500">Enable or disable any of the 14 interactive layout sections with a single click</p>
@@ -1485,7 +1364,6 @@ export default function TestimonialsAdmin({ currentLang, isOpen, onClose, onData
                         googleReviews: '11. Google Review Style Cards',
                         achievements: '12. Before/After Achievements',
                         submissionCta: '13. Submission Call to Action',
-                        faq: '14. FAQ Accordions',
                       };
                       return (
                         <button
@@ -1495,7 +1373,7 @@ export default function TestimonialsAdmin({ currentLang, isOpen, onClose, onData
                           className={`flex items-center justify-between p-2.5 rounded-xl border text-xs font-bold text-left transition ${
                             sectionVisibility[key]
                               ? 'border-blue-200 dark:border-orange-500/25 bg-blue-50/20 text-blue-900'
-                              : 'border-slate-200 dark:border-neutral-700 bg-slate-50 dark:bg-slate-900/60 text-slate-400 dark:text-neutral-500'
+                              : 'border-slate-200 dark:border-neutral-700 bg-slate-50 dark:bg-neutral-900/70 text-slate-400 dark:text-neutral-500'
                           }`}
                         >
                           <span className="truncate pr-1">{displayNames[key] || key}</span>

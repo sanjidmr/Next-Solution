@@ -303,7 +303,7 @@ export default function AdminLegalCMS({ currentLang, triggerNotice }: AdminLegal
               <div className="space-y-6">
                 {sections.map(sec => (
                   <div key={sec.id} className="space-y-2">
-                    <h3 className="text-sm font-bold text-gray-900 dark:text-white border-b border-gray-50 pb-1">
+                    <h3 className="text-sm font-bold text-gray-900 dark:text-white border-b border-gray-50 dark:border-neutral-800 pb-1">
                       {currentLang === 'en' ? sec.titleEn : sec.titleBn}
                     </h3>
                     <p className="text-xs text-gray-500 dark:text-neutral-400 dark:text-neutral-500 leading-relaxed whitespace-pre-wrap">
@@ -567,7 +567,7 @@ export default function AdminLegalCMS({ currentLang, triggerNotice }: AdminLegal
                   </p>
                 </div>
 
-                <div className="pt-4 border-t border-gray-50 mt-4 flex items-center justify-between">
+                <div className="pt-4 border-t border-gray-50 dark:border-neutral-800 mt-4 flex items-center justify-between">
                   <span className="text-[9px] text-gray-400 dark:text-neutral-500">Updated: {policy.lastUpdated}</span>
                   <button
                     onClick={() => handleEditPolicyTrigger(policy)}
@@ -717,7 +717,7 @@ export default function AdminLegalCMS({ currentLang, triggerNotice }: AdminLegal
               
               {/* English Phrases */}
               <div className="space-y-4">
-                <span className="font-bold text-gray-700 dark:text-neutral-200 block border-b border-gray-50 pb-1">English Translation Settings</span>
+                <span className="font-bold text-gray-700 dark:text-neutral-200 block border-b border-gray-50 dark:border-neutral-800 pb-1">English Translation Settings</span>
                 
                 <div className="space-y-1.5">
                   <label className="font-semibold text-gray-500 dark:text-neutral-400 dark:text-neutral-500">Banner Title (English)</label>
@@ -793,7 +793,7 @@ export default function AdminLegalCMS({ currentLang, triggerNotice }: AdminLegal
 
               {/* Revision Sections read-only display */}
               <div className="space-y-4 pt-3">
-                <span className="font-bold text-gray-700 dark:text-neutral-200 block border-b border-gray-50 pb-1 uppercase text-[10px]">Document Content Clause Snapshots</span>
+                <span className="font-bold text-gray-700 dark:text-neutral-200 block border-b border-gray-50 dark:border-neutral-800 pb-1 uppercase text-[10px]">Document Content Clause Snapshots</span>
                 {selectedRevision.sections.map((sec, idx) => (
                   <div key={sec.id} className="p-3 bg-gray-50 dark:bg-neutral-900 rounded-xl space-y-1">
                     <span className="text-[10px] text-gray-400 dark:text-neutral-500 font-mono">Snapshot Clause {idx + 1}</span>
@@ -818,7 +818,7 @@ export default function AdminLegalCMS({ currentLang, triggerNotice }: AdminLegal
                       <th className="p-4 text-right">Actions</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-gray-50 text-gray-600 dark:text-neutral-300 dark:text-neutral-600 font-medium">
+                  <tbody className="divide-y divide-gray-50 dark:divide-neutral-800 text-gray-600 dark:text-neutral-300 font-medium">
                     {revisions.map(rev => (
                       <tr key={rev.id} className="hover:bg-gray-50/50 transition-colors">
                         <td className="p-4 font-bold text-gray-900 dark:text-white">

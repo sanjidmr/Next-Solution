@@ -84,6 +84,26 @@ export interface PortfolioItem {
   appStoreUrl?: string;
   playStoreUrl?: string;
   thumbnailImage?: string; // Optional thumbnail separate from main image
+
+  // Service-specific structured metadata (JSONB). Real project data for the
+  // selected service (marketing strategy, AI features, video category, etc.).
+  projectData?: Record<string, any>;
+}
+
+// Service-specific portfolio field metadata used by the admin form and the
+// public details page to render the correct set of fields per service.
+export interface PortfolioServiceField {
+  key: string;
+  labelEn: string;
+  labelBn: string;
+  type: "text" | "textarea" | "list" | "image" | "url";
+  placeholder?: string;
+  required?: boolean;
+}
+
+export interface PortfolioServiceConfig {
+  service: string;
+  fields: PortfolioServiceField[];
 }
 
 export interface BlogPost {
@@ -171,7 +191,7 @@ export interface ContactMessage {
   message: string;
   service: string;
   budget: string;
-  status: 'unread' | 'read' | 'replied';
+  status: 'unread' | 'read' | 'replied' | 'contacted' | 'in_progress' | 'converted' | 'closed';
   createdAt: string;
 }
 

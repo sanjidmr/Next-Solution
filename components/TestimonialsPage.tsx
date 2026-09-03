@@ -2,14 +2,14 @@
 import React, { useState, useEffect } from 'react';
 import { 
   Star, Play, CheckCircle, Search, MessageSquare, Plus, X, 
-  Globe, ArrowRight, Sparkles, ThumbsUp, HelpCircle, ChevronDown, ShieldCheck, Settings, Lock
+  Globe, ArrowRight, Sparkles, ThumbsUp, HelpCircle, ShieldCheck, Settings, Lock
 } from 'lucide-react';
 import { 
   getTestimonials, saveTestimonial, getTestimonialCategories, 
   getTestimonialVideos, getTestimonialStatistics, 
-  getSuccessStories, getReviewSettings, getFAQs, getClientMoments
+  getSuccessStories, getReviewSettings, getClientMoments
 } from '@/lib/db';
-import { Testimonial, TestimonialCategory, TestimonialVideo, SuccessStory, FAQ, ClientMoment } from '@/types';
+import { Testimonial, TestimonialCategory, TestimonialVideo, SuccessStory, ClientMoment } from '@/types';
 import { TRUSTED_BY } from '@/data/trustedBy';
 import { motion, AnimatePresence } from 'motion/react';
 import { getLocalItem } from '@/lib/utils';
@@ -28,13 +28,12 @@ export default function TestimonialsPage({ currentLang, setTab }: TestimonialsPa
   const [statistics, setStatistics] = useState<any>(null);
   const [stories, setStories] = useState<SuccessStory[]>([]);
   const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
-  const [faqs, setFaqs] = useState<FAQ[]>([]);
   const [settings, setSettings] = useState<any>(null);
   const [moments, setMoments] = useState<ClientMoment[]>([]);
 
   // Section Visibility (LocalStorage)
   const [sectionVisibility, setSectionVisibility] = useState<Record<string, boolean>>({
-    hero: true, overview: true, stories: true, videos: true, wall: true, clientMoments: true, logos: true, whyUs: true, map: true, googleReviews: true, achievements: true, submissionCta: true, faq: true
+    hero: true, overview: true, stories: true, videos: true, wall: true, clientMoments: true, logos: true, whyUs: true, map: true, googleReviews: true, achievements: true, submissionCta: true
   });
 
   // UI States
@@ -44,7 +43,6 @@ export default function TestimonialsPage({ currentLang, setTab }: TestimonialsPa
   const [activeStoryIdx, setActiveStoryIdx] = useState<number>(0);
   const [storyTab, setStoryTab] = useState<'challenge' | 'solution' | 'results'>('challenge');
   const [activeVideoUrl, setActiveVideoUrl] = useState<string | null>(null);
-  const [expandedFaq, setExpandedFaq] = useState<string | null>(null);
   const [helpfulRatings, setHelpfulRatings] = useState<Record<string, number>>({});
   const [helpfulClicked, setHelpfulClicked] = useState<Record<string, boolean>>({});
 
@@ -69,7 +67,6 @@ export default function TestimonialsPage({ currentLang, setTab }: TestimonialsPa
     setVideos(getTestimonialVideos().filter(v => v.featured !== false));
     setStatistics(getTestimonialStatistics());
     setStories(getSuccessStories());
-    setFaqs(getFAQs());
     setTestimonials(getTestimonials().filter(t => t.status === 'approved' || !t.status));
     setSettings(getReviewSettings());
     setMoments(getClientMoments());
@@ -161,7 +158,7 @@ export default function TestimonialsPage({ currentLang, setTab }: TestimonialsPa
   };
 
   return (
-    <div id="testimonials-page-root" data-space-page className="bg-white dark:bg-[#0a0a0a] min-h-screen text-slate-900 dark:text-white overflow-x-hidden font-sans">
+    <div id="testimonials-page-root" data-space-page className="bg-white dark:bg-[#0a0a0a] min-h-screen text-slate-900 dark:text-white font-sans">
       
       {/* Floating Admin Entry Button */}
       <div className="fixed bottom-6 right-6 z-40">
@@ -177,10 +174,11 @@ export default function TestimonialsPage({ currentLang, setTab }: TestimonialsPa
 
       {/* 01. PREMIUM HERO SECTION — Pixel-Perfect Reference Design */}
       {sectionVisibility.hero && (
+        <div className="hero-stack">
         <section
           id="reviews-hero"
           data-space-hero
-          className="relative overflow-hidden min-h-screen flex items-center bg-gradient-to-br from-orange-50/40 via-white to-gray-50 dark:from-[#030303] dark:via-[#030303] dark:to-[#0a0a0a]"
+          className="hero-sticky relative overflow-hidden min-h-[100svh] flex items-center bg-gradient-to-br from-orange-50/40 via-white to-gray-50 dark:from-[#030303] dark:via-[#030303] dark:to-[#0a0a0a]"
         >
           {/* Subtle orange ambient glow behind right image */}
           <div className="absolute top-1/2 right-[10%] -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-orange-500/[0.08] dark:bg-orange-500/[0.07] blur-[120px] pointer-events-none" />
@@ -337,11 +335,12 @@ export default function TestimonialsPage({ currentLang, setTab }: TestimonialsPa
             </div>
           </div>
         </section>
+        </div>
       )}
 
       {/* 08. CLIENT LOGOS SCROLLING WALL */}
       {sectionVisibility.logos && (
-        <section className="py-12 bg-slate-50/50 dark:bg-[#0c0c0c] overflow-hidden">
+        <section className="stack-cover py-12 bg-slate-50/50 dark:bg-[#0c0c0c] overflow-hidden">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <span className="text-[10px] font-bold text-slate-400 dark:text-neutral-500 uppercase tracking-widest text-center block mb-8">
               {currentLang === 'en' ? 'POWERING GLOBAL PRODUCT LEADING TEAMS' : 'বিশ্ববিখ্যাত ব্র্যান্ডগুলোর বিশ্বস্ত পার্টনার'}
@@ -1273,52 +1272,6 @@ export default function TestimonialsPage({ currentLang, setTab }: TestimonialsPa
               )}
             </AnimatePresence>
 
-          </div>
-        </section>
-      )}
-
-      {/* 14. FAQ ACCORDIONS */}
-      {sectionVisibility.faq && faqs.length > 0 && (
-        <section id="faq-section" className="py-20 bg-white dark:bg-[#0a0a0a]">
-          <div className="mx-auto max-w-4xl px-4 sm:px-6 space-y-10">
-            <div className="text-center space-y-2">
-              <span className="text-xs font-bold text-blue-600 dark:text-orange-400 uppercase tracking-widest">14. FAQ ASSURANCE</span>
-              <h2 className="font-display text-3xl sm:text-4xl font-black text-slate-900 dark:text-white tracking-tight leading-tight">
-                {currentLang === 'en' ? 'Frequently Asked Questions' : 'সাধারণ জিজ্ঞাসা সমূহ'}
-              </h2>
-            </div>
-
-            <div className="space-y-3.5 max-w-2xl mx-auto">
-              {faqs.map((faq) => {
-                const isOpen = expandedFaq === faq.id;
-                return (
-                  <div key={faq.id} className="rounded-xl border border-slate-150 dark:border-neutral-700/60 overflow-hidden bg-slate-50/50 dark:bg-[#141414] hover:bg-white dark:hover:bg-[#1a1a1a] transition">
-                    <button
-                      onClick={() => setExpandedFaq(isOpen ? null : faq.id)}
-                      className="w-full text-left p-4 flex items-center justify-between text-xs sm:text-sm font-bold text-slate-900 dark:text-white focus:outline-none"
-                    >
-                      <span>{currentLang === 'en' ? faq.questionEn : faq.questionBn}</span>
-                      <ChevronDown className={`h-4 w-4 text-slate-400 transition-transform duration-300 ${isOpen ? 'rotate-180 text-blue-600 dark:text-orange-400' : ''}`} />
-                    </button>
-                    
-                    <AnimatePresence initial={false}>
-                      {isOpen && (
-                        <motion.div
-                          initial={{ height: 0 }}
-                          animate={{ height: 'auto' }}
-                          exit={{ height: 0 }}
-                          className="overflow-hidden border-t border-slate-100 dark:border-neutral-700"
-                        >
-                          <p className="p-4 text-xs text-slate-500 dark:text-neutral-400 leading-relaxed bg-white dark:bg-[#141414]">
-                            {currentLang === 'en' ? faq.answerEn : faq.answerBn}
-                          </p>
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
-                  </div>
-                );
-              })}
-            </div>
           </div>
         </section>
       )}

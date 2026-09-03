@@ -377,14 +377,14 @@ export default function AdminProductsCMS({ currentLang }: AdminProductsCMSProps)
             }
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-10 pr-4 py-2.5 text-xs rounded-xl border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-orange-500/20 dark:focus:ring-orange-500/20 focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
+            className="w-full pl-10 pr-4 py-2.5 text-xs rounded-xl border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-orange-500/20 focus:border-blue-500 dark:focus:border-orange-500"
           />
         </div>
 
         <select
           value={selectedCategory}
           onChange={(e) => setSelectedCategory(e.target.value)}
-          className="px-3.5 py-2.5 text-xs rounded-xl border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-orange-500/20 dark:focus:ring-orange-500/20 focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
+          className="px-3.5 py-2.5 text-xs rounded-xl border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] dark:bg-[#141414] focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-orange-500/20 focus:border-blue-500 dark:focus:border-orange-500"
         >
           <option value="all">
             {currentLang === "en" ? "All Categories" : "সব ক্যাটাগরি"}
@@ -532,7 +532,7 @@ export default function AdminProductsCMS({ currentLang }: AdminProductsCMSProps)
                           <span className={`text-[10px] font-bold px-2.5 py-1 rounded-full ${
                             isActive ? 'bg-emerald-500 text-white'
                             : isDraft ? 'bg-amber-500 text-white'
-                            : 'bg-gray-400 text-white'
+                            : 'bg-gray-400 text-white dark:bg-gray-700 dark:text-neutral-200'
                           }`}>
                             {isActive ? 'Published' : isDraft ? 'Draft' : isArchived ? 'Archived' : (p as any).status}
                           </span>
@@ -614,7 +614,7 @@ export default function AdminProductsCMS({ currentLang }: AdminProductsCMSProps)
                     <h4 className="text-sm font-bold text-gray-900 dark:text-white line-clamp-1">
                       {p.titleEn}
                     </h4>
-                    <div className="flex items-center justify-between text-xs pt-2 border-t border-gray-50">
+                    <div className="flex items-center justify-between text-xs pt-2 border-t border-gray-50 dark:border-neutral-800">
                       <span className="text-gray-400 dark:text-neutral-500 font-mono text-[10px]">
                         /{p.slug}
                       </span>
@@ -629,7 +629,7 @@ export default function AdminProductsCMS({ currentLang }: AdminProductsCMSProps)
                 </div>
 
                 {/* Actions */}
-                <div className="p-4 pt-0 flex items-center justify-end gap-2 border-t border-gray-50 mt-2">
+                <div className="p-4 pt-0 flex items-center justify-end gap-2 border-t border-gray-50 dark:border-neutral-800 mt-2">
                   <button
                     onClick={() => openEditModal(p)}
                     className="p-2 text-gray-600 dark:text-neutral-300 dark:text-neutral-600 hover:text-blue-600 dark:hover:text-orange-400 dark:text-orange-400 hover:bg-blue-50 dark:hover:bg-orange-500/10 dark:bg-orange-500/10 rounded-lg transition text-xs font-bold flex items-center gap-1"
@@ -690,7 +690,7 @@ export default function AdminProductsCMS({ currentLang }: AdminProductsCMSProps)
                     value={titleEn}
                     onChange={(e) => setTitleEn(e.target.value)}
                     placeholder="e.g. Next Solution Enterprise Kit"
-                    className="w-full px-3 py-2 text-xs rounded-xl border border-gray-200 dark:border-neutral-700 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-orange-500/20 dark:focus:ring-orange-500/20 focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
+                    className="w-full px-3 py-2 text-xs rounded-xl border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] text-gray-900 dark:text-neutral-100 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-orange-500/20 focus:border-blue-500 dark:focus:border-orange-500"
                   />
                 </div>
               </div>
@@ -706,7 +706,7 @@ export default function AdminProductsCMS({ currentLang }: AdminProductsCMSProps)
                     value={slug}
                     onChange={(e) => setSlug(e.target.value)}
                     placeholder="Auto-generated if empty"
-                    className="w-full px-3 py-2 text-xs rounded-xl border border-gray-200 dark:border-neutral-700 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-orange-500/20 dark:focus:ring-orange-500/20 focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500 font-mono"
+                    className="w-full px-3 py-2 text-xs rounded-xl border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] text-gray-900 dark:text-neutral-100 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-orange-500/20 dark:focus:ring-orange-500/20 focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500 font-mono"
                   />
                 </div>
                 <div>
@@ -718,7 +718,7 @@ export default function AdminProductsCMS({ currentLang }: AdminProductsCMSProps)
                     value={category}
                     onChange={(e) => setCategory(e.target.value)}
                     placeholder="e.g. SaaS Templates"
-                    className="w-full px-3 py-2 text-xs rounded-xl border border-gray-200 dark:border-neutral-700 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-orange-500/20 dark:focus:ring-orange-500/20 focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
+                    className="w-full px-3 py-2 text-xs rounded-xl border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] text-gray-900 dark:text-neutral-100 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-orange-500/20 focus:border-blue-500 dark:focus:border-orange-500"
                   />
                 </div>
                 <div>
@@ -730,7 +730,7 @@ export default function AdminProductsCMS({ currentLang }: AdminProductsCMSProps)
                     value={subcategory}
                     onChange={(e) => setSubcategory(e.target.value)}
                     placeholder="e.g. Next.js Starter"
-                    className="w-full px-3 py-2 text-xs rounded-xl border border-gray-200 dark:border-neutral-700 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-orange-500/20 dark:focus:ring-orange-500/20 focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
+                    className="w-full px-3 py-2 text-xs rounded-xl border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] text-gray-900 dark:text-neutral-100 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-orange-500/20 focus:border-blue-500 dark:focus:border-orange-500"
                   />
                 </div>
               </div>
@@ -748,7 +748,7 @@ export default function AdminProductsCMS({ currentLang }: AdminProductsCMSProps)
                     required
                     value={price}
                     onChange={(e) => setPrice(e.target.value)}
-                    className="w-full px-3 py-2 text-xs rounded-xl border border-gray-200 dark:border-neutral-700 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-orange-500/20 dark:focus:ring-orange-500/20 focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500 font-extrabold text-blue-600 dark:text-orange-400"
+                    className="w-full px-3 py-2 text-xs rounded-xl border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] text-gray-900 dark:text-neutral-100 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-orange-500/20 dark:focus:ring-orange-500/20 focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500 font-extrabold text-blue-600 dark:text-orange-400"
                   />
                 </div>
                 <div>
@@ -761,7 +761,7 @@ export default function AdminProductsCMS({ currentLang }: AdminProductsCMSProps)
                     min="0"
                     value={cost}
                     onChange={(e) => setCost(e.target.value)}
-                    className="w-full px-3 py-2 text-xs rounded-xl border border-gray-200 dark:border-neutral-700 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-orange-500/20 dark:focus:ring-orange-500/20 focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500 font-bold"
+                    className="w-full px-3 py-2 text-xs rounded-xl border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] text-gray-900 dark:text-neutral-100 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-orange-500/20 dark:focus:ring-orange-500/20 focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500 font-bold"
                   />
                 </div>
                 <div>
@@ -773,7 +773,7 @@ export default function AdminProductsCMS({ currentLang }: AdminProductsCMSProps)
                     min="0"
                     value={stock}
                     onChange={(e) => setStock(e.target.value)}
-                    className="w-full px-3 py-2 text-xs rounded-xl border border-gray-200 dark:border-neutral-700 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-orange-500/20 dark:focus:ring-orange-500/20 focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500 font-bold"
+                    className="w-full px-3 py-2 text-xs rounded-xl border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] text-gray-900 dark:text-neutral-100 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-orange-500/20 dark:focus:ring-orange-500/20 focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500 font-bold"
                   />
                 </div>
                 <div>
@@ -785,7 +785,7 @@ export default function AdminProductsCMS({ currentLang }: AdminProductsCMSProps)
                     min="0"
                     value={sold}
                     onChange={(e) => setSold(e.target.value)}
-                    className="w-full px-3 py-2 text-xs rounded-xl border border-gray-200 dark:border-neutral-700 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-orange-500/20 dark:focus:ring-orange-500/20 focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500 font-bold"
+                    className="w-full px-3 py-2 text-xs rounded-xl border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] text-gray-900 dark:text-neutral-100 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-orange-500/20 dark:focus:ring-orange-500/20 focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500 font-bold"
                   />
                 </div>
               </div>
@@ -798,7 +798,7 @@ export default function AdminProductsCMS({ currentLang }: AdminProductsCMSProps)
                 <select
                   value={status}
                   onChange={(e: any) => setStatus(e.target.value)}
-                  className="w-full px-3 py-2 text-xs rounded-xl border border-gray-200 dark:border-neutral-700 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-orange-500/20 dark:focus:ring-orange-500/20 focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
+                  className="w-full px-3 py-2 text-xs rounded-xl border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] text-gray-900 dark:text-neutral-100 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-orange-500/20 focus:border-blue-500 dark:focus:border-orange-500"
                 >
                   <option value="published">Published</option>
                   <option value="draft">Draft</option>
@@ -817,7 +817,7 @@ export default function AdminProductsCMS({ currentLang }: AdminProductsCMSProps)
                     value={descriptionEn}
                     onChange={(e) => setDescriptionEn(e.target.value)}
                     placeholder="Product details in English..."
-                    className="w-full px-3 py-2 text-xs rounded-xl border border-gray-200 dark:border-neutral-700 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-orange-500/20 dark:focus:ring-orange-500/20 focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500 resize-none"
+                    className="w-full px-3 py-2 text-xs rounded-xl border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] text-gray-900 dark:text-neutral-100 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-orange-500/20 dark:focus:ring-orange-500/20 focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500 resize-none"
                   />
                 </div>
               </div>
@@ -841,7 +841,7 @@ export default function AdminProductsCMS({ currentLang }: AdminProductsCMSProps)
                     placeholder="https://images.unsplash.com/photo-..."
                     value={newImageUrl}
                     onChange={(e) => setNewImageUrl(e.target.value)}
-                    className="flex-1 px-3 py-2 text-xs rounded-xl border border-gray-200 dark:border-neutral-700 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-orange-500/20 dark:focus:ring-orange-500/20 focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500 font-mono text-[11px]"
+                    className="flex-1 px-3 py-2 text-xs rounded-xl border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] text-gray-900 dark:text-neutral-100 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-orange-500/20 dark:focus:ring-orange-500/20 focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500 font-mono text-[11px]"
                   />
                   <button
                     type="button"

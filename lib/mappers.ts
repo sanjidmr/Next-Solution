@@ -84,7 +84,7 @@ export const mapService = {
 
 export const mapPortfolioItem = {
   toDb(item: PortfolioItem) {
-    return {
+    const dbRow: Record<string, any> = {
       id: item.id,
       category: item.category,
       title_en: item.titleEn,
@@ -133,6 +133,15 @@ export const mapPortfolioItem = {
       thumbnail_image: item.thumbnailImage || null,
       updated_at: new Date().toISOString(),
     };
+
+    // Only include project_data when it actually contains service-specific
+    // fields. This keeps classic saves working even if the JSONB column has
+    // not been added to the hosted database yet (migration pending).
+    if (item.projectData && typeof item.projectData === 'object' && Object.keys(item.projectData).length > 0) {
+      dbRow.project_data = item.projectData;
+    }
+
+    return dbRow;
   },
   fromDb(row: any): PortfolioItem {
     return {
@@ -182,6 +191,7 @@ export const mapPortfolioItem = {
       appStoreUrl: row.app_store_url || undefined,
       playStoreUrl: row.play_store_url || undefined,
       thumbnailImage: row.thumbnail_image || undefined,
+      projectData: row.project_data || undefined,
     };
   }
 };

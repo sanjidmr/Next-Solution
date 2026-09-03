@@ -1,6 +1,7 @@
 "use client";
 
 import Hero from '@/components/Hero';
+import StackingHero from '@/components/StackingHero';
 import HomePageSections from '@/components/HomePageSections';
 import { usePage } from '@/hooks/usePage';
 import { PortfolioItem } from '@/types';
@@ -14,7 +15,9 @@ export default function HomeClient({ portfolioData }: HomeClientProps) {
 
   return (
     <>
-      <Hero currentLang={currentLang} setTab={setTab} />
+      <StackingHero theme="dark">
+        <Hero currentLang={currentLang} setTab={setTab} />
+      </StackingHero>
       <HomePageSections currentLang={currentLang} setTab={setTab} portfolioData={portfolioData} />
     </>
   );

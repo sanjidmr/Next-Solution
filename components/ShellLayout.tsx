@@ -9,7 +9,9 @@ import FloatingContact from '@/components/FloatingContact';
 import ErrorBoundary from '@/components/ErrorBoundary';
 import { useLang } from '@/providers/LangProvider';
 import { useTheme } from '@/providers/ThemeProvider';
+import { usePathname } from 'next/navigation';
 import { getPathForTab, NavTabId, publicNavPaths } from '@/config/navigation';
+import { getHeroTheme } from '@/config/heroes';
 import SpaceBackground from '@/components/SpaceBackground';
 
 interface ShellLayoutProps {
@@ -18,8 +20,12 @@ interface ShellLayoutProps {
 
 export default function ShellLayout({ children }: ShellLayoutProps) {
   const router = useRouter();
+  const pathname = usePathname();
   const { currentLang, setCurrentLang } = useLang();
   const { isDark, toggleTheme } = useTheme();
+
+  // Navbar adapts its text/icon contrast to the current page's hero theme.
+  const heroTheme = getHeroTheme(pathname);
 
   // Prefetch all public routes on mount for instant client-side navigation
   useEffect(() => {
@@ -46,6 +52,7 @@ export default function ShellLayout({ children }: ShellLayoutProps) {
         toggleTheme={toggleTheme}
         currentTab=""
         setTab={setTab}
+        theme={heroTheme}
       />
       <main className="min-h-screen">
         <ErrorBoundary>

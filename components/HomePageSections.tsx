@@ -19,19 +19,16 @@ import {
 import { translations } from '@/data/translations';
 import { 
   getSettings, getClientLogos, getSuccessStories, 
-  getTestimonials, getBlogs, getPortfolio, getPricingPackages, 
+  getTestimonials, getBlogs, getPortfolio, 
   addSubscriber, getWhyChooseUsCards, getWhyChooseUsStats, 
   getWhyChooseUsBadges, getWhyChooseUsTechs, getWhyChooseUsCTA,
-  getProcessSteps, getProcessCTA, getTechServiceCards,
-  getCurrencies, getCurrencySettings
+  getProcessSteps, getProcessCTA, getTechServiceCards
 } from '@/lib/db';
 import { getLocalItem, setLocalItem } from '@/lib/utils';
-import FAQSection from '@/components/FAQSection';
 import { 
   Service, PortfolioItem, BlogPost, Testimonial, SuccessStory, 
-  ClientLogo, PricingPackage, WhyChooseUsCard, WhyChooseUsStat, 
-  WhyChooseUsBadge, WhyChooseUsTech, WhyChooseUsCTA, ProcessStep, ProcessCTA, TechServiceCard,
-  Currency
+  ClientLogo, WhyChooseUsCard, WhyChooseUsStat, 
+  WhyChooseUsBadge, WhyChooseUsTech, WhyChooseUsCTA, ProcessStep, ProcessCTA, TechServiceCard
 } from '@/types';
 
 const IconHelper = ({ name, className }: { name: string; className?: string }) => {
@@ -378,7 +375,6 @@ export default function HomePageSections({ currentLang, setTab, portfolioData }:
   const testimonials = getTestimonials();
   const blogs = getBlogs().filter(b => b.status === 'published');
   const portfolio = portfolioData ?? getPortfolio();
-  const pricingPackages = getPricingPackages().filter(p => p.enabled !== false);
 
   const whyChooseUsCards = getWhyChooseUsCards().filter(c => c.visible !== false).sort((a, b) => a.displayOrder - b.displayOrder);
   const whyChooseUsStats = getWhyChooseUsStats().filter(s => s.visible !== false).sort((a, b) => a.displayOrder - b.displayOrder);
@@ -421,48 +417,6 @@ export default function HomePageSections({ currentLang, setTab, portfolioData }:
   const [hoveredEcosystem, setHoveredEcosystem] = useState<any>(null);
   const [activeTimelineStep, setActiveTimelineStep] = useState<number>(0);
   const [hoveredIndustry, setHoveredIndustry] = useState<string | null>(null);
-
-  // Currency switcher (shared with pricing page)
-  const allCurrencies = getCurrencies().filter(c => c.enabled !== false).sort((a, b) => a.sortOrder - b.sortOrder);
-  const currencySettings = getCurrencySettings();
-  const [selectedCurrency, setSelectedCurrency] = useState<Currency | null>(() => {
-    const storedCode = getLocalItem('next_solution_selected_currency_code');
-    if (storedCode) {
-      const found = allCurrencies.find(c => c.code === storedCode);
-      if (found) return found;
-    }
-    const defaultCurr = allCurrencies.find(c => c.code === (getCurrencySettings().defaultCurrencyCode || 'USD'));
-    return defaultCurr || allCurrencies[0] || null;
-  });
-  const [liveRates, setLiveRates] = useState<Record<string, number>>({});
-
-  useEffect(() => {
-    if (currencySettings.enableLiveRates) {
-      fetch('https://open.er-api.com/v6/latest/USD')
-        .then(res => res.json())
-        .then(data => {
-          if (data && data.rates) setLiveRates(data.rates);
-        })
-        .catch(() => {});
-    }
-  }, [currencySettings.enableLiveRates]);
-
-  const handleCurrencyChange = (curr: Currency) => {
-    setSelectedCurrency(curr);
-    setLocalItem('next_solution_selected_currency_code', curr.code);
-  };
-
-  const formatPrice = (usdAmount: number) => {
-    if (!selectedCurrency) return `$${usdAmount.toLocaleString()}`;
-    const liveRate = currencySettings.enableLiveRates ? liveRates[selectedCurrency.code] : undefined;
-    const rate = liveRate ?? selectedCurrency.exchangeRate ?? 1.0;
-    const amount = usdAmount * rate;
-    const formattedAmount = amount.toLocaleString(undefined, {
-      minimumFractionDigits: currencySettings.decimalPrecision ?? 0,
-      maximumFractionDigits: currencySettings.decimalPrecision ?? 0,
-    });
-    return `${selectedCurrency.symbol}${formattedAmount}`;
-  };
 
   // Horizontal scroll ref for featured portfolio row
   const portfolioRowRef = useRef<HTMLDivElement>(null);
@@ -598,7 +552,7 @@ export default function HomePageSections({ currentLang, setTab, portfolioData }:
       {/* ========================================================
           SECTION 9: TECHNOLOGIES WE USE (PREMIUM INTERACTIVE STACK)
          ======================================================== */}
-      <section id="technologies" className="relative overflow-hidden py-12 bg-linear-to-b from-white via-[#FAFAFA]/40 to-white">
+      <section id="technologies" className="stack-cover relative overflow-hidden py-12 bg-linear-to-b from-white via-[#FAFAFA]/40 to-white">
         {/* Modern subtle ambient gradients in background */}
         <div className="absolute top-1/4 left-1/2 -translate-x-1/2 h-[500px] w-[500px] bg-blue-100/20 dark:bg-orange-500/5 rounded-full blur-3xl pointer-events-none"></div>
         <div className="absolute bottom-10 left-10 h-72 w-72 bg-indigo-50/30 dark:bg-orange-500/5 rounded-full blur-3xl pointer-events-none"></div>
@@ -1523,125 +1477,6 @@ className="group cursor-pointer"
 
 
       {/* ========================================================
-          SECTION 10: PRICING PREVIEW (TRANSPARENT RATES)
-         ======================================================== */}
-      <section id="pricing-preview" className="bg-gray-50/30 py-12">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-10">
-          <div className="text-center space-y-4 max-w-2xl mx-auto">
-            <span className="text-xs font-bold uppercase tracking-wider text-blue-600 dark:text-orange-400">
-              {currentLang === 'en' ? 'TRANSPARENT RATES' : 'স্বচ্ছ প্রাইসিং'}
-            </span>
-            <h2 className="font-sans text-3xl font-black text-gray-900 dark:text-white leading-tight">
-              {currentLang === 'en' ? 'Predictable Packages for Scalable Growth' : 'বাস্তবসম্মত ও সাশ্রয়ী প্রিমিয়াম প্ল্যান'}
-            </h2>
-            <p className="text-xs md:text-sm text-gray-500 dark:text-neutral-400 dark:text-neutral-500 leading-relaxed max-w-xl mx-auto">
-              {currentLang === 'en' 
-                ? 'Milestone-based billing, zero hidden fees, and absolute source-code transparency.'
-                : 'নির্ধারিত কাজের জন্য স্বচ্ছ মাইলস্টোন চুক্তি, কোনো অতিরিক্ত হিডেন চার্জ নেই।'}
-            </p>
-          </div>
-
-          <div className="flex flex-col items-center space-y-3">
-            <div className="inline-flex flex-wrap items-center justify-center gap-1.5 bg-white dark:bg-[#141414] border border-gray-100 dark:border-neutral-800 rounded-2xl p-1.5 shadow-sm">
-              {allCurrencies.map((curr) => {
-                const isSelected = selectedCurrency?.code === curr.code;
-                return (
-                  <button
-                    key={curr.code}
-                    onClick={() => handleCurrencyChange(curr)}
-                    className={`relative px-4 py-2.5 rounded-xl text-xs font-bold transition-all duration-300 cursor-pointer flex items-center space-x-2 ${
-                      isSelected
-                        ? 'bg-blue-600 text-white shadow-md shadow-blue-600/10'
-                        : 'text-neutral-600 dark:text-neutral-300 hover:bg-gray-50 dark:bg-neutral-900 hover:text-neutral-950'
-                    }`}
-                  >
-                    <span suppressHydrationWarning className="text-sm shrink-0" role="img" aria-label={curr.name}>
-                      {curr.flag || '🏳️'}
-                    </span>
-                    <span suppressHydrationWarning className="font-sans shrink-0">{curr.symbol}</span>
-                    <span suppressHydrationWarning className="font-mono uppercase tracking-wider shrink-0">{curr.code}</span>
-                  </button>
-                );
-              })}
-            </div>
-            <span className="text-[10px] font-bold uppercase tracking-widest text-gray-400 dark:text-neutral-500">
-              {currentLang === 'en' ? 'Select Preferred Currency' : 'পছন্দসই কারেন্সি সিলেক্ট করুন'}
-            </span>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {pricingPackages.slice(0, 3).map((pkg) => (
-              <motion.div
-                key={pkg.id}
-                whileHover={{ y: -5 }}
-                className={`rounded-3xl border bg-white dark:bg-[#141414] p-6 md:p-8 space-y-6 shadow-sm flex flex-col justify-between relative overflow-hidden ${
-                  pkg.popular 
-                    ? 'border-blue-600 ring-1 ring-blue-600/20 shadow-blue-600/5' 
-                    : 'border-gray-100 dark:border-neutral-800'
-                }`}
-              >
-                {pkg.popular && (
-                  <div suppressHydrationWarning className="absolute top-4 right-4 rounded-full bg-blue-600 px-3 py-0.5 text-[9px] font-bold text-white uppercase tracking-wider">
-                    {currentLang === 'en' ? 'Most Popular' : 'জনপ্রিয়'}
-                  </div>
-                )}
-
-                <div className="space-y-5">
-                  <div className="space-y-1">
-                    <span suppressHydrationWarning className="text-xs font-bold text-blue-600 dark:text-orange-400 font-mono uppercase tracking-widest block">{pkg.category}</span>
-                    <h3 suppressHydrationWarning className="font-sans text-lg font-black text-gray-900 dark:text-white">{currentLang === 'en' ? pkg.nameEn : pkg.nameBn}</h3>
-                    <p suppressHydrationWarning className="text-xs text-gray-400 dark:text-neutral-500 leading-relaxed">{currentLang === 'en' ? pkg.descriptionEn : pkg.descriptionBn}</p>
-                  </div>
-
-                  <div className="py-2 border-y border-gray-50 flex items-baseline space-x-1.5">
-                    <span suppressHydrationWarning className="text-3xl font-black text-gray-900 dark:text-white font-mono">{formatPrice(pkg.priceMonthly)}</span>
-                    <span className="text-xs text-gray-400 dark:text-neutral-500">/ {currentLang === 'en' ? 'mo' : 'মাস'}</span>
-                  </div>
-
-                  <div className="space-y-2.5">
-                    <span className="block text-[10px] font-bold uppercase tracking-wider text-gray-400 dark:text-neutral-500">
-                      {currentLang === 'en' ? 'Includes Core Benefits' : 'প্ল্যানে যা যা অন্তর্ভুক্ত'}
-                    </span>
-                    <ul className="space-y-2">
-                      {(currentLang === 'en' ? pkg.featuresEn : pkg.featuresBn).slice(0, 5).map((feat, fIdx) => (
-                        <li key={fIdx} className="flex items-start space-x-2">
-                          <Check className="h-4 w-4 text-blue-600 dark:text-orange-400 shrink-0 mt-0.5" />
-                          <span suppressHydrationWarning className="text-xs text-gray-600 dark:text-neutral-300 dark:text-neutral-600 leading-tight">{feat}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
-
-                <div className="pt-6 border-t border-gray-50">
-                  <button suppressHydrationWarning
-                    onClick={() => { setTab('pricing'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-                    className={`w-full rounded-xl py-3 text-xs font-bold transition duration-150 cursor-pointer text-center block ${
-                      pkg.popular 
-                        ? 'bg-blue-600 hover:bg-blue-700 text-white shadow-sm shadow-blue-600/10' 
-                        : 'bg-gray-50 dark:bg-neutral-900 hover:bg-gray-100 dark:bg-neutral-800 text-gray-700 dark:text-neutral-200 border border-gray-100 dark:border-neutral-800'
-                    }`}
-                  >
-                    {currentLang === 'en' ? pkg.ctaEn : pkg.ctaBn}
-                  </button>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-
-          <div className="text-center pt-4">
-            <button
-              onClick={() => { setTab('pricing'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-              className="inline-flex items-center space-x-2 rounded-xl border border-gray-200 dark:border-neutral-700 px-6 py-3 text-xs font-bold text-gray-700 dark:text-neutral-200 hover:text-blue-600 dark:text-orange-400 hover:border-blue-600 hover:bg-gray-50/50 transition cursor-pointer"
-            >
-              <span>{currentLang === 'en' ? 'Compare Full Pricing Comparison' : 'সব প্ল্যান সমূহ দেখুন ও তুলনা করুন'}</span>
-              <ArrowRight className="h-3.5 w-3.5" />
-            </button>
-          </div>
-        </div>
-      </section>
-
-      {/* ========================================================
           SECTION 11: CLIENT TESTIMONIALS (MODERN MINI GRID)
          ======================================================== */}
       {testimonials.length > 0 && (
@@ -1707,12 +1542,6 @@ className="group cursor-pointer"
           </div>
         </section>
       )}
-
-      {/* ========================================================
-          SECTION 12: FAQ
-         ======================================================== */}
-      <FAQSection currentLang={currentLang} setTab={setTab} />
-
 
       {/* ========================================================
           SECTION 15: FINAL CTA (HIGH-IMPACT NEGATIVE-SPACE BANNER)

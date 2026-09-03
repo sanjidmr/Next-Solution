@@ -13,6 +13,7 @@ import {
   Clock,
   Users,
 } from "lucide-react";
+import Reveal from '@/components/motion/Reveal';
 import { TRUSTED_BY as trustedBy } from '@/data/trustedBy';
 
 interface HeroProps {
@@ -167,16 +168,19 @@ export default function Hero({ currentLang, setTab }: HeroProps) {
         aria-hidden="true"
       />
 
-      <div className="relative z-10 mx-auto flex min-h-screen max-w-[1600px] flex-col justify-center px-5 sm:px-7 lg:px-10 xl:px-12">
+      <Reveal direction="up">
+      <div className="relative z-10 mx-auto flex min-h-[100svh] max-w-[1600px] flex-col justify-center px-5 sm:px-7 lg:px-10 xl:px-12">
         <div
           className="
             grid
             grid-cols-1
             items-center
-            gap-12
-            pt-10
-            pb-10
-            sm:pt-14
+            gap-6
+            pt-6
+            pb-6
+            sm:gap-10
+            sm:pt-10
+            sm:pb-10
             lg:grid-cols-[1.15fr_1fr]
             lg:gap-10
             lg:pt-12
@@ -198,7 +202,7 @@ export default function Hero({ currentLang, setTab }: HeroProps) {
             <h1
               className="
                 max-w-[720px]
-                text-[2.5rem]
+                text-[2.15rem]
                 font-black
                 leading-[1.05]
                 tracking-[-0.035em]
@@ -248,13 +252,13 @@ export default function Hero({ currentLang, setTab }: HeroProps) {
               )}
             </h1>
 
-            <p className="mx-auto mt-7 max-w-[560px] text-base font-medium leading-8 text-gray-600 dark:text-neutral-400 sm:text-lg lg:mx-0">
+            <p className="mx-auto mt-4 max-w-[560px] text-sm font-medium leading-6 text-gray-600 dark:text-neutral-400 sm:mt-7 sm:text-base lg:text-lg lg:mx-0">
               {isEn
                 ? "From powerful websites to digital growth strategies — we deliver complete solutions that drive real results."
                 : "শক্তিশালী ওয়েবসাইট থেকে ডিজিটাল গ্রোথ স্ট্র্যাটেজি — আমরা বাস্তব ফলাফল আনার জন্য সম্পূর্ণ সলিউশন দেই।"}
             </p>
 
-            <div className="mt-8 flex flex-wrap items-center justify-center gap-6 lg:justify-start">
+            <div className="mt-5 flex flex-wrap items-center justify-center gap-5 lg:mt-8 lg:justify-start">
               <button
                 id="hero-primary-cta"
                 onClick={() => setTab("contact")}
@@ -344,10 +348,10 @@ export default function Hero({ currentLang, setTab }: HeroProps) {
               z-20
               order-2
               flex
-              min-h-[420px]
+              min-h-[200px]
               items-center
               justify-center
-              sm:min-h-[520px]
+              sm:min-h-[420px]
               lg:min-h-[640px]
               lg:justify-end
             "
@@ -574,6 +578,7 @@ export default function Hero({ currentLang, setTab }: HeroProps) {
           </div>
         </div>
       </div>
+    </Reveal>
     </section>
   );
 }

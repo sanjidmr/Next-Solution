@@ -9,8 +9,8 @@ import { getLocalItem, setLocalItem } from '@/lib/utils';
 import { translations } from '@/data/translations';
 import { adminDB } from '@/lib/admin-fetch';
 import { 
-  ContactMessage, Subscriber, BlogPost, Service, SiteSettings, PortfolioItem, FAQ, Testimonial,
-  PricingPackage, PricingAddon, PricingComparison, PricingQuoteRequest, Currency, CurrencySettings,
+  ContactMessage, Subscriber, BlogPost, Service, SiteSettings, PortfolioItem, Testimonial,
+  Currency, CurrencySettings,
   TestimonialCategory, TestimonialVideo, TestimonialStatistics, ClientLogo, SuccessStory, ReviewSettings,
   WhyChooseUsCard, WhyChooseUsStat, WhyChooseUsBadge, WhyChooseUsTech, WhyChooseUsCTA,
   ProcessStep, ProcessCTA, TechServiceCard
@@ -18,13 +18,63 @@ import {
 
 import AdminLegalCMS from '@/components/AdminLegalCMS';
 import AdminProductsCMS from '@/components/AdminProductsCMS';
-import AdminPricingManager from '@/components/AdminPricingManager';
+import AdminPortfolioManager from '@/components/AdminPortfolioManager';
+import DashboardOverview from '@/components/DashboardOverview';
+import { useRealtime } from '@/lib/useRealtime';
+
+type LeadStatusValue = 'unread' | 'read' | 'replied' | 'contacted' | 'in_progress' | 'converted' | 'closed';
+
+const LEAD_STATUS_META: Record<LeadStatusValue, { labelEn: string; labelBn: string; badge: string; dot: string; icon: React.ElementType }> = {
+  unread: {
+    labelEn: 'New', labelBn: 'নতুন',
+    badge: 'bg-orange-50 text-orange-600 dark:bg-orange-500/15 dark:text-orange-400 border-orange-200/70 dark:border-orange-500/25',
+    dot: 'bg-orange-500',
+    icon: InboxIcon,
+  },
+  read: {
+    labelEn: 'Read', labelBn: 'পঠিত',
+    badge: 'bg-gray-100 text-gray-600 dark:bg-neutral-800 dark:text-neutral-300 border-gray-200/70 dark:border-neutral-700',
+    dot: 'bg-gray-400',
+    icon: MailIcon,
+  },
+  replied: {
+    labelEn: 'Replied', labelBn: 'উত্তর দেওয়া হয়েছে',
+    badge: 'bg-emerald-50 text-emerald-600 dark:bg-emerald-500/15 dark:text-emerald-400 border-emerald-200/70 dark:border-emerald-500/25',
+    dot: 'bg-emerald-500',
+    icon: CheckCircle2Icon,
+  },
+  contacted: {
+    labelEn: 'Contacted', labelBn: 'যোগাযোগ করা হয়েছে',
+    badge: 'bg-blue-50 text-blue-600 dark:bg-blue-500/15 dark:text-blue-400 border-blue-200/70 dark:border-blue-500/25',
+    dot: 'bg-blue-500',
+    icon: PhoneCallIcon,
+  },
+  in_progress: {
+    labelEn: 'In Progress', labelBn: 'চলমান',
+    badge: 'bg-violet-50 text-violet-600 dark:bg-violet-500/15 dark:text-violet-400 border-violet-200/70 dark:border-violet-500/25',
+    dot: 'bg-violet-500',
+    icon: Clock3Icon,
+  },
+  converted: {
+    labelEn: 'Converted', labelBn: 'কনভার্টেড',
+    badge: 'bg-emerald-50 text-emerald-600 dark:bg-emerald-500/15 dark:text-emerald-400 border-emerald-200/70 dark:border-emerald-500/25',
+    dot: 'bg-emerald-500',
+    icon: CheckCircle2Icon,
+  },
+  closed: {
+    labelEn: 'Closed', labelBn: 'বন্ধ',
+    badge: 'bg-gray-100 text-gray-500 dark:bg-neutral-800 dark:text-neutral-400 border-gray-200/70 dark:border-neutral-700',
+    dot: 'bg-gray-400',
+    icon: XCircleIcon,
+  },
+};
 
 import { 
   Lock as LockIcon, CheckCircle2 as CheckCircle2Icon, Trash2 as Trash2Icon, Mail as MailIcon, Users as UsersIcon, BookOpen as BookOpenIcon, Settings as SettingsIcon, 
   RotateCcw as RotateCcwIcon, Sparkles as SparklesIcon, Plus as PlusIcon, Edit2 as Edit2Icon, BarChart3 as BarChart3Icon, FolderKanban as FolderKanbanIcon, 
-  DollarSign as DollarSignIcon, HelpCircle as HelpCircleIcon, MessageSquare as MessageSquareIcon, UserCheck as UserCheckIcon, Image as ImageIcon, Shield as ShieldIcon,
-  Search as SearchIcon, Eye as EyeIcon, ArrowUpRight as ArrowUpRightIcon, Cpu as CpuIcon, ShoppingBag as ShoppingBagIcon
+  MessageSquare as MessageSquareIcon, UserCheck as UserCheckIcon, Image as ImageIcon, Shield as ShieldIcon,
+  Search as SearchIcon, Eye as EyeIcon, ArrowUpRight as ArrowUpRightIcon, Cpu as CpuIcon, ShoppingBag as ShoppingBagIcon,
+  ChevronDown as ChevronDownIcon, Inbox as InboxIcon, PhoneCall as PhoneCallIcon, Clock3 as Clock3Icon, XCircle as XCircleIcon
 } from 'lucide-react';
 
 interface AdminPanelProps {
@@ -36,9 +86,10 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [password, setPassword] = useState('');
   const [authError, setAuthError] = useState('');
+  const [openStatusMenu, setOpenStatusMenu] = useState<string | null>(null);
 
   // Tab State
-  const [activeSubTab, setActiveSubTab] = useState<'overview' | 'messages' | 'subscribers' | 'blogs' | 'services' | 'portfolio' | 'pricing' | 'faqs' | 'testimonials' | 'team' | 'media' | 'settings' | 'users' | 'legal' | 'whychooseus' | 'process' | 'techstack' | 'products'>('overview');
+  const [activeSubTab, setActiveSubTab] = useState<'overview' | 'messages' | 'subscribers' | 'blogs' | 'services' | 'portfolio' | 'testimonials' | 'team' | 'media' | 'settings' | 'users' | 'legal' | 'whychooseus' | 'process' | 'techstack' | 'products'>('overview');
 
   // PROCESS WORKFLOW CMS STATE
   const [processSteps, setProcessStepsState] = useState<ProcessStep[]>([]);
@@ -153,9 +204,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
 
   // Expanded Modules lists state
   const [portfolios, setPortfolios] = useState<PortfolioItem[]>([]);
-  const [faqs, setFaqs] = useState<FAQ[]>([]);
   const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
-  const [pricingPlans, setPricingPlans] = useState<any[]>([]);
   const [teamMembers, setTeamMembers] = useState<any[]>([]);
   const [mediaItems, setMediaItems] = useState<any[]>([]);
   const [adminUsers, setAdminUsers] = useState<any[]>([]);
@@ -174,17 +223,9 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
   const [editingPortfolio, setEditingPortfolio] = useState<PortfolioItem | null>(null);
   const [isCreatingPortfolio, setIsCreatingPortfolio] = useState(false);
 
-  // Edit / Create States for FAQs
-  const [editingFAQ, setEditingFAQ] = useState<FAQ | null>(null);
-  const [isCreatingFAQ, setIsCreatingFAQ] = useState(false);
-
   // Edit / Create States for Testimonials
   const [editingTestimonial, setEditingTestimonial] = useState<Testimonial | null>(null);
   const [isCreatingTestimonial, setIsCreatingTestimonial] = useState(false);
-
-  // Edit / Create States for Pricing plans
-  const [editingPricingPlan, setEditingPricingPlan] = useState<any | null>(null);
-  const [isCreatingPricingPlan, setIsCreatingPricingPlan] = useState(false);
 
   // Edit / Create States for Team Members
   const [editingTeamMember, setEditingTeamMember] = useState<any | null>(null);
@@ -215,28 +256,11 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
     projectType: '', projectDate: '', appStoreUrl: '', playStoreUrl: '', thumbnailImage: ''
   });
 
-  // Form states for FAQs
-  const [faqForm, setFaqForm] = useState<Partial<FAQ>>({
-    categoryEn: 'General', categoryBn: 'সাধারণ', questionEn: '', questionBn: '', answerEn: '', answerBn: '', helpfulCount: 0
-  });
-
   // Form states for Testimonials
   const [testimonialForm, setTestimonialForm] = useState<Partial<Testimonial>>({
     name: '', roleEn: '', roleBn: '', company: '', feedbackEn: '', feedbackBn: '', rating: 5, avatar: ''
   });
 
-  // Form states for Pricing plans
-  const [pricingPlanForm, setPricingPlanForm] = useState<any>({
-    nameEn: '', nameBn: '', priceEn: '', priceBn: '', periodEn: 'month', periodBn: 'মাস',
-    badgeEn: '', badgeBn: '', featuresEn: [], featuresBn: [], buttonTextEn: 'Get Started', buttonTextBn: 'শুরু করুন'
-  });
-
-  // State arrays for granular pricing entities
-  const [pricingPackages, setPricingPackages] = useState<PricingPackage[]>([]);
-  const [pricingAddons, setPricingAddons] = useState<PricingAddon[]>([]);
-  const [pricingComparisons, setPricingComparisons] = useState<PricingComparison[]>([]);
-  const [pricingQuotes, setPricingQuotes] = useState<PricingQuoteRequest[]>([]);
-  
   // Currencies State
   const [currencies, setCurrencies] = useState<Currency[]>([]);
   const [currencySettings, setCurrencySettingsState] = useState<CurrencySettings>({
@@ -249,9 +273,6 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
   const [currencyForm, setCurrencyForm] = useState<Partial<Currency>>({
     name: '', code: '', symbol: '', flag: '', exchangeRate: 1.0, enabled: true, isDefault: false, sortOrder: 0
   });
-
-  // Sub-tab selection for Pricing inside admin panel
-  const [pricingSubTab, setPricingSubTab] = useState<'packages' | 'addons' | 'comparisons' | 'quotes' | 'currencies'>('packages');
 
   // New Testimonials Entities States
   const [testimonialVideos, setTestimonialVideos] = useState<TestimonialVideo[]>([]);
@@ -284,44 +305,6 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
     name: '', logoUrl: '', featured: true, displayOrder: 1
   });
 
-  // Edit / Create States for Pricing Packages
-  const [editingPricingPackage, setEditingPricingPackage] = useState<PricingPackage | null>(null);
-  const [isCreatingPricingPackage, setIsCreatingPricingPackage] = useState(false);
-
-  // Edit / Create States for Pricing Addons
-  const [editingPricingAddon, setEditingPricingAddon] = useState<PricingAddon | null>(null);
-  const [isCreatingPricingAddon, setIsCreatingPricingAddon] = useState(false);
-
-  // Edit / Create States for Pricing Comparisons
-  const [editingPricingComparison, setEditingPricingComparison] = useState<PricingComparison | null>(null);
-  const [isCreatingPricingComparison, setIsCreatingPricingComparison] = useState(false);
-
-  // Forms
-  const [pricingPackageForm, setPricingPackageForm] = useState<Partial<PricingPackage>>({
-    category: 'Agency Packages',
-    nameEn: '', nameBn: '',
-    priceMonthly: 0, priceYearly: 0,
-    descriptionEn: '', descriptionBn: '',
-    featuresEn: [], featuresBn: [],
-    notIncludedEn: [], notIncludedBn: [],
-    ctaEn: 'Get Started', ctaBn: 'শুরু করুন',
-    popular: false, enabled: true, sortOrder: 0,
-    badgeEn: '', badgeBn: '', techEn: ''
-  });
-
-  const [pricingAddonForm, setPricingAddonForm] = useState<Partial<PricingAddon>>({
-    nameEn: '', nameBn: '', price: '', descriptionEn: '', descriptionBn: '', category: 'Core Service', enabled: true
-  });
-
-  const [pricingComparisonForm, setPricingComparisonForm] = useState<Partial<PricingComparison>>({
-    featureEn: '', featureBn: '',
-    starterEn: '', starterBn: '',
-    businessEn: '', businessBn: '',
-    enterpriseEn: '', enterpriseBn: '',
-    categoryEn: 'Core Deliverables', categoryBn: 'প্রধান ডেলিভারিবল',
-    sortOrder: 0
-  });
-
   // Form states for Team Members
   const [teamMemberForm, setTeamMemberForm] = useState<any>({
     name: '', roleEn: '', roleBn: '', departmentEn: 'Management', departmentBn: 'ব্যবস্থাপনা',
@@ -345,12 +328,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
     const svcs = await adminDB.getAllServices(); setServices(svcs || []);
     const stgs = await adminDB.getSettings(); setSettings(stgs || {} as SiteSettings);
     const pfs = await adminDB.getAllPortfolio(); setPortfolios(pfs || []);
-    const faqs = await adminDB.getAllFAQs(); setFaqs(faqs || []);
     const tsts = await adminDB.getAllTestimonials(); setTestimonials(tsts || []);
-    const pkgs = await adminDB.getAllPricingPackages(); setPricingPackages(pkgs || []);
-    const adns = await adminDB.getAllPricingAddons(); setPricingAddons(adns || []);
-    const cmps = await adminDB.getAllPricingComparisons(); setPricingComparisons(cmps || []);
-    const pqs = await adminDB.getAllPricingQuotes(); setPricingQuotes(pqs || []);
     const curs = await adminDB.getAllCurrencies(); setCurrencies(curs || []);
     const currSets = await adminDB.getCurrencySettings(); if (currSets) setCurrencySettingsState(currSets);
     const vids = await adminDB.getAllTestimonialVideos(); setTestimonialVideos(vids || []);
@@ -360,15 +338,6 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
     const rvw = await adminDB.getReviewSettings(); setReviewSettings(rvw || null);
 
     // Auxiliary collections with local persistence
-    if (!getLocalItem('next_solution_pricing_plans')) {
-      const defaultPricing = [
-        { id: 'price-1', nameEn: 'Startup Blueprint', nameBn: 'স্টার্টআপ ব্লুপ্রিন্ট', priceEn: '$1,500', priceBn: '৳১,৫০,০০০', periodEn: 'one-time', periodBn: 'এককালীন', badgeEn: 'Popular', badgeBn: 'জনপ্রিয়', featuresEn: ['High-Fidelity UI Redesign', 'Standard React Frontend', 'Contact Form Integration', 'Basic SEO Setup'], featuresBn: ['হাই-ফিডেলিটি UI রিডিজাইন', 'স্ট্যান্ডার্ড রিঅ্যাক্ট ফ্রন্টএন্ড', 'যোগাযোগ ফর্ম ইন্টিগ্রেশন', 'বেসিক এসইও সেটআপ'], buttonTextEn: 'Kickstart Project', buttonTextBn: 'প্রজেক্ট শুরু করুন' },
-        { id: 'price-2', nameEn: 'Enterprise Scaling', nameBn: 'এন্টারপ্রাইজ স্কেলিং', priceEn: '$5,000', priceBn: '৳৫,০০,০০০', periodEn: 'month', periodBn: 'মাস', badgeEn: 'Elite', badgeBn: 'এলিট', featuresEn: ['Custom Next.js App Router', 'Full Cloud Architecture', 'Supabase Database Setup', 'Role-Based Authentication', 'Continuous 24/7 Support'], featuresBn: ['কাস্টম নেক্সট জেএস অ্যাপ রাউটার', 'সম্পূর্ণ ক্লাউড আর্কিটেকচার', 'সুপাবেস ডাটাবেস সেটআপ', 'রোল-ভিত্তিক অথেনটিকেশন', 'সার্বক্ষণিক সাপোর্ট'], buttonTextEn: 'Secure Retainer', buttonTextBn: 'রিটেইনার বুক করুন' }
-      ];
-      setLocalItem('next_solution_pricing_plans', JSON.stringify(defaultPricing));
-    }
-    setPricingPlans(JSON.parse(getLocalItem('next_solution_pricing_plans') || '[]'));
-
     if (!getLocalItem('next_solution_team')) {
       const defaultTeam = [
         { id: 'team-1', name: 'Sanjid Rahman', roleEn: 'Founder & CEO', roleBn: 'প্রতিষ্ঠাতা ও সিইও', departmentEn: 'Executive', departmentBn: 'নির্বাহী', avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=400', email: 'sanjid@nextsolution.com', linkedin: 'https://linkedin.com/in/sanjid', bioEn: 'Sanjid oversees Next Solutions strategic direction, drawing on 12+ years of enterprise SaaS architecture.', bioBn: 'সানজিদ নেক্সট সলিউশনের কৌশলগত পরিকল্পনা পরিচালনা করেন, তার ১২ বছরের স্যাস আর্কিটেকচারের অভিজ্ঞতা রয়েছে।' },
@@ -429,6 +398,60 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
     }
   }, [isAuthenticated]);
 
+  // Real-time subscriptions for the most important operational tables.
+  // On any relevant event we re-pull that collection so the dashboard and
+  // listing stay in sync without a manual page refresh. Polling acts as a
+  // safety net for tables that aren't enabled on the realtime publication yet.
+  const realtimeRefreshMap: Record<string, () => Promise<void>> = {
+    contact_messages: async () => {
+      const msgs = await adminDB.getAllMessages();
+      setMessages(msgs || []);
+    },
+    portfolio_items: async () => {
+      const pfs = await adminDB.getAllPortfolio();
+      setPortfolios(pfs || []);
+    },
+    services: async () => {
+      const svcs = await adminDB.getAllServices();
+      setServices(svcs || []);
+    },
+    newsletter_subscribers: async () => {
+      const subs = await adminDB.getAllSubscribers();
+      setSubscribers(subs || []);
+    },
+    blog_posts: async () => {
+      const blgs = await adminDB.getAllBlogs();
+      setBlogs(blgs || []);
+    },
+  };
+  useRealtime(
+    Object.keys(realtimeRefreshMap),
+    (e) => {
+      const fn = realtimeRefreshMap[e.table];
+      if (fn) {
+        fn();
+        if (e.table === "contact_messages" && e.type === "INSERT") {
+          triggerNotice(
+            currentLang === "en"
+              ? "New inbound lead received."
+              : "নতুন লিড প্রাপ্ত হয়েছে।",
+          );
+        }
+      }
+    },
+  );
+
+  // Polling safety net (60s) so live dashboards recover even if a table is
+  // not (yet) enabled on the Supabase realtime publication.
+  useEffect(() => {
+    if (!isAuthenticated) return;
+    const id = setInterval(() => {
+      loadAdminData();
+    }, 60000);
+    return () => clearInterval(id);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isAuthenticated]);
+
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
     setAuthError('');
@@ -441,12 +464,20 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
   };
 
   // Messages operations
-  const handleToggleMessageStatus = async (id: string, currentStatus: 'unread' | 'read' | 'replied') => {
-    let nextStatus: 'unread' | 'read' | 'replied' = 'read';
-    if (currentStatus === 'read') nextStatus = 'replied';
-    else if (currentStatus === 'replied') nextStatus = 'unread';
+  const handleToggleMessageStatus = async (id: string, currentStatus: 'unread' | 'read' | 'replied' | 'contacted' | 'in_progress' | 'converted' | 'closed') => {
+    let nextStatus: 'unread' | 'read' | 'replied' | 'contacted' | 'in_progress' | 'converted' | 'closed' = 'contacted';
+    if (currentStatus === 'contacted') nextStatus = 'in_progress';
+    else if (currentStatus === 'in_progress') nextStatus = 'converted';
+    else if (currentStatus === 'converted') nextStatus = 'closed';
+    else if (currentStatus === 'closed') nextStatus = 'unread';
 
     await adminDB.updateMessage(id, { status: nextStatus });
+    const msgs = await adminDB.getAllMessages(); setMessages(msgs || []);
+    triggerNotice(currentLang === 'en' ? 'Message state updated!' : 'বার্তার স্ট্যাটাস আপডেট করা হয়েছে!');
+  };
+
+  const handleSetMessageStatus = async (id: string, status: 'unread' | 'read' | 'replied' | 'contacted' | 'in_progress' | 'converted' | 'closed') => {
+    await adminDB.updateMessage(id, { status });
     const msgs = await adminDB.getAllMessages(); setMessages(msgs || []);
     triggerNotice(currentLang === 'en' ? 'Message state updated!' : 'বার্তার স্ট্যাটাস আপডেট করা হয়েছে!');
   };
@@ -683,40 +714,6 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
     triggerNotice(currentLang === 'en' ? 'Portfolio item deleted.' : 'পোর্টফোলিও প্রজেক্টটি মুছে ফেলা হয়েছে।');
   };
 
-  // FAQ CRUD operations
-  const handleSaveFAQ = async (e: React.FormEvent) => {
-    e.preventDefault();
-    const faqId = editingFAQ ? editingFAQ.id : `faq-${Date.now()}`;
-    const completedFAQ: FAQ = {
-      id: faqId,
-      categoryEn: faqForm.categoryEn || 'General',
-      categoryBn: faqForm.categoryBn || 'সাধারণ',
-      questionEn: faqForm.questionEn || '',
-      questionBn: faqForm.questionBn || '',
-      answerEn: faqForm.answerEn || '',
-      answerBn: faqForm.answerBn || '',
-      helpfulCount: faqForm.helpfulCount || 0
-    };
-
-    await adminDB.saveFAQ(completedFAQ);
-    const faqs = await adminDB.getAllFAQs(); setFaqs(faqs || []);
-    setIsCreatingFAQ(false);
-    setEditingFAQ(null);
-    triggerNotice(currentLang === 'en' ? 'FAQ successfully saved!' : 'প্রশ্নোত্তরটি সংরক্ষণ করা হয়েছে!');
-  };
-
-  const handleEditFAQTrigger = (item: FAQ) => {
-    setEditingFAQ(item);
-    setFaqForm(item);
-    setIsCreatingFAQ(true);
-  };
-
-  const handleDeleteFAQ = async (id: string) => {
-    await adminDB.deleteFAQ(id);
-    const faqs = await adminDB.getAllFAQs(); setFaqs(faqs || []);
-    triggerNotice(currentLang === 'en' ? 'FAQ entry removed.' : 'প্রশ্নোত্তরটি মুছে ফেলা হয়েছে।');
-  };
-
   // Testimonials CRUD operations
   const handleSaveTestimonial = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -885,191 +882,6 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
     if (!reviewSettings) return;
     await adminDB.saveReviewSettings(reviewSettings);
     triggerNotice(currentLang === 'en' ? 'Settings successfully updated!' : 'সেটিংস সফলভাবে আপডেট করা হয়েছে!');
-  };
-
-  // Pricing plans operations
-  const handleSavePricingPlan = (e: React.FormEvent) => {
-    e.preventDefault();
-    const list = [...pricingPlans];
-    const planId = editingPricingPlan ? editingPricingPlan.id : `price-${Date.now()}`;
-    const completedPlan = {
-      id: planId,
-      nameEn: pricingPlanForm.nameEn || 'Premium Plan',
-      nameBn: pricingPlanForm.nameBn || 'প্রিমিয়াম প্ল্যান',
-      priceEn: pricingPlanForm.priceEn || '$1,000',
-      priceBn: pricingPlanForm.priceBn || '৳১,০০,০০০',
-      periodEn: pricingPlanForm.periodEn || 'month',
-      periodBn: pricingPlanForm.periodBn || 'মাস',
-      badgeEn: pricingPlanForm.badgeEn || '',
-      badgeBn: pricingPlanForm.badgeBn || '',
-      featuresEn: pricingPlanForm.featuresEn || [],
-      featuresBn: pricingPlanForm.featuresBn || [],
-      buttonTextEn: pricingPlanForm.buttonTextEn || 'Get Started',
-      buttonTextBn: pricingPlanForm.buttonTextBn || 'শুরু করুন'
-    };
-
-    const index = list.findIndex(p => p.id === planId);
-    if (index >= 0) {
-      list[index] = completedPlan;
-    } else {
-      list.push(completedPlan);
-    }
-
-    setLocalItem('next_solution_pricing_plans', JSON.stringify(list));
-    setPricingPlans(list);
-    setIsCreatingPricingPlan(false);
-    setEditingPricingPlan(null);
-    triggerNotice(currentLang === 'en' ? 'Pricing plan saved!' : 'প্রাইসিং প্যাকেজটি সংরক্ষণ করা হয়েছে!');
-  };
-
-  const handleEditPricingPlanTrigger = (plan: any) => {
-    setEditingPricingPlan(plan);
-    setPricingPlanForm(plan);
-    setIsCreatingPricingPlan(true);
-  };
-
-  const handleDeletePricingPlan = (id: string) => {
-    const list = pricingPlans.filter(p => p.id !== id);
-    setLocalItem('next_solution_pricing_plans', JSON.stringify(list));
-    setPricingPlans(list);
-    triggerNotice(currentLang === 'en' ? 'Pricing plan deleted.' : 'প্রাইসিং প্যাকেজটি মুছে ফেলা হয়েছে।');
-  };
-
-  // 1. Pricing Packages CRUD
-  const handleSavePricingPackage = async (e: React.FormEvent) => {
-    e.preventDefault();
-    const pkgId = editingPricingPackage ? editingPricingPackage.id : `pkg-${Date.now()}`;
-    const completedPkg: PricingPackage = {
-      id: pkgId,
-      category: pricingPackageForm.category || 'Agency Packages',
-      nameEn: pricingPackageForm.nameEn || '',
-      nameBn: pricingPackageForm.nameBn || '',
-      priceMonthly: Number(pricingPackageForm.priceMonthly) || 0,
-      priceYearly: Number(pricingPackageForm.priceYearly) || 0,
-      descriptionEn: pricingPackageForm.descriptionEn || '',
-      descriptionBn: pricingPackageForm.descriptionBn || '',
-      featuresEn: pricingPackageForm.featuresEn || [],
-      featuresBn: pricingPackageForm.featuresBn || [],
-      notIncludedEn: pricingPackageForm.notIncludedEn || [],
-      notIncludedBn: pricingPackageForm.notIncludedBn || [],
-      ctaEn: pricingPackageForm.ctaEn || 'Get Started',
-      ctaBn: pricingPackageForm.ctaBn || 'শুরু করুন',
-      popular: !!pricingPackageForm.popular,
-      enabled: !!pricingPackageForm.enabled,
-      sortOrder: Number(pricingPackageForm.sortOrder) || 0,
-      badgeEn: pricingPackageForm.badgeEn || '',
-      badgeBn: pricingPackageForm.badgeBn || '',
-      techEn: pricingPackageForm.techEn || '',
-      deliveryTimeEn: pricingPackageForm.deliveryTimeEn || '',
-      deliveryTimeBn: pricingPackageForm.deliveryTimeBn || '',
-      supportPeriodEn: pricingPackageForm.supportPeriodEn || '',
-      supportPeriodBn: pricingPackageForm.supportPeriodBn || '',
-      perfectForEn: pricingPackageForm.perfectForEn || '',
-      perfectForBn: pricingPackageForm.perfectForBn || ''
-    };
-
-    await adminDB.savePricingPackage(completedPkg);
-    const pkgs = await adminDB.getAllPricingPackages(); setPricingPackages(pkgs || []);
-    setIsCreatingPricingPackage(false);
-    setEditingPricingPackage(null);
-    triggerNotice(currentLang === 'en' ? 'Pricing package saved successfully!' : 'প্রাইসিং প্যাকেজটি সফলভাবে সংরক্ষণ করা হয়েছে!');
-  };
-
-  const handleEditPricingPackageTrigger = (pkg: PricingPackage) => {
-    setEditingPricingPackage(pkg);
-    setPricingPackageForm(pkg);
-    setIsCreatingPricingPackage(true);
-  };
-
-  const handleDeletePricingPackage = async (id: string) => {
-    await adminDB.deletePricingPackage(id);
-    const pkgs = await adminDB.getAllPricingPackages(); setPricingPackages(pkgs || []);
-    triggerNotice(currentLang === 'en' ? 'Pricing package removed.' : 'প্রাইসিং প্যাকেজটি মুছে ফেলা হয়েছে।');
-  };
-
-  // 2. Pricing Addons CRUD
-  const handleSavePricingAddon = async (e: React.FormEvent) => {
-    e.preventDefault();
-    const addonId = editingPricingAddon ? editingPricingAddon.id : `addon-${Date.now()}`;
-    const completedAddon: PricingAddon = {
-      id: addonId,
-      nameEn: pricingAddonForm.nameEn || '',
-      nameBn: pricingAddonForm.nameBn || '',
-      price: pricingAddonForm.price || '',
-      descriptionEn: pricingAddonForm.descriptionEn || '',
-      descriptionBn: pricingAddonForm.descriptionBn || '',
-      category: pricingAddonForm.category || 'Core Service',
-      enabled: !!pricingAddonForm.enabled
-    };
-
-    await adminDB.savePricingAddon(completedAddon);
-    const adns = await adminDB.getAllPricingAddons(); setPricingAddons(adns || []);
-    setIsCreatingPricingAddon(false);
-    setEditingPricingAddon(null);
-    triggerNotice(currentLang === 'en' ? 'Add-on service saved successfully!' : 'অ্যাড-অন সার্ভিসটি সফলভাবে সংরক্ষণ করা হয়েছে!');
-  };
-
-  const handleEditPricingAddonTrigger = (addon: PricingAddon) => {
-    setEditingPricingAddon(addon);
-    setPricingAddonForm(addon);
-    setIsCreatingPricingAddon(true);
-  };
-
-  const handleDeletePricingAddon = async (id: string) => {
-    await adminDB.deletePricingAddon(id);
-    const adns = await adminDB.getAllPricingAddons(); setPricingAddons(adns || []);
-    triggerNotice(currentLang === 'en' ? 'Add-on service removed.' : 'অ্যাড-অন সার্ভিসটি মুছে ফেলা হয়েছে।');
-  };
-
-  // 3. Pricing Comparisons CRUD
-  const handleSavePricingComparison = async (e: React.FormEvent) => {
-    e.preventDefault();
-    const compId = editingPricingComparison ? editingPricingComparison.id : `comp-${Date.now()}`;
-    const completedComp: PricingComparison = {
-      id: compId,
-      featureEn: pricingComparisonForm.featureEn || '',
-      featureBn: pricingComparisonForm.featureBn || '',
-      starterEn: pricingComparisonForm.starterEn || '',
-      starterBn: pricingComparisonForm.starterBn || '',
-      businessEn: pricingComparisonForm.businessEn || '',
-      businessBn: pricingComparisonForm.businessBn || '',
-      enterpriseEn: pricingComparisonForm.enterpriseEn || '',
-      enterpriseBn: pricingComparisonForm.enterpriseBn || '',
-      categoryEn: pricingComparisonForm.categoryEn || 'Core Deliverables',
-      categoryBn: pricingComparisonForm.categoryBn || 'প্রধান ডেলিভারিবল',
-      sortOrder: Number(pricingComparisonForm.sortOrder) || 0
-    };
-
-    await adminDB.savePricingComparison(completedComp);
-    const cmps = await adminDB.getAllPricingComparisons(); setPricingComparisons(cmps || []);
-    setIsCreatingPricingComparison(false);
-    setEditingPricingComparison(null);
-    triggerNotice(currentLang === 'en' ? 'Comparison feature saved successfully!' : 'ফিচার তুলনা ম্যাট্রিক্স সফলভাবে সংরক্ষণ করা হয়েছে!');
-  };
-
-  const handleEditPricingComparisonTrigger = (comp: PricingComparison) => {
-    setEditingPricingComparison(comp);
-    setPricingComparisonForm(comp);
-    setIsCreatingPricingComparison(true);
-  };
-
-  const handleDeletePricingComparison = async (id: string) => {
-    await adminDB.deletePricingComparison(id);
-    const cmps = await adminDB.getAllPricingComparisons(); setPricingComparisons(cmps || []);
-    triggerNotice(currentLang === 'en' ? 'Comparison feature removed.' : 'ফিচার তুলনা ম্যাট্রিক্স মুছে ফেলা হয়েছে।');
-  };
-
-  // 4. Quotes Operations
-  const handleUpdateQuoteStatus = async (id: string, status: 'pending' | 'reviewed' | 'contacted') => {
-    await adminDB.updatePricingQuote(id, { status: status });
-    const pqs = await adminDB.getAllPricingQuotes(); setPricingQuotes(pqs || []);
-    triggerNotice(currentLang === 'en' ? 'Inbound quote status updated!' : 'কোড রিকোয়েস্ট স্ট্যাটাস আপডেট করা হয়েছে!');
-  };
-
-  const handleDeleteQuote = async (id: string) => {
-    await adminDB.deletePricingQuote(id);
-    const pqs = await adminDB.getAllPricingQuotes(); setPricingQuotes(pqs || []);
-    triggerNotice(currentLang === 'en' ? 'Inbound quote request removed.' : 'কোড রিকোয়েস্টটি মুছে ফেলা হয়েছে।');
   };
 
   // Currency & Rate operations
@@ -1576,7 +1388,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder={currentLang === 'en' ? 'Enter admin to access' : 'প্রবেশ করতে admin লিখুন'}
-                className="w-full rounded-lg border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-3 py-2.5 text-sm text-gray-800 dark:text-neutral-100 placeholder-gray-400 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500 transition"
+                className="w-full rounded-lg border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-3 py-2.5 text-sm text-gray-800 dark:text-neutral-100 placeholder-gray-400 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 transition"
               />
             </div>
 
@@ -1603,7 +1415,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
 
   // Primary Authenticated Admin Console Layout
   return (
-    <section id="admin-main-dashboard" className="bg-gray-50 dark:bg-[#0c0c0c] py-12 min-h-screen">
+    <section id="admin-main-dashboard" className="bg-gray-50 dark:bg-[#0c0c0c] py-12 min-h-screen text-gray-900 dark:text-white">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         
         {/* Header Block */}
@@ -1695,8 +1507,6 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
               { id: 'messages', label: currentLang === 'en' ? 'Inbound Leads' : 'প্রাপ্ত বার্তা সমূহ', icon: MailIcon },
               { id: 'services', label: currentLang === 'en' ? 'Manage Services' : 'সার্ভিস পরিবর্তন', icon: SettingsIcon },
               { id: 'portfolio', label: currentLang === 'en' ? 'Manage Portfolio' : 'পোর্টফোলিও পরিচালনা', icon: FolderKanbanIcon },
-              { id: 'pricing', label: currentLang === 'en' ? 'Pricing Management' : 'প্রাইসিং ম্যানেজমেন্ট', icon: DollarSignIcon },
-              { id: 'faqs', label: currentLang === 'en' ? 'Manage FAQs' : 'সাধারণ জিজ্ঞাসা', icon: HelpCircleIcon },
               { id: 'team', label: currentLang === 'en' ? 'Team Members' : 'টিম মেম্বার্স', icon: UserCheckIcon },
               { id: 'settings', label: currentLang === 'en' ? 'Site Config & SEO' : 'সাইটের তথ্য ও এসইও', icon: SettingsIcon },
               { id: 'products', label: currentLang === 'en' ? 'Manage Products' : 'প্রোডাক্টস পরিচালনা', icon: ShoppingBagIcon }
@@ -1711,12 +1521,8 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                   setEditingService(null);
                   setEditingPortfolio(null);
                   setIsCreatingPortfolio(false);
-                  setEditingFAQ(null);
-                  setIsCreatingFAQ(false);
                   setEditingTestimonial(null);
                   setIsCreatingTestimonial(false);
-                  setEditingPricingPlan(null);
-                  setIsCreatingPricingPlan(false);
                   setEditingTeamMember(null);
                   setIsCreatingTeamMember(false);
                   setEditingUser(null);
@@ -1749,204 +1555,179 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
           {/* Tab Work Desk (Right panel) */}
           <div className="lg:col-span-9 bg-white dark:bg-[#141414] border border-gray-200 dark:border-neutral-700/80 rounded-2xl p-5 md:p-6 shadow-sm overflow-hidden">
             
-            {/* T0: DASHBOARD OVERVIEW & ANALYTICS */}
+            {/* T0: DASHBOARD OVERVIEW & ANALYTICS (premium real-time) */}
             {activeSubTab === 'overview' && (
-              <div id="panel-overview-desk" className="space-y-6">
-                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-gray-200 dark:border-neutral-700/80 pb-3">
-                  <h3 className="text-sm font-bold text-gray-900 dark:text-white">
-                    {currentLang === 'en' ? 'Enterprise Operations Hub' : 'এন্টারপ্রাইজ অপারেশনস হাব'}
-                  </h3>
-                  <div className="flex items-center space-x-2">
-                    <span className="inline-flex h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                    <span className="text-[10px] text-gray-400 dark:text-neutral-500 font-bold uppercase tracking-widest font-mono">Live Systems Connected</span>
-                  </div>
-                </div>
-
-                {/* KPI Metrics row */}
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                  <div className="rounded-xl border border-gray-200 dark:border-neutral-700/80 bg-white dark:bg-[#141414] p-4 space-y-1 shadow-sm">
-                    <span className="text-[10px] text-gray-400 dark:text-neutral-500 font-bold uppercase block">Monthly Revenue</span>
-                    <span className="text-xl font-bold text-gray-900 dark:text-white font-mono">$24,500</span>
-                    <span className="text-[9px] text-emerald-500 dark:text-emerald-400 font-bold flex items-center">↑ 12.4% vs last month</span>
-                  </div>
-                  <div className="rounded-xl border border-gray-200 dark:border-neutral-700/80 bg-white dark:bg-[#141414] p-4 space-y-1 shadow-sm">
-                    <span className="text-[10px] text-gray-400 dark:text-neutral-500 font-bold uppercase block">Lead Conversion</span>
-                    <span className="text-xl font-bold text-gray-900 dark:text-white font-mono">8.42%</span>
-                    <span className="text-[9px] text-emerald-500 dark:text-emerald-400 font-bold flex items-center">↑ 2.1% conversion rate</span>
-                  </div>
-                  <div className="rounded-xl border border-gray-200 dark:border-neutral-700/80 bg-white dark:bg-[#141414] p-4 space-y-1 shadow-sm">
-                    <span className="text-[10px] text-gray-400 dark:text-neutral-500 font-bold uppercase block">Total Leads Logged</span>
-                    <span className="text-xl font-bold text-gray-900 dark:text-white font-mono">{messages.length}</span>
-                    <span className="text-[9px] text-blue-500 dark:text-orange-400 font-semibold block">Real-time DB synced</span>
-                  </div>
-                  <div className="rounded-xl border border-gray-200 dark:border-neutral-700/80 bg-white dark:bg-[#141414] p-4 space-y-1 shadow-sm">
-                    <span className="text-[10px] text-gray-400 dark:text-neutral-500 font-bold uppercase block">Subscriber Intel</span>
-                    <span className="text-xl font-bold text-gray-900 dark:text-white font-mono">{subscribers.length}</span>
-                    <span className="text-[9px] text-purple-500 font-semibold block">Active newsletters</span>
-                  </div>
-                </div>
-
-                {/* Analytic Graphs mock dashboard using SVG */}
-                <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
-                  <div className="md:col-span-8 rounded-xl border border-gray-100 dark:border-neutral-800 bg-white dark:bg-[#141414] p-4 md:p-5 space-y-4 shadow-sm">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <h4 className="text-xs font-bold text-gray-900 dark:text-white uppercase tracking-wide">Client Traffic & Lead Volume</h4>
-                        <p className="text-[10px] text-gray-400 dark:text-neutral-500 mt-0.5">Bi-weekly analytics aggregation</p>
-                      </div>
-                      <select className="text-[10px] bg-gray-50 dark:bg-[#141414] border border-gray-100 dark:border-neutral-800 rounded px-2 py-1 font-bold">
-                        <option>7 Days (Interval)</option>
-                        <option>30 Days (Rolling)</option>
-                        <option>Year to Date</option>
-                      </select>
-                    </div>
-                    {/* SVG Line Chart */}
-                    <div className="relative h-48 w-full bg-gray-50/50 rounded-lg flex items-end px-4 pb-2 pt-6">
-                      <svg className="absolute inset-0 h-full w-full" viewBox="0 0 100 100" preserveAspectRatio="none">
-                        <defs>
-                          <linearGradient id="gradient-area" x1="0" y1="0" x2="0" y2="1">
-                            <stop offset="0%" stopColor="#FF4D00" stopOpacity="0.15" />
-                            <stop offset="100%" stopColor="#FF4D00" stopOpacity="0" />
-                          </linearGradient>
-                        </defs>
-                        {/* Area path */}
-                        <path d="M 0 85 Q 15 65 30 75 T 60 40 T 90 20 T 100 15 L 100 95 L 0 95 Z" fill="url(#gradient-area)" />
-                        {/* Grid lines */}
-                        <line x1="0" y1="20" x2="100" y2="20" stroke="#f1f5f9" strokeWidth="0.5" />
-                        <line x1="0" y1="50" x2="100" y2="50" stroke="#f1f5f9" strokeWidth="0.5" />
-                        <line x1="0" y1="80" x2="100" y2="80" stroke="#f1f5f9" strokeWidth="0.5" />
-                        {/* Main line path */}
-                        <path d="M 0 85 Q 15 65 30 75 T 60 40 T 90 20 T 100 15" fill="none" stroke="#FF4D00" strokeWidth="2" strokeLinecap="round" />
-                        {/* Dots */}
-                        <circle cx="30" cy="75" r="2" fill="#FF4D00" />
-                        <circle cx="60" cy="40" r="2" fill="#FF4D00" />
-                        <circle cx="90" cy="20" r="2" fill="#FF4D00" />
-                      </svg>
-                      {/* X Axis Labels */}
-                      <div className="w-full flex justify-between text-[8px] font-bold text-gray-400 dark:text-neutral-500 font-mono relative z-10">
-                        <span>Mon</span>
-                        <span>Wed</span>
-                        <span>Fri</span>
-                        <span>Sun</span>
-                        <span>Today</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="md:col-span-4 rounded-xl border border-gray-100 dark:border-neutral-800 bg-white dark:bg-[#141414] p-4 space-y-4 shadow-sm">
-                    <div>
-                      <h4 className="text-xs font-bold text-gray-900 dark:text-white uppercase tracking-wide">Acquisition Channels</h4>
-                      <p className="text-[10px] text-gray-400 dark:text-neutral-500 mt-0.5">Where inbound leads originate</p>
-                    </div>
-                    {/* Funnel list representation */}
-                    <div className="space-y-3 pt-2">
-                      {[
-                        { label: 'Organic Search (SEO)', pct: '48%', color: 'bg-blue-600 dark:bg-orange-500' },
-                        { label: 'LinkedIn Marketing', pct: '28%', color: 'bg-emerald-600' },
-                        { label: 'Client Referrals', pct: '15%', color: 'bg-indigo-600' },
-                        { label: 'Direct / Word of Mouth', pct: '9%', color: 'bg-purple-600' },
-                      ].map((item, idx) => (
-                        <div key={idx} className="space-y-1">
-                          <div className="flex justify-between text-[10px] font-bold text-gray-600 dark:text-neutral-300">
-                            <span>{item.label}</span>
-                            <span className="font-mono">{item.pct}</span>
-                          </div>
-                          <div className="h-1.5 w-full bg-gray-100 dark:bg-neutral-800 rounded-full overflow-hidden">
-                            <div className={`h-full rounded-full ${item.color}`} style={{ width: item.pct }}></div>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-
-                {/* Operations checklist and system logs */}
-                <div className="rounded-xl border border-gray-100 dark:border-neutral-800 bg-white dark:bg-[#141414] p-4 space-y-3 shadow-sm">
-                  <h4 className="text-xs font-bold text-gray-900 dark:text-white uppercase tracking-wide">System Audit & Status Log</h4>
-                  <div className="divide-y divide-gray-50 text-[10px]">
-                    <div className="py-2.5 flex items-center justify-between text-gray-600 dark:text-neutral-300">
-                      <span>Database initialized successfully (seeded default records)</span>
-                      <span className="font-mono text-gray-400 dark:text-neutral-500">July 10, 2026</span>
-                    </div>
-                    <div className="py-2.5 flex items-center justify-between text-gray-600 dark:text-neutral-300">
-                      <span>Services module string integrity confirmed and secured</span>
-                      <span className="font-mono text-emerald-500 dark:text-emerald-400 font-bold">Passed</span>
-                    </div>
-                    <div className="py-2.5 flex items-center justify-between text-gray-600 dark:text-neutral-300">
-                      <span>Supabase storage container connection emulation</span>
-                      <span className="font-mono text-blue-500 dark:text-orange-400 font-semibold">Active</span>
-                    </div>
-                  </div>
-                </div>
+              <div id="panel-overview-desk">
+                <DashboardOverview
+                  messages={messages as any}
+                  subscribers={subscribers as any}
+                  blogs={blogs as any}
+                  services={services as any}
+                  portfolios={portfolios}
+                />
               </div>
             )}
             
             {/* T1: INBOUND LEADS SECTION */}
             {activeSubTab === 'messages' && (
-              <div id="panel-leads-desk" className="space-y-6">
-                <h3 className="text-sm font-bold text-gray-900 dark:text-white border-b border-gray-50 pb-3">
-                  {currentLang === 'en' ? 'Inbound Customer Leads' : 'প্রাপ্ত কাস্টমার লিডসমূহ'}
-                </h3>
+              <div id="panel-leads-desk" className="space-y-5">
+                <div className="flex flex-wrap items-center justify-between gap-3 border-b border-gray-200 dark:border-neutral-700/80 pb-3">
+                  <h3 className="text-sm font-bold text-gray-900 dark:text-white">
+                    {currentLang === 'en' ? 'Inbound Customer Leads' : 'প্রাপ্ত কাস্টমার লিডসমূহ'}
+                  </h3>
+                  <div className="flex items-center gap-2">
+                    <span className="inline-flex items-center gap-1.5 rounded-full bg-orange-50 dark:bg-orange-500/10 text-orange-600 dark:text-orange-400 text-[10px] font-bold px-2.5 py-1">
+                      <span className="h-1.5 w-1.5 rounded-full bg-orange-500 animate-pulse" />
+                      LIVE
+                    </span>
+                    <span className="inline-flex items-center gap-1.5 rounded-full bg-gray-100 dark:bg-neutral-800 text-gray-600 dark:text-neutral-300 text-[10px] font-bold px-2.5 py-1">
+                      <MailIcon className="h-3 w-3" />
+                      {messages.length} {currentLang === 'en' ? 'total' : 'মোট'}
+                    </span>
+                  </div>
+                </div>
 
-                <div className="space-y-4">
-                  {messages.map((msg) => (
-                    <div 
-                      key={msg.id} 
-                      className={`rounded-xl border p-4 text-xs space-y-3 transition ${
-                        msg.status === 'unread' 
-                          ? 'border-blue-400 bg-blue-50/10' 
-                          : 'border-gray-100 dark:border-neutral-800'
-                      }`}
-                    >
-                      <div className="flex flex-wrap items-center justify-between gap-2 border-b border-gray-50 pb-2">
-                        <div>
-                          <span className="font-bold text-sm text-gray-900 dark:text-white block">{msg.name}</span>
-                          <span className="text-gray-400 dark:text-neutral-500 font-mono text-[10px]">{msg.email} | {msg.phone}</span>
+                <div className="space-y-3">
+                  {messages.map((msg) => {
+                    const st: LeadStatusValue = (LEAD_STATUS_META[msg.status as LeadStatusValue] ? msg.status as LeadStatusValue : 'unread');
+                    const meta = LEAD_STATUS_META[st];
+                    const StatusIcon = meta.icon;
+                    const isOpen = openStatusMenu === msg.id;
+                    return (
+                      <div
+                        key={msg.id}
+                        className={`relative rounded-2xl border p-4 text-xs space-y-3 transition bg-white dark:bg-[#151515] shadow-sm ${
+                          st === 'unread'
+                            ? 'border-orange-200 dark:border-orange-500/30'
+                            : 'border-gray-100 dark:border-neutral-700/70'
+                        } hover:border-gray-300 dark:hover:border-neutral-600`}
+                      >
+                        <div className="flex flex-wrap items-center justify-between gap-2">
+                          <div className="flex items-center gap-3 min-w-0">
+                            <div className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl font-black text-sm ${meta.badge}`}>
+                              {msg.name ? msg.name.charAt(0).toUpperCase() : '?'}
+                            </div>
+                            <div className="min-w-0">
+                              <div className="flex items-center gap-2">
+                                <span className="font-bold text-sm text-gray-900 dark:text-white truncate">{msg.name}</span>
+                                {st === 'unread' && (
+                                  <span className="text-[8px] font-black uppercase tracking-wider text-orange-500 bg-orange-50 dark:bg-orange-500/10 rounded-full px-1.5 py-0.5">
+                                    {currentLang === 'en' ? 'New' : 'নতুন'}
+                                  </span>
+                                )}
+                              </div>
+                              <span className="text-gray-400 dark:text-neutral-500 font-mono text-[10px] truncate">
+                                {msg.email}{msg.phone ? ` | ${msg.phone}` : ''}
+                              </span>
+                            </div>
+                          </div>
+
+                          <div className="flex items-center space-x-2">
+                            {/* Status dropdown */}
+                            <div className="relative">
+                              <button
+                                id={`status-toggle-${msg.id}`}
+                                onClick={() => setOpenStatusMenu(isOpen ? null : msg.id)}
+                                className={`inline-flex items-center gap-1.5 rounded-lg border px-2.5 py-1.5 text-[10px] font-bold uppercase transition hover:brightness-95 ${meta.badge}`}
+                              >
+                                <StatusIcon className="h-3.5 w-3.5" />
+                                {currentLang === 'en' ? meta.labelEn : meta.labelBn}
+                                <ChevronDownIcon className={`h-3 w-3 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
+                              </button>
+
+                              {isOpen && (
+                                <>
+                                  <div className="fixed inset-0 z-20" onClick={() => setOpenStatusMenu(null)} />
+                                  <div className="absolute right-0 z-30 mt-1.5 w-44 rounded-xl border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#151515] shadow-xl py-1.5">
+                                    {(['unread', 'contacted', 'in_progress', 'converted', 'closed'] as LeadStatusValue[]).map((opt) => {
+                                      const om = LEAD_STATUS_META[opt];
+                                      const Icon = om.icon;
+                                      const isActive = opt === st;
+                                      return (
+                                        <button
+                                          key={opt}
+                                          onClick={() => { setOpenStatusMenu(null); handleSetMessageStatus(msg.id, opt); }}
+                                          className={`w-full flex items-center gap-2 px-3 py-1.5 text-left text-[11px] font-semibold transition ${
+                                            isActive
+                                              ? 'bg-gray-50 dark:bg-neutral-800 text-gray-900 dark:text-white'
+                                              : 'text-gray-600 dark:text-neutral-300 hover:bg-gray-50 dark:hover:bg-neutral-800'
+                                          }`}
+                                        >
+                                          <Icon className={`h-3.5 w-3.5 ${om.dot}`} />
+                                          {currentLang === 'en' ? om.labelEn : om.labelBn}
+                                          {isActive && <span className={`ml-auto h-1.5 w-1.5 rounded-full ${om.dot}`} />}
+                                        </button>
+                                      );
+                                    })}
+                                    <div className="my-1 border-t border-gray-100 dark:border-neutral-800" />
+                                    <button
+                                      onClick={() => { setOpenStatusMenu(null); handleToggleMessageStatus(msg.id, st); }}
+                                      className="w-full flex items-center gap-2 px-3 py-1.5 text-left text-[11px] font-semibold text-gray-500 dark:text-neutral-400 hover:bg-gray-50 dark:hover:bg-neutral-800 transition"
+                                    >
+                                      <RotateCcwIcon className="h-3.5 w-3.5" />
+                                      {currentLang === 'en' ? 'Advance one step' : 'এক ধাপ অগ্রসর'}
+                                    </button>
+                                  </div>
+                                </>
+                              )}
+                            </div>
+
+                            <button
+                              id={`delete-msg-${msg.id}`}
+                              onClick={() => handleDeleteMessage(msg.id)}
+                              className="p-1.5 text-gray-400 dark:text-neutral-500 hover:text-red-500 rounded-lg transition hover:bg-red-50 dark:hover:bg-red-500/10"
+                            >
+                              <Trash2Icon className="h-4 w-4" />
+                            </button>
+                          </div>
                         </div>
-                        
-                        <div className="flex items-center space-x-2">
-                          <button
-                            id={`status-toggle-${msg.id}`}
-                            onClick={() => handleToggleMessageStatus(msg.id, msg.status)}
-                            className={`px-2.5 py-1 rounded-md text-[10px] font-bold uppercase transition ${
-                              msg.status === 'unread'
-                                ? 'bg-blue-600 dark:bg-orange-500 text-white'
-                                : msg.status === 'read'
-                                ? 'bg-gray-100 dark:bg-neutral-800 text-gray-600 dark:text-neutral-300 border border-gray-200 dark:border-neutral-700'
-                                : 'bg-emerald-100 text-emerald-700 dark:text-emerald-300'
-                            }`}
-                          >
-                            {msg.status}
-                          </button>
 
+                        <div className="grid grid-cols-2 gap-3">
+                          <div className="rounded-xl bg-gray-50 dark:bg-[#141414] px-3 py-2">
+                            <span className="block text-[9px] font-bold uppercase tracking-wider text-gray-400 dark:text-neutral-500">
+                              {currentLang === 'en' ? 'Desired Service' : 'পছন্দের সেবা'}
+                            </span>
+                            <span className="text-[11px] font-bold text-gray-800 dark:text-neutral-100">{msg.service || '—'}</span>
+                          </div>
+                          <div className="rounded-xl bg-gray-50 dark:bg-[#141414] px-3 py-2">
+                            <span className="block text-[9px] font-bold uppercase tracking-wider text-gray-400 dark:text-neutral-500">
+                              {currentLang === 'en' ? 'Estimated Budget' : 'আনুমানিক বাজেট'}
+                            </span>
+                            <span className="text-[11px] font-bold text-gray-800 dark:text-neutral-100">{msg.budget || '—'}</span>
+                          </div>
+                          {msg.subject && (
+                            <div className="col-span-2 rounded-xl bg-gray-50 dark:bg-[#141414] px-3 py-2">
+                              <span className="block text-[9px] font-bold uppercase tracking-wider text-gray-400 dark:text-neutral-500">
+                                {currentLang === 'en' ? 'Subject' : 'বিষয়'}
+                              </span>
+                              <span className="text-[11px] font-bold text-gray-800 dark:text-neutral-100">{msg.subject}</span>
+                            </div>
+                          )}
+                        </div>
+
+                        <p className="text-gray-700 dark:text-neutral-200 leading-relaxed text-[11px] whitespace-pre-line bg-gray-50 dark:bg-[#141414] p-3 rounded-xl">
+                          {msg.message}
+                        </p>
+
+                        <div className="flex items-center justify-between text-[10px] text-gray-400 dark:text-neutral-500 font-medium">
+                          <span>{currentLang === 'en' ? 'Received on' : 'প্রাপ্তির সময়'}: {new Date(msg.createdAt).toLocaleString()}</span>
                           <button
-                            id={`delete-msg-${msg.id}`}
-                            onClick={() => handleDeleteMessage(msg.id)}
-                            className="p-1 text-gray-400 dark:text-neutral-500 hover:text-red-500 dark:text-red-400 rounded transition"
+                            onClick={() => handleToggleMessageStatus(msg.id, st)}
+                            className="inline-flex items-center gap-1 text-gray-400 dark:text-neutral-500 hover:text-orange-500 transition"
                           >
-                            <Trash2Icon className="h-4 w-4" />
+                            <RotateCcwIcon className="h-3 w-3" />
+                            {currentLang === 'en' ? 'Advance status' : 'স্ট্যাটাস অগ্রসর করুন'}
                           </button>
                         </div>
                       </div>
-
-                      <div className="grid grid-cols-2 gap-4 text-[11px] font-semibold text-gray-500 dark:text-neutral-400 bg-gray-50 dark:bg-[#141414] p-2.5 rounded-lg">
-                        <div>Desired Service: <span className="text-gray-800 dark:text-neutral-100">{msg.service}</span></div>
-                        <div>Estimated Budget: <span className="text-gray-800 dark:text-neutral-100">{msg.budget}</span></div>
-                      </div>
-
-                      <p className="text-gray-700 dark:text-neutral-200 leading-relaxed text-[11px] whitespace-pre-line bg-gray-50 dark:bg-[#141414] p-2.5 rounded-lg">
-                        {msg.message}
-                      </p>
-                      
-                      <div className="text-[10px] text-gray-400 dark:text-neutral-500 font-medium">
-                        Received on: {new Date(msg.createdAt).toLocaleString()}
-                      </div>
-                    </div>
-                  ))}
+                    );
+                  })}
 
                   {messages.length === 0 && (
-                    <div className="text-center py-10 text-gray-400 dark:text-neutral-500 italic">
-                      No inbound customer messages stored. Use the Contact Page form to log messages in real-time!
+                    <div className="text-center py-14 text-gray-400 dark:text-neutral-500 italic">
+                      {currentLang === 'en'
+                        ? 'No inbound customer messages stored yet. Submissions from the Contact page appear here in real-time!'
+                        : 'এখনো কোনো ইনবাউন্ড কাস্টমার মেসেজ সংরক্ষিত নেই। যোগাযোগ পেজের ফর্ম থেকে মেসেজ রিয়েল-টাইমে এখানে দেখা যাবে!'}
                     </div>
                   )}
                 </div>
@@ -1956,7 +1737,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
             {/* T2: NEWSLETTER SUBSCRIBERS LIST */}
             {activeSubTab === 'subscribers' && (
               <div id="panel-subs-desk" className="space-y-6">
-                <h3 className="text-sm font-bold text-gray-900 dark:text-white border-b border-gray-50 pb-3">
+                <h3 className="text-sm font-bold text-gray-900 dark:text-white border-b border-gray-50 dark:border-neutral-800 pb-3">
                   {currentLang === 'en' ? 'Intel Subscribers Directory' : 'নিউজলেটার সাবস্ক্রাইবার তালিকা'}
                 </h3>
 
@@ -2001,7 +1782,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
             {/* T3: MANAGE BLOG ARTICLES CRUD */}
             {activeSubTab === 'blogs' && (
               <div id="panel-blogs-desk" className="space-y-6">
-                <div className="flex items-center justify-between border-b border-gray-50 pb-3">
+                <div className="flex items-center justify-between border-b border-gray-50 dark:border-neutral-800 pb-3">
                   <h3 className="text-sm font-bold text-gray-900 dark:text-white">
                     {currentLang === 'en' ? 'Manage Published Intelligence' : 'নিবন্ধ পরিচালনা ও প্রকাশ'}
                   </h3>
@@ -2199,7 +1980,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
             {/* T4: MANAGE CORE CAPABILITIES SERVICES */}
             {activeSubTab === 'services' && (
               <div id="panel-services-desk" className="space-y-6">
-                <div className="flex items-center justify-between border-b border-gray-50 pb-3">
+                <div className="flex items-center justify-between border-b border-gray-50 dark:border-neutral-800 pb-3">
                   <h3 className="text-sm font-bold text-gray-900 dark:text-white">
                     {currentLang === 'en' ? 'Manage Capability Matrix' : 'সার্ভিসের বিবরণ ও বাজেট পরিবর্তন'}
                   </h3>
@@ -2244,7 +2025,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                 </div>
 
                 {editingService ? (
-                  <form onSubmit={handleSaveServiceEdit} className="space-y-6 text-xs bg-gray-50/50 p-5 rounded-2xl border border-gray-100 dark:border-neutral-800 max-h-[80vh] overflow-y-auto">
+                  <form onSubmit={handleSaveServiceEdit} className="space-y-6 text-xs bg-white dark:bg-neutral-900/60 p-5 rounded-2xl border border-gray-200 dark:border-neutral-700 max-h-[80vh] overflow-y-auto">
                     <div className="flex items-center justify-between border-b border-gray-200 dark:border-neutral-700/80 pb-3">
                       <h4 className="text-sm font-bold text-blue-600 dark:text-orange-400">Editing: {editingService.titleEn}</h4>
                       <span className="text-[10px] font-mono text-gray-400 dark:text-neutral-500">ID: {editingService.id}</span>
@@ -2262,7 +2043,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                             required
                             value={editingService.price}
                             onChange={(e) => setEditingService({ ...editingService, price: e.target.value })}
-                            className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
+                            className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500"
                           />
                         </div>
                         <div className="space-y-1.5">
@@ -2273,7 +2054,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                             required
                             value={editingService.category}
                             onChange={(e) => setEditingService({ ...editingService, category: e.target.value })}
-                            className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
+                            className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500"
                           />
                         </div>
                       </div>
@@ -2287,7 +2068,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                             value={editingService.slug || ''}
                             onChange={(e) => setEditingService({ ...editingService, slug: e.target.value })}
                             placeholder="Leave blank to auto-generate from English Title"
-                            className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
+                            className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500"
                           />
                         </div>
                         <div className="space-y-1.5">
@@ -2298,7 +2079,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                             required
                             value={editingService.icon || ''}
                             onChange={(e) => setEditingService({ ...editingService, icon: e.target.value })}
-                            className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
+                            className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500"
                           />
                         </div>
                       </div>
@@ -2312,7 +2093,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                             required
                             value={editingService.titleEn}
                             onChange={(e) => setEditingService({ ...editingService, titleEn: e.target.value })}
-                            className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
+                            className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500"
                           />
                         </div>
                         
@@ -2326,7 +2107,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                             rows={3}
                             value={editingService.descriptionEn}
                             onChange={(e) => setEditingService({ ...editingService, descriptionEn: e.target.value })}
-                            className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
+                            className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500"
                           ></textarea>
                         </div>
                         
@@ -2345,7 +2126,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                             type="text"
                             value={editingService.subtitleEn || ''}
                             onChange={(e) => setEditingService({ ...editingService, subtitleEn: e.target.value })}
-                            className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
+                            className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500"
                             placeholder="Hook line"
                           />
                         </div>
@@ -2360,7 +2141,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                             rows={2}
                             value={editingService.whyNeedEn || ''}
                             onChange={(e) => setEditingService({ ...editingService, whyNeedEn: e.target.value })}
-                            className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
+                            className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500"
                             placeholder="Core business pain point"
                           ></textarea>
                         </div>
@@ -2375,7 +2156,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                             rows={2}
                             value={editingService.whoForEn || ''}
                             onChange={(e) => setEditingService({ ...editingService, whoForEn: e.target.value })}
-                            className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
+                            className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500"
                             placeholder="Target audience"
                           ></textarea>
                         </div>
@@ -2390,7 +2171,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                             rows={2}
                             value={editingService.businessImpactEn || ''}
                             onChange={(e) => setEditingService({ ...editingService, businessImpactEn: e.target.value })}
-                            className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
+                            className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500"
                             placeholder="ROI outcome"
                           ></textarea>
                         </div>
@@ -2409,7 +2190,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                           type="text"
                           value={editingService.techUsed ? editingService.techUsed.join(', ') : ''}
                           onChange={(e) => setEditingService({ ...editingService, techUsed: e.target.value.split(',').map(s => s.trim()).filter(Boolean) })}
-                          className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
+                          className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500"
                           placeholder="e.g. React, Node.js, Tailwind, Postgres"
                         />
                       </div>
@@ -2422,7 +2203,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                             rows={2}
                             value={editingService.featuresEn ? editingService.featuresEn.join(', ') : ''}
                             onChange={(e) => setEditingService({ ...editingService, featuresEn: e.target.value.split(',').map(s => s.trim()).filter(Boolean) })}
-                            className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
+                            className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500"
                             placeholder="Deliverable A, Deliverable B"
                           />
                         </div>
@@ -2437,7 +2218,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                             rows={2}
                             value={editingService.benefitsEn ? editingService.benefitsEn.join(', ') : ''}
                             onChange={(e) => setEditingService({ ...editingService, benefitsEn: e.target.value.split(',').map(s => s.trim()).filter(Boolean) })}
-                            className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
+                            className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500"
                             placeholder="Benefit A, Benefit B"
                           />
                         </div>
@@ -2452,7 +2233,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                             rows={3}
                             value={editingService.processEn ? editingService.processEn.join('\n') : ''}
                             onChange={(e) => setEditingService({ ...editingService, processEn: e.target.value.split('\n').map(s => s.trim()).filter(Boolean) })}
-                            className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 font-mono text-[10px] focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
+                            className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 font-mono text-[10px] focus:outline-none focus:border-blue-500 dark:focus:border-orange-500"
                             placeholder="Step 1&#10;Step 2&#10;Step 3"
                           />
                         </div>
@@ -2471,7 +2252,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                           rows={3}
                           value={editingService.subServicesJson || '[]'}
                           onChange={(e) => setEditingService({ ...editingService, subServicesJson: e.target.value })}
-                          className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 font-mono text-[10px] focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
+                          className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 font-mono text-[10px] focus:outline-none focus:border-blue-500 dark:focus:border-orange-500"
                         />
                         <span className="text-[9px] text-gray-400 dark:text-neutral-500 block font-mono">{'Format: [{"titleEn": "...", "titleBn": "...", "descEn": "...", "descBn": "..."}]'}</span>
                       </div>
@@ -2483,7 +2264,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                           rows={4}
                           value={editingService.pricingJson || '[]'}
                           onChange={(e) => setEditingService({ ...editingService, pricingJson: e.target.value })}
-                          className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 font-mono text-[10px] focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
+                          className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 font-mono text-[10px] focus:outline-none focus:border-blue-500 dark:focus:border-orange-500"
                         />
                         <span className="text-[9px] text-gray-400 dark:text-neutral-500 block font-mono">{'Format: [{"nameEn": "...", "nameBn": "...", "price": "...", "periodEn": "...", "periodBn": "...", "featuresEn": ["A"], "featuresBn": ["১"]}]'}</span>
                       </div>
@@ -2495,7 +2276,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                           rows={3}
                           value={editingService.faqsJson || '[]'}
                           onChange={(e) => setEditingService({ ...editingService, faqsJson: e.target.value })}
-                          className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 font-mono text-[10px] focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
+                          className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 font-mono text-[10px] focus:outline-none focus:border-blue-500 dark:focus:border-orange-500"
                         />
                         <span className="text-[9px] text-gray-400 dark:text-neutral-500 block font-mono">{'Format: [{"questionEn": "...", "questionBn": "...", "answerEn": "...", "answerBn": "..."}]'}</span>
                       </div>
@@ -2554,7 +2335,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
             {/* T5: SYSTEM CONFIG SETTINGS */}
             {activeSubTab === 'settings' && settings && (
               <form onSubmit={handleSaveSettings} className="space-y-8 text-xs">
-                <h3 className="text-sm font-bold text-gray-900 dark:text-white border-b border-gray-50 pb-3 flex items-center justify-between">
+                <h3 className="text-sm font-bold text-gray-900 dark:text-white border-b border-gray-50 dark:border-neutral-800 pb-3 flex items-center justify-between">
                   <span>{currentLang === 'en' ? 'Agency Information Config' : 'এজেন্সি তথ্য কনফিগারেশন'}</span>
                   <span className="text-[10px] text-blue-600 dark:text-orange-400 bg-blue-50 dark:bg-orange-500/10 px-2 py-0.5 rounded font-extrabold uppercase">Live DB</span>
                 </h3>
@@ -2571,7 +2352,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                         required
                         value={settings.agencyName}
                         onChange={(e) => setSettings({ ...settings, agencyName: e.target.value })}
-                        className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
+                        className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500"
                       />
                     </div>
                     <div className="space-y-1.5">
@@ -2582,7 +2363,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                         required
                         value={settings.email}
                         onChange={(e) => setSettings({ ...settings, email: e.target.value })}
-                        className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
+                        className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500"
                       />
                     </div>
                   </div>
@@ -2596,7 +2377,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                         required
                         value={settings.phone}
                         onChange={(e) => setSettings({ ...settings, phone: e.target.value })}
-                        className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
+                        className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500"
                       />
                     </div>
                     <div className="space-y-1.5">
@@ -2607,14 +2388,14 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                         required
                         value={settings.addressEn}
                         onChange={(e) => setSettings({ ...settings, addressEn: e.target.value })}
-                        className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
+                        className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500"
                       />
                     </div>
                   </div>
                 </div>
 
                 {/* Section B: Mission & Vision */}
-                <div className="space-y-4 pt-4 border-t border-gray-50">
+                <div className="space-y-4 pt-4 border-t border-gray-50 dark:border-neutral-800">
                   <h4 className="font-extrabold text-blue-600 dark:text-orange-400 uppercase tracking-wider text-[10px]">B. Mission & Vision Statements</h4>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="space-y-1.5">
@@ -2624,7 +2405,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                         rows={3}
                         value={settings.aboutMissionEn || ''}
                         onChange={(e) => setSettings({ ...settings, aboutMissionEn: e.target.value })}
-                        className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
+                        className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500"
                         placeholder="Define company mission in English"
                       />
                     </div>
@@ -2639,7 +2420,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                         rows={3}
                         value={settings.aboutVisionEn || ''}
                         onChange={(e) => setSettings({ ...settings, aboutVisionEn: e.target.value })}
-                        className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
+                        className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500"
                         placeholder="Define company vision in English"
                       />
                     </div>
@@ -2648,7 +2429,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                 </div>
 
                 {/* Section C: Live Counters */}
-                <div className="space-y-4 pt-4 border-t border-gray-50">
+                <div className="space-y-4 pt-4 border-t border-gray-50 dark:border-neutral-800">
                   <h4 className="font-extrabold text-blue-600 dark:text-orange-400 uppercase tracking-wider text-[10px]">C. Statistics Counters</h4>
                   <div className="grid grid-cols-2 md:grid-cols-6 gap-3">
                     <div className="space-y-1.5">
@@ -2658,7 +2439,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                         type="number"
                         value={settings.statsProjects || 0}
                         onChange={(e) => setSettings({ ...settings, statsProjects: parseInt(e.target.value) || 0 })}
-                        className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500 font-bold"
+                        className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 font-bold"
                       />
                     </div>
                     <div className="space-y-1.5">
@@ -2668,7 +2449,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                         type="number"
                         value={settings.statsClients || 0}
                         onChange={(e) => setSettings({ ...settings, statsClients: parseInt(e.target.value) || 0 })}
-                        className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500 font-bold"
+                        className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 font-bold"
                       />
                     </div>
                     <div className="space-y-1.5">
@@ -2678,7 +2459,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                         type="number"
                         value={settings.statsTeam || 0}
                         onChange={(e) => setSettings({ ...settings, statsTeam: parseInt(e.target.value) || 0 })}
-                        className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500 font-bold"
+                        className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 font-bold"
                       />
                     </div>
                     <div className="space-y-1.5">
@@ -2688,7 +2469,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                         type="number"
                         value={settings.statsExperience || 0}
                         onChange={(e) => setSettings({ ...settings, statsExperience: parseInt(e.target.value) || 0 })}
-                        className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500 font-bold"
+                        className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 font-bold"
                       />
                     </div>
                     <div className="space-y-1.5">
@@ -2698,7 +2479,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                         type="number"
                         value={settings.statsCountries || 0}
                         onChange={(e) => setSettings({ ...settings, statsCountries: parseInt(e.target.value) || 0 })}
-                        className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500 font-bold"
+                        className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 font-bold"
                       />
                     </div>
                     <div className="space-y-1.5">
@@ -2708,7 +2489,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                         type="number"
                         value={settings.statsSatisfaction || 0}
                         onChange={(e) => setSettings({ ...settings, statsSatisfaction: parseInt(e.target.value) || 0 })}
-                        className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500 font-bold"
+                        className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 font-bold"
                       />
                     </div>
                     <div className="space-y-1.5">
@@ -2718,7 +2499,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                         type="number"
                         value={settings.statsIndustries || 0}
                         onChange={(e) => setSettings({ ...settings, statsIndustries: parseInt(e.target.value) || 0 })}
-                        className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500 font-bold"
+                        className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 font-bold"
                       />
                     </div>
                     <div className="space-y-1.5">
@@ -2728,14 +2509,14 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                         type="number"
                         value={settings.statsTechs || 0}
                         onChange={(e) => setSettings({ ...settings, statsTechs: parseInt(e.target.value) || 0 })}
-                        className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500 font-bold"
+                        className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 font-bold"
                       />
                     </div>
                   </div>
                 </div>
 
                 {/* Section D: Advanced Team, Timeline, Techs JSON editors */}
-                <div className="space-y-4 pt-4 border-t border-gray-50">
+                <div className="space-y-4 pt-4 border-t border-gray-50 dark:border-neutral-800">
                   <div className="flex items-center justify-between">
                     <h4 className="font-extrabold text-blue-600 dark:text-orange-400 uppercase tracking-wider text-[10px]">D. Dynamic Lists (JSON Arrays)</h4>
                     <span className="text-[9px] text-gray-400 dark:text-neutral-500">Validate comma structures carefully</span>
@@ -2755,7 +2536,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                         rows={4}
                         value={settings.aboutTeamJson || '[]'}
                         onChange={(e) => setSettings({ ...settings, aboutTeamJson: e.target.value })}
-                        className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500 font-mono text-[10px]"
+                        className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 font-mono text-[10px]"
                       />
                     </div>
 
@@ -2772,7 +2553,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                         rows={4}
                         value={settings.aboutTimelineJson || '[]'}
                         onChange={(e) => setSettings({ ...settings, aboutTimelineJson: e.target.value })}
-                        className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500 font-mono text-[10px]"
+                        className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 font-mono text-[10px]"
                       />
                     </div>
 
@@ -2789,7 +2570,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                         rows={4}
                         value={settings.aboutTechsJson || '[]'}
                         onChange={(e) => setSettings({ ...settings, aboutTechsJson: e.target.value })}
-                        className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500 font-mono text-[10px]"
+                        className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 font-mono text-[10px]"
                       />
                     </div>
                   </div>
@@ -2807,426 +2588,12 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
               </form>
             )}
 
-            {/* T6: PORTFOLIO MANAGEMENT */}
+            {/* T6: PORTFOLIO MANAGEMENT — dynamic service-specific */}
             {activeSubTab === 'portfolio' && (
-              <div id="panel-portfolio-desk" className="space-y-6 text-xs">
-                <div className="flex items-center justify-between border-b border-gray-200 dark:border-neutral-700/80 pb-3">
-                  <h3 className="text-sm font-bold text-gray-900 dark:text-white">
-                    {currentLang === 'en' ? 'Manage Portfolio Items' : 'পোর্টফোলিও কেস স্টাডি পরিচালনা'}
-                  </h3>
-                  <button
-                    id="add-portfolio-btn"
-                    onClick={() => {
-                      setIsCreatingPortfolio(true);
-                      setEditingPortfolio(null);
-                      setPortfolioForm({
-                        titleEn: '', titleBn: '', category: '', duration: '', budget: '', projectType: '', completionYear: '',
-                        descriptionEn: '', descriptionBn: '', client: '', challengeEn: '', challengeBn: '',
-                        solutionEn: '', solutionBn: '', resultEn: '', resultBn: '', technologies: [], image: '', featured: false,
-                        projectDate: '', appStoreUrl: '', playStoreUrl: '', thumbnailImage: ''
-                      });
-                    }}
-                    className="flex items-center space-x-1.5 rounded-lg bg-blue-600 dark:bg-orange-500 hover:bg-blue-700 dark:hover:bg-orange-400 text-white px-3 py-2 font-bold transition"
-                  >
-                    <PlusIcon className="h-4 w-4" />
-                    <span>{currentLang === 'en' ? 'New Case Study' : 'নতুন প্রজেক্ট যোগ করুন'}</span>
-                  </button>
-                </div>
-
-                {isCreatingPortfolio ? (
-<form onSubmit={handleSavePortfolio} className="space-y-5 bg-gray-50/50 dark:bg-neutral-800/40 rounded-xl p-4 md:p-6 border border-gray-200 dark:border-neutral-700 max-h-[80vh] overflow-y-auto text-xs">
-
-                    {/* 1. BASIC PROJECT INFO */}
-                    <div className="space-y-3 p-4 rounded-xl border border-gray-100 dark:border-neutral-800 bg-white dark:bg-[#141414]">
-                      <h4 className="font-extrabold text-blue-600 dark:text-orange-400 uppercase tracking-wider text-[10px] mb-2 border-b border-gray-50 pb-1.5">1. Basic Project Info</h4>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div className="space-y-1.5">
-                          <label className="font-semibold text-gray-500 dark:text-neutral-400">Project Name *</label>
-                          <input
-                            type="text" required
-                            value={portfolioForm.titleEn || ''}
-                            onChange={(e) => setPortfolioForm({ ...portfolioForm, titleEn: e.target.value })}
-                            className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
-                          />
-                        </div>
-                        <div className="space-y-1.5">
-                          <label className="font-semibold text-gray-500 dark:text-neutral-400">This portfolio is for which service? *</label>
-                          <select
-                            required
-                            value={portfolioForm.category || ''}
-                            onChange={(e) => setPortfolioForm({ ...portfolioForm, category: e.target.value })}
-                            className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
-                          >
-                            <option value="">-- Select a service --</option>
-                            {(services.length > 0
-                              ? Array.from(new Set(services.map(s => s.titleEn).filter(Boolean)))
-                              : ['Web Development', 'Web App', 'UI/UX Design', 'Graphic Design', 'Digital Marketing', 'SEO', 'AI Services']
-                            ).map((name) => (
-                              <option key={name} value={name}>{name}</option>
-                            ))}
-                          </select>
-                        </div>
-                        <div className="space-y-1.5">
-                          <label className="font-semibold text-gray-500 dark:text-neutral-400">Project Type</label>
-                          <select
-                            value={portfolioForm.projectType || ''}
-                            onChange={(e) => setPortfolioForm({ ...portfolioForm, projectType: e.target.value })}
-                            className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
-                          >
-                            <option value="">Select Type</option>
-                            <option value="website">Website</option>
-                            <option value="webapp">Web Application</option>
-                            <option value="desktop">Desktop Software</option>
-                            <option value="design">Design Project</option>
-                            <option value="marketing">Marketing Campaign</option>
-                            <option value="ai">AI / AI Services</option>
-                            <option value="other">Other</option>
-                          </select>
-                        </div>
-                        <div className="space-y-1.5">
-                          <label className="font-semibold text-gray-500 dark:text-neutral-400">Completion Year</label>
-                          <input
-                            type="text" placeholder="e.g. 2026"
-                            value={portfolioForm.completionYear || ''}
-                            onChange={(e) => setPortfolioForm({ ...portfolioForm, completionYear: e.target.value })}
-                            className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
-                          />
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* 2. IMAGES — REAL UPLOAD */}
-                    <div className="space-y-3 p-4 rounded-xl border border-gray-100 dark:border-neutral-800 bg-white dark:bg-[#141414]">
-                      <h4 className="font-extrabold text-blue-600 dark:text-orange-400 uppercase tracking-wider text-[10px] mb-2 border-b border-gray-50 pb-1.5">2. Project Images (Upload Files)</h4>
-
-                      {/* Featured image upload */}
-                      <div className="space-y-1.5">
-                        <label className="font-semibold text-gray-500 dark:text-neutral-400">Featured / Main Image *</label>
-                        <div className="flex flex-wrap items-center gap-3">
-                          <label className="cursor-pointer inline-flex items-center space-x-1.5 rounded border border-dashed border-gray-300 dark:border-neutral-600 bg-gray-50 dark:bg-[#141414] hover:bg-gray-100 dark:hover:bg-neutral-800 px-3 py-2 font-bold text-gray-600 dark:text-neutral-300 text-[10px] transition">
-                            {portfolioUploading
-                              ? <span>{currentLang === 'en' ? 'Uploading…' : 'আপলোড হচ্ছে…'}</span>
-                              : <span>{currentLang === 'en' ? '⬆ Upload Image' : '⬆ ছবি আপলোড'}</span>}
-                            <input type="file" accept="image/*" className="hidden" onChange={handlePortfolioImageChange} />
-                          </label>
-                          {portfolioForm.image && (
-                            <div className="relative">
-                              <img src={portfolioForm.image} alt="" className="h-14 w-20 object-cover rounded border border-gray-200 dark:border-neutral-700" referrerPolicy="no-referrer" />
-                              <button
-                                type="button"
-                                onClick={() => setPortfolioForm({ ...portfolioForm, image: '' })}
-                                className="absolute -top-1.5 -right-1.5 h-5 w-5 rounded-full bg-red-500 text-white text-[10px] leading-none font-bold transition hover:bg-red-600"
-                                title="Remove"
-                              >✕</button>
-                            </div>
-                          )}
-                          {portfolioForm.image && (
-                            <span className="text-[9px] text-gray-400 dark:text-neutral-500 font-mono break-all max-w-[220px]">{portfolioForm.image}</span>
-                          )}
-                        </div>
-                      </div>
-
-                      {/* Gallery upload */}
-                      <div className="space-y-1.5 pt-2 border-t border-gray-50">
-                        <label className="font-semibold text-gray-500 dark:text-neutral-400">More Project Photos (Gallery)</label>
-                        <label className="cursor-pointer inline-flex items-center space-x-1.5 rounded border border-dashed border-gray-300 dark:border-neutral-600 bg-gray-50 dark:bg-[#141414] hover:bg-gray-100 dark:hover:bg-neutral-800 px-3 py-2 font-bold text-gray-600 dark:text-neutral-300 text-[10px] transition">
-                          <span>{portfolioUploading ? (currentLang === 'en' ? 'Uploading…' : 'আপলোড হচ্ছে…') : (currentLang === 'en' ? '⬆ Upload more images' : '⬆ আরও ছবি আপলোড')}</span>
-                          <input type="file" accept="image/*" multiple className="hidden" onChange={handlePortfolioGalleryChange} />
-                        </label>
-                        {(() => {
-                          let gallery: string[] = [];
-                          try { gallery = JSON.parse(portfolioForm.galleryJson || '[]') || []; } catch { gallery = []; }
-                          if (gallery.length === 0) {
-                            return <p className="text-[10px] text-gray-400 dark:text-neutral-500 italic">No gallery photos yet. Upload as many as you like.</p>;
-                          }
-                          return (
-                            <div className="flex flex-wrap gap-2 pt-1">
-                              {gallery.map((u) => (
-                                <div key={u} className="relative">
-                                  <img src={u} alt="" className="h-14 w-20 object-cover rounded border border-gray-200 dark:border-neutral-700" referrerPolicy="no-referrer" />
-                                  <button
-                                    type="button"
-                                    onClick={() => removeGalleryImage(u)}
-                                    className="absolute -top-1.5 -right-1.5 h-5 w-5 rounded-full bg-red-500 text-white text-[10px] leading-none font-bold transition hover:bg-red-600"
-                                    title="Remove"
-                                  >✕</button>
-                                </div>
-                              ))}
-                            </div>
-                          );
-                        })()}
-                      </div>
-                    </div>
-
-                    {/* 3. DESCRIPTION & TECHNOLOGIES */}
-                    <div className="space-y-3 p-4 rounded-xl border border-gray-100 dark:border-neutral-800 bg-white dark:bg-[#141414]">
-                      <h4 className="font-extrabold text-blue-600 dark:text-orange-400 uppercase tracking-wider text-[10px] mb-2 border-b border-gray-50 pb-1.5">3. About the Project</h4>
-                      <div className="space-y-1.5">
-                        <label className="font-semibold text-gray-500 dark:text-neutral-400">Project Description *</label>
-                        <textarea
-                          rows={4} required
-                          value={portfolioForm.descriptionEn || ''}
-                          onChange={(e) => setPortfolioForm({ ...portfolioForm, descriptionEn: e.target.value })}
-                          className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
-                        />
-                      </div>
-                      <div className="space-y-1.5">
-                        <label className="font-semibold text-gray-500 dark:text-neutral-400">What was this project built with? (Technologies) *</label>
-                        <input
-                          type="text" required
-                          placeholder="Next.js, React, Tailwind CSS, Supabase, OpenAI"
-                          value={portfolioForm.technologies ? portfolioForm.technologies.join(', ') : ''}
-                          onChange={(e) => setPortfolioForm({ ...portfolioForm, technologies: e.target.value.split(',').map(t => t.trim()).filter(Boolean) })}
-                          className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
-                        />
-                        <p className="text-[9px] text-gray-400 dark:text-neutral-500">Separate with commas, e.g. Next.js, Supabase, Stripe</p>
-                      </div>
-                    </div>
-
-                    {/* 4. LINKS */}
-                    <div className="space-y-3 p-4 rounded-xl border border-gray-100 dark:border-neutral-800 bg-white dark:bg-[#141414]">
-                      <h4 className="font-extrabold text-blue-600 dark:text-orange-400 uppercase tracking-wider text-[10px] mb-2 border-b border-gray-50 pb-1.5">4. Project Links</h4>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div className="space-y-1.5">
-                          <label className="font-semibold text-gray-500 dark:text-neutral-400">Live Website / Demo URL</label>
-                          <input
-                            type="text" placeholder="https://..."
-                            value={portfolioForm.liveUrl || ''}
-                            onChange={(e) => setPortfolioForm({ ...portfolioForm, liveUrl: e.target.value })}
-                            className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
-                          />
-                        </div>
-                        <div className="space-y-1.5">
-                          <label className="font-semibold text-gray-500 dark:text-neutral-400">GitHub Repository URL</label>
-                          <input
-                            type="text" placeholder="https://github.com/..."
-                            value={portfolioForm.githubUrl || ''}
-                            onChange={(e) => setPortfolioForm({ ...portfolioForm, githubUrl: e.target.value })}
-                            className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
-                          />
-                        </div>
-                        <div className="space-y-1.5">
-                          <label className="font-semibold text-gray-500 dark:text-neutral-400">App Store URL (iOS)</label>
-                          <input
-                            type="text" placeholder="https://apps.apple.com/..."
-                            value={portfolioForm.appStoreUrl || ''}
-                            onChange={(e) => setPortfolioForm({ ...portfolioForm, appStoreUrl: e.target.value })}
-                            className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
-                          />
-                        </div>
-                        <div className="space-y-1.5">
-                          <label className="font-semibold text-gray-500 dark:text-neutral-400">Play Store URL (Android)</label>
-                          <input
-                            type="text" placeholder="https://play.google.com/..."
-                            value={portfolioForm.playStoreUrl || ''}
-                            onChange={(e) => setPortfolioForm({ ...portfolioForm, playStoreUrl: e.target.value })}
-                            className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
-                          />
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* 5. OPTIONS */}
-                    <div className="p-4 rounded-xl border border-gray-100 dark:border-neutral-800 bg-white dark:bg-[#141414]">
-                      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 items-end">
-                        <div className="space-y-1.5">
-                          <label className="font-semibold text-gray-500 dark:text-neutral-400">Display Order</label>
-                          <input
-                            type="number"
-                            value={portfolioForm.sortOrder || 0}
-                            onChange={(e) => setPortfolioForm({ ...portfolioForm, sortOrder: parseInt(e.target.value) || 0 })}
-                            className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500"
-                          />
-                        </div>
-                        <div className="flex items-center space-x-2 h-full pt-6">
-                          <input
-                            type="checkbox"
-                            id="portfolio-form-featured"
-                            checked={portfolioForm.featured || false}
-                            onChange={(e) => setPortfolioForm({ ...portfolioForm, featured: e.target.checked })}
-                            className="h-4 w-4 text-blue-600 dark:text-orange-400 rounded border-gray-300 dark:border-neutral-600 focus:ring-blue-500 dark:focus:ring-orange-500"
-                          />
-                          <label htmlFor="portfolio-form-featured" className="font-bold text-gray-700 dark:text-neutral-200">Featured Project</label>
-                        </div>
-                        <div className="space-y-1.5">
-                          <label className="font-semibold text-gray-500 dark:text-neutral-400">Status</label>
-                          <select
-                            value={portfolioForm.status || 'published'}
-                            onChange={(e) => setPortfolioForm({ ...portfolioForm, status: e.target.value as any })}
-                            className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 dark:border-orange-500 font-bold"
-                          >
-                            <option value="published">Published</option>
-                            <option value="draft">Draft</option>
-                          </select>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="flex justify-end space-x-2 pt-4 border-t border-gray-100 dark:border-neutral-800">
-                      <button
-                        type="button"
-                        onClick={() => setIsCreatingPortfolio(false)}
-                        className="rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-4 py-2 font-bold text-gray-600 dark:text-neutral-300 hover:bg-gray-50 dark:hover:bg-neutral-800/70 dark:bg-[#141414]"
-                      >
-                        Cancel
-                      </button>
-                      <button
-                        type="submit"
-                        disabled={portfolioUploading}
-                        className={`rounded px-5 py-2 font-bold shadow-md shadow-blue-600/10 text-white transition ${portfolioUploading ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-600 dark:bg-orange-500 hover:bg-blue-700 dark:hover:bg-orange-400'}`}
-                      >
-                        {currentLang === 'en' ? 'Save Project' : 'প্রজেক্ট সংরক্ষণ করুন'}
-                      </button>
-                    </div>
-                  </form>
-                ) : (
-                  <div className="grid grid-cols-1 gap-4">
-                    {portfolios.map((item) => (
-                      <div key={item.id} className="rounded-xl border border-gray-100 dark:border-neutral-800 p-4 flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-sm bg-white dark:bg-[#141414] hover:border-blue-500 dark:border-orange-500 transition">
-                        <div className="flex items-center space-x-4">
-                          <img src={item.image} alt="" className="h-12 w-16 object-cover rounded bg-gray-50 dark:bg-[#141414] border border-gray-100 dark:border-neutral-800" referrerPolicy="no-referrer" />
-                          <div>
-                            <span className="font-bold text-sm text-gray-900 dark:text-white block">{item.titleEn}</span>
-                            <span className="text-gray-400 dark:text-neutral-500 font-mono text-[10px] block mt-0.5">{item.category}{item.completionYear ? ` • ${item.completionYear}` : ''}{(item.projectType ? ` • ${item.projectType}` : '')}</span>
-                          </div>
-                        </div>
-                        <div className="flex items-center space-x-2">
-                          <button
-                            onClick={() => handleEditPortfolioTrigger(item)}
-                            className="rounded bg-gray-50 dark:bg-[#141414] hover:bg-gray-100 dark:hover:bg-neutral-800 dark:bg-neutral-800 px-3 py-1.5 font-semibold text-gray-700 dark:text-neutral-200 border border-gray-100 dark:border-neutral-800 transition"
-                          >
-                            Edit
-                          </button>
-                          <button
-                            onClick={() => handleDeletePortfolio(item.id)}
-                            className="rounded bg-red-50 dark:bg-red-500/10 hover:bg-red-100 dark:hover:bg-red-500/20 px-3 py-1.5 font-semibold text-red-600 dark:text-red-400 border border-red-100 dark:border-red-500/20 transition"
-                          >
-                            Delete
-                          </button>
-                        </div>
-                      </div>
-                    ))}
-                    {portfolios.length === 0 && (
-                      <div className="text-center py-10 text-gray-400 dark:text-neutral-500 italic">No case studies loaded. Add one to expand agency portfolio!</div>
-                    )}
-                  </div>
-                )}
-              </div>
-            )}
-
-            {/* T7: PRICING MANAGEMENT - dynamic pricing engine */}
-            {activeSubTab === 'pricing' && (
-              <div id="panel-pricing-desk" className="space-y-6 text-xs">
-                <AdminPricingManager currentLang={currentLang} />
-              </div>
-            )}
-
-            {/* T8: FAQ MANAGEMENT */}
-            {activeSubTab === 'faqs' && (
-              <div id="panel-faqs-desk" className="space-y-6 text-xs">
-                <div className="flex items-center justify-between border-b border-gray-200 dark:border-neutral-700/80 pb-3">
-                  <h3 className="text-sm font-bold text-gray-900 dark:text-white">
-                    {currentLang === 'en' ? 'Manage Global FAQs' : 'সাধারণ জিজ্ঞাসাবলী পরিচালনা'}
-                  </h3>
-                  <button
-                    onClick={() => {
-                      setIsCreatingFAQ(true);
-                      setEditingFAQ(null);
-                      setFaqForm({
-                        categoryEn: 'General', categoryBn: 'সাধারণ', questionEn: '', questionBn: '', answerEn: '', answerBn: '', helpfulCount: 0
-                      });
-                    }}
-                    className="flex items-center space-x-1.5 rounded-lg bg-blue-600 dark:bg-orange-500 hover:bg-blue-700 dark:hover:bg-orange-400 text-white px-3 py-2 font-bold transition"
-                  >
-                    <PlusIcon className="h-4 w-4" />
-                    <span>{currentLang === 'en' ? 'Add Question' : 'প্রশ্ন যোগ করুন'}</span>
-                  </button>
-                </div>
-
-                {isCreatingFAQ ? (
-                  <form onSubmit={handleSaveFAQ} className="space-y-4 bg-gray-50/50 dark:bg-neutral-800/40 rounded-xl p-4 md:p-5 border border-gray-200 dark:border-neutral-700">
-                    <div className="grid grid-cols-2 gap-4">
-                      <div className="space-y-1.5">
-                        <label className="font-semibold text-gray-500 dark:text-neutral-400">FAQ Group Category (English)</label>
-                        <input
-                          type="text" required
-                          value={faqForm.categoryEn || ''}
-                          onChange={(e) => setFaqForm({ ...faqForm, categoryEn: e.target.value })}
-                          className="w-full rounded border border-gray-200 dark:border-neutral-600 bg-white dark:bg-neutral-900 px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:ring-2 focus:ring-orange-500/30 dark:border-neutral-600"
-                        />
-                      </div>
-                      
-                    </div>
-
-                    <div className="grid grid-cols-2 gap-4">
-                      <div className="space-y-1.5">
-                        <label className="font-semibold text-gray-500 dark:text-neutral-400">Question Statement (English)</label>
-                        <input
-                          type="text" required
-                          value={faqForm.questionEn || ''}
-                          onChange={(e) => setFaqForm({ ...faqForm, questionEn: e.target.value })}
-                          className="w-full rounded border border-gray-200 dark:border-neutral-600 bg-white dark:bg-neutral-900 px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:ring-2 focus:ring-orange-500/30 dark:border-neutral-600"
-                        />
-                      </div>
-                      
-                    </div>
-
-                    <div className="grid grid-cols-2 gap-4">
-                      <div className="space-y-1.5">
-                        <label className="font-semibold text-gray-500 dark:text-neutral-400">Answer Explanation (English)</label>
-                        <textarea
-                          rows={4} required
-                          value={faqForm.answerEn || ''}
-                          onChange={(e) => setFaqForm({ ...faqForm, answerEn: e.target.value })}
-                          className="w-full rounded border border-gray-200 dark:border-neutral-600 bg-white dark:bg-neutral-900 px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:ring-2 focus:ring-orange-500/30 dark:border-neutral-600"
-                        />
-                      </div>
-                      
-                    </div>
-
-                    <div className="flex justify-end space-x-2 pt-4">
-                      <button
-                        type="button"
-                        onClick={() => setIsCreatingFAQ(false)}
-                        className="rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-4 py-2 font-bold text-gray-600 dark:text-neutral-300 hover:bg-gray-50 dark:hover:bg-neutral-800/70 dark:bg-[#141414]"
-                      >
-                        Cancel
-                      </button>
-                      <button
-                        type="submit"
-                        className="rounded bg-blue-600 dark:bg-orange-500 hover:bg-blue-700 dark:hover:bg-orange-400 text-white px-5 py-2 font-bold"
-                      >
-                        Save FAQ Question
-                      </button>
-                    </div>
-                  </form>
-                ) : (
-                  <div className="grid grid-cols-1 gap-4">
-                    {faqs.map((item) => (
-                      <div key={item.id} className="rounded-xl border border-gray-100 dark:border-neutral-800 p-4 shadow-sm bg-white dark:bg-[#141414] hover:border-blue-500 dark:border-orange-500 transition space-y-2">
-                        <div className="flex items-center justify-between">
-                          <span className="bg-blue-50 dark:bg-orange-500/10 text-blue-600 dark:text-orange-400 px-2 py-0.5 rounded text-[10px] font-bold uppercase">{item.categoryEn}</span>
-                          <div className="flex items-center space-x-2">
-                            <button
-                              onClick={() => handleEditFAQTrigger(item)}
-                              className="text-gray-500 dark:text-neutral-400 hover:text-blue-600 dark:hover:text-orange-400 dark:text-orange-400 font-bold"
-                            >
-                              Edit
-                            </button>
-                            <button
-                              onClick={() => handleDeleteFAQ(item.id)}
-                              className="text-red-500 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 dark:text-red-300 font-bold"
-                            >
-                              Delete
-                            </button>
-                          </div>
-                        </div>
-                        <p className="font-bold text-sm text-gray-900 dark:text-white font-sans">Q: {item.questionEn}</p>
-                        <p className="text-gray-500 dark:text-neutral-400 text-[11px] leading-relaxed">A: {item.answerEn}</p>
-                      </div>
-                    ))}
-                  </div>
-                )}
+              <div id="panel-portfolio-desk">
+                <AdminPortfolioManager
+                  onNotice={(msg) => triggerNotice(msg)}
+                />
               </div>
             )}
 
@@ -3240,7 +2607,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                     className={`px-4 py-2 font-bold border-b-2 text-xs transition duration-150 ${
                       testimonialsSubTab === 'reviews'
                         ? 'border-blue-600 text-blue-600 dark:text-orange-400'
-                        : 'border-transparent text-gray-500 dark:text-neutral-400 hover:text-gray-800 dark:hover:text-white dark:text-neutral-100 hover:border-gray-200 dark:hover:border-neutral-700 dark:border-neutral-700'
+                        : 'border-transparent text-gray-500 dark:text-neutral-400 hover:text-gray-800 dark:hover:text-white hover:border-gray-200 dark:hover:border-neutral-700'
                     }`}
                   >
                     {currentLang === 'en' ? 'Reviews (Text)' : 'গ্রাহক রিভিউ'}
@@ -3250,7 +2617,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                     className={`px-4 py-2 font-bold border-b-2 text-xs transition duration-150 ${
                       testimonialsSubTab === 'videos'
                         ? 'border-blue-600 text-blue-600 dark:text-orange-400'
-                        : 'border-transparent text-gray-500 dark:text-neutral-400 hover:text-gray-800 dark:hover:text-white dark:text-neutral-100 hover:border-gray-200 dark:hover:border-neutral-700 dark:border-neutral-700'
+                        : 'border-transparent text-gray-500 dark:text-neutral-400 hover:text-gray-800 dark:hover:text-white hover:border-gray-200 dark:hover:border-neutral-700'
                     }`}
                   >
                     {currentLang === 'en' ? 'Video Testimonials' : 'ভিডিও রিভিউ'}
@@ -3260,7 +2627,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                     className={`px-4 py-2 font-bold border-b-2 text-xs transition duration-150 ${
                       testimonialsSubTab === 'stories'
                         ? 'border-blue-600 text-blue-600 dark:text-orange-400'
-                        : 'border-transparent text-gray-500 dark:text-neutral-400 hover:text-gray-800 dark:hover:text-white dark:text-neutral-100 hover:border-gray-200 dark:hover:border-neutral-700 dark:border-neutral-700'
+                        : 'border-transparent text-gray-500 dark:text-neutral-400 hover:text-gray-800 dark:hover:text-white hover:border-gray-200 dark:hover:border-neutral-700'
                     }`}
                   >
                     {currentLang === 'en' ? 'Success Stories' : 'সফলতার গল্প'}
@@ -3270,7 +2637,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                     className={`px-4 py-2 font-bold border-b-2 text-xs transition duration-150 ${
                       testimonialsSubTab === 'logos'
                         ? 'border-blue-600 text-blue-600 dark:text-orange-400'
-                        : 'border-transparent text-gray-500 dark:text-neutral-400 hover:text-gray-800 dark:hover:text-white dark:text-neutral-100 hover:border-gray-200 dark:hover:border-neutral-700 dark:border-neutral-700'
+                        : 'border-transparent text-gray-500 dark:text-neutral-400 hover:text-gray-800 dark:hover:text-white hover:border-gray-200 dark:hover:border-neutral-700'
                     }`}
                   >
                     {currentLang === 'en' ? 'Client Logos' : 'ক্লায়েন্ট লোগো'}
@@ -3280,7 +2647,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                     className={`px-4 py-2 font-bold border-b-2 text-xs transition duration-150 ${
                       testimonialsSubTab === 'stats_settings'
                         ? 'border-blue-600 text-blue-600 dark:text-orange-400'
-                        : 'border-transparent text-gray-500 dark:text-neutral-400 hover:text-gray-800 dark:hover:text-white dark:text-neutral-100 hover:border-gray-200 dark:hover:border-neutral-700 dark:border-neutral-700'
+                        : 'border-transparent text-gray-500 dark:text-neutral-400 hover:text-gray-800 dark:hover:text-white hover:border-gray-200 dark:hover:border-neutral-700'
                     }`}
                   >
                     {currentLang === 'en' ? 'Stats & Settings' : 'পরিসংখ্যান ও সেটিংস'}
@@ -3470,7 +2837,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                                 </div>
                               </div>
                               <span className="block text-[10px] text-gray-500 dark:text-neutral-400">{item.roleEn} ({item.industryEn || 'General'})</span>
-                              <p className="text-gray-600 dark:text-neutral-300 leading-relaxed italic text-[11px] bg-gray-50/50 p-2 rounded mt-1 border border-gray-50">"{item.feedbackEn}"</p>
+                              <p className="text-gray-600 dark:text-neutral-300 leading-relaxed italic text-[11px] bg-gray-50/50 dark:bg-neutral-800/60 p-2 rounded mt-1 border border-gray-50 dark:border-neutral-700">"{item.feedbackEn}"</p>
                               <div className="flex items-center space-x-0.5 text-amber-500 dark:text-amber-400 font-semibold pt-1">
                                 {'★'.repeat(item.rating)}
                               </div>
@@ -4062,7 +3429,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                                 <span className="font-bold text-[10px] text-gray-400 dark:text-neutral-500">{item.name}</span>
                               )}
                             </div>
-                            <div className="flex items-center justify-between w-full border-t border-gray-50 pt-2 mt-1">
+                            <div className="flex items-center justify-between w-full border-t border-gray-50 dark:border-neutral-800 pt-2 mt-1">
                               <span className="font-bold text-[10px] text-gray-700 dark:text-neutral-200 truncate max-w-[60%]">{item.name}</span>
                               <div className="flex items-center space-x-1.5">
                                 <button
@@ -4158,7 +3525,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                         {currentLang === 'en' ? 'Review Submission Settings' : 'রিভিউ সাবমিশন সেটিংস'}
                       </h4>
                       <form onSubmit={handleSaveReviewSettings} className="space-y-3 bg-white dark:bg-[#141414] rounded-xl p-4 border border-gray-100 dark:border-neutral-800 shadow-sm">
-                        <div className="flex items-center justify-between py-1 border-b border-gray-50">
+                        <div className="flex items-center justify-between py-1 border-b border-gray-50 dark:border-neutral-800">
                           <div className="flex flex-col">
                             <span className="font-bold text-gray-700 dark:text-neutral-200">Require Approval</span>
                             <span className="text-[10px] text-gray-400 dark:text-neutral-500">Newly submitted reviews must be manually approved</span>
@@ -4174,7 +3541,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                           />
                         </div>
 
-                        <div className="flex items-center justify-between py-1 border-b border-gray-50">
+                        <div className="flex items-center justify-between py-1 border-b border-gray-50 dark:border-neutral-800">
                           <div className="flex flex-col">
                             <span className="font-bold text-gray-700 dark:text-neutral-200">Enable Star Ratings</span>
                             <span className="text-[10px] text-gray-400 dark:text-neutral-500">Allow users to provide 1-5 rating sliders</span>
@@ -4190,7 +3557,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                           />
                         </div>
 
-                        <div className="flex items-center justify-between py-1 border-b border-gray-50">
+                        <div className="flex items-center justify-between py-1 border-b border-gray-50 dark:border-neutral-800">
                           <div className="flex flex-col">
                             <span className="font-bold text-gray-700 dark:text-neutral-200">Allow Video Submissions</span>
                             <span className="text-[10px] text-gray-400 dark:text-neutral-500">Enable video URL suggestions in client forms</span>
@@ -4365,7 +3732,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                     {teamMembers.map((member) => (
                       <div key={member.id} className="rounded-xl border border-gray-100 dark:border-neutral-800 p-4 flex items-center justify-between gap-4 shadow-sm bg-white dark:bg-[#141414] hover:border-blue-500 dark:border-orange-500 transition">
                         <div className="flex items-center space-x-4">
-                          <img src={member.avatar} alt="" className="h-10 w-10 object-cover rounded-full bg-gray-50 dark:bg-[#141414] border border-gray-50" referrerPolicy="no-referrer" />
+                          <img src={member.avatar} alt="" className="h-10 w-10 object-cover rounded-full bg-gray-50 dark:bg-[#141414] border border-gray-50 dark:border-neutral-800" referrerPolicy="no-referrer" />
                           <div>
                             <span className="font-bold text-sm text-gray-900 dark:text-white block">{member.name}</span>
                             <span className="text-gray-400 dark:text-neutral-500 font-mono text-[10px] block mt-0.5">{member.roleEn} • {member.departmentEn}</span>
@@ -4403,7 +3770,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                 </div>
 
                 {/* Add new media reference form */}
-                <form onSubmit={handleAddMedia} className="bg-gray-50/50 p-4 rounded-xl border border-gray-100 dark:border-neutral-800 grid grid-cols-1 md:grid-cols-4 gap-3 items-end">
+                <form onSubmit={handleAddMedia} className="bg-gray-50/50 dark:bg-neutral-800/40 p-4 rounded-xl border border-gray-100 dark:border-neutral-800 grid grid-cols-1 md:grid-cols-4 gap-3 items-end">
                   <div className="space-y-1.5">
                     <label className="font-semibold text-gray-500 dark:text-neutral-400">Asset Title</label>
                     <input
@@ -4468,11 +3835,11 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                       .map((item) => (
                         <div key={item.id} className="group relative rounded-xl border border-gray-100 dark:border-neutral-800 overflow-hidden shadow-sm bg-white dark:bg-[#141414] flex flex-col justify-between">
                           <img src={item.url} alt="" className="h-28 w-full object-cover bg-gray-50 dark:bg-[#141414]" referrerPolicy="no-referrer" />
-                          <div className="p-2.5 space-y-1 border-t border-gray-50">
+                          <div className="p-2.5 space-y-1 border-t border-gray-50 dark:border-neutral-800">
                             <span className="font-bold text-gray-900 dark:text-white block truncate">{item.title}</span>
                             <span className="text-[9px] text-gray-400 dark:text-neutral-500 font-mono block truncate">{item.url}</span>
                           </div>
-                          <div className="flex border-t border-gray-50 divide-x divide-gray-50 text-[10px] font-bold text-center">
+                          <div className="flex border-t border-gray-50 dark:border-neutral-800 divide-x divide-gray-50 dark:divide-neutral-800 text-[10px] font-bold text-center">
                             <button
                               type="button"
                               onClick={() => {
@@ -4600,7 +3967,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                       <div key={u.id} className="rounded-xl border border-gray-100 dark:border-neutral-800 p-4 flex items-center justify-between gap-4 shadow-sm bg-white dark:bg-[#141414] hover:border-blue-500 dark:border-orange-500 transition">
                         <div className="flex items-center space-x-3">
                           <div className={`h-8 w-8 rounded-full flex items-center justify-center font-bold font-mono ${
-                            u.role === 'SuperAdmin' ? 'bg-purple-100 text-purple-700 dark:text-purple-400 dark:text-purple-300' : 'bg-blue-100 dark:bg-orange-500/15 text-blue-700 dark:text-orange-400'
+                            u.role === 'SuperAdmin' ? 'bg-purple-100 text-purple-700 dark:bg-purple-500/15 dark:text-purple-300' : 'bg-blue-100 dark:bg-orange-500/15 text-blue-700 dark:text-orange-400'
                           }`}>
                             {u.username.slice(0, 2).toUpperCase()}
                           </div>
@@ -4664,7 +4031,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                       className={`border-b-2 py-2 px-4 text-xs font-bold transition-all duration-150 ${
                         whyChooseUsSubTab === tab
                           ? 'border-blue-600 text-blue-600 dark:text-orange-400'
-                          : 'border-transparent text-gray-500 dark:text-neutral-400 hover:text-gray-900 dark:hover:text-white dark:text-white'
+                          : 'border-transparent text-gray-500 dark:text-neutral-400 hover:text-gray-900 dark:hover:text-white'
                       }`}
                     >
                       {tab === 'cards' && (currentLang === 'en' ? 'Ecosystem Cards' : 'ইকোসিস্টেম কার্ড')}

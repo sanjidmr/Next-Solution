@@ -1859,12 +1859,6 @@ export default function BlogSection({ currentLang, setTab, isFullPage = false }:
                         Our specialized engineering squads deliver headless ecommerce, React dashboards, and automated CRM pipelines in weeks.
                       </p>
                     </div>
-                    <button
-                      onClick={() => { setTab('pricing'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-                      className="w-full text-center rounded-xl bg-blue-600 hover:bg-blue-500 dark:bg-orange-500 text-white text-[10px] font-bold py-2 transition"
-                    >
-                      Compare Sprints & Settle Retainers
-                    </button>
                   </div>
 
                   {/* Widget 5: Social Channels */}
@@ -1894,59 +1888,6 @@ export default function BlogSection({ currentLang, setTab, isFullPage = false }:
 
             </div>
 
-            {/* 3. CORE FAQ PREVIEW SUB-SECTION */}
-            <div id="blog-faq-section" className="bg-white dark:bg-[#141414] rounded-3xl border border-gray-100 dark:border-neutral-800 p-6 md:p-10 space-y-8 shadow-sm">
-              <div className="space-y-2 text-center max-w-2xl mx-auto">
-                <span className="text-[10px] uppercase font-bold tracking-wider text-blue-600 dark:text-orange-400 block">Frequently Asked Questions</span>
-                <h3 className="text-xl md:text-2xl font-black text-gray-900 dark:text-white">CMS & Digital Agency FAQs</h3>
-                <p className="text-xs text-gray-500 dark:text-neutral-400 dark:text-neutral-500 font-sans leading-relaxed">
-                  Learn about our collaborative model, design guidelines, code delivery, and search optimization standards.
-                </p>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {[
-                  {
-                    q: 'How are blog posts deployed and managed in the CMS?',
-                    a: 'All posts can be drafted, scheduled, or instantly published live from the secured Admin Dashboard tab. Any changes made to titles, contents, tags, and authors persist in the simulated database.'
-                  },
-                  {
-                    q: 'Do your compiled web architectures meet Core Web Vitals?',
-                    a: 'Yes! Next Solution guarantees 100/100 Lighthouse speed performance. We pre-render pages into flat static markup, load optimized WebP image frameworks, and ensure zero layout shifts.'
-                  },
-                  {
-                    q: 'Can we configure multi-user editing roles in the dashboard?',
-                    a: 'Absolutely. The Admin Panel allows creating different administrative accounts with customized roles, such as SuperAdmin (full controls) or Editor (content editing only).'
-                  },
-                  {
-                    q: 'How does the automated semantic search engine optimize results?',
-                    a: 'The blog incorporates dynamic client-side filtering, fuzzy matching across titles and contents, and structured tag catalogs so readers locate relevant intelligence in milliseconds.'
-                  }
-                ].map((item, idx) => (
-                  <div key={idx} className="p-4 rounded-2xl border border-gray-50 bg-[#FAFAFA] space-y-2">
-                    <h5 className="font-bold text-xs text-gray-900 dark:text-white flex items-center gap-2">
-                      <HelpCircle className="h-4.5 w-4.5 text-blue-500 dark:text-orange-400 shrink-0" />
-                      {item.q}
-                    </h5>
-                    <p className="text-[11px] text-gray-500 dark:text-neutral-400 dark:text-neutral-500 leading-relaxed font-sans pl-6">
-                      {item.a}
-                    </p>
-                  </div>
-                ))}
-              </div>
-              
-              <div className="text-center pt-2">
-                <button
-                  type="button"
-                  onClick={() => { setTab('faq'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-                  className="text-xs font-bold text-blue-600 dark:text-orange-400 hover:underline flex items-center gap-1 justify-center mx-auto"
-                >
-                  <span>See more database-driven FAQs</span>
-                  <ArrowRight className="h-3.5 w-3.5" />
-                </button>
-              </div>
-            </div>
-
             {/* 4. FINAL COMPREHENSIVE CTA */}
             <div id="blog-footer-cta" className="rounded-3xl bg-gradient-to-r from-blue-600 dark:from-orange-500 to-indigo-700 text-white p-8 md:p-12 text-center space-y-6 relative overflow-hidden shadow-xl">
               <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-white via-transparent to-transparent"></div>
@@ -1961,13 +1902,6 @@ export default function BlogSection({ currentLang, setTab, isFullPage = false }:
                   : 'সিনিয়র সলিউশন আর্কিটেক্ট, ইউআই ডিজাইনার এবং এসইও বিশেষজ্ঞদের সাথে আপনার কাস্টম সফটওয়্যার ডিজাইন শুরু করুন।'}
               </p>
               <div className="flex flex-wrap items-center justify-center gap-4 relative z-10 pt-2">
-                <button
-                  id="final-cta-pricing-btn"
-                  onClick={() => { setTab('pricing'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-                  className="rounded-xl bg-white dark:bg-[#141414] hover:bg-gray-50 dark:bg-neutral-900 text-blue-600 dark:text-orange-400 text-xs font-bold px-6 py-3.5 transition hover:scale-[1.02] shadow-md shadow-black/5"
-                >
-                  Book Consultation Now
-                </button>
                 <button
                   id="final-cta-contact-btn"
                   onClick={() => { setTab('contact'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}

@@ -6,15 +6,10 @@ const TABLE_MAP: Record<string, string> = {
   services: "services",
   portfolio: "portfolio_items",
   blogs: "blog_posts",
-  faqs: "faqs",
   testimonials: "testimonials",
   messages: "contact_messages",
   subscribers: "newsletter_subscribers",
   settings: "site_settings",
-  "pricing-packages": "pricing_packages",
-  "pricing-addons": "pricing_addons",
-  "pricing-comparisons": "pricing_comparisons",
-  "pricing-quotes": "pricing_quote_requests",
   currencies: "currencies",
   "currency-settings": "currency_settings",
   "testimonial-categories": "testimonial_categories",
@@ -38,9 +33,6 @@ const TABLE_MAP: Record<string, string> = {
   "client-moments": "client_moments",
   products: "products",
   "product-images": "product_images",
-  "project-pricing": "project_pricing",
-  "monthly-pricing": "monthly_pricing",
-  "agency-packages": "agency_packages",
 };
 
 const SOFT_DELETE_TABLES = new Set([
@@ -48,9 +40,6 @@ const SOFT_DELETE_TABLES = new Set([
   "portfolio_items",
   "blog_posts",
   "products",
-  "project_pricing",
-  "monthly_pricing",
-  "agency_packages",
 ]);
 
 const SINGLETON_TABLES = new Set([

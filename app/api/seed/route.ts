@@ -1,13 +1,9 @@
 import { NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import {
-  initialServices, initialPortfolio, initialBlogs, initialFAQs, initialTestimonials,
-  defaultSiteSettings, initialPricingPackages, initialPricingAddons, initialPricingComparisons,
-  initialTechServiceCards
+  initialServices, initialPortfolio, initialBlogs, initialTestimonials,
+  defaultSiteSettings, initialTechServiceCards
 } from "@/data/initialData";
-import {
-  initialProjectPricing, initialMonthlyPricing, initialAgencyPackages
-} from "@/data/pricingInitialData";
 import {
   initialCookieCategories, defaultCookieSettings, initialLegalPolicies, initialLegalRevisions
 } from "@/data/legalInitialData";
@@ -17,13 +13,12 @@ import {
   initialProcessCTA
 } from "@/lib/db";
 import {
-  mapService, mapPortfolioItem, mapBlogPost, mapTestimonial, mapFAQ, mapSiteSettings,
-  mapPricingPackage, mapPricingAddon, mapPricingComparison, mapCurrency, mapCurrencySettings,
+  mapService, mapPortfolioItem, mapBlogPost, mapTestimonial, mapSiteSettings,
+  mapCurrency, mapCurrencySettings,
   mapTestimonialVideo, mapClientMoment, mapTestimonialStatistics, mapClientLogo, mapSuccessStory,
   mapReviewSettings, mapLegalPolicy, mapLegalRevision, mapCookieCategory, mapCookieSettings,
   mapWhyChooseUsCard, mapWhyChooseUsStat, mapWhyChooseUsBadge, mapWhyChooseUsTech, mapWhyChooseUsCTA,
-  mapProcessStep, mapProcessCTA, mapTechServiceCard, mapContactMessage, mapSubscriber, mapPricingQuoteRequest,
-  mapProjectPricing, mapMonthlyPricing, mapAgencyPackage
+  mapProcessStep, mapProcessCTA, mapTechServiceCard, mapContactMessage, mapSubscriber
 } from "@/lib/mappers";
 
 // Additional mock data arrays referenced in initDB()
@@ -57,22 +52,6 @@ const seedMessages = [
 const seedSubscribers = [
   { id: "sub-1", email: "investor@siliconbay.com", createdAt: "2026-07-01T08:00:00.000Z" },
   { id: "sub-2", email: "tech_crunch_editor@republic.co", createdAt: "2026-07-03T11:45:00.000Z" }
-];
-
-const seedQuotes = [
-  {
-    id: "quote-1",
-    name: "Asif Rahman",
-    email: "asif@nextech.io",
-    phone: "+880 1711 223344",
-    company: "NexTech Solutions",
-    service: "Web App",
-    budget: "$10,000 - $25,000",
-    timeline: "2-3 months",
-    projectDesc: "Need a premium billing and invoicing SaaS application integrated with local payment gateways (bKash, Nagad) and Stripe for international users. The UI/UX should feel premium and fluid.",
-    status: "pending",
-    createdAt: "2026-07-09T09:30:00.000Z"
-  }
 ];
 
 const defaultCurrencies = [
@@ -158,37 +137,13 @@ export async function GET() {
       await supabase.from("blog_posts").upsert(itemsToInsert);
     }
 
-    // 5. Seed FAQs
-    if (initialFAQs && initialFAQs.length > 0) {
-      const itemsToInsert = initialFAQs.map(item => mapFAQ.toDb(item));
-      await supabase.from("faqs").upsert(itemsToInsert);
-    }
-
-    // 6. Seed Testimonials
+    // 5. Seed Testimonials
     if (initialTestimonials && initialTestimonials.length > 0) {
       const itemsToInsert = initialTestimonials.map(item => mapTestimonial.toDb(item));
       await supabase.from("testimonials").upsert(itemsToInsert);
     }
 
-    // 7. Seed Pricing Packages
-    if (initialPricingPackages && initialPricingPackages.length > 0) {
-      const itemsToInsert = initialPricingPackages.map(item => mapPricingPackage.toDb(item));
-      await supabase.from("pricing_packages").upsert(itemsToInsert);
-    }
-
-    // 8. Seed Pricing Addons
-    if (initialPricingAddons && initialPricingAddons.length > 0) {
-      const itemsToInsert = initialPricingAddons.map(item => mapPricingAddon.toDb(item));
-      await supabase.from("pricing_addons").upsert(itemsToInsert);
-    }
-
-    // 9. Seed Pricing Comparisons
-    if (initialPricingComparisons && initialPricingComparisons.length > 0) {
-      const itemsToInsert = initialPricingComparisons.map(item => mapPricingComparison.toDb(item));
-      await supabase.from("pricing_comparisons").upsert(itemsToInsert);
-    }
-
-    // 10. Seed Currencies & Settings
+    // 6. Seed Currencies & Settings
     if (defaultCurrencies && defaultCurrencies.length > 0) {
       const itemsToInsert = defaultCurrencies.map((item: any) => mapCurrency.toDb(item));
       await supabase.from("currencies").upsert(itemsToInsert);
@@ -291,25 +246,6 @@ export async function GET() {
       const itemsToInsert = seedSubscribers.map(item => mapSubscriber.toDb(item));
       await supabase.from("newsletter_subscribers").upsert(itemsToInsert);
     }
-    if (seedQuotes && seedQuotes.length > 0) {
-      const itemsToInsert = seedQuotes.map((item: any) => mapPricingQuoteRequest.toDb(item));
-      await supabase.from("pricing_quote_requests").upsert(itemsToInsert);
-    }
-
-    // 22. Seed Dynamic Pricing System (project / monthly / agency packages)
-    if (initialProjectPricing && initialProjectPricing.length > 0) {
-      const itemsToInsert = initialProjectPricing.map(item => mapProjectPricing.toDb(item));
-      await supabase.from("project_pricing").upsert(itemsToInsert);
-    }
-    if (initialMonthlyPricing && initialMonthlyPricing.length > 0) {
-      const itemsToInsert = initialMonthlyPricing.map(item => mapMonthlyPricing.toDb(item));
-      await supabase.from("monthly_pricing").upsert(itemsToInsert);
-    }
-    if (initialAgencyPackages && initialAgencyPackages.length > 0) {
-      const itemsToInsert = initialAgencyPackages.map(item => mapAgencyPackage.toDb(item));
-      await supabase.from("agency_packages").upsert(itemsToInsert);
-    }
-
     return NextResponse.json(
       { message: "Database tables seeded successfully." },
       { status: 201 }

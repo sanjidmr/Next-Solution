@@ -126,7 +126,7 @@ export default function Navbar({
             onClick={() => handleTabClick('home')}
             className="flex cursor-pointer items-center space-x-2 transition duration-200 hover:opacity-90"
           >
-            <img src={heroIsDark ? "/logow.png" : "/logo.png"} alt="Next Solution" className="h-11 w-auto max-h-11 object-contain" />
+            <img src={heroIsDark ? "/logow.png" : "/logo.png"} alt="Next Solution" className="h-9 w-auto max-h-9 object-contain sm:h-8 max-h-8" />
           </Link>
 
           {/* Desktop Navigation */}

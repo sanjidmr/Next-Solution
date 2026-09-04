@@ -1496,10 +1496,7 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
           05. WHY CHOOSE US (Interactive Ecosystem)
          ======================================================== */}
       <section id="why-choose-us" className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-24 relative z-10">
-        <div className="text-center space-y-4 max-w-2xl mx-auto mb-16">
-          <span className="text-xs font-bold uppercase tracking-widest text-blue-600 dark:text-blue-400">
-            {currentLang === 'en' ? 'THE AGENCY ADVANTAGE' : 'কেন আমরা সেরা'}
-          </span>
+        <div className="text-center space-y-2 max-w-2xl mx-auto mb-10">
           <h2 className="font-sans text-2xl sm:text-3xl lg:text-4xl font-black text-neutral-900 dark:text-white leading-tight">
             {currentLang === 'en' ? 'Our Digital Ecosystem Yields Stronger Performance' : 'আমাদের সমন্বিত কাজের পদ্ধতি শতভাগ প্রবৃদ্ধি নিশ্চিত করে'}
           </h2>

@@ -1,15 +1,16 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import PortfolioDetails from "./client";
-import { createAdminClient } from "@/lib/supabase/admin";
+import { createClient } from "@/lib/supabase/server";
 import { mapPortfolioItem } from "@/lib/mappers";
 
 async function getPortfolioItem(slug: string) {
   try {
-    const supabase = createAdminClient();
+    const supabase = await createClient();
     const { data, error } = await supabase
       .from("portfolio_items")
       .select("*")
+      .eq("status", "published")
       .is("deleted_at", null)
       .eq("slug", slug)
       .single();

@@ -7,7 +7,7 @@ import { Service, PortfolioItem, BlogPost, Testimonial, FAQ, ContactMessage, Sub
 import { initialServices, initialPortfolio, initialBlogs, initialFAQs, initialTestimonials, defaultSiteSettings, initialPricingPackages, initialPricingAddons, initialPricingComparisons, initialTechServiceCards } from '@/data/initialData';
 import { initialCookieCategories, defaultCookieSettings, initialLegalPolicies, initialLegalRevisions } from '@/data/legalInitialData';
 
-const KEYS = {
+export const KEYS = {
   SERVICES: 'next_solution_services',
   PORTFOLIO: 'next_solution_portfolio',
   BLOGS: 'next_solution_blogs',
@@ -226,6 +226,15 @@ function setLocal<T>(key: string, value: T): void {
   } catch (e) {
     console.error('Error writing to localStorage key', key, e);
   }
+}
+
+/**
+ * Externally-visible write-through for the localStorage cache so the public
+ * content sync (@/lib/content-sync) can hydrate the same keys the getters read.
+ */
+
+export function setLocalData<T>(key: string, value: T): void {
+  setLocal(key, value);
 }
 
 // Initial seed data for Testimonials & Reviews sections

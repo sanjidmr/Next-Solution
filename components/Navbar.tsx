@@ -118,15 +118,15 @@ export default function Navbar({
   return (
     <header id="app-navbar" className={headerClass}>
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="flex h-16 items-center justify-between">
+        <div className="relative flex h-16 items-center justify-between">
           {/* Logo */}
           <Link
             id="nav-logo"
             href={getPathForTab('home')}
             onClick={() => handleTabClick('home')}
-            className="flex cursor-pointer items-center space-x-2 transition duration-200 hover:opacity-90"
+            className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 lg:static lg:transform-none flex cursor-pointer items-center space-x-2 transition duration-200 hover:opacity-90"
           >
-            <img src={heroIsDark ? "/logow.png" : "/logo.png"} alt="Next Solution" className="h-9 w-auto max-h-9 object-contain sm:h-8 max-h-8" />
+            <img src={heroIsDark ? "/logow.png" : "/logo.png"} alt="Next Solution" className="h-10 w-auto max-h-10 object-contain sm:h-9 sm:max-h-9" />
           </Link>
 
           {/* Desktop Navigation */}
@@ -186,7 +186,7 @@ export default function Navbar({
           </div>
 
           {/* Mobile menu button */}
-          <div id="nav-mobile-controls" className="flex items-center space-x-2 lg:hidden">
+          <div id="nav-mobile-controls" className="ml-auto flex items-center space-x-2 lg:ml-0 lg:hidden">
             {/* Dark Mode Toggle for mobile */}
             <button
               id="mobile-theme-toggle"

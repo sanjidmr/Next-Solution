@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import PortfolioClient from './_client';
-import { createAdminClient } from '@/lib/supabase/admin';
+import { createClient } from '@/lib/supabase/server';
 import { mapPortfolioItem } from '@/lib/mappers';
 
 export const metadata: Metadata = {
@@ -10,10 +10,11 @@ export const metadata: Metadata = {
 
 async function getPortfolioFromSupabase() {
   try {
-    const supabase = createAdminClient();
+    const supabase = await createClient();
     const { data, error } = await supabase
       .from('portfolio_items')
       .select('*')
+      .eq('status', 'published')
       .is('deleted_at', null)
       .order('sort_order', { ascending: true });
 

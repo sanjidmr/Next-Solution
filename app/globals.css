@@ -177,6 +177,20 @@ body {
   animation: pulse-soft 1.4s ease-in-out infinite;
 }
 
+/* "Trusted by Industry Leaders" marquee — seamless infinite loop. */
+@keyframes trustedMarquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+.trusted-marquee {
+  animation: trustedMarquee 30s linear infinite;
+}
+
+.trusted-marquee:hover {
+  animation-play-state: paused;
+}
+
 /* Hide horizontal scrollbar but keep scrollability */
 .scrollbar-none {
   scrollbar-width: none;
@@ -525,20 +539,35 @@ body {
   background-image: none !important;
 }
 
-/* The stacking cover (the section sliding over the hero) stays opaque so it
-   genuinely hides the pinned hero while it slides across — but instead of a
-   flat dark block it reproduces the SAME deep-space look (near-black base,
-   sparse stars, warm orange glows) so the whole page reads as one continuous
-   design with no seams. Higher specificity than the wipe above. */
+/* The stacking cover (the section sliding over the hero) itself stays
+   TRANSPARENT so the single continuous deep-space layer shows through and
+   never restarts a section background. What slides over the pinned hero is
+   an opaque cover layer (::before) that spans exactly the hero-wrap region —
+   the top 200svh of the section: it is fully opaque while the hero can still
+   be behind it, and ends right where the hero can no longer be seen. From
+   there on the continuous global deep-space layer (identical near-black
+   palette) continues without interruption: no rectangle, no restart, no seam. */
 .dark [data-space-page] section.stack-cover,
 .dark [data-space-page] div.stack-cover,
 .dark [data-space-page] .stack-cover.stack-cover {
   position: relative;
-  /* Reuse the exact deep-space base gradient so this section reads as part of
-     the same premium space environment (never a flat single colour) while it
-     slides over the pinned hero. Stars + warm orange glows keep it alive yet
-     subtle, and the whole layer travels WITH the section during the wrap. */
-  background-color: #070707 !important;
+  background-color: transparent !important;
+  background-image: none !important;
+}
+
+.dark [data-space-page] section.stack-cover::before,
+.dark [data-space-page] div.stack-cover::before,
+.dark [data-space-page] .stack-cover.stack-cover::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 200svh;
+  pointer-events: none;
+  /* Same premium deep-space look that the global layer uses, so the cover
+     blends once the mask fades it into the continuous background below. */
+  background-color: #070707;
   background-image:
     radial-gradient(circle at 12% 22%, rgba(255, 217, 196, 0.9) 0, rgba(255, 217, 196, 0) 1.5px),
     radial-gradient(circle at 38% 64%, rgba(255, 255, 255, 0.85) 0, rgba(255, 255, 255, 0) 1.5px),
@@ -546,14 +575,9 @@ body {
     radial-gradient(circle at 74% 48%, rgba(255, 217, 196, 0.85) 0, rgba(255, 217, 196, 0) 1.5px),
     radial-gradient(circle at 91% 76%, rgba(255, 255, 255, 0.75) 0, rgba(255, 255, 255, 0) 1.5px),
     radial-gradient(circle at 5% 86%, rgba(255, 255, 255, 0.6) 0, rgba(255, 255, 255, 0) 1.5px),
-    radial-gradient(circle at 27% 42%, rgba(255, 255, 255, 0.55) 0, rgba(255, 255, 255, 0) 1.5px),
-    radial-gradient(circle at 52% 88%, rgba(255, 255, 255, 0.6) 0, rgba(255, 255, 255, 0) 1.5px),
-    radial-gradient(circle at 84% 30%, rgba(255, 255, 255, 0.7) 0, rgba(255, 255, 255, 0) 1.5px),
-    radial-gradient(circle at 68% 8%, rgba(255, 217, 196, 0.75) 0, rgba(255, 217, 196, 0) 1.5px),
-    radial-gradient(1200px 760px at 78% -10%, rgba(255, 77, 0, 0.10), transparent 60%),
+    radial-gradient(1200px 760px at 78% -10%, rgba(255, 77, 0, 0.1), transparent 60%),
     radial-gradient(900px 660px at 6% 55%, rgba(255, 108, 0, 0.06), transparent 60%),
-    radial-gradient(760px 560px at 66% 88%, rgba(255, 77, 0, 0.06), transparent 60%),
-    linear-gradient(180deg, #070707 0%, #080808 48%, #040404 100%) !important;
+    linear-gradient(180deg, #070707 0%, #080808 48%, #040404 100%);
 }
 
 /* Dark mode: no rounded-top arc on the cover so there is no visible seam /
@@ -567,6 +591,7 @@ body {
     border-radius: 0;
   }
 }
+
 
 /* =========================================================
    PREMIUM MOTION SYSTEM — global hover & micro-interactions

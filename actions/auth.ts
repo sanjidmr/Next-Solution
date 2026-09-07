@@ -39,7 +39,8 @@ export async function signIn(formData: FormData) {
 
 export async function signInWithGoogle() {
   const supabase = await createClient();
-  const origin = (await headers()).get("origin") || "http://localhost:3000";
+  const origin =
+    (await headers()).get("origin") || process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: "google",
@@ -62,7 +63,8 @@ export async function signOut() {
 export async function resetPassword(formData: FormData) {
   const supabase = await createClient();
   const email = formData.get("email") as string;
-  const origin = (await headers()).get("origin") || "http://localhost:3000";
+  const origin =
+    (await headers()).get("origin") || process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 
   const { error } = await supabase.auth.resetPasswordForEmail(email, {
     redirectTo: `${origin}/auth/reset-password`,

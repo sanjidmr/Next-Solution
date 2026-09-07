@@ -149,12 +149,13 @@ export default function PortfolioSection({ currentLang, setTab, isFullPage = fal
         <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-orange-500/[0.03] dark:bg-orange-500/[0.04] rounded-full blur-[180px] pointer-events-none" />
         <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-orange-400/[0.02] dark:bg-orange-400/[0.03] rounded-full blur-[150px] pointer-events-none" />
 
-        <HeroEntrance direction="left" distance={150} duration={1} className="w-full">
+        <div className="w-full">
         <div className="mx-auto max-w-[1400px] px-5 sm:px-8 lg:px-12 xl:px-16 py-10 sm:py-20 lg:py-28">
           {/* Mobile: text first, images second. Desktop: side by side */}
           <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-12 lg:gap-16 items-center">
 
-            {/* Left Column — Text */}
+            {/* Left Column — Text — slides in from left */}
+            <HeroEntrance direction="left" distance={120} duration={1}>
             <div className="space-y-6 sm:space-y-7 order-1">
               <div className="inline-flex items-center gap-2.5 rounded-full border border-orange-200 dark:border-orange-500/20 bg-orange-50 dark:bg-orange-500/5 px-4 py-1.5">
                 <span className="h-1.5 w-1.5 rounded-full bg-orange-500 animate-pulse" />
@@ -194,8 +195,10 @@ export default function PortfolioSection({ currentLang, setTab, isFullPage = fal
                 </button>
               </div>
             </div>
+            </HeroEntrance>
 
-            {/* Right Column — 3 Floating Images, bigger & tilted stylishly */}
+            {/* Right Column — 3 Floating Images — slides in from right */}
+            <HeroEntrance direction="right" distance={120} duration={1} delay={0.1}>
             <div className="relative flex items-center justify-center min-h-[380px] sm:min-h-[480px] lg:min-h-[560px] order-2">
               {/* Decorative rings */}
               <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
@@ -251,9 +254,11 @@ export default function PortfolioSection({ currentLang, setTab, isFullPage = fal
                 <span className="absolute top-[55%] right-[8%] w-1 h-1 rounded-full bg-orange-400/40 dark:bg-orange-500/50 animate-pulse z-30" style={{ animationDelay: '2s' }} />
               </div>
             </div>
+            </HeroEntrance>
+
           </div>
         </div>
-        </HeroEntrance>
+        </div>
       </section>
       </div>
 

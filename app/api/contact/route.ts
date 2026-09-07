@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createAdminClient } from "@/lib/supabase/admin";
+import { createClient } from "@/lib/supabase/server";
 
 /**
- * Public contact form submission. Server-only (service-role client).
+ * Public contact form submission. Server-only (anonymous client; RLS grants
+ * anonymous INSERT vi the "Anyone can submit contact messages" policy).
  * Writes the message into the contact_messages table so it appears in the
  * admin panel's Messages tab.
  */
@@ -27,7 +28,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const supabase = createAdminClient();
+    const supabase = await createClient();
     const { error } = await supabase.from("contact_messages").insert([
       {
         name,

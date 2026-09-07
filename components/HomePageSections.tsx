@@ -17,6 +17,10 @@ import {
 } from 'lucide-react';
 
 import { translations } from '@/data/translations';
+import TrustedByMarquee from '@/components/motion/TrustedByMarquee';
+import HorizontalServices from '@/components/motion/HorizontalServices';
+import StackingCards from '@/components/motion/StackingCards';
+import RevealGuard from '@/components/motion/RevealGuard';
 import { 
   getSettings, getClientLogos, getSuccessStories, 
   getTestimonials, getBlogs, getPortfolio, 
@@ -415,7 +419,6 @@ export default function HomePageSections({ currentLang, setTab, portfolioData }:
   const [isSubscribed, setIsSubscribed] = useState(false);
   const [newsletterError, setNewsletterError] = useState('');
   const [hoveredEcosystem, setHoveredEcosystem] = useState<any>(null);
-  const [activeTimelineStep, setActiveTimelineStep] = useState<number>(0);
   const [hoveredIndustry, setHoveredIndustry] = useState<string | null>(null);
 
   // Horizontal scroll ref for featured portfolio row
@@ -550,236 +553,21 @@ export default function HomePageSections({ currentLang, setTab, portfolioData }:
   return (
     <div data-space-page className="space-y-8">
       {/* ========================================================
-          SECTION 9: TECHNOLOGIES WE USE (PREMIUM INTERACTIVE STACK)
+          SECTION 9: OUR SERVICES — HORIZONTAL SCROLL STORYTELLING
          ======================================================== */}
-      <section id="technologies" className="stack-cover relative overflow-hidden py-12 bg-linear-to-b from-white via-[#FAFAFA]/40 to-white">
-        {/* Modern subtle ambient gradients in background */}
-        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 h-[500px] w-[500px] bg-blue-100/20 dark:bg-orange-500/5 rounded-full blur-3xl pointer-events-none"></div>
-        <div className="absolute bottom-10 left-10 h-72 w-72 bg-indigo-50/30 dark:bg-orange-500/5 rounded-full blur-3xl pointer-events-none"></div>
+      <section id="technologies" className="stack-cover relative bg-white dark:bg-[#0A0A0A]">
+        <HorizontalServices
+          currentLang={currentLang}
+          services={homeServices}
+          onSelect={openService}
+        />
+      </section>
 
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-20 relative z-10">
-          
-          {/* Header Block */}
-          <div className="text-center space-y-4 max-w-3xl mx-auto">
-            <motion.div 
-              initial={{ opacity: 0, y: 10 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-50 dark:bg-orange-500/10 border border-blue-100/50 text-blue-700 text-xs font-bold font-mono uppercase tracking-wider"
-            >
-              <span className="relative flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-blue-600"></span>
-              </span>
-              {currentLang === 'en' ? '✦ Our Services' : '✦ আমাদের সেবাসমূহ'}
-            </motion.div>
-            
-            <motion.h2 
-              initial={{ opacity: 0, y: 15 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.1 }}
-              className="font-sans text-3xl sm:text-4xl md:text-5xl font-black text-neutral-900 dark:text-white leading-tight tracking-tight"
-            >
-              {currentLang === 'en' ? 'Everything Your Business Needs, ' : 'আপনার ব্যবসার যাবতীয় চাহিদা, '}
-              <span className="bg-gradient-to-r from-blue-600 dark:from-orange-500 via-indigo-600 to-blue-700 bg-clip-text text-transparent">
-                {currentLang === 'en' ? 'In One Place' : 'এক জায়গাতেই'}
-              </span>
-            </motion.h2>
-
-            <motion.p 
-              initial={{ opacity: 0, y: 15 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.2 }}
-              className="font-sans text-sm md:text-base text-neutral-500 dark:text-neutral-400 font-semibold uppercase tracking-wider"
-            >
-              {currentLang === 'en' ? 'From Websites to AI — We Deliver It All' : 'ওয়েবসাইট থেকে এআই — সবকিছুই আমরা করে দিই'}
-            </motion.p>
-
-            <motion.p 
-              initial={{ opacity: 0, y: 15 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.3 }}
-              className="text-sm sm:text-base text-neutral-600 dark:text-neutral-300 leading-relaxed font-sans max-w-2xl mx-auto"
-            >
-              {currentLang === 'en' 
-                ? 'From high-performance websites to intelligent AI services — we deliver every digital service you need to grow, win and scale. Click any service to explore full details, deliverables and plans.'
-                : 'উচ্চ-মানের ওয়েবসাইট থেকে বুদ্ধিমান এআই সার্ভিস — আপনার ব্যবসাকে বড় করার জন্য দরকারি প্রতিটি ডিজিটাল সেবা আমরা দিয়ে থাকি। যেকোনো সেবায় ক্লিক করে বিস্তারিত, ডেলিভারেবল এবং প্ল্যান দেখুন।'}
-            </motion.p>
-          </div>
-
-          {/* FLOATING TECHNOLOGY CLOUD */}
-          <div className="max-w-4xl mx-auto py-4">
-            <div className="flex flex-wrap justify-center gap-3 sm:gap-4">
-              {[
-                { name: 'Next.js', xOffset: -8, yOffset: -12, speed: 7 },
-                { name: 'React', xOffset: 10, yOffset: 12, speed: 6 },
-                { name: 'Supabase', xOffset: -12, yOffset: 14, speed: 8 },
-                { name: 'TypeScript', xOffset: 12, yOffset: -8, speed: 6.5 },
-                { name: 'OpenAI', xOffset: -14, yOffset: -6, speed: 7.2 },
-                { name: 'Gemini AI', xOffset: 14, yOffset: 10, speed: 5.5 },
-                { name: 'Figma', xOffset: -8, yOffset: 15, speed: 7.8 },
-                { name: 'WordPress', xOffset: 8, yOffset: -15, speed: 8.2 },
-                { name: 'Shopify', xOffset: -15, yOffset: 8, speed: 6.8 },
-                { name: 'Meta Ads', xOffset: 10, yOffset: -12, speed: 5.8 },
-                { name: 'Google Ads', xOffset: -6, yOffset: 14, speed: 7.5 },
-                { name: 'Adobe Premiere', xOffset: 15, yOffset: -10, speed: 6.2 },
-                { name: 'Laravel', xOffset: -10, yOffset: -14, speed: 8.5 },
-                { name: 'SEO Engine', xOffset: 12, yOffset: 8, speed: 6.4 },
-                { name: 'Node.js', xOffset: -9, yOffset: 13, speed: 6.9 },
-                { name: 'Tailwind CSS', xOffset: 13, yOffset: -11, speed: 7.6 },
-                { name: 'Adobe Photoshop', xOffset: -13, yOffset: 9, speed: 6.1 },
-                { name: 'Canva', xOffset: 9, yOffset: -13, speed: 8.3 },
-                { name: 'Ahrefs', xOffset: -11, yOffset: 12, speed: 5.9 },
-                { name: 'Mailchimp', xOffset: 11, yOffset: -9, speed: 6.7 },
-              ].map((tag, idx) => (
-                <motion.div
-                  key={idx}
-                  animate={{ 
-                    y: [0, tag.yOffset, 0],
-                    x: [0, tag.xOffset, 0]
-                  }}
-                  transition={{
-                    repeat: Infinity,
-                    duration: tag.speed,
-                    ease: "easeInOut"
-                  }}
-                  className="inline-flex items-center px-4 py-2 rounded-full text-xs font-bold bg-white dark:bg-[#141414] border border-neutral-200/50 hover:border-orange-500 hover:text-orange-600 hover:shadow-[0_10px_20px_-5px_rgba(255,77,0,0.1)] cursor-default transition-colors duration-300 shadow-xs font-mono"
-                >
-                  <span className="h-1.5 w-1.5 rounded-full bg-blue-500 dark:bg-orange-500 mr-2"></span>
-                  {tag.name}
-                </motion.div>
-              ))}
-            </div>
-          </div>
-
-          {/* TECHNOLOGY COUNTERS */}
-         
-
-          {/* BENTO GRID OF CARDS */}
-          <div className="grid grid-cols-2 gap-3 sm:gap-6 lg:grid-cols-3 lg:gap-8">
-            {homeServices.map((service, idx) => {
-              const Icon = service.icon;
-              return (
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: Math.min(idx * 0.05, 0.3) }}
-                  whileHover={{ y: -8 }}
-                  key={idx}
-                  onClick={() => openService(service.slug)}
-                  className="group relative cursor-pointer rounded-3xl border border-neutral-200/50 bg-white dark:bg-[#141414] p-4 sm:p-6 md:p-8 flex flex-col justify-between overflow-hidden shadow-[0_4px_30px_rgba(0,0,0,0.015)] hover:border-orange-500 hover:shadow-[0_20px_50px_-10px_rgba(255,77,0,0.08)] transition-all duration-500"
-                >
-                  {/* Glossy gradient highlight on hover */}
-                  <div className="absolute inset-0 bg-radial-gradient(circle_at_top_left,rgba(255,77,0,0.02)_0%,transparent_60%) pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-
-                  {/* Top Badge & Icon Row */}
-                  <div className="relative z-10 space-y-3 sm:space-y-5">
-                    <div className="flex items-start justify-between">
-                      <div className="h-10 w-10 sm:h-12 sm:w-12 rounded-2xl bg-blue-50/5 dark:bg-orange-500/50 border border-blue-100/50 flex items-center justify-center text-blue-600 dark:text-orange-400 group-hover:bg-blue-600 group-hover:text-white transition-all duration-500 shadow-sm">
-                        <Icon className="h-5 w-5 sm:h-6 sm:w-6" />
-                      </div>
-                      
-                      {/* Featured Badge */}
-                      <span className="text-[9px] font-bold font-mono bg-indigo-50 dark:bg-orange-500/10 text-indigo-600 dark:text-orange-400 px-2.5 py-1 rounded-full uppercase tracking-wider border border-indigo-100/30">
-                        {currentLang === 'en' ? `Service 0${idx + 1}` : `সেবা 0${idx + 1}`}
-                      </span>
-                    </div>
-
-                    {/* Service Text */}
-                    <div className="space-y-2">
-                      <div className="flex items-baseline space-x-2">
-                        <h3 className="font-sans text-sm sm:text-base md:text-xl font-extrabold text-neutral-900 dark:text-white group-hover:text-blue-600 dark:text-orange-400 transition-colors duration-300">
-                          {service.title}
-                        </h3>
-                        <span className="text-[10px] font-extrabold text-neutral-400 dark:text-neutral-500 font-mono">
-                          (0{idx + 1})
-                        </span>
-                      </div>
-
-                      <p className="font-sans text-xs text-neutral-500 dark:text-neutral-400 dark:text-neutral-500 leading-relaxed">
-                        {service.desc}
-                      </p>
-                    </div>
-
-                    {/* Core Technologies Badges */}
-                    <div className="space-y-2">
-                      <div className="text-[9px] font-extrabold font-mono uppercase tracking-wider text-neutral-400 dark:text-neutral-500">
-                        {currentLang === 'en' ? 'Core Stack' : 'প্রধান টেকনোলজি'}
-                      </div>
-                      <div className="flex flex-wrap gap-1.5">
-                        {service.techs.slice(0, 6).map((tech) => (
-                          <span 
-                            key={tech}
-                            className="rounded-lg bg-neutral-50 dark:bg-neutral-900 hover:bg-blue-50/5 dark:bg-orange-500/50 border border-neutral-200/60 text-[9px] font-extrabold font-mono text-neutral-600 dark:text-neutral-300 dark:text-neutral-600 hover:text-blue-600 dark:text-orange-400 px-2.5 py-1 transition-colors duration-200"
-                          >
-                            {tech}
-                          </span>
-                        ))}
-                        {service.techs.length > 6 && (
-                          <span className="rounded-lg bg-blue-50/30 dark:bg-orange-500/5 border border-blue-100/20 text-[9px] font-extrabold font-mono text-blue-600 dark:text-orange-400 px-2 py-1">
-                            +{service.techs.length - 6} more
-                          </span>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Interactive Hidden Drawer/Content - Reveals on hover/desktop or stands elegantly */}
-                  <div className="mt-6 pt-5 border-t border-neutral-50 dark:border-neutral-800 space-y-4 relative z-10 transition-all duration-300">
-                    {/* Experience Level & Count Row */}
-                    <div className="flex items-center justify-between text-[10px] font-bold font-mono text-neutral-400 dark:text-neutral-500">
-                      <span>{currentLang === 'en' ? 'Exclusive Service' : 'এক্সক্লুসিভ সেবা'}</span>
-                      <span className="text-blue-600 dark:text-orange-400 bg-blue-50/5 dark:bg-orange-500/50 px-2 py-0.5 rounded border border-blue-100/30">
-                        {currentLang === 'en' ? 'View Details →' : 'বিস্তারিত দেখুন →'}
-                      </span>
-                    </div>
-
-                    {/* Hover expansion container (always readable, extra sleek styled bullet points) */}
-                    <div className="h-0 group-hover:h-auto overflow-hidden opacity-0 group-hover:opacity-100 transition-all duration-500 space-y-3 pt-1">
-                      {/* Popular Projects */}
-                      <div className="space-y-1">
-                        <div className="text-[9px] font-extrabold font-mono uppercase tracking-wider text-neutral-400 dark:text-neutral-500 flex items-center">
-                          <CheckCircle className="h-3 w-3 text-emerald-500 dark:text-emerald-400 mr-1" />
-                          {currentLang === 'en' ? 'Popular Solutions' : 'জনপ্রিয় সমাধানসমূহ'}
-                        </div>
-                        <div className="grid grid-cols-1 gap-1 text-[11px] font-sans text-neutral-600 dark:text-neutral-300 dark:text-neutral-600 font-medium pl-4">
-                          {service.popular.map((proj, pIdx) => (
-                            <div key={pIdx} className="flex items-center">
-                              <span className="h-1 w-1 bg-neutral-300 rounded-full mr-2"></span>
-                              {proj}
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-
-                      {/* Key Benefits */}
-                      <div className="space-y-1">
-                        <div className="text-[9px] font-extrabold font-mono uppercase tracking-wider text-neutral-400 dark:text-neutral-500 flex items-center">
-                          <Sparkles className="h-3 w-3 text-blue-500 dark:text-orange-400 mr-1" />
-                          {currentLang === 'en' ? 'Core Benefits' : 'মূল সুবিধা'}
-                        </div>
-                        <div className="grid grid-cols-1 gap-1 text-[11px] font-sans text-neutral-600 dark:text-neutral-300 dark:text-neutral-600 font-medium pl-4">
-                          {service.benefits.map((benefit, bIdx) => (
-                            <div key={bIdx} className="flex items-center">
-                              <span className="h-1 w-1 bg-neutral-300 rounded-full mr-2"></span>
-                              {benefit}
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                </motion.div>
-              );
-            })}
-          </div>
-
-        </div>
+      {/* ========================================================
+          TRUSTED BY INDUSTRY LEADERS — right beneath Our Services
+         ======================================================== */}
+      <section id="trusted-by" className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10 sm:py-12">
+        <TrustedByMarquee currentLang={currentLang} />
       </section>
 
       {/* ========================================================
@@ -825,222 +613,66 @@ export default function HomePageSections({ currentLang, setTab, portfolioData }:
           </div>
 
 {/* Main visual - chose.png (complete center visual + surrounding cards) */}
-          <div className="mt-8 sm:mt-10 lg:mt-12">
-              <div className="mx-auto max-w-[1250px]">
+          <RevealGuard
+            initial={{ opacity: 0, x: 160, scale: 0.98 }}
+            animate={{ opacity: 1, x: 0, scale: 1 }}
+            transition={{ duration: 1.1, ease: [0.22, 1, 0.36, 1] }}
+            fallbackMs={1200}
+            amount={0.18}
+            className="mt-8 sm:mt-10 lg:mt-12 flex justify-end"
+          >
+            <div className="mx-auto max-w-[1250px] animate-[ns-float_7s_ease-in-out_infinite]">
+              <div className="relative overflow-hidden rounded-2xl sm:rounded-3xl border border-orange-200/40 dark:border-white/10 shadow-2xl shadow-orange-500/10">
+                <div className="pointer-events-none absolute inset-0 z-10 bg-gradient-to-t from-orange-500/10 via-transparent to-transparent" />
                 <img
                   src="/chose.png"
                   alt="Why choose Next Solution - our team and capabilities"
                   className="w-full h-auto select-none"
-                  loading="lazy"
+                  width={1536}
+                  height={1024}
                   draggable={false}
                 />
               </div>
-          </div>
+            </div>
+          </RevealGuard>
 
         </div>
       </section>
 
 
       {/* ========================================================
-          SECTION 6: OUR PROCESS (PREMIUM TIMELINE)
+          SECTION 6: OUR PROCESS (STICKY STACKING CARDS)
          ======================================================== */}
-      <section id="our-process" className="relative bg-white dark:bg-[#141414] py-16 sm:py-20 overflow-hidden">
-        {/* Ambient Gradient Background Orbs */}
-        <div className="absolute top-1/4 left-[10%] w-96 h-96 bg-blue-50/40 dark:bg-orange-500/5 rounded-full blur-3xl -z-10 animate-pulse" style={{ animationDuration: '10s' }}></div>
-        <div className="absolute bottom-1/4 right-[10%] w-96 h-96 bg-indigo-50/30 dark:bg-orange-500/5 rounded-full blur-3xl -z-10 animate-pulse" style={{ animationDuration: '8s' }}></div>
+      <section id="our-process" className="relative bg-white dark:bg-[#141414] pt-10 pb-16 sm:pt-12 sm:pb-20">
+        {/* Ambient Gradient Background Orbs — clipped in their own wrapper so
+            the section itself never becomes a scroll container (which would
+            break the sticky stacking-card pin) */}
+        <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
+          <div className="absolute top-1/4 left-[10%] w-96 h-96 bg-blue-50/40 dark:bg-orange-500/5 rounded-full blur-3xl -z-10 animate-pulse" style={{ animationDuration: '10s' }}></div>
+          <div className="absolute bottom-1/4 right-[10%] w-96 h-96 bg-indigo-50/30 dark:bg-orange-500/5 rounded-full blur-3xl -z-10 animate-pulse" style={{ animationDuration: '8s' }}></div>
+        </div>
         
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-8">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-5">
           
-          {/* Header */}
-          <div className="text-center space-y-4 max-w-3xl mx-auto">
-            <span className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full bg-blue-50 dark:bg-orange-500/10 border border-blue-100 dark:border-orange-500/20 text-xs font-bold uppercase tracking-wider text-blue-600 dark:text-orange-400">
-              <Sparkles className="h-3.5 w-3.5 text-blue-500 dark:text-orange-400 animate-spin" style={{ animationDuration: '3s' }} />
-              <span suppressHydrationWarning>{currentLang === 'en' ? processCTA.titleEn : processCTA.titleBn}</span>
-            </span>
-            <h2 suppressHydrationWarning className="font-sans text-2xl sm:text-3xl lg:text-4xl font-black text-gray-900 dark:text-white leading-tight tracking-tight">
-              {currentLang === 'en' ? processCTA.highlightEn : processCTA.highlightBn}
-            </h2>
-            <p suppressHydrationWarning className="text-sm sm:text-base text-gray-500 dark:text-neutral-400 dark:text-neutral-500 leading-relaxed max-w-2xl mx-auto">
-              {currentLang === 'en' ? processCTA.subtitleEn : processCTA.subtitleBn}
-            </p>
-          </div>
-
-          {/* Adaptation Service Selector (Interactive Tab) */}
-          <div className="max-w-2xl mx-auto bg-gray-50/80 border border-gray-100 dark:border-neutral-800 p-1.5 rounded-2xl flex flex-wrap justify-center gap-1 shadow-sm">
-            {[
-              { id: 'all', labelEn: 'All Services Workflow', labelBn: 'সকল সার্ভিস ওয়ার্কফ্লো', icon: 'Globe' },
-              { id: 'web', labelEn: 'Web & Apps Dev', labelBn: 'ওয়েব ও অ্যাপ ডেভেলপমেন্ট', icon: 'Code' },
-              { id: 'design', labelEn: 'UI/UX & Branding', labelBn: 'ইউআই/ইউএক্স ও ব্র্যান্ডিং', icon: 'Layers' },
-              { id: 'marketing', labelEn: 'SEO & Marketing', labelBn: 'এসইও ও ডিজিটাল মার্কেটিং', icon: 'Megaphone' },
-              { id: 'ai', labelEn: 'AI Services', labelBn: 'এআই সার্ভিস', icon: 'Cpu' }
-            ].map((tab) => {
-              const isActive = (activeTimelineStep === 0 && tab.id === 'all') || 
-                               (activeTimelineStep === 1 && tab.id === 'web') ||
-                               (activeTimelineStep === 2 && tab.id === 'design') ||
-                               (activeTimelineStep === 3 && tab.id === 'marketing') ||
-                               (activeTimelineStep === 4 && tab.id === 'ai');
-              return (
-                <button
-                  key={tab.id}
-                  onClick={() => {
-                    if (tab.id === 'all') setActiveTimelineStep(0);
-                    if (tab.id === 'web') setActiveTimelineStep(1);
-                    if (tab.id === 'design') setActiveTimelineStep(2);
-                    if (tab.id === 'marketing') setActiveTimelineStep(3);
-                    if (tab.id === 'ai') setActiveTimelineStep(4);
-                  }}
-                  className={`flex items-center space-x-1.5 px-4 py-2 rounded-xl text-xs font-bold transition duration-200 ${
-                    isActive 
-                      ? 'bg-blue-600 text-white shadow-md shadow-blue-500/15 scale-102'
-                      : 'text-gray-600 dark:text-neutral-300 dark:text-neutral-600 hover:bg-gray-100 dark:bg-neutral-800'
-                  }`}
-                >
-                  <IconHelper name={tab.icon} className="h-3.5 w-3.5" />
-                  <span>{currentLang === 'en' ? tab.labelEn : tab.labelBn}</span>
-                </button>
-              );
-            })}
-          </div>
-
-          {/* Adaptability Insight Banner */}
-          <div className="max-w-3xl mx-auto rounded-xl bg-blue-50/5 dark:bg-orange-500/50 border border-blue-100/50 p-4 text-center">
-            <p className="text-xs text-blue-700 font-medium">
-              {activeTimelineStep === 0 && (currentLang === 'en' 
-                ? "💡 Showing our baseline 7-step digital growth workflow. Switch tabs above to see how we specialize our process for individual disciplines."
-                : "💡 আমাদের বেসলাইন ৭-ধাপের ডিজিটাল গ্রোথ ওয়ার্কফ্লো দেখানো হচ্ছে। নির্দিষ্ট সার্ভিসের কাজের পদ্ধতি দেখতে ওপরে ট্যাব পরিবর্তন করুন।")}
-              {activeTimelineStep === 1 && (currentLang === 'en' 
-                ? "💻 Web Dev Path: Emphasizes modular React architecture, headless APIs, strict QA test scripts, load optimizations, and high-performance serverless cloud deployments."
-                : "💻 ওয়েব ডেভেলপমেন্ট পথ: মডুলার রিঅ্যাক্ট আর্কিটেকচার, হেডলেস এপিআই, কঠোর কিউএ টেস্ট স্ক্রিপ্ট এবং উচ্চ-ক্ষমতার ক্লাউড ডেপ্লয়মেন্টের ওপর জোর দেয়।")}
-              {activeTimelineStep === 2 && (currentLang === 'en' 
-                ? "🎨 Design Path: Focuses on extensive mood-boarding, wireframing, high-fidelity interactive prototyping, user persona studies, and full branding system deliverables."
-                : "🎨 ডিজাইন পথ: বিস্তারিত মুড-বোর্ডিং, ওয়্যারফ্রেমিং, ইন্টারঅ্যাক্টিভ প্রোটোটাইপিং, ইউজার পারসোনা স্টাডি এবং ব্র্যান্ডিং সিস্টেমের ওপর ফোকাস করে।")}
-              {activeTimelineStep === 3 && (currentLang === 'en' 
-                ? "📈 SEO & Marketing Path: Maximizes competitor backlink profiling, technical core web vitals audits, landing page conversions, dynamic pixel tracking, and performance reporting."
-                : "📈 এসইও ও মার্কেটিং পথ: প্রতিযোগী ব্যাকলিংক প্রোফাইলিং, টেকনিক্যাল ও কন্টেন্ট অডিট, ল্যান্ডিং পেজ কনভার্সন এবং পারফরম্যান্স রিপোর্টিং নিশ্চিত করে।")}
-              {activeTimelineStep === 4 && (currentLang === 'en' 
-                ? "🤖 AI Services Path: Specializes in custom LLM orchestrations (Gemini API), flow diagrams, integration testing, training custom agents, and automated database triggering."
-                : "🤖 এআই সার্ভিস পথ: কাস্টম এলএলএম অর্কেস্ট্রেশন (জেমিনি এপিআই), ফ্লো ডায়াগ্রাম, ইন্টিগ্রেশন টেস্টিং এবং কাস্টম এজেন্ট ট্রেনিং সলিউশনে পারদর্শী।")}
-            </p>
-          </div>
-
-          {/* Timeline */}
-          <div className="relative mt-8">
-            
-            {/* Desktop Center connector line */}
-            <div className="absolute left-4 lg:left-1/2 top-4 bottom-4 w-[2px] bg-gray-100 dark:bg-neutral-800 lg:-translate-x-[1px] block"></div>
-            
-            {/* Center connector line GLOW progress bar */}
-            <div className="absolute left-4 lg:left-1/2 top-4 bottom-4 w-[2px] bg-gradient-to-b from-blue-600 dark:from-orange-500 via-indigo-500 to-purple-600 lg:-translate-x-[1px] block opacity-30"></div>
-
-            <div className="space-y-5 relative">
-              {processSteps.map((step, idx) => {
-                const isLeft = idx % 2 === 0;
-                return (
-                  <motion.div 
-                    key={step.id}
-                    initial={{ opacity: 0, y: 30 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true, margin: "-100px" }}
-                    transition={{ duration: 0.6, delay: idx * 0.1 }}
-                    className={`flex flex-col lg:flex-row items-stretch gap-4 lg:gap-10 relative ${
-                      isLeft ? 'lg:flex-row' : 'lg:flex-row-reverse'
-                    }`}
-                  >
-                    {/* Visual dot indicator with glow if hovered */}
-                    <div className="absolute left-4 lg:left-1/2 top-8 h-8 w-8 rounded-full bg-white dark:bg-[#141414] border-4 border-blue-600 z-10 lg:-translate-x-[16px] flex items-center justify-center shadow-lg transition-all duration-300">
-                      <span suppressHydrationWarning className="text-[10px] font-black text-blue-600 dark:text-orange-400 font-mono">{step.stepNumber}</span>
-                    </div>
-                    
-                    {/* Content card (Responsive wrapper) */}
-                    <div className="w-full lg:w-1/2 pl-14 md:pl-16 lg:pl-0">
-                      <div className="group relative rounded-2xl lg:rounded-3xl border border-gray-100 dark:border-neutral-800 bg-white dark:bg-[#141414] p-3 sm:p-4 lg:p-5 space-y-2.5 lg:space-y-3 shadow-sm hover:shadow-xl hover:border-blue-200/60 transition-all duration-300">
-                        {/* Decorative subtle border glow */}
-                        <div className="absolute inset-0 rounded-2xl lg:rounded-3xl bg-gradient-to-tr from-blue-500/5 to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
-
-                        {/* Top Metadata Row */}
-                        <div className="flex items-center justify-between">
-                          <span suppressHydrationWarning className="text-[10px] sm:text-xs font-black px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-md lg:rounded-lg bg-blue-50 dark:bg-orange-500/10 text-blue-600 dark:text-orange-400 font-mono">
-                            STEP {step.stepNumber}
-                          </span>
-                          <span className="text-lg sm:text-2xl" role="img" aria-label="step-icon">
-                            {step.icon}
-                          </span>
-                        </div>
-
-                        {/* Title & Description */}
-                        <div className="space-y-1.5 lg:space-y-3">
-                          <h3 suppressHydrationWarning className="font-sans text-sm sm:text-base lg:text-lg font-bold text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-orange-400 transition-colors duration-200 leading-snug">
-                            {currentLang === 'en' ? step.titleEn : step.titleBn}
-                          </h3>
-                          <p suppressHydrationWarning className="text-[10px] sm:text-[11px] lg:text-xs text-gray-500 dark:text-neutral-400 leading-snug line-clamp-2 lg:line-clamp-none">
-                            {currentLang === 'en' ? step.descriptionEn : step.descriptionBn}
-                          </p>
-                        </div>
-
-                        {/* Detail Reveal Panel */}
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 lg:gap-3 pt-2 lg:pt-3 border-t border-gray-50 text-[10px] lg:text-[11px]">
-                          {/* Deliverables Column */}
-                          <div className="space-y-1.5">
-                            <span className="block font-bold text-gray-400 dark:text-neutral-500 uppercase tracking-widest text-[8px] lg:text-[9px]">
-                              {currentLang === 'en' ? 'Deliverables' : 'ডেলিভারিবলস'}
-                            </span>
-                            <ul className="space-y-1">
-                              {(currentLang === 'en' ? step.deliverablesEn : step.deliverablesBn).map((del, dIdx) => (
-                                <li key={dIdx} className="flex items-center space-x-1 text-gray-600 dark:text-neutral-300 dark:text-neutral-600">
-                                  <CheckCircle className="h-3 w-3 sm:h-3.5 sm:w-3.5 text-emerald-500 dark:text-emerald-400 shrink-0" />
-                                  <span suppressHydrationWarning>{del}</span>
-                                </li>
-                              ))}
-                            </ul>
-                          </div>
-
-                          {/* Tools & Services Column */}
-                          <div className="space-y-2.5 lg:space-y-4">
-                            {/* Duration */}
-                            <div className="space-y-1">
-                              <span className="block font-bold text-gray-400 dark:text-neutral-500 uppercase tracking-widest text-[8px] lg:text-[9px]">
-                                {currentLang === 'en' ? 'Estimated Duration' : 'আনুমানিক সময়'}
-                              </span>
-                              <span suppressHydrationWarning className="font-semibold text-gray-700 dark:text-neutral-200 bg-gray-50 dark:bg-neutral-900 px-1.5 sm:px-2 py-0.5 rounded-md inline-block text-[10px] lg:text-[11px]">
-                                {currentLang === 'en' ? step.estimatedDurationEn : step.estimatedDurationBn}
-                              </span>
-                            </div>
-
-                            {/* Tools Used */}
-                            <div className="space-y-1 lg:space-y-1.5">
-                              <span className="block font-bold text-gray-400 dark:text-neutral-500 uppercase tracking-widest text-[8px] lg:text-[9px]">
-                                {currentLang === 'en' ? 'Primary Stack' : 'প্রধান স্ট্যাক'}
-                              </span>
-                              <div className="flex flex-wrap gap-1">
-                                {step.toolsUsed.map((tool, tIdx) => (
-                                  <span suppressHydrationWarning key={tIdx} className="px-1.5 sm:px-2 py-0.5 rounded bg-gray-50 dark:bg-neutral-900 text-gray-500 dark:text-neutral-400 dark:text-neutral-500 font-mono text-[9px] lg:text-[10px]">
-                                    {tool}
-                                  </span>
-                                ))}
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-
-                      </div>
-                    </div>
-
-                    {/* Step visual - blends with background */}
-                    <div className="w-full lg:w-1/2 pl-14 md:pl-16 lg:pl-0">
-                      <div className="group/visual relative h-full min-h-[110px] sm:min-h-[150px] lg:min-h-[240px] overflow-hidden flex items-center justify-center">
-                        <img
-                          src={`/step${parseInt(step.stepNumber, 10)}.png`}
-                          alt={currentLang === 'en' ? step.titleEn : step.titleBn}
-                          className="max-h-[180px] sm:max-h-[240px] lg:max-h-[300px] w-auto max-w-full h-auto object-contain"
-                          loading="lazy"
-                        />
-                      </div>
-                    </div>
-                  </motion.div>
-                );
-              })}
-            </div>
-          </div>
+          {/* Header — pinned together with the stacking deck */}
+          <StackingCards
+            currentLang={currentLang}
+            steps={processSteps}
+            header={
+              <>
+                <span className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full bg-blue-50 dark:bg-orange-500/10 border border-blue-100 dark:border-orange-500/20 text-xs font-bold uppercase tracking-wider text-blue-600 dark:text-orange-400">
+                  <Sparkles className="h-3.5 w-3.5 text-blue-500 dark:text-orange-400 animate-spin" style={{ animationDuration: '3s' }} />
+                  <span suppressHydrationWarning>{currentLang === 'en' ? processCTA.titleEn : processCTA.titleBn}</span>
+                </span>
+                <h2 suppressHydrationWarning className="font-sans text-2xl sm:text-3xl lg:text-4xl font-black text-gray-900 dark:text-white leading-tight tracking-tight">
+                  {currentLang === 'en' ? processCTA.highlightEn : processCTA.highlightBn}
+                </h2>
+                <p suppressHydrationWarning className="text-sm sm:text-base text-gray-500 dark:text-neutral-400 leading-relaxed max-w-2xl mx-auto">
+                  {currentLang === 'en' ? processCTA.subtitleEn : processCTA.subtitleBn}
+                </p>
+              </>
+            }
+          />
 
           {/* Interactive Flow Indicator Line (Idea -> Build -> Launch -> Grow) */}
           <div className="max-w-4xl mx-auto rounded-2xl bg-gray-50 dark:bg-neutral-900 border border-gray-100 dark:border-neutral-800 p-6 shadow-inner space-y-4">
@@ -1107,7 +739,13 @@ export default function HomePageSections({ currentLang, setTab, portfolioData }:
         {/* Layout: left service navbar + right portfolio row */}
         <div className="grid grid-cols-1 lg:grid-cols-[240px_1fr] gap-8 items-start">
 {/* Left: Service Navbar (vertical on desktop, compact scroll chips on mobile) */}
-          <div className="lg:sticky lg:top-28 flex lg:flex-col gap-1.5 lg:gap-2 lg:p-2 lg:rounded-2xl lg:bg-white lg:dark:bg-[#141414] lg:border lg:border-neutral-100 lg:dark:border-neutral-800 lg:shadow-sm overflow-x-auto scrollbar-none pb-1 lg:pb-0 -mx-4 sm:-mx-6 lg:mx-0 px-4 sm:px-6 lg:px-0">
+          <RevealGuard
+            initial={{ opacity: 0, y: -48 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1], delay: 0.05 }}
+            fallbackMs={900}
+            className="lg:sticky lg:top-28 flex lg:flex-col gap-1.5 lg:gap-2 lg:p-2 lg:rounded-2xl lg:bg-white lg:dark:bg-[#141414] lg:border lg:border-neutral-100 lg:dark:border-neutral-800 lg:shadow-sm overflow-x-auto scrollbar-none pb-1 lg:pb-0 -mx-4 sm:-mx-6 lg:mx-0 px-4 sm:px-6 lg:px-0"
+          >
             {portfolioCategories.map((cat) => {
               const isActive = activePortfolioFilter === cat;
               return (
@@ -1127,18 +765,23 @@ export default function HomePageSections({ currentLang, setTab, portfolioData }:
                 </button>
               );
             })}
-          </div>
+          </RevealGuard>
 
           {/* Right: Portfolio cards in a grid (same size as services cards) */}
-          <div>
+          <RevealGuard
+            initial={{ opacity: 0, x: 64 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: 0.15 }}
+            fallbackMs={1000}
+          >
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               <AnimatePresence mode="popLayout">
                 {filteredPortfolio.slice(0, 6).map((item, idx) => (
                   <motion.div
                     layout
                     key={item.id}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
+                    initial={{ opacity: 0, x: 24 }}
+                    animate={{ opacity: 1, x: 0 }}
                     exit={{ opacity: 0, scale: 0.95 }}
                     transition={{ duration: 0.35, delay: idx * 0.05 }}
                     onClick={() => {
@@ -1213,7 +856,7 @@ className="group cursor-pointer"
                 ))}
               </AnimatePresence>
             </div>
-          </div>
+          </RevealGuard>
         </div>
 
         <div className="text-center pt-4">
@@ -1281,14 +924,14 @@ className="group cursor-pointer"
               {industries.slice(0, 4).map((ind, idx) => {
                 const isHovered = hoveredIndustry === ind.id;
                 return (
-                  <motion.div
+                  <RevealGuard
                     key={ind.id}
-                    initial={{ opacity: 0, x: -30 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: idx * 0.08, duration: 0.5 }}
+                    initial={{ opacity: 0, x: -30, clipPath: 'inset(0% 100% 0% 0%)', scale: 0.96 }}
+                    animate={{ opacity: 1, x: 0, clipPath: 'inset(0% 0% 0% 0%)', scale: 1 }}
+                    transition={{ delay: idx * 0.1, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
                     whileHover={{ y: -6 }}
                     onMouseEnter={() => setHoveredIndustry(ind.id)}
+                    fallbackMs={800 + idx * 120}
                     className={`relative group cursor-pointer rounded-[22px] overflow-hidden border transition-all duration-400 ${isHovered ? 'border-orange-400 shadow-[0_12px_40px_rgba(255,74,0,0.15)]' : 'border-gray-200 dark:border-white/10 shadow-sm hover:shadow-lg'}`}
                     style={{ transform: idx % 2 === 1 ? 'translateX(8px)' : 'none' }}
                   >
@@ -1313,18 +956,18 @@ className="group cursor-pointer"
                         </p>
                       </div>
                     </div>
-                  </motion.div>
+                  </RevealGuard>
                 );
               })}
             </div>
 
             {/* ── Center Featured Area ── */}
-            <motion.div
+            <RevealGuard
+              initial={{ opacity: 0, scale: 0.85 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1], delay: 0.15 }}
+              fallbackMs={900}
               className="flex items-center justify-center z-10"
-              initial={{ opacity: 0, scale: 0.9 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
             >
               <div className={`relative w-full aspect-square max-w-[400px] rounded-full transition-all duration-500 ${hoveredIndustry !== null ? 'shadow-[0_0_60px_rgba(255,74,0,0.12)]' : ''}`}>
                 {/* Outer ring */}
@@ -1346,21 +989,21 @@ className="group cursor-pointer"
                   </span>
                 </div>
               </div>
-            </motion.div>
+            </RevealGuard>
 
             {/* ── Right Column (4 cards) ── */}
             <div className="flex flex-col gap-4 z-10">
               {industries.slice(4, 8).map((ind, idx) => {
                 const isHovered = hoveredIndustry === ind.id;
                 return (
-                  <motion.div
+                  <RevealGuard
                     key={ind.id}
-                    initial={{ opacity: 0, x: 30 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: (idx + 4) * 0.08, duration: 0.5 }}
+                    initial={{ opacity: 0, x: 30, clipPath: 'inset(0% 0% 0% 100%)', scale: 0.96 }}
+                    animate={{ opacity: 1, x: 0, clipPath: 'inset(0% 0% 0% 0%)', scale: 1 }}
+                    transition={{ delay: (idx + 4) * 0.1, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
                     whileHover={{ y: -6 }}
                     onMouseEnter={() => setHoveredIndustry(ind.id)}
+                    fallbackMs={800 + (idx + 4) * 120}
                     className={`relative group cursor-pointer rounded-[22px] overflow-hidden border transition-all duration-400 ${isHovered ? 'border-orange-400 shadow-[0_12px_40px_rgba(255,74,0,0.15)]' : 'border-gray-200 dark:border-white/10 shadow-sm hover:shadow-lg'}`}
                     style={{ transform: idx % 2 === 0 ? 'translateX(-8px)' : 'none' }}
                   >
@@ -1382,18 +1025,18 @@ className="group cursor-pointer"
                         </p>
                       </div>
                     </div>
-                  </motion.div>
+                  </RevealGuard>
                 );
               })}
             </div>
           </div>
 
           {/* ── 9th Industry — Featured Wide Card (Desktop) ── */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.4, duration: 0.5 }}
+          <RevealGuard
+            initial={{ opacity: 0, clipPath: 'inset(0% 100% 0% 0%)' }}
+            animate={{ opacity: 1, clipPath: 'inset(0% 0% 0% 0%)' }}
+            transition={{ delay: 0.5, duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
+            fallbackMs={1300}
             className="hidden lg:block mt-6 relative mx-auto max-w-3xl group cursor-pointer rounded-[24px] overflow-hidden border border-gray-200 dark:border-white/10 shadow-sm hover:shadow-xl transition-all duration-400 hover:border-orange-400"
           >
             <div className="relative h-[180px] flex">
@@ -1416,15 +1059,16 @@ className="group cursor-pointer"
                 </div>
               </div>
             </div>
-          </motion.div>
+          </RevealGuard>
 
           {/* ── Mobile / Tablet Layout ── */}
           <div className="lg:hidden space-y-6">
             {/* Featured image on mobile */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
+            <RevealGuard
+              initial={{ opacity: 0, clipPath: 'inset(0% 0% 100% 0%)' }}
+              animate={{ opacity: 1, clipPath: 'inset(0% 0% 0% 0%)' }}
+              transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
+              fallbackMs={1100}
               className="relative rounded-[24px] overflow-hidden aspect-[16/9] sm:aspect-[21/9]"
             >
               <img src={industries[0].image} alt="Industries" className="w-full h-full object-cover" />
@@ -1438,17 +1082,17 @@ className="group cursor-pointer"
                   {currentLang === 'en' ? 'Digital Solutions Across Every Industry' : 'প্রতিটি সেক্টরে ডিজিটাল সলিউশন'}
                 </h3>
               </div>
-            </motion.div>
+            </RevealGuard>
 
             {/* Industry cards grid */}
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4">
               {industries.map((ind, idx) => (
-                <motion.div
+                <RevealGuard
                   key={ind.id}
-                  initial={{ opacity: 0, y: 15 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: idx * 0.04, duration: 0.4 }}
+                  initial={{ opacity: 0, y: 15, clipPath: 'inset(100% 0% 0% 0%)' }}
+                  animate={{ opacity: 1, y: 0, clipPath: 'inset(0% 0% 0% 0%)' }}
+                  transition={{ delay: idx * 0.05, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+                  fallbackMs={900 + idx * 60}
                   className="group cursor-pointer rounded-[18px] overflow-hidden border border-gray-200 dark:border-white/10 shadow-sm hover:shadow-lg hover:border-orange-300 transition-all duration-300"
                 >
                   <div className="relative h-[110px] sm:h-[130px]">
@@ -1466,82 +1110,12 @@ className="group cursor-pointer"
                       </p>
                     </div>
                   </div>
-                </motion.div>
+                </RevealGuard>
               ))}
             </div>
           </div>
         </div>
       </section>
-
-      {/* ========================================================
-
-
-      {/* ========================================================
-          SECTION 11: CLIENT TESTIMONIALS (MODERN MINI GRID)
-         ======================================================== */}
-      {testimonials.length > 0 && (
-        <section id="testimonials" className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-12">
-          <div className="text-center space-y-3 max-w-2xl mx-auto">
-            <span className="text-xs font-bold uppercase tracking-wider text-blue-600 dark:text-orange-400">
-              {currentLang === 'en' ? 'CLIENT FEEDBACK' : 'ক্লায়েন্ট টেস্টিমোনিয়াল'}
-            </span>
-            <h2 className="font-sans text-2xl md:text-3xl font-black text-gray-900 dark:text-white leading-tight">
-              {currentLang === 'en' ? 'Trusted by Dynamic Tech Leaders' : 'টেক স্টার্টআপ ও এন্টারপ্রাইজ লিডারদের প্রতিক্রিয়া'}
-            </h2>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {testimonials.slice(0, 6).map((item, idx) => (
-              <motion.div
-                key={item.id}
-                initial={{ opacity: 0, y: 15 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: idx * 0.05, duration: 0.4 }}
-                className="group relative rounded-2xl border border-neutral-100/70 bg-[#FAFAFA]/40 p-5 hover:bg-white dark:bg-[#141414] hover:border-blue-500/20 hover:shadow-xl transition-all duration-300 flex flex-col justify-between space-y-5"
-              >
-                <div className="space-y-3.5">
-                  {/* Rating & Small Quote */}
-                  <div className="flex items-center justify-between">
-                    <div className="flex space-x-0.5">
-                      {Array.from({ length: item.rating }).map((_, rIdx) => (
-                        <Star key={rIdx} className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />
-                      ))}
-                    </div>
-                    <Quote className="h-4.5 w-4.5 text-neutral-200 group-hover:text-blue-100 transition duration-300 shrink-0" />
-                  </div>
-
-                  {/* Review Text */}
-                  <p suppressHydrationWarning className="text-xs text-neutral-600 dark:text-neutral-300 dark:text-neutral-600 leading-relaxed font-normal italic">
-                    "{currentLang === 'en' ? item.feedbackEn : item.feedbackBn}"
-                  </p>
-                </div>
-
-                {/* Profile Meta */}
-                <div className="flex items-center space-x-3 pt-4 border-t border-neutral-100/50">
-                  <div className="h-9 w-9 rounded-full overflow-hidden border border-neutral-100 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900 shrink-0">
-                    <img 
-                      src={item.avatar} 
-                      alt={item.name} 
-                      className="h-full w-full object-cover"
-                      referrerPolicy="no-referrer"
-                    />
-                  </div>
-                  <div className="min-w-0">
-                    <span suppressHydrationWarning className="block text-xs font-bold text-neutral-900 dark:text-white truncate">{item.name}</span>
-                    <span suppressHydrationWarning className="block text-[9px] text-neutral-400 dark:text-neutral-500 font-semibold uppercase tracking-wider truncate">
-                      {currentLang === 'en' ? item.roleEn : item.roleBn}
-                    </span>
-                    <span suppressHydrationWarning className="block text-[9px] text-blue-600 dark:text-orange-400 font-bold truncate">
-                      {item.company}
-                    </span>
-                  </div>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </section>
-      )}
 
       {/* ========================================================
           SECTION 15: FINAL CTA (HIGH-IMPACT NEGATIVE-SPACE BANNER)

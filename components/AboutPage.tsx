@@ -12,12 +12,13 @@ import {
   ChevronDown, ChevronUp, Heart, Smile, Users, Palette, TrendingUp, 
   Lightbulb, CheckCircle2, Globe, Clock, Code2, Database, Terminal, 
   Cpu, Star, Zap, Check, MessageSquare, Quote, Server, Layers,
-  MapPin, BookOpen, Laptop, Network, Rocket, FileText, Share2, Compass,
+  MapPin, BookOpen, Laptop, Rocket, FileText, Share2, Compass,
   DollarSign, Activity, Settings as SettingsIcon, BrainCircuit, Search, Play,
   Mail, Linkedin, Smartphone
 } from 'lucide-react';
 import { translations } from '@/data/translations';
 import { getSettings, getTestimonials } from '@/lib/db';
+import Reveal from '@/components/motion/Reveal';
 
 import sanjidImage from "../assets/images/sanjid.jpg";
 import jisan from "../assets/images/jisan.jpg";
@@ -300,6 +301,7 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
 
   // Active Process Step state
   const [activeProcessStep, setActiveProcessStep] = useState(0);
+  const [activeTechTab, setActiveTechTab] = useState<'frontend' | 'backend' | 'design' | 'automation' | 'video' | 'marketing'>('frontend');
 
 
 
@@ -900,7 +902,7 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
   ], []);
 
   return (
-    <section id="about-page" data-space-page className="bg-white dark:bg-[#0F0E0C] dark:bg-gradient-to-b dark:from-[#12100D] dark:via-[#0F0E0C] dark:to-[#0A0908] text-neutral-900 dark:text-white relative selection:bg-blue-500 dark:bg-blue-500 selection:text-white">
+    <section id="about-page" data-space-page className="bg-white dark:bg-[#0A0A0A] text-neutral-900 dark:text-white relative selection:bg-orange-600 selection:text-white overflow-x-clip">
       
       {/* Scroll Progress Bar */}
       <div className="fixed top-0 left-0 right-0 h-1 bg-neutral-100 dark:bg-neutral-800 z-50">
@@ -912,16 +914,16 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
         />
       </div>
 
-      {/* Background ambient luxurious glows */}
-      <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-gradient-to-tr from-blue-500/5 to-purple-500/5 rounded-full blur-[120px] pointer-events-none" />
-      <div className="absolute top-[20%] right-10 w-[600px] h-[600px] bg-gradient-to-bl from-teal-500/5 to-blue-500/5 rounded-full blur-[140px] pointer-events-none" />
-      <div className="absolute bottom-[15%] left-10 w-[500px] h-[500px] bg-gradient-to-tr from-fuchsia-500/5 to-purple-500/5 rounded-full blur-[120px] pointer-events-none" />
+      {/* Background ambient orange glows — same brand treatment as Home hero */}
+      <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-orange-500/[0.05] rounded-full blur-[120px] pointer-events-none" />
+      <div className="absolute top-[20%] right-10 w-[600px] h-[600px] bg-orange-500/[0.04] rounded-full blur-[140px] pointer-events-none" />
+      <div className="absolute bottom-[15%] left-10 w-[500px] h-[500px] bg-orange-500/[0.04] rounded-full blur-[120px] pointer-events-none" />
 
       {/* ========================================================
           01. HERO STORY — ABOUT US PREMIUM HERO
          ======================================================== */}
       <div className="hero-stack">
-      <section id="about-hero" data-space-hero className="hero-sticky relative overflow-hidden bg-white dark:bg-[#080a0d] min-h-[100svh]">
+      <section id="about-hero" data-space-hero className="hero-sticky relative overflow-hidden bg-white dark:bg-[#0A0A0A] min-h-[100svh]">
         
         {/* Background "NEXT SOLUTION" watermark typography */}
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none select-none z-0" aria-hidden="true">
@@ -943,10 +945,10 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
           <div className="absolute top-40 right-12 w-[180px] h-[300px] rounded-l-full border-[2px] border-[#FF5A00]/8 dark:border-[#FF5A00]/6" />
         </div>
 
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-4 sm:pt-6 lg:pt-8 pb-0 relative z-10">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-3 sm:pt-6 lg:pt-8 pb-0 relative z-10">
 
           {/* Breadcrumb */}
-          <nav className="flex items-center space-x-2 text-[10px] font-black text-neutral-400 dark:text-neutral-500 uppercase tracking-widest mb-4 lg:mb-10">
+          <nav className="flex items-center space-x-2 text-[10px] font-black text-neutral-400 dark:text-neutral-500 uppercase tracking-widest mb-2 lg:mb-10">
             <span className="hover:text-[#FF5A00] dark:hover:text-[#FF5A00] transition cursor-pointer" onClick={() => navigateToTab('home')}>
               {currentLang === 'en' ? 'Home' : 'হোম'}
             </span>
@@ -956,14 +958,14 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
             </span>
           </nav>
 
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-6 items-stretch">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-3 sm:gap-8 lg:gap-6 items-stretch">
 
             {/* ── LEFT COLUMN ── */}
             <motion.div
               initial={{ opacity: 0, x: -90 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.9, delay: 0.05, ease: [0.22, 1, 0.36, 1] }}
-              className="lg:col-span-5 space-y-5 lg:space-y-8 relative z-10 flex flex-col justify-center py-6 lg:py-0"
+              className="lg:col-span-5 space-y-2 sm:space-y-5 lg:space-y-8 relative z-10 flex flex-col justify-center items-center text-center lg:items-start lg:text-left py-2 sm:py-6 lg:py-0"
             >
 
               {/* Label */}
@@ -984,7 +986,7 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
                 initial={{ opacity: 0, x: -50 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.8, delay: 0.28, ease: [0.22, 1, 0.36, 1] }}
-                className="font-sans text-[2rem] sm:text-[2.6rem] lg:text-[3.4rem] font-black tracking-tight leading-[1.02] text-neutral-900 dark:text-white"
+                className="font-sans text-[1.45rem] xs:text-[1.75rem] sm:text-[2.6rem] lg:text-[3.4rem] font-black tracking-tight leading-[1.05] text-neutral-900 dark:text-white line-clamp-3 sm:line-clamp-none"
               >
                 {currentLang === 'en' ? (
                   <>
@@ -1016,7 +1018,7 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
                 initial={{ opacity: 0, x: -36 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.7, delay: 0.5, ease: [0.22, 1, 0.36, 1] }}
-                className="text-[15px] sm:text-[16px] leading-[1.65] text-[#555555] dark:text-[#b5b5b5] max-w-[460px]"
+                className="text-[13px] sm:text-[16px] leading-[1.65] text-[#555555] dark:text-[#b5b5b5] max-w-[460px] line-clamp-3"
               >
                 {currentLang === 'en'
 ? 'At Next Solution, we combine creativity, technology and strategy to help businesses grow faster. From web development to AI Services, we deliver complete digital solutions under one roof.'
@@ -1028,14 +1030,14 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
                 initial={{ opacity: 0, x: -30 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.65, delay: 0.6, ease: [0.22, 1, 0.36, 1] }}
-                className="flex flex-wrap items-center gap-4 pt-1"
+                className="flex flex-wrap items-center justify-center lg:justify-start gap-3 sm:gap-4 pt-1"
               >
                 <motion.button
                   id="about-hero-btn-primary"
                   onClick={() => navigateToTab('services')}
                   whileHover={{ y: -2 }}
                   whileTap={{ scale: 0.97 }}
-                  className="group inline-flex items-center justify-center gap-2.5 rounded-[10px] bg-[#FF5A00] hover:bg-[#E04F00] text-white text-[13px] sm:text-sm font-bold px-7 py-3.5 shadow-lg shadow-[#FF5A00]/20 hover:shadow-xl hover:shadow-[#FF5A00]/30 transition-all duration-300 cursor-pointer"
+                  className="group inline-flex items-center justify-center gap-2 rounded-[10px] bg-[#FF5A00] hover:bg-[#E04F00] text-white text-xs sm:text-sm font-bold px-5 sm:px-7 py-3 shadow-lg shadow-[#FF5A00]/20 hover:shadow-xl hover:shadow-[#FF5A00]/30 transition-all duration-300 cursor-pointer"
                 >
                   <span>{currentLang === 'en' ? 'Explore Services' : 'সেবাসমূহ দেখুন'}</span>
                   <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform duration-300" />
@@ -1046,20 +1048,15 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
                   onClick={() => navigateToTab('team')}
                   whileHover={{ y: -2 }}
                   whileTap={{ scale: 0.97 }}
-                  className="group inline-flex items-center justify-center gap-2.5 rounded-[10px] border border-neutral-300 dark:border-neutral-600 bg-white dark:bg-transparent text-neutral-800 dark:text-white text-[13px] sm:text-sm font-bold px-7 py-3.5 hover:border-neutral-500 dark:hover:border-neutral-400 transition-all duration-300 cursor-pointer"
+                  className="group inline-flex items-center justify-center gap-2 rounded-[10px] border border-neutral-300 dark:border-neutral-600 bg-white dark:bg-transparent text-neutral-800 dark:text-white text-xs sm:text-sm font-bold px-5 sm:px-7 py-3 hover:border-neutral-500 dark:hover:border-neutral-400 transition-all duration-300 cursor-pointer"
                 >
                   <span>{currentLang === 'en' ? 'Meet Our Team' : 'আমাদের টিম দেখুন'}</span>
                   <Users className="h-4 w-4" />
                 </motion.button>
               </motion.div>
 
-              {/* Key Metrics Row */}
-              <motion.div
-                initial={{ opacity: 0, y: 24 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.7, delay: 0.72, ease: [0.22, 1, 0.36, 1] }}
-                className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-3"
-              >
+              {/* Key Metrics Row — desktop only (mobile shown below PNG) */}
+              <div className="hidden lg:grid grid-cols-4 gap-3 pt-3">
                 {[
                   { value: '2+', labelEn: 'Years Technical', labelBn: 'বছরের অভিজ্ঞতা' },
                   { value: '2+', labelEn: 'Years Agency', labelBn: 'বছরের এজেন্সি' },
@@ -1081,7 +1078,7 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
                     </span>
                   </div>
                 ))}
-              </motion.div>
+              </div>
             </motion.div>
 
             {/* ── RIGHT COLUMN — Team Visual ── */}
@@ -1089,27 +1086,27 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 1.1, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
-              className="lg:col-span-7 relative z-10 flex justify-center lg:justify-end lg:items-end -mr-4 xl:-mr-12 2xl:-mr-20"
+              className="lg:col-span-7 relative z-10 flex justify-center lg:justify-end lg:items-end lg:-mr-4 xl:-mr-12 2xl:-mr-20"
             >
               <div className="relative w-full max-w-[540px] lg:max-w-none ml-auto lg:ml-8 xl:ml-12">
 
                 {/* Circular glow frame */}
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[280px] h-[280px] sm:w-[360px] sm:h-[360px] lg:w-[500px] lg:h-[500px] xl:w-[580px] xl:h-[580px] rounded-full border border-[#FF5A00]/25 dark:border-[#FF5A00]/20 bg-gradient-to-br from-[#FF5A00]/5 via-[#FF5A00]/3 to-transparent pointer-events-none" />
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[310px] h-[310px] sm:w-[400px] sm:h-[400px] lg:w-[540px] lg:h-[540px] xl:w-[620px] xl:h-[620px] rounded-full border border-[#FF5A00]/10 dark:border-[#FF5A00]/8 pointer-events-none" />
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[240px] h-[240px] sm:w-[320px] sm:h-[320px] lg:w-[460px] lg:h-[460px] xl:w-[540px] xl:h-[540px] rounded-full bg-[#FF5A00]/[0.04] dark:bg-[#FF5A00]/[0.06] blur-[60px] pointer-events-none" />
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[180px] h-[180px] sm:w-[360px] sm:h-[360px] lg:w-[500px] lg:h-[500px] xl:w-[580px] xl:h-[580px] rounded-full border border-[#FF5A00]/25 dark:border-[#FF5A00]/20 bg-gradient-to-br from-[#FF5A00]/5 via-[#FF5A00]/3 to-transparent pointer-events-none" />
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[210px] h-[210px] sm:w-[400px] sm:h-[400px] lg:w-[540px] lg:h-[540px] xl:w-[620px] xl:h-[620px] rounded-full border border-[#FF5A00]/10 dark:border-[#FF5A00]/8 pointer-events-none" />
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[160px] h-[160px] sm:w-[320px] sm:h-[320px] lg:w-[460px] lg:h-[460px] xl:w-[540px] xl:h-[540px] rounded-full bg-[#FF5A00]/[0.04] dark:bg-[#FF5A00]/[0.06] blur-[60px] pointer-events-none" />
 
                 {/* Team image */}
-<div className="relative z-10 max-h-[400px] sm:max-h-[300px]">
+<div className="relative z-10 max-h-[140px] sm:max-h-[300px] lg:max-h-[400px]">
                   <img
                     src="/about.png"
                     alt={currentLang === 'en' ? 'Next Solution Team' : 'নেক্সট সলিউশন টিম'}
-                    className="w-full h-auto relative z-10 scale-[0.95] sm:scale-[1.05] lg:scale-[1.05] xl:scale-[1.15] 2xl:scale-[1.25] origin-bottom dark:hidden"
+                    className="w-full h-auto relative z-10 scale-[0.85] sm:scale-[1.05] lg:scale-[1.05] xl:scale-[1.15] 2xl:scale-[1.25] origin-bottom dark:hidden"
                     style={{ WebkitMaskImage: 'linear-gradient(to bottom, black 65%, transparent 100%)', maskImage: 'linear-gradient(to bottom, black 65%, transparent 100%)' }}
                   />
                   <img
                     src="/aboutb.png"
                     alt={currentLang === 'en' ? 'Next Solution Team' : 'নেক্সট সলিউশন টিম'}
-                    className="w-full h-auto relative z-10 scale-[0.95] sm:scale-[1.05] lg:scale-[1.05] xl:scale-[1.15] 2xl:scale-[1.25] origin-bottom hidden dark:block"
+                    className="w-full h-auto relative z-10 scale-[0.85] sm:scale-[1.05] lg:scale-[1.05] xl:scale-[1.15] 2xl:scale-[1.25] origin-bottom hidden dark:block"
                     style={{ WebkitMaskImage: 'linear-gradient(to bottom, black 65%, transparent 100%)', maskImage: 'linear-gradient(to bottom, black 65%, transparent 100%)' }}
                   />
                 </div>
@@ -1118,6 +1115,30 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
                 <div className="hidden lg:block">
                 </div>
 
+                {/* Key Metrics Row — below PNG */}
+                <div className="relative z-10 mt-4 sm:mt-6 grid grid-cols-4 gap-2 sm:gap-3 lg:hidden">
+                  {[
+                    { value: '2+', labelEn: 'Years Technical', labelBn: 'বছরের অভিজ্ঞতা' },
+                    { value: '2+', labelEn: 'Years Agency', labelBn: 'বছরের এজেন্সি' },
+                    { value: '50+', labelEn: 'Projects', labelBn: 'প্রজেক্ট' },
+                    { value: '20+', labelEn: 'Clients', labelBn: 'ক্লায়েন্ট' },
+                    { value: '5+', labelEn: 'Team Members', labelBn: 'টিম মেম্বার' },
+                    { value: '8+', labelEn: 'Digital Services', labelBn: 'ডিজিটাল সেবা' },
+                    { value: '20+', labelEn: 'Industries Served', labelBn: 'ইন্ডাস্ট্রি' },
+                  ].map((s, i) => (
+                    <div
+                      key={i}
+                      className="group rounded-xl border border-neutral-200/60 dark:border-neutral-700/60 bg-white/70 dark:bg-white/[0.04] backdrop-blur-sm px-1.5 sm:px-3 py-1.5 sm:py-2 text-center hover:border-[#FF5A00]/50 hover:bg-[#FF5A00]/5 hover:shadow-[0_8px_24px_-8px_rgba(255,90,0,0.3)] transition-all duration-300"
+                    >
+                      <span className="block text-sm sm:text-[15px] font-black text-neutral-900 dark:text-white group-hover:text-[#FF5A00] transition-colors duration-300 leading-none">
+                        <CountUp value={s.value} duration={1.8} />
+                      </span>
+                      <span className="mt-1 block text-[8px] sm:text-[8.5px] font-bold uppercase tracking-widest text-neutral-500 dark:text-neutral-400 group-hover:text-neutral-700 dark:group-hover:text-neutral-300 transition-colors duration-300">
+                        {currentLang === 'en' ? s.labelEn : s.labelBn}
+                      </span>
+                    </div>
+                  ))}
+                </div>
 </div>
             </motion.div>
 
@@ -1130,7 +1151,6 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
           02. WHO WE ARE
          ======================================================== */}
       <section id="who-we-are" className="stack-cover relative py-28 overflow-hidden z-10">
-        <div className="absolute inset-0 bg-[#0A0A0A] dark:bg-[#0A0A0A]" />
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[600px] bg-orange-500/[0.03] rounded-full blur-[150px] pointer-events-none" />
         <div className="absolute bottom-0 right-0 w-[400px] h-[400px] bg-orange-500/[0.02] rounded-full blur-[120px] pointer-events-none" />
 
@@ -1242,7 +1262,6 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
           03. OUR GUIDING STARS (Mission & Vision)
          ======================================================== */}
       <section id="mission-vision" className="relative py-28 overflow-hidden z-10">
-        <div className="absolute inset-0 bg-[#0A0A0A] dark:bg-[#0A0A0A]" />
         <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-orange-500/[0.04] dark:bg-orange-500/[0.02] rounded-full blur-[140px] pointer-events-none" />
         <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-orange-500/[0.03] dark:bg-orange-500/[0.015] rounded-full blur-[120px] pointer-events-none" />
         <div className="absolute top-10 left-10 w-[200px] h-[150px] pointer-events-none opacity-[0.06] dark:opacity-[0.04]"
@@ -1344,12 +1363,7 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
       {/* ========================================================
           03.5. MEET THE MINDS BEHIND NEXT SOLUTION (Leadership Showcase)
          ======================================================== */}
-      <section id="about-leadership" className="bg-white dark:bg-[#141414] py-24 relative z-10 overflow-hidden" data-space-page>
-        
-        {/* Abstract Background Design Elements */}
-        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-gradient-to-tr from-blue-400/5 via-teal-400/5 to-purple-400/5 rounded-full blur-[120px] pointer-events-none" />
-        <div className="absolute -top-10 -left-10 w-72 h-72 bg-gradient-to-br from-indigo-50/20 to-sky-50/20 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute bottom-10 right-10 w-96 h-96 bg-gradient-to-tl from-emerald-50/10 to-blue-50/10 rounded-full blur-3xl pointer-events-none" />
+      <section id="about-leadership" className="bg-white dark:bg-[#0A0A0A] py-24 relative z-10 overflow-hidden" data-space-page>
 
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-20">
           
@@ -1370,10 +1384,22 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
               return (
                 <div 
                   key={leader.id}
-                  className="flex flex-col sm:flex-row bg-white dark:bg-[#141414] rounded-3xl border border-neutral-100 dark:border-neutral-800 shadow-[0_4px_20px_rgba(0,0,0,0.02)] overflow-hidden hover:shadow-[0_20px_50px_rgba(0,0,0,0.08)] hover:border-blue-500/10 transition-all duration-500 group relative"
+                  className="flex flex-col sm:flex-row-reverse bg-white dark:bg-[#141414] rounded-3xl border border-neutral-100 dark:border-neutral-800 shadow-[0_4px_20px_rgba(0,0,0,0.02)] overflow-hidden hover:shadow-[0_20px_50px_rgba(0,0,0,0.08)] hover:border-blue-500/10 transition-all duration-500 group relative"
                 >
-                  {/* Left Side: Introduction */}
-                  <div className="p-6 md:p-8 flex flex-col justify-between flex-1 space-y-4">
+                  {/* Top/Mobile: Image — bigger on mobile, right side on desktop */}
+                  <div className="relative w-full h-60 sm:h-64 md:w-2/5 md:h-auto shrink-0 overflow-hidden bg-neutral-50 dark:bg-neutral-900">
+                    <img 
+                      src={typeof leader.portrait === 'string' ? leader.portrait : leader.portrait.src} 
+                      alt={leader.nameEn}
+                      className="absolute inset-0 w-full h-full object-cover object-top group-hover:scale-[1.04] transition-all duration-700 ease-out"
+                      referrerPolicy="no-referrer"
+                    />
+                    {/* Subtle overlay to blend into card */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-white/5 via-transparent to-transparent" />
+                  </div>
+
+                  {/* Bottom: Info */}
+                  <div className="p-5 md:p-8 flex flex-col justify-between flex-1 space-y-3 md:space-y-4">
                     <div className="space-y-2">
                       <div className="flex items-center space-x-2">
                         <span className="h-1.5 w-1.5 rounded-full bg-blue-600 animate-pulse" />
@@ -1382,7 +1408,7 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
                         </span>
                       </div>
                       
-                      <h3 className="text-xl md:text-2xl font-black text-neutral-900 dark:text-white group-hover:text-blue-600 dark:text-orange-400 transition-colors duration-300">
+                      <h3 className="text-lg md:text-2xl font-black text-neutral-900 dark:text-white group-hover:text-blue-600 dark:text-orange-400 transition-colors duration-300">
                         {currentLang === 'en' ? leader.nameEn : leader.nameBn}
                       </h3>
                       
@@ -1391,19 +1417,19 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
                       </p>
                     </div>
 
-                    <p className="text-xs text-neutral-500 dark:text-neutral-400 dark:text-neutral-500 leading-relaxed font-normal">
+                    <p className="text-[11px] md:text-xs text-neutral-500 dark:text-neutral-400 dark:text-neutral-500 leading-relaxed font-normal line-clamp-3 md:line-clamp-none">
                       {currentLang === 'en' ? leader.bioEn : leader.bioBn}
                     </p>
 
                     {/* Motto/Quote */}
                     <div className="border-l-2 border-neutral-200 dark:border-neutral-700 pl-3 py-0.5">
-                      <p className="text-[11px] italic text-neutral-400 dark:text-neutral-500 font-normal leading-relaxed">
+                      <p className="text-[10px] md:text-[11px] italic text-neutral-400 dark:text-neutral-500 font-normal leading-relaxed line-clamp-2 md:line-clamp-none">
                         "{currentLang === 'en' ? leader.mottoEn : leader.mottoBn}"
                       </p>
                     </div>
 
                     {/* Socials & Meta */}
-                    <div className="flex items-center justify-between pt-3 border-t border-neutral-100 dark:border-neutral-800">
+                    <div className="flex items-center justify-between pt-2 md:pt-3 border-t border-neutral-100 dark:border-neutral-800">
                       <div className="flex items-center space-x-3">
                         <a 
                           href={`mailto:${leader.email}`} 
@@ -1430,18 +1456,6 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
                       </div>
                     </div>
                   </div>
-
-                  {/* Right Side: Image */}
-                  <div className="w-full sm:w-2/5 min-h-[220px] sm:min-h-full relative overflow-hidden shrink-0 bg-neutral-50 dark:bg-neutral-900">
-                    <img 
-                      src={typeof leader.portrait === 'string' ? leader.portrait : leader.portrait.src} 
-                      alt={leader.nameEn}
-                      className="absolute inset-0 w-full h-full object-cover object-center group-hover:scale-[1.04] transition-all duration-700 ease-out"
-                      referrerPolicy="no-referrer"
-                    />
-                    {/* Subtle Overlay to blend */}
-                    <div className="absolute inset-0 bg-gradient-to-t sm:bg-gradient-to-l from-transparent via-transparent to-white/10" />
-                  </div>
                 </div>
               );
             })}
@@ -1453,7 +1467,7 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
       {/* ========================================================
           04. CORE VALUES (Bento Grid)
          ======================================================== */}
-      <section id="core-values" className="bg-neutral-50/20 py-24 relative z-10">
+      <section id="core-values" className="bg-neutral-50/20 py-24 relative z-10 overflow-hidden">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-16">
           <div className="text-center space-y-4 max-w-2xl mx-auto">
             <span className="text-xs font-bold uppercase tracking-widest text-blue-600 dark:text-blue-400">
@@ -1493,63 +1507,9 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
       </section>
 
       {/* ========================================================
-          05. WHY CHOOSE US (Interactive Ecosystem)
+          05. (REMOVED — Our Digital Ecosystem section deleted)
          ======================================================== */}
-      <section id="why-choose-us" className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-24 relative z-10">
-        <div className="text-center space-y-2 max-w-2xl mx-auto mb-10">
-          <h2 className="font-sans text-2xl sm:text-3xl lg:text-4xl font-black text-neutral-900 dark:text-white leading-tight">
-            {currentLang === 'en' ? 'Our Digital Ecosystem Yields Stronger Performance' : 'আমাদের সমন্বিত কাজের পদ্ধতি শতভাগ প্রবৃদ্ধি নিশ্চিত করে'}
-          </h2>
-        </div>
 
-        {/* Ecosystem Grid: Circular logo in center or visual block */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center max-w-6xl mx-auto">
-          
-          {/* Side Features Left */}
-          <div className="lg:col-span-4 space-y-6">
-            {[
-              { titleEn: 'Dedicated In-house Squad', titleBn: '১০০% ইন-হাউস স্কোয়াড', descEn: 'We do not hire temporary gig freelancers. Every single developer belongs to our core permanent staff.', descBn: 'আমরা সাময়িক কোনো ফ্রিল্যান্সার নিয়োগ করি না। আমাদের প্রতিটি সদস্য আমাদের স্থায়ী ও নিবেদিতপ্রাণ ইন-হাউস কর্মী।' },
-              { titleEn: 'Extreme Load Tuning', titleBn: 'চরম লোড অপ্টিমাইজেশন', descEn: 'We implement advanced Redis caching, index pooling, and optimized static asset compression.', descBn: 'আমরা উন্নত রেডিস ক্যাশিং এবং সর্বোচ্চ ইমেজ কম্প্রেশন ব্যবহারের মাধ্যমে ট্রানজেকশন লোড সামলানো নিশ্চিত করি।' }
-            ].map((f, i) => (
-              <div key={i} className="border border-neutral-100/70 rounded-2xl p-6 bg-white dark:bg-[#141414] shadow-sm hover:shadow-md transition-shadow">
-                <div className="h-8 w-8 rounded-lg bg-blue-50 dark:bg-blue-500/10 text-blue-600 dark:text-blue-400 flex items-center justify-center mb-3">
-                  <Check className="h-4 w-4" />
-                </div>
-                <h4 className="text-xs font-black text-neutral-900 dark:text-white uppercase tracking-wider">{currentLang === 'en' ? f.titleEn : f.titleBn}</h4>
-                <p className="text-[11px] text-neutral-500 dark:text-neutral-400 dark:text-neutral-500 leading-relaxed mt-1">{currentLang === 'en' ? f.descEn : f.descBn}</p>
-              </div>
-            ))}
-          </div>
-
-          {/* Central Logo Panel */}
-          <div className="lg:col-span-4 flex justify-center relative">
-            <div className="h-64 w-64 rounded-full bg-gradient-to-tr from-blue-600 dark:from-blue-500 to-indigo-600 dark:to-blue-400 text-white p-8 flex flex-col items-center justify-center text-center shadow-2xl relative">
-              <div className="absolute inset-2 border-2 border-white/20 rounded-full border-dashed animate-spin [animation-duration:12s]"></div>
-              
-              <Network className="h-10 w-10 text-white mb-3" />
-              <span className="font-sans text-lg font-black tracking-widest uppercase">Next Solution</span>
-              <span className="text-[9px] text-blue-100 tracking-wider font-semibold mt-1">THE DIGITAL HQ</span>
-            </div>
-          </div>
-
-          {/* Side Features Right */}
-          <div className="lg:col-span-4 space-y-6">
-            {[
-              { titleEn: 'AI Services Driven', titleBn: 'এআই সার্ভিস চালিত', descEn: 'By coding proprietary LLM triggers and custom cognitive workflows, we eliminate manual paperwork.', descBn: 'আমাদের তৈরি কাস্টম এলএলএম কোডিং ও ইন্টেলিজেন্ট এপিআই আপনার ব্যবসার পুনরাবৃত্তিমূলক জটিলতা দূর করে দেয়।' },
-              { titleEn: 'Direct Developer SLA Hotline', titleBn: 'ডেভেলপার এসএলএ হটলাইন', descEn: 'Direct access to engineering channels on Slack without wading through slow ticket boards.', descBn: 'ঝামেলাহীন সরাসরি সাপোর্ট চ্যানেল। ধীরগতির টিকিট ব্যবস্থার অবসান ঘটিয়ে সরাসরি স্ল্যাকে ডেভেলপারদের অ্যাক্সেস।' }
-            ].map((f, i) => (
-              <div key={i} className="border border-neutral-100/70 rounded-2xl p-6 bg-white dark:bg-[#141414] shadow-sm hover:shadow-md transition-shadow">
-                <div className="h-8 w-8 rounded-lg bg-blue-50 dark:bg-blue-500/10 text-blue-600 dark:text-blue-400 flex items-center justify-center mb-3">
-                  <Check className="h-4 w-4" />
-                </div>
-                <h4 className="text-xs font-black text-neutral-900 dark:text-white uppercase tracking-wider">{currentLang === 'en' ? f.titleEn : f.titleBn}</h4>
-                <p className="text-[11px] text-neutral-500 dark:text-neutral-400 dark:text-neutral-500 leading-relaxed mt-1">{currentLang === 'en' ? f.descEn : f.descBn}</p>
-              </div>
-            ))}
-          </div>
-
-        </div>
-      </section>
 
       {/* ========================================================
           06. COMPANY STATISTICS
@@ -1559,7 +1519,8 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
       {/* ========================================================
           07. SERVICES ECOSYSTEM (Bento Grid)
          ======================================================== */}
-      <section id="services-ecosystem" className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-24 relative z-10">
+      <section id="services-ecosystem" className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-24 relative z-10 overflow-hidden">
+
         <div className="text-center space-y-4 max-w-2xl mx-auto mb-12">
           <span className="text-xs font-bold uppercase tracking-widest text-blue-600 dark:text-blue-400">
             {currentLang === 'en' ? 'OUR CAPABILITIES' : 'আমাদের সার্ভিস সমূহ'}
@@ -1652,7 +1613,8 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
       {/* ========================================================
           08. INDUSTRIES WE SERVE
          ======================================================== */}
-      <section id="industries-serve" className="bg-neutral-50/20 py-24 relative z-10">
+      <section id="industries-serve" className="bg-neutral-50/20 py-24 relative z-10 overflow-hidden">
+
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-16">
           <div className="text-center space-y-4 max-w-2xl mx-auto">
             <span className="text-xs font-bold uppercase tracking-widest text-blue-600 dark:text-blue-400">
@@ -1695,6 +1657,7 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
           09. OUR PROCESS (Interactive Timeline)
          ======================================================== */}
       <section id="our-process-timeline" className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-24 relative z-10">
+
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-start">
           
           <div className="lg:col-span-4 space-y-6 lg:sticky lg:top-24">
@@ -1772,102 +1735,151 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
       {/* ========================================================
           10. TECHNOLOGIES POWERING NEXT SOLUTION
          ======================================================== */}
-      <section id="tech-powering" className="bg-neutral-50/20 py-24 relative z-10">
-        {/* Continuous Train Animation Keyframes */}
-        <style dangerouslySetInnerHTML={{ __html: `
-          @keyframes marquee-left {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(-50%); }
-          }
-          @keyframes marquee-right {
-            0% { transform: translateX(-50%); }
-            100% { transform: translateX(0); }
-          }
-          .animate-marquee-left {
-            display: flex;
-            width: max-content;
-            animation: marquee-left 35s linear infinite;
-          }
-          .animate-marquee-right {
-            display: flex;
-            width: max-content;
-            animation: marquee-right 35s linear infinite;
-          }
-          .marquee-container:hover .animate-marquee-left,
-          .marquee-container:hover .animate-marquee-right {
-            animation-play-state: paused;
-          }
-        `}} />
+      <section id="services-tech-stack" className="py-24 bg-white dark:bg-[#0A0A0A] relative z-10 overflow-hidden">
 
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-16">
-          <div className="text-center space-y-4 max-w-2xl mx-auto">
-            <span className="text-xs font-bold uppercase tracking-widest text-blue-600 dark:text-blue-400">
-              {currentLang === 'en' ? 'OUR TECH STACK' : 'আমাদের আধুনিক প্রযুক্তি'}
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          
+          <Reveal direction="up">
+          <div className="text-center space-y-4 max-w-3xl mx-auto mb-16">
+            <span className="text-xs font-black uppercase tracking-widest text-blue-600 dark:text-orange-400">
+              {currentLang === 'en' ? 'OUR STACK ECOSYSTEM' : 'à¦†à¦®à¦¾à¦¦à§‡à¦° à¦ªà§à¦°à¦¯à§à¦•à§à¦¤à¦¿ à¦‡à¦•à§‹à¦¸à¦¿à¦¸à§à¦Ÿà§‡à¦®'}
             </span>
-            <h2 className="font-sans text-3xl font-black text-neutral-900 dark:text-white leading-tight">
-              {currentLang === 'en' ? 'State-Of-The-Art Technologies We Depend On' : 'সর্বোচ্চ সাইট স্পিডের জন্য বিশ্বমানের আধুনিক প্রযুক্তি'}
+            <h2 className="font-sans text-3xl font-extrabold tracking-tight text-gray-900 dark:text-white sm:text-4xl">
+              {currentLang === 'en' ? 'Technology Ecosystem' : 'à¦ªà§à¦°à¦¯à§à¦•à§à¦¤à¦¿ à¦‡à¦•à§‹à¦¸à¦¿à¦¸à§à¦Ÿà§‡à¦®'}
             </h2>
-            <p className="text-xs sm:text-sm text-neutral-400 dark:text-neutral-500 max-w-md mx-auto">
-              {currentLang === 'en' 
-                ? 'We write clean, well-tested code in strict frontend, backend, design, and AI Services stacks.' 
-                : 'আমরা নিখুঁত কোড লিখি এবং সর্বোত্তম গতি নিশ্চিত করতে বিশ্বমানের ফ্রেমওয়ার্ক ব্যবহার করি।'}
+            <p className="text-sm text-gray-500 dark:text-neutral-300 max-w-xl mx-auto leading-relaxed">
+              {currentLang === 'en' ? (
+                'We write strict typesafe assemblies using industry leading stacks. Zero legacy dependencies.'
+              ) : (
+                'à¦†à¦®à¦°à¦¾ à¦†à¦§à§à¦¨à¦¿à¦• à¦à¦¬à¦‚ à¦¨à¦¿à¦°à¦¾à¦ªà¦¦ à¦¸à§à¦Ÿà§à¦¯à¦¾à¦• à¦¬à§à¦¯à¦¬à¦¹à¦¾à¦° à¦•à¦°à§‡ à¦Ÿà¦¾à¦‡à¦ªà¦¸à§‡à¦« à¦•à§‹à¦¡ à¦²à¦¿à¦–à§‡ à¦¥à¦¾à¦•à¦¿à¥¤ à¦•à§‹à¦¨à§‹ à¦…à¦ªà§à¦°à§Ÿà§‹à¦œà¦¨à§€à§Ÿ à¦œà¦Ÿà¦¿à¦²à¦¤à¦¾ à¦›à¦¾à§œà¦¾à¦‡à¥¤'
+              )}
             </p>
           </div>
+          </Reveal>
 
-          <div className="space-y-10 max-w-6xl mx-auto">
-            {techCategories.map((cat, i) => {
-              // Duplicate techs array to create infinite scroll effect
-              const duplicatedTechs = [...cat.techs, ...cat.techs];
-              return (
-                <div key={i} className="bg-white dark:bg-[#141414] border border-neutral-100/80 rounded-3xl p-6 md:p-8 shadow-sm space-y-6 overflow-hidden relative">
-                  {/* Category Title & Subtitle */}
-                  <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-neutral-50 dark:border-neutral-800 pb-4">
-                    <div className="space-y-1">
-                      <h3 className="text-sm font-black text-neutral-900 dark:text-white flex items-center gap-2 uppercase tracking-wide">
-                        <span className="inline-block h-2.5 w-2.5 rounded-full bg-blue-600 animate-pulse" />
-                        {currentLang === 'en' ? cat.titleEn : cat.titleBn}
-                      </h3>
-                      <p className="text-xs text-neutral-400 dark:text-neutral-500 font-normal leading-relaxed">
-                        {currentLang === 'en' ? cat.descEn : cat.descBn}
-                      </p>
-                    </div>
-                    <span className="self-start md:self-auto text-[9px] font-mono font-bold uppercase tracking-wider bg-blue-50 dark:bg-blue-500/10 text-blue-600 dark:text-blue-400 px-3 py-1 rounded-full border border-blue-100/30">
-                      {currentLang === 'en' ? 'Live Tech Train' : 'টেকনোলজি ট্রেন'}
-                    </span>
-                  </div>
-
-                  {/* Infinite Sliding Train Window */}
-                  <div className="relative marquee-container w-full overflow-hidden py-2 select-none">
-                    {/* Edge fade visual overlays */}
-                    <div className="absolute left-0 top-0 bottom-0 w-16 bg-gradient-to-r from-white to-transparent z-10 pointer-events-none" />
-                    <div className="absolute right-0 top-0 bottom-0 w-16 bg-gradient-to-l from-white to-transparent z-10 pointer-events-none" />
-
-                    {/* Scrolling Track */}
-                    <div className={cat.direction === 'left' ? 'animate-marquee-left gap-4 pr-4' : 'animate-marquee-right gap-4 pr-4'}>
-                      {duplicatedTechs.map((tech, tIdx) => (
-                        <div 
-                          key={tIdx} 
-                          className="w-48 sm:w-52 shrink-0 bg-neutral-50/50 dark:bg-neutral-900/50 hover:bg-white dark:bg-[#141414] border border-neutral-100/60 rounded-2xl p-3 flex items-center gap-3 transition-all duration-300 hover:scale-[1.03] hover:shadow-[0_4px_15px_rgba(0,0,0,0.03)] hover:border-blue-500/20 group cursor-pointer"
-                        >
-                          <div className="h-9 w-9 rounded-xl border border-neutral-100 dark:border-neutral-800 bg-white dark:bg-[#141414] shadow-sm flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
-                            <TechIcon logo={tech.logo} />
-                          </div>
-                          <div className="overflow-hidden min-w-0">
-                            <span className="block text-xs font-black text-neutral-800 dark:text-neutral-100 truncate group-hover:text-blue-600 dark:text-blue-400 transition-colors">
-                              {tech.name}
-                            </span>
-                            <span className="block text-[8.5px] text-neutral-400 dark:text-neutral-500 font-mono font-bold uppercase tracking-widest truncate">
-                              {currentLang === 'en' ? tech.tagEn : tech.tagBn}
-                            </span>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
+          {/* Stack Tab selection */}
+          <div className="flex overflow-x-auto items-center gap-2 sm:gap-3 mb-10 pb-2 -mx-4 px-4 sm:mx-0 sm:px-0 sm:flex-wrap sm:justify-center scrollbar-none">
+            {[
+              { id: 'frontend', labelEn: 'Frontend', labelBn: 'à¦«à§à¦°à¦¨à§à¦Ÿà¦à¦¨à§à¦¡' },
+              { id: 'backend', labelEn: 'Backend & Cloud', labelBn: 'à¦¬à§à¦¯à¦¾à¦•à¦à¦¨à§à¦¡ à¦“ à¦•à§à¦²à¦¾à¦‰à¦¡' },
+              { id: 'design', labelEn: 'Design Tools', labelBn: 'à¦¡à¦¿à¦œà¦¾à¦‡à¦¨ à¦Ÿà§à¦²à¦¸' },
+              { id: 'automation', labelEn: 'AI Services', labelBn: 'à¦à¦†à¦‡ à¦“ à¦…à¦Ÿà§‹à¦®à§‡à¦¶à¦¨' },
+              { id: 'video', labelEn: 'Video & Graphics', labelBn: 'à¦­à¦¿à¦¡à¦¿à¦“ à¦“ à¦—à§à¦°à¦¾à¦«à¦¿à¦•à§à¦¸' },
+              { id: 'marketing', labelEn: 'Marketing & PR', labelBn: 'à¦®à¦¾à¦°à§à¦•à§‡à¦Ÿà¦¿à¦‚ à¦“ à¦ªà¦¿à¦†à¦°' }
+            ].map((tab) => (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTechTab(tab.id as any)}
+                className={`rounded-full px-5 py-2 text-xs font-bold border transition ${
+                  activeTechTab === tab.id 
+                    ? 'bg-blue-600 border-blue-600 text-white shadow-md shadow-blue-600/10' 
+                    : 'bg-white dark:bg-[#141414] border-gray-100 dark:border-neutral-800 text-gray-500 dark:text-neutral-300 hover:text-gray-700 dark:text-neutral-200 hover:border-gray-200 dark:border-neutral-700'
+                }`}
+              >
+                {currentLang === 'en' ? tab.labelEn : tab.labelBn}
+              </button>
+            ))}
           </div>
+
+          {/* Tab contents */}
+          <div className="bg-[#FAFAFA]/60 dark:bg-[#141414]/60 border border-gray-100 dark:border-neutral-800 rounded-3xl p-5 sm:p-8 max-w-4xl mx-auto">
+            {activeTechTab === 'frontend' && (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 animate-fadeIn">
+                <div className="space-y-2">
+                  <h4 className="text-sm font-extrabold text-gray-900 dark:text-white">React & Next.js Ecosystem</h4>
+                  <p className="text-xs text-gray-500 dark:text-neutral-300 leading-relaxed">
+                    We use Vite, React 18/19, and Next.js server component rendering to deliver exceptional load speeds (First Contentful Paint &lt; 0.4s).
+                  </p>
+                </div>
+                <div className="flex flex-wrap gap-2.5 items-center">
+                  {['React 19', 'Next.js', 'Vite', 'Tailwind CSS 4', 'TypeScript', 'Framer Motion', 'Redux Toolkit', 'Zustand', 'D3.js', 'Recharts'].map((t) => (
+                    <span key={t} className="bg-white dark:bg-[#141414] border border-gray-100 dark:border-neutral-800 rounded-xl px-4 py-2 text-xs font-bold text-gray-700 dark:text-neutral-200 shadow-sm">{t}</span>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {activeTechTab === 'backend' && (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 animate-fadeIn">
+                <div className="space-y-2">
+                  <h4 className="text-sm font-extrabold text-gray-900 dark:text-white">Cloud Run & Databases</h4>
+                  <p className="text-xs text-gray-500 dark:text-neutral-300 leading-relaxed">
+                    Strict RESTful configurations, secure Node.js APIs, database migrations via ORM models, and cloud-hosted data storage.
+                  </p>
+                </div>
+                <div className="flex flex-wrap gap-2.5 items-center">
+                  {['Node.js', 'Express', 'Supabase', 'PostgreSQL', 'Cloud SQL', 'Firebase Firestore', 'MongoDB', 'Drizzle ORM', 'Redis', 'Docker', 'Google Cloud Run'].map((t) => (
+                    <span key={t} className="bg-white dark:bg-[#141414] border border-gray-100 dark:border-neutral-800 rounded-xl px-4 py-2 text-xs font-bold text-gray-700 dark:text-neutral-200 shadow-sm">{t}</span>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {activeTechTab === 'design' && (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 animate-fadeIn">
+                <div className="space-y-2">
+                  <h4 className="text-sm font-extrabold text-gray-900 dark:text-white">Editorial Figma Redesigns</h4>
+                  <p className="text-xs text-gray-500 dark:text-neutral-300 leading-relaxed">
+                    We design responsive design rules, atomic layout components, stylebooks, interactive click triggers, and visual prototypes.
+                  </p>
+                </div>
+                <div className="flex flex-wrap gap-2.5 items-center">
+                  {['Figma Professional', 'Adobe Illustrator', 'Photoshop', 'Canva Pro', 'Spline 3D', 'Proto.io', 'Bespoke Style Guides'].map((t) => (
+                    <span key={t} className="bg-white dark:bg-[#141414] border border-gray-100 dark:border-neutral-800 rounded-xl px-4 py-2 text-xs font-bold text-gray-700 dark:text-neutral-200 shadow-sm">{t}</span>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {activeTechTab === 'automation' && (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 animate-fadeIn">
+                <div className="space-y-2">
+                  <h4 className="text-sm font-extrabold text-gray-900 dark:text-white">AI Agents & Pipeline Loops</h4>
+                  <p className="text-xs text-gray-500 dark:text-neutral-300 leading-relaxed">
+                    Integrating Google Gemini models directly via server proxies, LangChain embeddings, vector search indexes, and n8n workflow loops.
+                  </p>
+                </div>
+                <div className="flex flex-wrap gap-2.5 items-center">
+                  {['Google Gemini SDK', 'OpenAI API', 'LangChain', 'Pinecone Vector DB', 'n8n pipelines', 'Make.com', 'Airtable Syncs', 'Slack bots', 'Zapier'].map((t) => (
+                    <span key={t} className="bg-white dark:bg-[#141414] border border-gray-100 dark:border-neutral-800 rounded-xl px-4 py-2 text-xs font-bold text-gray-700 dark:text-neutral-200 shadow-sm">{t}</span>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {activeTechTab === 'video' && (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 animate-fadeIn">
+                <div className="space-y-2">
+                  <h4 className="text-sm font-extrabold text-gray-900 dark:text-white">Cinematic Video Ads & Reels</h4>
+                  <p className="text-xs text-gray-500 dark:text-neutral-300 leading-relaxed">
+                    Storyboards, advanced color grading, motion graphics, audio restoration, and ad integrations to drive click conversions.
+                  </p>
+                </div>
+                <div className="flex flex-wrap gap-2.5 items-center">
+                  {['DaVinci Resolve Studio', 'Premiere Pro', 'After Effects', 'CapCut Pro', 'Storyblocks License', 'Getty Images License', 'Professional Sound Design'].map((t) => (
+                    <span key={t} className="bg-white dark:bg-[#141414] border border-gray-100 dark:border-neutral-800 rounded-xl px-4 py-2 text-xs font-bold text-gray-700 dark:text-neutral-200 shadow-sm">{t}</span>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {activeTechTab === 'marketing' && (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 animate-fadeIn">
+                <div className="space-y-2">
+                  <h4 className="text-sm font-extrabold text-gray-900 dark:text-white">Marketing, PR & Brand Strategy</h4>
+                  <p className="text-xs text-gray-500 dark:text-neutral-400 leading-relaxed">
+                    Data-driven marketing campaigns, brand positioning, media outreach, performance analytics, and full-funnel growth strategies powered by industry-leading platforms.
+                  </p>
+                </div>
+                <div className="flex flex-wrap gap-2.5 items-center">
+                  {['Google Analytics 4', 'Meta Business Suite', 'SEMrush', 'Ahrefs', 'HubSpot CRM', 'Mailchimp', 'Hootsuite', 'Google Ads', 'Facebook Ads Manager', 'Buffer'].map((t) => (
+                    <span key={t} className="bg-white dark:bg-[#141414] border border-gray-100 dark:border-neutral-800 rounded-xl px-4 py-2 text-xs font-bold text-gray-700 dark:text-neutral-200 shadow-sm">{t}</span>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+
         </div>
       </section>
 
@@ -1877,7 +1889,8 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
       {/* ========================================================
           13. SUCCESS STORIES (Challenge, Solution, Results)
          ======================================================== */}
-      <section id="success-stories" className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-24 relative z-10">
+      <section id="success-stories" className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-24 relative z-10 overflow-hidden">
+
         <div className="text-center space-y-4 max-w-2xl mx-auto mb-16">
           <span className="text-xs font-bold uppercase tracking-widest text-blue-600 dark:text-blue-400">
             {currentLang === 'en' ? 'MEASURABLE BUSINESS OUTCOMES' : 'সাফল্যের বিবরণী'}
@@ -1928,78 +1941,16 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
       </section>
 
       {/* ========================================================
-          15. GLOBAL PRESENCE (Interactive Map Pin Representation)
+          15. (REMOVED — Global Presence / Global Network section deleted)
          ======================================================== */}
-      <section id="global-presence" className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-24 relative z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
-          
-          <div className="lg:col-span-6 space-y-6">
-            <span className="text-xs font-bold uppercase tracking-widest text-blue-600 dark:text-blue-400">
-              {currentLang === 'en' ? 'GLOBAL NETWORK' : 'বিশ্বব্যাপী কার্যক্রম'}
-            </span>
-            <h2 className="font-sans text-3xl font-black text-neutral-900 dark:text-white leading-tight">
-              {currentLang === 'en' ? 'Serving Clients Globally via Remote Systems' : 'রিমোট কার্যক্রমের মাধ্যমে বিশ্বজুড়ে সফল সেবা'}
-            </h2>
-            <p className="text-xs sm:text-sm text-neutral-500 dark:text-neutral-400 dark:text-neutral-500 leading-relaxed font-normal">
-              {currentLang === 'en' 
-                ? 'We deploy server architectures and coordinate localized development teams from North America to Southeast Asia. Our virtual staging frameworks enable you to check progress seamlessly from any time zone.' 
-                : 'আমরা উত্তর আমেরিকা থেকে দক্ষিণ-পূর্ব এশিয়া পর্যন্ত বিস্তৃত টিম পরিচালনা করছি। আমাদের স্বয়ংক্রিয় প্রজেক্ট প্রিভিউ আপনাকে যেকোনো টাইম জোন থেকে সরাসরি কাজের অগ্রগতি দেখার সুবিধা দেয়।'}
-            </p>
-
-            <div className="grid grid-cols-2 gap-4">
-              <div className="border border-neutral-100/75 p-4 rounded-xl">
-                <span className="block text-xl font-black text-blue-600 dark:text-blue-400">12+</span>
-                <span className="block text-[10px] text-neutral-400 dark:text-neutral-500 uppercase tracking-widest">{currentLang === 'en' ? 'Countries Served' : 'সেবাপ্রাপ্ত দেশ'}</span>
-              </div>
-              <div className="border border-neutral-100/75 p-4 rounded-xl">
-                <span className="block text-xl font-black text-blue-600 dark:text-blue-400">100%</span>
-                <span className="block text-[10px] text-neutral-400 dark:text-neutral-500 uppercase tracking-widest">{currentLang === 'en' ? 'Remote Delivery' : 'রিমোট কোলাবরেশন'}</span>
-              </div>
-            </div>
-          </div>
-
-          <div className="lg:col-span-6 flex justify-center">
-            {/* Elegant luxury minimalist map grid */}
-            <div className="relative w-full max-w-md aspect-video bg-neutral-50 dark:bg-neutral-900 border border-neutral-100 dark:border-neutral-800 rounded-2xl p-6 flex flex-col justify-between shadow-inner">
-              <div className="absolute inset-0 bg-[radial-gradient(#2563eb_1.5px,transparent_1.5px)] [background-size:24px_24px] opacity-10"></div>
-              
-              <div className="flex justify-between items-start relative z-10">
-                <span className="text-[9px] font-mono font-bold text-neutral-400 dark:text-neutral-500">NEXT_SOLUTION_CORE_NODES</span>
-                <Globe className="h-4 w-4 text-blue-600 dark:text-blue-400 animate-spin [animation-duration:20s]" />
-              </div>
-
-              {/* Simulated Cities pins */}
-              <div className="relative h-24 w-full">
-                <div className="absolute top-4 left-[20%] flex items-center space-x-1.5 animate-pulse">
-                  <div className="h-2 w-2 rounded-full bg-blue-600"></div>
-                  <span className="text-[9px] font-bold text-neutral-800 dark:text-neutral-100">New York</span>
-                </div>
-                <div className="absolute bottom-6 left-[45%] flex items-center space-x-1.5 animate-pulse [animation-delay:0.5s]">
-                  <div className="h-2 w-2 rounded-full bg-indigo-600"></div>
-                  <span className="text-[9px] font-bold text-neutral-800 dark:text-neutral-100">London</span>
-                </div>
-                <div className="absolute top-10 right-[15%] flex items-center space-x-1.5 animate-pulse [animation-delay:1s]">
-                  <div className="h-2 w-2 rounded-full bg-blue-600"></div>
-                  <span className="text-[9px] font-bold text-neutral-800 dark:text-neutral-100">Dhaka HQ</span>
-                </div>
-              </div>
-
-              <div className="flex justify-between items-end relative z-10 text-[9px] text-neutral-400 dark:text-neutral-500 font-mono">
-                <span>LAT: 23.8103° N</span>
-                <span>LON: 90.4125° E</span>
-              </div>
-            </div>
-          </div>
-
-        </div>
-      </section>
 
       {/* ========================================================
           17. FINAL CTA
          ======================================================== */}
-      <section id="about-final-cta" className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-24 relative z-10">
+      <section id="about-final-cta" className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-24 relative z-10 overflow-hidden">
+
         <div className="rounded-3xl bg-neutral-950 text-white p-8 md:p-16 text-center space-y-8 relative overflow-hidden shadow-2xl">
-          <div className="absolute inset-0 bg-[radial-gradient(#2563eb_1.5px,transparent_1.5px)] [background-size:24px_24px] opacity-10"></div>
+          <div className="absolute inset-0 bg-[radial-gradient(#FF5A00_1.5px,transparent_1.5px)] [background-size:24px_24px] opacity-10"></div>
           
           <div className="space-y-4 max-w-2xl mx-auto relative z-10">
             <span className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full bg-white/10 text-white text-[9px] font-bold uppercase tracking-wider">

@@ -81,8 +81,8 @@ export default function Reveal({
       className={className}
       initial={
         noTransform
-          ? { opacity: 0, scale: direction === 'in' ? 0.96 : 1 }
-          : { opacity: 0, x: direction === 'left' || direction === 'right' ? off : 0, y: direction === 'up' || direction === 'down' ? off : 0 }
+          ? { opacity: 1, scale: direction === 'in' ? 0.98 : 1 }
+          : { opacity: 1, x: direction === 'left' || direction === 'right' ? off : 0, y: direction === 'up' || direction === 'down' ? off : 0 }
       }
       whileInView={
         noTransform

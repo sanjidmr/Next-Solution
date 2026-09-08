@@ -924,7 +924,7 @@ export default function ServicesSection({ currentLang, setTab, isFullPage = fals
                   setSelectedService(service);
                   window.scrollTo({ top: 0, behavior: 'smooth' });
                 }}
-                className="group cursor-pointer rounded-2xl border border-gray-100 dark:border-neutral-800 bg-[#FAFAFA]/40 p-6 shadow-sm hover:shadow-lg hover:border-blue-600 hover:bg-white dark:bg-[#141414] dark:hover:bg-white/[0.05] dark:hover:border-orange-500/60 dark:hover:shadow-[0_0_35px_-5px_rgba(255,90,0,0.35)] transition-all duration-300 transform hover:-translate-y-0.5 active:scale-[0.99] dark:active:shadow-[0_0_45px_-8px_rgba(255,90,0,0.5)] flex flex-col justify-between"
+                className="group cursor-pointer rounded-2xl border border-gray-200 dark:border-neutral-700 bg-gray-50/60 dark:bg-[#161616] p-6 shadow-[0_1px_3px_rgba(0,0,0,0.04)] hover:shadow-lg hover:border-blue-600 hover:bg-white dark:hover:bg-white/[0.05] dark:hover:border-orange-500/60 dark:hover:shadow-[0_0_35px_-5px_rgba(255,90,0,0.35)] transition-all duration-300 transform hover:-translate-y-0.5 active:scale-[0.99] dark:active:shadow-[0_0_45px_-8px_rgba(255,90,0,0.5)] flex flex-col justify-between"
               >
                 <div className="space-y-4">
                   {/* Icon and Pricing Header */}

@@ -896,7 +896,7 @@ export default function ServicesSection({ currentLang, setTab, isFullPage = fals
 
       {/* 2. SERVICES OVERVIEW GRID (LOADED DYNAMICALLY) */}
       <section id="services-grid-list" className="stack-cover relative py-10 sm:py-24 overflow-hidden bg-white dark:bg-[#141414] z-10">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           
 <Reveal direction="up">
           <div className="text-center space-y-4 max-w-3xl mx-auto mb-16">

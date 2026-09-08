@@ -269,7 +269,7 @@ export default function PortfolioSection({ currentLang, setTab, isFullPage = fal
           PROJECT GRID — heading left + nav right
       ========================================= */}
       <section id="project-grid" className="stack-cover relative py-16 sm:py-20 lg:py-24 overflow-hidden bg-white dark:bg-[#0A0908] z-10 transition-colors">
-        <div className="mx-auto max-w-[1400px] px-5 sm:px-8 lg:px-12 xl:px-16">
+        <div className="relative z-10 mx-auto max-w-[1400px] px-5 sm:px-8 lg:px-12 xl:px-16">
 
           <Reveal direction="up">
           {/* Header row: left-aligned title + right-side filter pills */}

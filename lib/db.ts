@@ -868,6 +868,27 @@ export function getPortfolio(): PortfolioItem[] {
   return getLocal<PortfolioItem[]>(KEYS.PORTFOLIO, []);
 }
 
+/**
+ * Merges live (Supabase-backed) portfolio rows with the seeded showcase items.
+ * Live rows keep their order; seeded items that are not already present (by
+ * id/slug) are appended so the grid never looks empty when the DB has few
+ * published rows. Drafts are always dropped.
+ */
+export function mergePortfolioData(dbItems: PortfolioItem[]): PortfolioItem[] {
+  const published = (dbItems || []).filter((p) => p.status !== 'draft');
+  const seen = new Set<string>();
+  const merged: PortfolioItem[] = [];
+  const push = (item: PortfolioItem) => {
+    const key = item.id || item.slug;
+    if (!key || seen.has(key)) return;
+    seen.add(key);
+    merged.push(item);
+  };
+  published.forEach(push);
+  initialPortfolio.forEach(push);
+  return merged;
+}
+
 export function savePortfolioItem(item: PortfolioItem): void {
   const list = getPortfolio();
   const index = list.findIndex(p => p.id === item.id);

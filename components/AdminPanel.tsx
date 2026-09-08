@@ -85,6 +85,14 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
   // Auth states
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [password, setPassword] = useState('');
+
+  // If the middleware session cookie is present, skip the redundant in-panel
+  // passcode gate — the server already verified the credentials.
+  useEffect(() => {
+    if (typeof document !== 'undefined' && document.cookie.split(';').some(c => c.trim().startsWith('ns_admin=1'))) {
+      setIsAuthenticated(true);
+    }
+  }, []);
   const [authError, setAuthError] = useState('');
   const [openStatusMenu, setOpenStatusMenu] = useState<string | null>(null);
 
@@ -1434,7 +1442,10 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
             {/* Quick Lock option */}
             <button
               id="admin-lock-btn"
-              onClick={() => setIsAuthenticated(false)}
+              onClick={() => {
+                document.cookie = 'ns_admin=; Max-Age=0; path=/; SameSite=Lax';
+                setIsAuthenticated(false);
+              }}
               className="rounded-lg bg-gray-100 dark:bg-neutral-800 text-gray-600 dark:text-neutral-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-200 dark:hover:bg-neutral-700 px-3 py-1.5 text-xs font-bold transition flex items-center gap-1.5"
             >
               <LockIcon className="h-3.5 w-3.5" />

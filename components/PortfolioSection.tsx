@@ -60,18 +60,17 @@ function useScrollReveal() {
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
-    el.style.opacity = '0';
-    el.style.transform = 'translateY(30px)';
-    el.style.transition = 'opacity 0.7s ease, transform 0.7s ease';
+    el.style.opacity = '1';
+    el.style.transform = 'translateY(20px)';
+    el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
-          el.style.opacity = '1';
           el.style.transform = 'translateY(0)';
           observer.unobserve(el);
         }
       },
-      { threshold: 0.1 }
+      { threshold: 0.05 }
     );
     observer.observe(el);
     return () => observer.disconnect();
@@ -145,18 +144,21 @@ export default function PortfolioSection({ currentLang, setTab, isFullPage = fal
       ========================================= */}
       <div className="hero-stack">
       <section data-space-hero className="hero-sticky relative overflow-hidden min-h-[100svh] flex items-center bg-gradient-to-b from-gray-50 to-white dark:from-[#0A0908] dark:to-[#0E0D0B]">
-        <div className="absolute inset-0 opacity-[0.015] dark:opacity-[0.03] pointer-events-none" style={{ backgroundImage: 'radial-gradient(circle, rgba(255,90,0,0.4) 1px, transparent 1px)', backgroundSize: '40px 40px' }} />
-        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-orange-500/[0.03] dark:bg-orange-500/[0.04] rounded-full blur-[180px] pointer-events-none" />
-        <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-orange-400/[0.02] dark:bg-orange-400/[0.03] rounded-full blur-[150px] pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-b from-gray-50 via-orange-50/30 to-white dark:from-[#050403] dark:via-[#180F08] dark:to-[#0A0908]" />
+        <div className="absolute inset-0 opacity-[0.02] dark:opacity-[0.05] pointer-events-none" style={{ backgroundImage: 'radial-gradient(circle, rgba(255,90,0,0.5) 1px, transparent 1px)', backgroundSize: '36px 36px' }} />
+        <div className="absolute -top-40 left-1/4 w-[540px] h-[540px] bg-orange-500/[0.07] dark:bg-orange-600/[0.18] rounded-full blur-[170px] pointer-events-none" />
+        <div className="absolute top-1/4 -right-20 w-[480px] h-[480px] bg-orange-400/[0.05] dark:bg-orange-500/[0.14] rounded-full blur-[150px] pointer-events-none" />
+        <div className="absolute -bottom-24 -left-24 w-[420px] h-[420px] bg-orange-400/[0.04] dark:bg-orange-400/[0.12] rounded-full blur-[130px] pointer-events-none" />
+        <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-orange-500/30 dark:via-orange-500/60 to-transparent" />
 
         <div className="w-full">
-        <div className="mx-auto max-w-[1400px] px-5 sm:px-8 lg:px-12 xl:px-16 py-10 sm:py-20 lg:py-28">
+        <div className="mx-auto max-w-[1400px] px-5 sm:px-8 lg:px-12 xl:px-16 py-5 sm:py-20 lg:py-28">
           {/* Mobile: text first, images second. Desktop: side by side */}
-          <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-12 lg:gap-16 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-6 sm:gap-12 lg:gap-16 items-center">
 
-            {/* Left Column — Text — slides in from left */}
-            <HeroEntrance direction="left" distance={120} duration={1}>
-            <div className="space-y-6 sm:space-y-7 order-1">
+            {/* Left Column — Text — slides in from left (always visible, no opacity gate) */}
+            <div className="relative z-20">
+            <div className="space-y-4 sm:space-y-7 order-1">
               <div className="inline-flex items-center gap-2.5 rounded-full border border-orange-200 dark:border-orange-500/20 bg-orange-50 dark:bg-orange-500/5 px-4 py-1.5">
                 <span className="h-1.5 w-1.5 rounded-full bg-orange-500 animate-pulse" />
                 <span className="text-[10px] font-black uppercase tracking-[0.2em] text-orange-600 dark:text-orange-500">
@@ -165,7 +167,7 @@ export default function PortfolioSection({ currentLang, setTab, isFullPage = fal
               </div>
               <div className="h-px w-12 bg-gradient-to-r from-orange-500 to-transparent" />
 
-              <h1 className="text-[2rem] sm:text-[2.5rem] lg:text-[3.5rem] xl:text-[4rem] font-black leading-[1.05] tracking-tight">
+              <h1 className="text-[1.55rem] sm:text-[2.5rem] lg:text-[3.5rem] xl:text-[4rem] font-black leading-[1.05] tracking-tight">
                 <span className="text-gray-900 dark:text-white">{isEn ? 'Ideas We Design.' : 'আমরা যে আইডিয়া ডিজাইন করি।'}</span>
                 <br />
                 <span className="text-gray-900 dark:text-white">{isEn ? 'Solutions We ' : 'সমাধান যা আমরা '}</span>
@@ -178,38 +180,38 @@ export default function PortfolioSection({ currentLang, setTab, isFullPage = fal
                   : 'বিশ্বব্যাপী ব্যবসাগুলোর জন্য প্রকৃত বৃদ্ধি চালিত ডিজিটাল প্রোডাক্ট, ওয়েবসাইট এবং ক্যাম্পেইনের আমাদের বৈচিত্র্যময় পোর্টফোলিও অন্বেষণ করুন।'}
               </p>
 
-              <div className="flex flex-wrap items-center gap-4 pt-2">
+              <div className="flex flex-wrap items-center gap-3 sm:gap-4 pt-1">
                 <button
                   onClick={() => setTab('contact')}
-                  className="group inline-flex items-center gap-2.5 rounded-xl bg-orange-500 hover:bg-orange-600 text-white text-xs sm:text-sm font-bold px-7 py-3.5 transition-all duration-300 hover:scale-[1.02] shadow-lg shadow-orange-500/20 cursor-pointer"
+                  className="group inline-flex items-center gap-2.5 rounded-xl bg-orange-500 hover:bg-orange-600 text-white text-[10px] sm:text-sm font-bold px-6 py-3 sm:px-7 sm:py-3.5 transition-all duration-300 hover:scale-[1.02] shadow-lg shadow-orange-500/20 cursor-pointer"
                 >
                   <span>{isEn ? 'Start Your Project' : 'প্রজেক্ট শুরু করুন'}</span>
                   <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
                 </button>
                 <button
                   onClick={() => document.getElementById('project-grid')?.scrollIntoView({ behavior: 'smooth' })}
-                  className="inline-flex items-center gap-2 rounded-xl border border-gray-200 dark:border-white/10 text-gray-600 dark:text-white/70 hover:text-orange-500 hover:border-orange-300 dark:hover:border-orange-500/30 text-xs sm:text-sm font-bold px-7 py-3.5 transition-all duration-300 cursor-pointer"
+                  className="inline-flex items-center gap-2 rounded-xl border border-gray-200 dark:border-white/10 text-gray-600 dark:text-white/70 hover:text-orange-500 hover:border-orange-300 dark:hover:border-orange-500/30 text-[10px] sm:text-sm font-bold px-6 py-3 sm:px-7 sm:py-3.5 transition-all duration-300 cursor-pointer"
                 >
                   <span>{isEn ? 'Explore Projects' : 'প্রজেক্ট দেখুন'}</span>
                   <ArrowRight className="h-4 w-4" />
                 </button>
               </div>
             </div>
-            </HeroEntrance>
+            </div>
 
             {/* Right Column — 3 Floating Images — slides in from right */}
             <HeroEntrance direction="right" distance={120} duration={1} delay={0.1}>
-            <div className="relative flex items-center justify-center min-h-[380px] sm:min-h-[480px] lg:min-h-[560px] order-2">
+            <div className="relative flex items-center justify-center min-h-[290px] sm:min-h-[480px] lg:min-h-[560px] order-2">
               {/* Decorative rings */}
               <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                <div className="w-[320px] h-[320px] lg:w-[420px] lg:h-[420px] rounded-full border border-dashed border-orange-300/30 dark:border-orange-500/10 animate-[spin_60s_linear_infinite]" />
+                <div className="w-[240px] h-[240px] lg:w-[420px] lg:h-[420px] rounded-full border border-dashed border-orange-300/30 dark:border-orange-500/10 animate-[spin_60s_linear_infinite]" />
               </div>
               <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                <div className="w-[240px] h-[240px] lg:w-[320px] lg:h-[320px] rounded-full border border-orange-200/20 dark:border-orange-500/6 animate-[spin_45s_linear_infinite_reverse]" />
+                <div className="w-[180px] h-[180px] lg:w-[320px] lg:h-[320px] rounded-full border border-orange-200/20 dark:border-orange-500/6 animate-[spin_45s_linear_infinite_reverse]" />
               </div>
 
               {/* 3 Floating images — bigger, side-by-side tilted layout */}
-              <div className="relative w-full max-w-[560px] h-[420px] sm:h-[480px] lg:h-[540px]">
+              <div className="relative w-full max-w-[560px] h-[300px] sm:h-[480px] lg:h-[540px]">
 
                 {/* Image 1 — Large, top-left, tilted right */}
                 <div className="absolute top-[2%] left-[2%] w-[55%] h-[55%] rounded-2xl lg:rounded-3xl overflow-hidden border border-gray-200/60 dark:border-white/10 shadow-2xl shadow-gray-400/20 dark:shadow-black/40 rotate-[3deg] hover:rotate-[1deg] transition-transform duration-500 z-10 group/img">

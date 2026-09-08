@@ -72,24 +72,24 @@ function ServiceCard({
             <h3 className="font-sans text-sm sm:text-base md:text-xl font-extrabold text-neutral-900 dark:text-white group-hover:text-blue-600 dark:text-orange-400 transition-colors duration-300">
               {service.title}
             </h3>
-            <span className="text-[10px] font-extrabold text-neutral-400 dark:text-neutral-500 font-mono">
+            <span className="text-[10px] font-extrabold text-neutral-400 dark:text-neutral-400 font-mono">
               (0{idx + 1})
             </span>
           </div>
-          <p className="font-sans text-xs text-neutral-500 dark:text-neutral-400 dark:text-neutral-500 leading-relaxed">
+          <p className="font-sans text-xs text-neutral-500 dark:text-neutral-300 leading-relaxed">
             {service.desc}
           </p>
         </div>
 
         <div className="space-y-2">
-          <div className="text-[9px] font-extrabold font-mono uppercase tracking-wider text-neutral-400 dark:text-neutral-500">
+          <div className="text-[9px] font-extrabold font-mono uppercase tracking-wider text-neutral-400 dark:text-neutral-400">
             {currentLang === 'en' ? 'Core Stack' : 'প্রধান টেকনোলজি'}
           </div>
           <div className="flex flex-wrap gap-1.5">
             {service.techs.slice(0, 5).map((tech) => (
               <span
                 key={tech}
-                className="rounded-lg bg-neutral-50 dark:bg-neutral-900 hover:bg-blue-50/5 dark:bg-orange-500/50 border border-neutral-200/60 text-[9px] font-extrabold font-mono text-neutral-600 dark:text-neutral-300 dark:text-neutral-600 hover:text-blue-600 dark:text-orange-400 px-2.5 py-1 transition-colors duration-200"
+                className="rounded-lg bg-neutral-50 dark:bg-neutral-800 hover:bg-blue-50/5 dark:hover:bg-neutral-700 border border-neutral-200/60 dark:border-neutral-700 text-[9px] font-extrabold font-mono text-neutral-600 dark:text-neutral-200 hover:text-blue-600 dark:hover:text-orange-400 px-2.5 py-1 transition-colors duration-200"
               >
                 {tech}
               </span>
@@ -104,7 +104,7 @@ function ServiceCard({
       </div>
 
       <div className="mt-6 pt-5 border-t border-neutral-50 dark:border-neutral-800 flex-1 flex flex-col space-y-4 relative z-10 transition-all duration-300">
-        <div className="flex items-center justify-between text-[10px] font-bold font-mono text-neutral-400 dark:text-neutral-500">
+        <div className="flex items-center justify-between text-[10px] font-bold font-mono text-neutral-400 dark:text-neutral-400">
           <span>{currentLang === 'en' ? 'Exclusive Service' : 'এক্সক্লুসিভ সেবা'}</span>
           <span className="text-blue-600 dark:text-orange-400 bg-blue-50/5 dark:bg-orange-500/50 px-2 py-0.5 rounded border border-blue-100/30">
             {currentLang === 'en' ? 'View Details →' : 'বিস্তারিত দেখুন →'}
@@ -113,14 +113,14 @@ function ServiceCard({
 
         <div className="relative z-10 flex-1 grid grid-cols-2 gap-3 sm:gap-4 pt-1 items-stretch transition-all duration-300">
             <div className="flex flex-col min-w-0">
-              <div className="text-[9px] font-extrabold font-mono uppercase tracking-wider text-neutral-400 dark:text-neutral-500 flex items-center">
+              <div className="text-[9px] font-extrabold font-mono uppercase tracking-wider text-neutral-400 dark:text-neutral-400 flex items-center">
                 <CheckCircle className="h-3 w-3 text-emerald-500 dark:text-emerald-400 mr-1 shrink-0" />
                 {currentLang === 'en' ? 'Popular Solutions' : 'জনপ্রিয় সমাধানসমূহ'}
               </div>
-              <div className="flex-1 flex flex-col justify-around text-[11px] font-sans text-neutral-600 dark:text-neutral-300 dark:text-neutral-600 font-medium pt-2">
+              <div className="flex-1 flex flex-col justify-around text-[11px] font-sans text-neutral-600 dark:text-neutral-200 font-medium pt-2">
                 {service.popular.map((proj) => (
                   <div key={proj} className="flex items-center leading-snug">
-                    <span className="h-1 w-1 bg-neutral-300 rounded-full mr-2 shrink-0" />
+                    <span className="h-1 w-1 bg-neutral-300 dark:bg-neutral-500 rounded-full mr-2 shrink-0" />
                     <span className="min-w-0 line-clamp-2">{proj}</span>
                   </div>
                 ))}
@@ -128,14 +128,14 @@ function ServiceCard({
             </div>
 
             <div className="flex flex-col min-w-0">
-              <div className="text-[9px] font-extrabold font-mono uppercase tracking-wider text-neutral-400 dark:text-neutral-500 flex items-center">
+              <div className="text-[9px] font-extrabold font-mono uppercase tracking-wider text-neutral-400 dark:text-neutral-400 flex items-center">
                 <Sparkles className="h-3 w-3 text-blue-500 dark:text-orange-400 mr-1 shrink-0" />
                 {currentLang === 'en' ? 'Core Benefits' : 'মূল সুবিধা'}
               </div>
-              <div className="flex-1 flex flex-col justify-around text-[11px] font-sans text-neutral-600 dark:text-neutral-300 dark:text-neutral-600 font-medium pt-2">
+              <div className="flex-1 flex flex-col justify-around text-[11px] font-sans text-neutral-600 dark:text-neutral-200 font-medium pt-2">
                 {service.benefits.map((benefit) => (
                   <div key={benefit} className="flex items-center leading-snug">
-                    <span className="h-1 w-1 bg-neutral-300 rounded-full mr-2 shrink-0" />
+                    <span className="h-1 w-1 bg-neutral-300 dark:bg-neutral-500 rounded-full mr-2 shrink-0" />
                     <span className="min-w-0 line-clamp-2">{benefit}</span>
                   </div>
                 ))}

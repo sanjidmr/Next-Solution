@@ -730,7 +730,7 @@ export default function ServicesSection({ currentLang, setTab, isFullPage = fals
       
       {/* 1. HERO SECTION â€” Full Screen */}
       <div className="hero-stack">
-      <section id="services-hero" data-space-hero className="hero-sticky relative min-h-[100svh] flex items-center overflow-hidden bg-white dark:bg-[#0A0908] py-12 sm:py-0">
+      <section id="services-hero" data-space-hero className="hero-sticky relative min-h-[100svh] flex items-center overflow-hidden bg-white dark:bg-[#0A0908] py-4 sm:py-0">
         {/* Unified background */}
         <div className="absolute inset-0 bg-gradient-to-b from-white via-orange-50/30 to-white dark:from-[#0A0908] dark:via-[#0F0E0C] dark:to-[#0A0908]" />
         <div className="absolute top-1/4 left-1/3 w-[700px] h-[700px] bg-orange-500/[0.06] rounded-full blur-[180px] pointer-events-none" />
@@ -738,12 +738,12 @@ export default function ServicesSection({ currentLang, setTab, isFullPage = fals
         <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: 'radial-gradient(circle, rgba(255,74,0,0.3) 1px, transparent 1px)', backgroundSize: '40px 40px' }} />
 
         <div className="w-full">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10 w-full py-10 sm:py-24">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-8 items-center">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10 w-full py-4 sm:py-24">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 lg:gap-8 items-center">
 
             {/* Left Column: Copy & CTA — slides down from above */}
             <HeroEntrance direction="down" distance={100} duration={1}>
-            <div className="space-y-6 sm:space-y-8 text-center sm:text-left">
+            <div className="space-y-3.5 sm:space-y-8 text-center sm:text-left">
               <div className="inline-flex items-center gap-2 rounded-full border border-orange-500/20 bg-orange-500/10 px-4 py-1.5">
                 <span className="h-1.5 w-1.5 rounded-full bg-orange-500 animate-pulse" />
                 <span className="text-[10px] font-black uppercase tracking-[0.2em] text-orange-400">
@@ -751,7 +751,7 @@ export default function ServicesSection({ currentLang, setTab, isFullPage = fals
                 </span>
               </div>
 
-              <h1 className="text-3xl sm:text-5xl lg:text-[4rem] font-black text-neutral-900 dark:text-white leading-[1.05] tracking-tight">
+              <h1 className="text-[1.65rem] sm:text-5xl lg:text-[4rem] font-black text-neutral-900 dark:text-white leading-[1.05] tracking-tight">
                 {currentLang === 'en' ? (
                   <>All Digital Problems.<br /><span className="text-orange-500">One Trusted Solution.</span></>
                 ) : (
@@ -759,35 +759,35 @@ export default function ServicesSection({ currentLang, setTab, isFullPage = fals
                 )}
               </h1>
 
-              <p className="text-sm sm:text-base text-gray-500 dark:text-neutral-400 leading-relaxed max-w-lg">
+              <p className="text-[13px] sm:text-base text-gray-500 dark:text-neutral-400 leading-relaxed max-w-lg">
                 {currentLang === 'en'
                   ? 'From strategy to execution, we architect complete digital ecosystems. 50+ projects delivered, 100% client retention, and a team of senior engineers who ship revenue â€” not just code.'
                   : 'à¦ªà¦°à¦¿à¦•à¦²à§à¦ªà¦¨à¦¾ à¦¥à§‡à¦•à§‡ à¦¬à¦¾à¦¸à§à¦¤à¦¬à¦¾à¦¯à¦¼à¦¨ à¦ªà¦°à§à¦¯à¦¨à§à¦¤, à¦†à¦®à¦°à¦¾ à¦¸à¦®à§à¦ªà§‚à¦°à§à¦£ à¦¡à¦¿à¦œà¦¿à¦Ÿà¦¾à¦² à¦‡à¦•à§‹à¦¸à¦¿à¦¸à§à¦Ÿà§‡à¦® à¦¤à§ˆà¦°à¦¿ à¦•à¦°à¦¿à¥¤ à§«à§¦+ à¦ªà§à¦°à¦œà§‡à¦•à§à¦Ÿ à¦¸à¦®à§à¦ªà¦¨à§à¦¨, à§§à§¦à§¦% à¦•à§à¦²à¦¾à¦¯à¦¼à§‡à¦¨à§à¦Ÿ à¦§à¦¾à¦°à¦£ à¦à¦¬à¦‚ à¦¸à¦¿à¦¨à¦¿à¦¯à¦¼à¦° à¦‡à¦žà§à¦œà¦¿à¦¨à¦¿à¦¯à¦¼à¦¾à¦°à¦¦à§‡à¦° à¦à¦•à¦Ÿà¦¿ à¦¦à¦² à¦¯à¦¾à¦°à¦¾ à¦°à¦¾à¦œà¦¸à§à¦¬ à¦¤à§ˆà¦°à¦¿ à¦•à¦°à§‡ â€” à¦¶à§à¦§à§ à¦•à§‹à¦¡ à¦¨à¦¯à¦¼à¥¤'}
               </p>
 
-              <div className="flex flex-wrap gap-6 sm:gap-8 pt-2">
+              <div className="flex flex-wrap gap-4 sm:gap-8 pt-1">
                 {[
                   { num: '50+', labelEn: 'Projects Done', labelBn: 'à¦ªà§à¦°à¦œà§‡à¦•à§à¦Ÿ à¦¸à¦®à§à¦ªà¦¨à§à¦¨' },
                   { num: '100%', labelEn: 'Client Retention', labelBn: 'à¦•à§à¦²à¦¾à¦¯à¦¼à§‡à¦¨à§à¦Ÿ à¦§à¦¾à¦°à¦£' },
                   { num: '24/7', labelEn: 'Active Support', labelBn: 'à¦¸à¦•à§à¦°à¦¿à¦¯à¦¼ à¦¸à¦¾à¦ªà§‹à¦°à§à¦Ÿ' }
                 ].map((s, i) => (
                   <div key={i} className="space-y-0.5">
-                    <span className="block text-2xl font-black text-orange-500 font-mono">{s.num}</span>
-                    <span className="block text-[10px] font-bold text-gray-400 dark:text-neutral-400 uppercase tracking-wider">{currentLang === 'en' ? s.labelEn : s.labelBn}</span>
+                    <span className="block text-xl sm:text-2xl font-black text-orange-500 font-mono">{s.num}</span>
+                    <span className="block text-[9px] sm:text-[10px] font-bold text-gray-400 dark:text-neutral-400 uppercase tracking-wider">{currentLang === 'en' ? s.labelEn : s.labelBn}</span>
                   </div>
                 ))}
               </div>
 
-              <div className="flex flex-wrap gap-4 pt-4">
+              <div className="flex flex-wrap gap-3 pt-2.5">
                 <button
                   onClick={() => { setTab('contact'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-                  className="rounded-xl bg-orange-500 hover:bg-orange-600 text-white text-xs font-bold px-8 py-4 transition-all duration-300 hover:scale-[1.01] shadow-lg shadow-orange-500/20 cursor-pointer"
+                  className="rounded-xl bg-orange-500 hover:bg-orange-600 text-white text-[10px] sm:text-xs font-bold px-6 py-3 sm:px-8 sm:py-4 transition-all duration-300 hover:scale-[1.01] shadow-lg shadow-orange-500/20 cursor-pointer"
                 >
                   {currentLang === 'en' ? 'Get Free Consultation' : 'à¦«à§à¦°à¦¿ à¦ªà¦°à¦¾à¦®à¦°à§à¦¶ à¦¨à¦¿à¦¨'}
                 </button>
                 <button
                   onClick={() => { setTab('portfolio'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-                  className="rounded-xl border border-gray-200 dark:border-neutral-700 px-8 py-4 text-xs font-bold text-gray-700 dark:text-neutral-200 hover:text-orange-500 hover:border-orange-500/30 bg-transparent transition-all duration-300 cursor-pointer"
+                  className="rounded-xl border border-gray-200 dark:border-neutral-700 px-6 py-3 sm:px-8 sm:py-4 text-[10px] sm:text-xs font-bold text-gray-700 dark:text-neutral-200 hover:text-orange-500 hover:border-orange-500/30 bg-transparent transition-all duration-300 cursor-pointer"
                 >
                   {currentLang === 'en' ? 'View Our Portfolio' : 'à¦ªà§‹à¦°à§à¦Ÿà¦«à§‹à¦²à¦¿à¦“ à¦¦à§‡à¦–à§à¦¨'}
                 </button>
@@ -797,10 +797,10 @@ export default function ServicesSection({ currentLang, setTab, isFullPage = fals
 
             {/* Right Column: Logo + Orbiting Services — slides up from below */}
             <HeroEntrance direction="up" distance={120} duration={1} delay={0.15}>
-            <div className="relative flex items-center justify-center min-h-[340px] sm:min-h-[440px] lg:min-h-[650px]">
+            <div className="relative flex items-center justify-center min-h-[250px] sm:min-h-[440px] lg:min-h-[650px]">
 
               {/* Responsive orbit wrapper â€” scales down on mobile */}
-              <div className="relative w-full h-full scale-[0.52] sm:scale-75 lg:scale-100 origin-center">
+              <div className="relative w-full h-full scale-[0.40] sm:scale-75 lg:scale-100 origin-center">
 
                 {/* Outer orbit ring â€” 6 services, rotates clockwise */}
                 <div className="absolute inset-0 animate-[spin_70s_linear_infinite]">
@@ -894,7 +894,7 @@ export default function ServicesSection({ currentLang, setTab, isFullPage = fals
 
 
       {/* 2. SERVICES OVERVIEW GRID (LOADED DYNAMICALLY) */}
-      <section id="services-grid-list" className="stack-cover py-24 bg-white dark:bg-[#141414]">
+      <section id="services-grid-list" className="stack-cover py-10 sm:py-24 bg-white dark:bg-[#141414]">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           
 <Reveal direction="up">
@@ -915,7 +915,7 @@ export default function ServicesSection({ currentLang, setTab, isFullPage = fals
           </div>
           </Reveal>
 
-          <Reveal className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <Reveal disabled className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-8">
             {services.map((service) => (
               <div
                 id={`service-card-${service.id}`}

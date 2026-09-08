@@ -119,14 +119,17 @@ export default function Navbar({
     <header id="app-navbar" className={headerClass}>
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="relative flex h-16 items-center justify-between">
+          {/* Left balance spacer — forces centered logo on mobile only */}
+          <div className="flex-1 lg:hidden" aria-hidden="true" />
+
           {/* Logo */}
           <Link
             id="nav-logo"
             href={getPathForTab('home')}
             onClick={() => handleTabClick('home')}
-            className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 lg:static lg:transform-none flex cursor-pointer items-center space-x-2 transition duration-200 hover:opacity-90"
+            className="flex shrink-0 cursor-pointer items-center space-x-2 transition duration-200 hover:opacity-90"
           >
-            <img src={heroIsDark ? "/logow.png" : "/logo.png"} alt="Next Solution" className="h-10 w-auto max-h-10 object-contain sm:h-9 sm:max-h-9" />
+            <img src={heroIsDark ? "/logow.png" : "/logo.png"} alt="Next Solution" className="h-10 w-auto max-h-10 object-contain dark:h-12 dark:max-h-12 sm:h-9 sm:max-h-9 sm:dark:h-9 sm:dark:max-h-9" />
           </Link>
 
           {/* Desktop Navigation */}
@@ -186,7 +189,7 @@ export default function Navbar({
           </div>
 
           {/* Mobile menu button */}
-          <div id="nav-mobile-controls" className="ml-auto flex items-center space-x-2 lg:ml-0 lg:hidden">
+          <div id="nav-mobile-controls" className="flex flex-1 items-center justify-end space-x-2 lg:hidden">
             {/* Dark Mode Toggle for mobile */}
             <button
               id="mobile-theme-toggle"

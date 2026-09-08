@@ -729,8 +729,7 @@ export default function ServicesSection({ currentLang, setTab, isFullPage = fals
     <div id="services-page-root" data-space-page className="bg-white dark:bg-[#141414] min-h-screen font-sans selection:bg-blue-600 selection:text-white">
       
       {/* 1. HERO SECTION â€” Full Screen */}
-      <div className="hero-stack">
-      <section id="services-hero" data-space-hero className="hero-sticky relative min-h-[100svh] flex items-center overflow-hidden bg-white dark:bg-[#0A0908] py-4 sm:py-0">
+      <section id="services-hero" data-space-hero className="relative min-h-[100svh] flex items-center overflow-hidden bg-white dark:bg-[#0A0908] py-4 sm:py-0">
         {/* Unified background */}
         <div className="absolute inset-0 bg-gradient-to-b from-white via-orange-50/30 to-white dark:from-[#0A0908] dark:via-[#0F0E0C] dark:to-[#0A0908]" />
         <div className="absolute top-1/4 left-1/3 w-[700px] h-[700px] bg-orange-500/[0.06] rounded-full blur-[180px] pointer-events-none" />
@@ -759,13 +758,13 @@ export default function ServicesSection({ currentLang, setTab, isFullPage = fals
                 )}
               </h1>
 
-              <p className="text-[13px] sm:text-base text-gray-500 dark:text-neutral-400 leading-relaxed max-w-lg">
+              <p className="text-[13px] sm:text-base text-gray-500 dark:text-neutral-400 leading-relaxed max-w-lg mx-auto sm:mx-0">
                 {currentLang === 'en'
                   ? 'From strategy to execution, we architect complete digital ecosystems. 50+ projects delivered, 100% client retention, and a team of senior engineers who ship revenue â€” not just code.'
                   : 'à¦ªà¦°à¦¿à¦•à¦²à§à¦ªà¦¨à¦¾ à¦¥à§‡à¦•à§‡ à¦¬à¦¾à¦¸à§à¦¤à¦¬à¦¾à¦¯à¦¼à¦¨ à¦ªà¦°à§à¦¯à¦¨à§à¦¤, à¦†à¦®à¦°à¦¾ à¦¸à¦®à§à¦ªà§‚à¦°à§à¦£ à¦¡à¦¿à¦œà¦¿à¦Ÿà¦¾à¦² à¦‡à¦•à§‹à¦¸à¦¿à¦¸à§à¦Ÿà§‡à¦® à¦¤à§ˆà¦°à¦¿ à¦•à¦°à¦¿à¥¤ à§«à§¦+ à¦ªà§à¦°à¦œà§‡à¦•à§à¦Ÿ à¦¸à¦®à§à¦ªà¦¨à§à¦¨, à§§à§¦à§¦% à¦•à§à¦²à¦¾à¦¯à¦¼à§‡à¦¨à§à¦Ÿ à¦§à¦¾à¦°à¦£ à¦à¦¬à¦‚ à¦¸à¦¿à¦¨à¦¿à¦¯à¦¼à¦° à¦‡à¦žà§à¦œà¦¿à¦¨à¦¿à¦¯à¦¼à¦¾à¦°à¦¦à§‡à¦° à¦à¦•à¦Ÿà¦¿ à¦¦à¦² à¦¯à¦¾à¦°à¦¾ à¦°à¦¾à¦œà¦¸à§à¦¬ à¦¤à§ˆà¦°à¦¿ à¦•à¦°à§‡ â€” à¦¶à§à¦§à§ à¦•à§‹à¦¡ à¦¨à¦¯à¦¼à¥¤'}
               </p>
 
-              <div className="flex flex-wrap gap-4 sm:gap-8 pt-1">
+              <div className="flex flex-wrap justify-center sm:justify-start gap-4 sm:gap-8 pt-1">
                 {[
                   { num: '50+', labelEn: 'Projects Done', labelBn: 'à¦ªà§à¦°à¦œà§‡à¦•à§à¦Ÿ à¦¸à¦®à§à¦ªà¦¨à§à¦¨' },
                   { num: '100%', labelEn: 'Client Retention', labelBn: 'à¦•à§à¦²à¦¾à¦¯à¦¼à§‡à¦¨à§à¦Ÿ à¦§à¦¾à¦°à¦£' },
@@ -778,7 +777,7 @@ export default function ServicesSection({ currentLang, setTab, isFullPage = fals
                 ))}
               </div>
 
-              <div className="flex flex-wrap gap-3 pt-2.5">
+              <div className="flex flex-wrap justify-center sm:justify-start gap-3 pt-2.5">
                 <button
                   onClick={() => { setTab('contact'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
                   className="rounded-xl bg-orange-500 hover:bg-orange-600 text-white text-[10px] sm:text-xs font-bold px-6 py-3 sm:px-8 sm:py-4 transition-all duration-300 hover:scale-[1.01] shadow-lg shadow-orange-500/20 cursor-pointer"
@@ -887,14 +886,14 @@ export default function ServicesSection({ currentLang, setTab, isFullPage = fals
             </div>
           </div>
         </div>
+
         </div>
       </section>
-      </div>
 
 
 
       {/* 2. SERVICES OVERVIEW GRID (LOADED DYNAMICALLY) */}
-      <section id="services-grid-list" className="stack-cover py-10 sm:py-24 bg-white dark:bg-[#141414]">
+      <section id="services-grid-list" className="py-10 sm:py-24 bg-white dark:bg-[#141414]">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           
 <Reveal direction="up">

@@ -142,8 +142,7 @@ export default function PortfolioSection({ currentLang, setTab, isFullPage = fal
       {/* ========================================
           1. HERO SECTION
       ========================================= */}
-      <div className="hero-stack">
-      <section data-space-hero className="hero-sticky relative overflow-hidden min-h-[100svh] flex items-center bg-gradient-to-b from-gray-50 to-white dark:from-[#0A0908] dark:to-[#0E0D0B]">
+      <section data-space-hero className="relative overflow-hidden min-h-[100svh] flex items-center bg-gradient-to-b from-gray-50 to-white dark:from-[#0A0908] dark:to-[#0E0D0B]">
         <div className="absolute inset-0 bg-gradient-to-b from-gray-50 via-orange-50/30 to-white dark:from-[#050403] dark:via-[#180F08] dark:to-[#0A0908]" />
         <div className="absolute inset-0 opacity-[0.02] dark:opacity-[0.05] pointer-events-none" style={{ backgroundImage: 'radial-gradient(circle, rgba(255,90,0,0.5) 1px, transparent 1px)', backgroundSize: '36px 36px' }} />
         <div className="absolute -top-40 left-1/4 w-[540px] h-[540px] bg-orange-500/[0.07] dark:bg-orange-600/[0.18] rounded-full blur-[170px] pointer-events-none" />
@@ -158,14 +157,14 @@ export default function PortfolioSection({ currentLang, setTab, isFullPage = fal
 
             {/* Left Column — Text — slides in from left (always visible, no opacity gate) */}
             <div className="relative z-20">
-            <div className="space-y-4 sm:space-y-7 order-1">
+            <div className="space-y-4 sm:space-y-7 order-1 text-center sm:text-left">
               <div className="inline-flex items-center gap-2.5 rounded-full border border-orange-200 dark:border-orange-500/20 bg-orange-50 dark:bg-orange-500/5 px-4 py-1.5">
                 <span className="h-1.5 w-1.5 rounded-full bg-orange-500 animate-pulse" />
                 <span className="text-[10px] font-black uppercase tracking-[0.2em] text-orange-600 dark:text-orange-500">
                   {isEn ? 'OUR PORTFOLIO' : 'আমাদের পোর্টফোলিও'}
                 </span>
               </div>
-              <div className="h-px w-12 bg-gradient-to-r from-orange-500 to-transparent" />
+              <div className="h-px w-12 bg-gradient-to-r from-orange-500 to-transparent mx-auto sm:mx-0" />
 
               <h1 className="text-[1.55rem] sm:text-[2.5rem] lg:text-[3.5rem] xl:text-[4rem] font-black leading-[1.05] tracking-tight">
                 <span className="text-gray-900 dark:text-white">{isEn ? 'Ideas We Design.' : 'আমরা যে আইডিয়া ডিজাইন করি।'}</span>
@@ -174,13 +173,13 @@ export default function PortfolioSection({ currentLang, setTab, isFullPage = fal
                 <span className="text-orange-500">{isEn ? 'Deliver.' : 'দিই।'}</span>
               </h1>
 
-              <p className="text-sm sm:text-base text-gray-500 dark:text-gray-400 leading-relaxed max-w-lg">
+              <p className="text-sm sm:text-base text-gray-500 dark:text-gray-400 leading-relaxed max-w-lg mx-auto sm:mx-0">
                 {isEn
                   ? 'Explore our diverse portfolio of digital products, websites, and campaigns that drive real growth for businesses worldwide.'
                   : 'বিশ্বব্যাপী ব্যবসাগুলোর জন্য প্রকৃত বৃদ্ধি চালিত ডিজিটাল প্রোডাক্ট, ওয়েবসাইট এবং ক্যাম্পেইনের আমাদের বৈচিত্র্যময় পোর্টফোলিও অন্বেষণ করুন।'}
               </p>
 
-              <div className="flex flex-wrap items-center gap-3 sm:gap-4 pt-1">
+              <div className="flex flex-wrap items-center justify-center sm:justify-start gap-3 sm:gap-4 pt-1">
                 <button
                   onClick={() => setTab('contact')}
                   className="group inline-flex items-center gap-2.5 rounded-xl bg-orange-500 hover:bg-orange-600 text-white text-[10px] sm:text-sm font-bold px-6 py-3 sm:px-7 sm:py-3.5 transition-all duration-300 hover:scale-[1.02] shadow-lg shadow-orange-500/20 cursor-pointer"
@@ -262,13 +261,12 @@ export default function PortfolioSection({ currentLang, setTab, isFullPage = fal
         </div>
         </div>
       </section>
-      </div>
 
 
       {/* ========================================
           PROJECT GRID — heading left + nav right
       ========================================= */}
-      <section id="project-grid" className="stack-cover py-16 sm:py-20 lg:py-24 bg-white dark:bg-[#0A0908] transition-colors">
+      <section id="project-grid" className="py-16 sm:py-20 lg:py-24 bg-white dark:bg-[#0A0908] transition-colors">
         <div className="mx-auto max-w-[1400px] px-5 sm:px-8 lg:px-12 xl:px-16">
 
           <Reveal direction="up">

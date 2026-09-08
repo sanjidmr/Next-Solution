@@ -142,7 +142,8 @@ export default function PortfolioSection({ currentLang, setTab, isFullPage = fal
       {/* ========================================
           1. HERO SECTION
       ========================================= */}
-      <section data-space-hero className="relative overflow-hidden min-h-[100svh] flex items-center bg-gradient-to-b from-gray-50 to-white dark:from-[#0A0908] dark:to-[#0E0D0B]">
+      <div className="hero-stack">
+      <section data-space-hero className="hero-sticky relative overflow-hidden min-h-[100svh] flex items-center bg-gradient-to-b from-gray-50 to-white dark:from-[#0A0908] dark:to-[#0E0D0B]">
         <div className="absolute inset-0 bg-gradient-to-b from-gray-50 via-orange-50/30 to-white dark:from-[#050403] dark:via-[#180F08] dark:to-[#0A0908]" />
         <div className="absolute inset-0 opacity-[0.02] dark:opacity-[0.05] pointer-events-none" style={{ backgroundImage: 'radial-gradient(circle, rgba(255,90,0,0.5) 1px, transparent 1px)', backgroundSize: '36px 36px' }} />
         <div className="absolute -top-40 left-1/4 w-[540px] h-[540px] bg-orange-500/[0.07] dark:bg-orange-600/[0.18] rounded-full blur-[170px] pointer-events-none" />
@@ -261,12 +262,13 @@ export default function PortfolioSection({ currentLang, setTab, isFullPage = fal
         </div>
         </div>
       </section>
+      </div>
 
 
       {/* ========================================
           PROJECT GRID — heading left + nav right
       ========================================= */}
-      <section id="project-grid" className="py-16 sm:py-20 lg:py-24 bg-white dark:bg-[#0A0908] transition-colors">
+      <section id="project-grid" className="stack-cover relative py-16 sm:py-20 lg:py-24 overflow-hidden bg-white dark:bg-[#0A0908] z-10 transition-colors">
         <div className="mx-auto max-w-[1400px] px-5 sm:px-8 lg:px-12 xl:px-16">
 
           <Reveal direction="up">

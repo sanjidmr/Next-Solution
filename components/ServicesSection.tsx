@@ -729,7 +729,8 @@ export default function ServicesSection({ currentLang, setTab, isFullPage = fals
     <div id="services-page-root" data-space-page className="bg-white dark:bg-[#141414] min-h-screen font-sans selection:bg-blue-600 selection:text-white">
       
       {/* 1. HERO SECTION â€” Full Screen */}
-      <section id="services-hero" data-space-hero className="relative min-h-[100svh] flex items-center overflow-hidden bg-white dark:bg-[#0A0908] py-4 sm:py-0">
+      <div className="hero-stack">
+      <section id="services-hero" data-space-hero className="hero-sticky relative min-h-[100svh] flex items-center overflow-hidden bg-white dark:bg-[#0A0908] py-4 sm:py-0">
         {/* Unified background */}
         <div className="absolute inset-0 bg-gradient-to-b from-white via-orange-50/30 to-white dark:from-[#0A0908] dark:via-[#0F0E0C] dark:to-[#0A0908]" />
         <div className="absolute top-1/4 left-1/3 w-[700px] h-[700px] bg-orange-500/[0.06] rounded-full blur-[180px] pointer-events-none" />
@@ -889,11 +890,12 @@ export default function ServicesSection({ currentLang, setTab, isFullPage = fals
 
         </div>
       </section>
+      </div>
 
 
 
       {/* 2. SERVICES OVERVIEW GRID (LOADED DYNAMICALLY) */}
-      <section id="services-grid-list" className="py-10 sm:py-24 bg-white dark:bg-[#141414]">
+      <section id="services-grid-list" className="stack-cover relative py-10 sm:py-24 overflow-hidden bg-white dark:bg-[#141414] z-10">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           
 <Reveal direction="up">

@@ -34,8 +34,8 @@ export const adminDB = {
     return apiFetch<T>(entity, id);
   },
 
-  async save(entity: string, items: any | any[]): Promise<void> {
-    await apiFetch(entity, undefined, { method: "POST", body: items });
+  async save(entity: string, items: any | any[]): Promise<any> {
+    return apiFetch(entity, undefined, { method: "POST", body: items });
   },
 
   async update(entity: string, id: string, data: any): Promise<void> {

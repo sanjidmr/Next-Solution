@@ -215,23 +215,23 @@ export async function POST(
   request: NextRequest,
   { params }: { params: Promise<{ entity: string }> }
 ) {
+  const denied = await requireStaff();
+  if (denied) {
+    return NextResponse.json({ error: denied.error }, { status: denied.status });
+  }
+
+  const { entity } = await params;
+  const tableName = TABLE_MAP[entity];
+  if (!tableName) {
+    return NextResponse.json({ error: `Unknown entity: ${entity}` }, { status: 404 });
+  }
+
+  const toDb = TO_DB_MAP[entity];
+  if (!toDb) {
+    return NextResponse.json({ error: `No mapper for entity: ${entity}` }, { status: 400 });
+  }
+
   try {
-    const denied = await requireStaff();
-    if (denied) {
-      return NextResponse.json({ error: denied.error }, { status: denied.status });
-    }
-
-    const { entity } = await params;
-    const tableName = TABLE_MAP[entity];
-    if (!tableName) {
-      return NextResponse.json({ error: `Unknown entity: ${entity}` }, { status: 404 });
-    }
-
-    const toDb = TO_DB_MAP[entity];
-    if (!toDb) {
-      return NextResponse.json({ error: `No mapper for entity: ${entity}` }, { status: 400 });
-    }
-
     const supabase = createAdminClient();
     const body = await request.json();
 
@@ -251,6 +251,51 @@ export async function POST(
 
     return NextResponse.json({ success: true });
   } catch (error: any) {
+    // Graceful fallback: if a save fails only because the `project_data`
+    // JSONB column is missing from the hosted database (migration
+    // 20260901000001_portfolio_project_data.sql not applied yet), retry the
+    // upsert WITHOUT project_data so the portfolio item still saves without
+    // an error. Other errors are reported as usual.
+    const missingColumn =
+      /project_data|PGRST204|42703/.test(
+        (error.message || "") + (error.details || "")
+      ) &&
+      String(error.message || "").includes("column");
+
+    if (missingColumn) {
+      try {
+        const body2 = await request.clone().json();
+        const items2 = Array.isArray(body2) ? body2 : [body2];
+        const retryItems = items2.map((item) => {
+          const row = toDb(item);
+          delete row.project_data;
+          return row;
+        });
+
+        const supabase = createAdminClient();
+        if (SINGLETON_TABLES.has(tableName) && retryItems.length === 1) {
+          const { error: e2 } = await supabase
+            .from(tableName)
+            .upsert({ id: "default", ...retryItems[0] }, { onConflict: "id" });
+          if (e2) throw e2;
+        } else {
+          const { error: e2 } = await supabase.from(tableName).upsert(retryItems);
+          if (e2) throw e2;
+        }
+
+        return NextResponse.json({
+          success: true,
+          warning:
+            "Saved without service-specific details: the `project_data` column is missing in the database. Apply migration 20260901000001_portfolio_project_data.sql to enable them.",
+        });
+      } catch (retryError: any) {
+        return NextResponse.json(
+          { error: retryError.message || "Failed to save data" },
+          { status: 500 }
+        );
+      }
+    }
+
     return NextResponse.json(
       { error: error.message || "Failed to save data" },
       { status: 500 }

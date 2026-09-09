@@ -223,12 +223,12 @@ export default function AdminPortfolioManager({
     };
 
     try {
-      await adminDB.savePortfolio(item);
+      const res = (await adminDB.savePortfolio(item)) as any;
       await load();
       setFormOpen(false);
       setEditing(null);
       setForm(emptyForm);
-      notice("Portfolio project saved.");
+      notice(res?.warning || "Portfolio project saved.");
     } catch (err: any) {
       notice(err?.message || "Failed to save portfolio project. If you filled service-specific fields, make sure the `project_data` DB migration has been applied.");
     }

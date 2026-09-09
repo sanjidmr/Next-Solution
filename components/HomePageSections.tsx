@@ -23,7 +23,7 @@ import StackingCards from '@/components/motion/StackingCards';
 import RevealGuard from '@/components/motion/RevealGuard';
 import { 
   getSettings, getClientLogos, getSuccessStories, 
-  getTestimonials, getBlogs, getPortfolio, mergePortfolioData, 
+  getTestimonials, getBlogs,
   addSubscriber, getWhyChooseUsCards, getWhyChooseUsStats, 
   getWhyChooseUsBadges, getWhyChooseUsTechs, getWhyChooseUsCTA,
   getProcessSteps, getProcessCTA, getTechServiceCards
@@ -378,7 +378,7 @@ export default function HomePageSections({ currentLang, setTab, portfolioData }:
 
   const testimonials = getTestimonials();
   const blogs = getBlogs().filter(b => b.status === 'published');
-  const portfolio = mergePortfolioData(portfolioData ?? getPortfolio());
+  const portfolio = portfolioData ?? [];
 
   const whyChooseUsCards = getWhyChooseUsCards().filter(c => c.visible !== false).sort((a, b) => a.displayOrder - b.displayOrder);
   const whyChooseUsStats = getWhyChooseUsStats().filter(s => s.visible !== false).sort((a, b) => a.displayOrder - b.displayOrder);

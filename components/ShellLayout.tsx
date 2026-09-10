@@ -9,7 +9,6 @@ import FloatingContact from '@/components/FloatingContact';
 import ErrorBoundary from '@/components/ErrorBoundary';
 import { useLang } from '@/providers/LangProvider';
 import { useTheme } from '@/providers/ThemeProvider';
-import { usePageTransition } from '@/providers/PageTransitionProvider';
 import { usePathname } from 'next/navigation';
 import { getPathForTab, NavTabId, publicNavPaths } from '@/config/navigation';
 import { getHeroTheme } from '@/config/heroes';
@@ -24,7 +23,6 @@ export default function ShellLayout({ children }: ShellLayoutProps) {
   const pathname = usePathname();
   const { currentLang, setCurrentLang } = useLang();
   const { isDark, toggleTheme } = useTheme();
-  const { navigate } = usePageTransition();
 
   // Navbar adapts its text/icon contrast to the current page's hero theme.
   const heroTheme = getHeroTheme(pathname);
@@ -37,11 +35,11 @@ export default function ShellLayout({ children }: ShellLayoutProps) {
 
   const setTab = (tab: string) => {
     const path = getPathForTab(tab as NavTabId);
-    if (path) navigate(path);
+    if (path) router.push(path);
   };
 
   const handleOpenPrivacyPolicy = () => {
-    navigate('/legal/privacy-policy');
+    router.push('/legal/privacy-policy');
   };
 
   return (

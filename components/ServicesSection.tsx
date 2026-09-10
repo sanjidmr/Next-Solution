@@ -1184,50 +1184,8 @@ export default function ServicesSection({ currentLang, setTab, isFullPage = fals
             })}
           </div>
         </div>
-      </section>
+</section>
 
-      {/* 8. CTA SECTION */}
-      <section id="services-final-cta" className="py-24 bg-white dark:bg-[#141414]">
-        <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-          <div className="rounded-3xl bg-gradient-to-r from-blue-600 dark:from-orange-500 to-indigo-600 dark:to-orange-400 p-6 sm:p-8 md:p-14 text-center space-y-4 sm:space-y-6 relative overflow-hidden shadow-xl text-white">
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-white/10 via-transparent to-transparent pointer-events-none"></div>
-            
-            <span className="text-[10px] uppercase tracking-widest font-extrabold text-blue-100 relative z-10 block">
-              {currentLang === 'en' ? 'COLLABORATIVE CODES' : 'à¦¸à¦¹à¦¯à§‹à¦—à¦¿à¦¤à¦¾'}
-            </span>
-            
-            <h2 className="text-3xl md:text-4xl font-black max-w-2xl mx-auto leading-tight relative z-10">
-              {currentLang === 'en' ? 'Ready to Scale Your Business Operations?' : 'à¦†à¦ªà¦¨à¦¾à¦° à¦¬à§à¦¯à¦¬à¦¸à¦¾à¦¯à¦¼à¦¿à¦• à¦•à¦¾à¦°à§à¦¯à¦•à§à¦°à¦®à¦•à§‡ à¦†à¦°à¦“ à¦ªà§à¦°à¦¸à¦¾à¦°à¦¿à¦¤ à¦•à¦°à¦¤à§‡ à¦ªà§à¦°à¦¸à§à¦¤à§à¦¤?'}
-            </h2>
-            
-            <p className="text-xs md:text-sm text-blue-100 max-w-md mx-auto relative z-10 leading-relaxed">
-              {currentLang === 'en' ? (
-                'Talk to a senior partner today to map out user stories, scope budgets, and draft blueprints.'
-              ) : (
-                'à¦†à¦ªà¦¨à¦¾à¦° à¦ªà§à¦°à¦œà§‡à¦•à§à¦Ÿà§‡à¦° à¦ªà¦°à¦¿à¦•à¦²à§à¦ªà¦¨à¦¾, à¦¬à¦¾à¦œà§‡à¦Ÿ à¦¨à¦¿à¦°à§à¦§à¦¾à¦°à¦£ à¦à¦¬à¦‚ à¦¸à¦«à¦² à¦¬à¦¾à¦¸à§à¦¤à¦¬à¦¾à§Ÿà¦¨à§‡à¦° à¦œà¦¨à§à¦¯ à¦†à¦œà¦‡ à¦†à¦®à¦¾à¦¦à§‡à¦° à¦ªà¦¾à¦°à§à¦Ÿà¦¨à¦¾à¦°à§‡à¦° à¦¸à¦¾à¦¥à§‡ à¦•à¦¥à¦¾ à¦¬à¦²à§à¦¨à¥¤'
-              )}
-            </p>
-
-            <div className="flex flex-wrap items-center justify-center gap-4 pt-4 relative z-10">
-              <button
-                id="cta-get-free-quote"
-                onClick={() => { setTab('contact'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-                className="rounded-xl bg-white dark:bg-[#141414] hover:bg-gray-50 dark:bg-neutral-900 text-blue-600 dark:text-orange-400 text-xs font-bold px-6 py-3.5 transition shadow-md hover:scale-[1.01] cursor-pointer"
-              >
-                {currentLang === 'en' ? 'Start Now' : 'à¦à¦–à¦¨à¦‡ à¦¶à§à¦°à§ à¦•à¦°à§à¦¨'}
-              </button>
-              <button
-                id="cta-contact-us"
-                onClick={() => { setTab('contact'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-                className="rounded-xl border border-white/30 px-6 py-3.5 text-xs font-bold text-white hover:bg-white/10 transition cursor-pointer"
-              >
-                {currentLang === 'en' ? 'Contact Us Directly' : 'à¦¸à¦°à¦¾à¦¸à¦°à¦¿ à¦¯à§‹à¦—à¦¾à¦¯à§‹à¦— à¦•à¦°à§à¦¨'}
-              </button>
-            </div>
-          </div>
-        </div>
-      </section>
-
-    </div>
+</div>
   );
 }

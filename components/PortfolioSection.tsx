@@ -134,7 +134,6 @@ export default function PortfolioSection({ currentLang, setTab, isFullPage = fal
   const gridRef = useScrollReveal();
   const caseStudyRef = useScrollReveal();
   const industriesRef = useScrollReveal();
-  const ctaRef = useScrollReveal();
 
   return (
     <div data-space-page className="min-h-screen bg-white dark:bg-[#0A0908] text-gray-900 dark:text-white font-sans transition-colors">
@@ -423,49 +422,6 @@ export default function PortfolioSection({ currentLang, setTab, isFullPage = fal
                   </div>
                 );
               })}
-            </div>
-          </div>
-        </div>
-      </section>
-
-
-      {/* ========================================
-          FINAL CTA
-      ========================================= */}
-      <section ref={ctaRef} className="py-16 sm:py-20 lg:py-24 bg-gray-50 dark:bg-[#0A0908] transition-colors">
-        <div className="mx-auto max-w-[900px] px-5 sm:px-8">
-          <div className="relative rounded-2xl lg:rounded-3xl bg-gradient-to-br from-white to-gray-50 dark:from-[#1a1816] dark:to-[#0E0D0B] border border-gray-200 dark:border-white/10 p-8 sm:p-12 lg:p-16 text-center space-y-5 sm:space-y-6 overflow-hidden transition-colors">
-            <div className="absolute top-0 right-0 w-[300px] h-[300px] bg-orange-500/[0.04] dark:bg-orange-500/[0.06] rounded-full blur-[120px] pointer-events-none" />
-            <div className="absolute bottom-0 left-0 w-[200px] h-[200px] bg-orange-400/[0.03] dark:bg-orange-400/[0.04] rounded-full blur-[100px] pointer-events-none" />
-
-            <h2 className="text-xl sm:text-2xl lg:text-3xl xl:text-4xl font-black text-gray-900 dark:text-white leading-tight relative z-10">
-              {isEn ? (
-                <>Have a Project in Mind?<br />Let's Build Something <span className="text-orange-500">Amazing</span> Together.</>
-              ) : (
-                <>প্রজেক্ট নিয়ে কিছু মাথায় আছে?<br />চলুন একসাথে কিছু <span className="text-orange-500">অসাধারণ</span> তৈরি করি।</>
-              )}
-            </h2>
-
-            <p className="text-sm text-gray-500 dark:text-gray-400 max-w-md mx-auto relative z-10">
-              {isEn
-                ? 'From concept to launch, we handle everything. Let us turn your vision into a high-performing digital reality.'
-                : 'কনসেপ্ট থেকে লঞ্চ পর্যন্ত, আমরা সব সামলাই। আপনার ভিশনকে একটি উচ্চ-কার্যকর ডিজিটাল বাস্তবতায় রূপান্তরিত করতে দিন।'}
-            </p>
-
-            <div className="flex flex-wrap items-center justify-center gap-4 pt-2 relative z-10">
-              <button
-                onClick={() => setTab('contact')}
-                className="group inline-flex items-center gap-2.5 rounded-xl bg-orange-500 hover:bg-orange-600 text-white text-xs sm:text-sm font-bold px-7 py-3.5 transition-all duration-300 hover:scale-[1.02] shadow-lg shadow-orange-500/20 cursor-pointer"
-              >
-                <span>{isEn ? 'Start Your Project' : 'প্রজেক্ট শুরু করুন'}</span>
-                <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-              </button>
-              <button
-                onClick={() => setTab('contact')}
-                className="flex h-12 w-12 items-center justify-center rounded-full border border-gray-200 dark:border-white/10 bg-white dark:bg-white/[0.03] text-gray-400 dark:text-white/60 hover:text-orange-500 dark:hover:text-orange-400 hover:border-orange-200 dark:hover:border-orange-500/30 transition-all duration-300 cursor-pointer shadow-sm dark:shadow-none"
-              >
-                <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" /></svg>
-              </button>
             </div>
           </div>
         </div>

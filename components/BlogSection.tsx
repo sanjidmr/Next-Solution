@@ -1883,33 +1883,9 @@ export default function BlogSection({ currentLang, setTab, isFullPage = false }:
                     </div>
                   </div>
 
-                </div>
+</div>
               </div>
 
-            </div>
-
-            {/* 4. FINAL COMPREHENSIVE CTA */}
-            <div id="blog-footer-cta" className="rounded-3xl bg-gradient-to-r from-blue-600 dark:from-orange-500 to-indigo-700 text-white p-8 md:p-12 text-center space-y-6 relative overflow-hidden shadow-xl">
-              <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-white via-transparent to-transparent"></div>
-              <h2 className="font-sans text-2xl md:text-4xl font-black leading-tight max-w-2xl mx-auto relative z-10">
-                {currentLang === 'en' 
-                  ? 'Ready to scale your digital presence with compiled Next-gen software?' 
-                  : 'আপনার আইডিয়াকে সাফল্যের শিখরে নিয়ে যেতে প্রস্তুত?'}
-              </h2>
-              <p className="text-xs md:text-sm text-blue-100 max-w-lg mx-auto relative z-10 font-sans leading-relaxed">
-                {currentLang === 'en' 
-                  ? 'Collaborate with senior solutions architects, UI strategists, and SEO specialists. Book your 100% free consult today.'
-                  : 'সিনিয়র সলিউশন আর্কিটেক্ট, ইউআই ডিজাইনার এবং এসইও বিশেষজ্ঞদের সাথে আপনার কাস্টম সফটওয়্যার ডিজাইন শুরু করুন।'}
-              </p>
-              <div className="flex flex-wrap items-center justify-center gap-4 relative z-10 pt-2">
-                <button
-                  id="final-cta-contact-btn"
-                  onClick={() => { setTab('contact'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-                  className="rounded-xl border border-white/20 bg-white/5 hover:bg-white/10 text-white text-xs font-bold px-6 py-3.5 transition hover:scale-[1.02]"
-                >
-                  Request Customized Quote
-                </button>
-              </div>
             </div>
 
           </div>

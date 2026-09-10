@@ -1940,61 +1940,10 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
         </div>
       </section>
 
-      {/* ========================================================
+{/* ========================================================
           15. (REMOVED — Global Presence / Global Network section deleted)
          ======================================================== */}
 
-      {/* ========================================================
-          17. FINAL CTA
-         ======================================================== */}
-      <section id="about-final-cta" className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-24 relative z-10 overflow-hidden">
-
-        <div className="rounded-3xl bg-neutral-950 text-white p-8 md:p-16 text-center space-y-8 relative overflow-hidden shadow-2xl">
-          <div className="absolute inset-0 bg-[radial-gradient(#FF5A00_1.5px,transparent_1.5px)] [background-size:24px_24px] opacity-10"></div>
-          
-          <div className="space-y-4 max-w-2xl mx-auto relative z-10">
-            <span className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full bg-white/10 text-white text-[9px] font-bold uppercase tracking-wider">
-              <Sparkles className="h-3 w-3 text-yellow-300" />
-              <span>{currentLang === 'en' ? "LET'S WORK TOGETHER" : 'আসুন প্রজেক্ট শুরু করি'}</span>
-            </span>
-
-            <h2 className="font-sans text-3xl sm:text-4xl md:text-6xl font-black leading-tight">
-              {currentLang === 'en' ? "Let's Build Your Next Big Success Story" : 'আসুন একসাথে আপনার পরবর্তী বড় সফলতাটি তৈরি করি'}
-            </h2>
-
-            <p className="text-xs sm:text-sm text-neutral-400 dark:text-neutral-500 max-w-md mx-auto leading-relaxed font-normal">
-              {currentLang === 'en' 
-                ? 'Whether you need a single custom web app or complete end-to-end digital transformation, Next Solution is ready to become your ultimate growth ally.' 
-                : 'আপনার একটি কাস্টম ওয়েব অ্যাপ্লিকেশন বা সম্পূর্ণ ডিজিটাল ট্রান্সফরমেশন যাই প্রয়োজন হোক না কেন, নেক্সট সলিউশন আপনাকে সাহায্য করতে প্রস্তুত।'}
-            </p>
-          </div>
-
-          <div className="flex flex-wrap justify-center gap-4 relative z-10 pt-4">
-            <button
-              id="about-final-btn-project"
-              onClick={() => navigateToTab('contact')}
-              className="rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs sm:text-sm font-bold px-8 py-4 transition shadow-md hover:scale-[1.02] cursor-pointer"
-            >
-              {currentLang === 'en' ? 'Start Your Project' : 'প্রজেক্ট শুরু করুন'}
-            </button>
-            <button
-              id="about-final-btn-consultation"
-              onClick={() => navigateToTab('contact')}
-              className="rounded-xl bg-white dark:bg-[#141414] hover:bg-neutral-100 dark:bg-neutral-800 text-neutral-950 text-xs sm:text-sm font-bold px-8 py-4 transition shadow-md hover:scale-[1.02] cursor-pointer"
-            >
-              {currentLang === 'en' ? 'Book a Free Consultation' : 'ফ্রি পরামর্শ নিন'}
-            </button>
-            <button
-              id="about-final-btn-quote"
-              onClick={() => navigateToTab('contact')}
-              className="rounded-xl bg-neutral-800 hover:bg-neutral-700 border border-neutral-700 text-white text-xs sm:text-sm font-bold px-8 py-4 transition shadow-md hover:scale-[1.02] cursor-pointer"
-            >
-              {currentLang === 'en' ? 'Request Custom Quote' : 'বাজেট হিসাব করুন'}
-            </button>
-          </div>
-        </div>
-      </section>
-
-    </section>
+</section>
   );
 }

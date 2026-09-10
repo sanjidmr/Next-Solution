@@ -1117,44 +1117,6 @@ className="group cursor-pointer"
         </div>
       </section>
 
-      {/* ========================================================
-          SECTION 15: FINAL CTA (HIGH-IMPACT NEGATIVE-SPACE BANNER)
-         ======================================================== */}
-      <section id="final-cta" className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pb-12">
-        <div className="rounded-3xl border border-gray-100 dark:border-neutral-800 bg-[#FAFAFA] dark:bg-[#1a1a1a] p-8 md:p-16 text-center space-y-8 shadow-sm relative overflow-hidden">
-          {/* Subtle grid pattern background */}
-          <div className="absolute inset-0 opacity-5 dark:opacity-[0.03] bg-[linear-gradient(to_right,#808080_1px,transparent_1px),linear-gradient(to_bottom,#808080_1px,transparent_1px)] [background-size:24px_24px]"></div>
-          
-          <div className="space-y-4 relative z-10 max-w-2xl mx-auto">
-            <h2 className="font-sans text-3xl md:text-4xl font-black text-gray-900 dark:text-white leading-tight">
-              {currentLang === 'en' ? 'Ready to transform your ideas into market success?' : 'আপনার আইডিয়াকে সাফল্যের শিখরে নিয়ে যেতে প্রস্তুত?'}
-            </h2>
-            <p className="text-xs md:text-sm text-gray-500 dark:text-neutral-400 dark:text-neutral-500 max-w-md mx-auto leading-relaxed">
-              {currentLang === 'en' 
-                ? 'Start blueprint drafting with our senior solutions architects. 100% free consultation.' 
-                : 'আমাদের সিনিয়র সলিউশন আর্কিটেক্টদের সাথে আপনার খসড়া রোডম্যাপ শুরু করুন। শতভাগ ফ্রি পরামর্শ।'}
-            </p>
-          </div>
-
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 relative z-10 pt-2">
-            <button
-              id="final-cta-start-project"
-              onClick={() => { setTab('contact'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-              className="w-full sm:w-auto rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold px-6 py-4 transition hover:scale-[1.01] shadow-md shadow-blue-600/15 cursor-pointer"
-            >
-              {currentLang === 'en' ? 'Start Your Project' : 'প্রজেক্ট আলোচনা শুরু করুন'}
-            </button>
-            <button
-              id="final-cta-book-consultation"
-              onClick={() => { setTab('contact'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-              className="w-full sm:w-auto rounded-xl bg-white dark:bg-[#141414] hover:bg-gray-50 dark:bg-neutral-900 text-gray-700 dark:text-neutral-200 hover:text-blue-600 dark:text-orange-400 text-xs font-bold px-6 py-4 border border-gray-200 dark:border-neutral-700 transition hover:scale-[1.01] cursor-pointer"
-            >
-              {currentLang === 'en' ? 'Book a Free Consultation' : 'ফ্রি কনসালটেশন বুক করুন'}
-            </button>
-          </div>
-        </div>
-      </section>
-
-    </div>
+      </div>
   );
 }

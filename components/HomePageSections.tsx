@@ -1117,6 +1117,159 @@ className="group cursor-pointer"
         </div>
       </section>
 
+      {/* ========================================================
+          SECTION 9: BEHIND NEXT SOLUTION (MEET THE MASTERMIND)
+         ======================================================== */}
+      <section id="behind-next-solution" className="relative bg-white dark:bg-[#0A0A0A] py-16 sm:py-24 overflow-hidden">
+        {/* Subtle premium backdrops */}
+        <div className="absolute top-0 right-0 w-[420px] h-[420px] bg-orange-100/40 dark:bg-orange-500/[0.06] rounded-full blur-[130px] pointer-events-none" />
+        <div className="absolute bottom-0 left-0 w-[360px] h-[360px] bg-blue-100/40 dark:bg-blue-500/[0.05] rounded-full blur-[120px] pointer-events-none" />
+        <div className="absolute inset-0 bg-[radial-gradient(#FF4A00_0.8px,transparent_0.8px)] [background-size:32px_32px] opacity-[0.03] dark:opacity-[0.02] pointer-events-none" />
+
+        <div className="relative z-10 mx-auto max-w-[1400px] px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 items-center gap-12 lg:gap-20">
+            {/* ── Text Column ── */}
+            <div className="order-2 lg:order-1 text-center lg:text-left space-y-6">
+              <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-orange-50 dark:bg-orange-500/10 border border-orange-200/60 dark:border-orange-500/20">
+                <Sparkles className="h-3.5 w-3.5 text-orange-500" />
+                <span className="text-[10px] font-black uppercase tracking-[0.2em] text-orange-600 dark:text-orange-400">
+                  {currentLang === 'en' ? 'Behind Next Solution' : 'নেক্সট সলিউশনের পেছনে'}
+                </span>
+              </div>
+
+              <h2 className="font-sans text-3xl sm:text-4xl lg:text-5xl font-black text-gray-900 dark:text-white leading-[1.1] tracking-tight">
+                {currentLang === 'en' ? (
+                  <>Meet the <span className="text-orange-500">Mastermind</span><br />Behind the Growth.</>
+                ) : (
+                  <>গ্রোথের পেছনের<br /><span className="text-orange-500">মাস্টারমাইন্ডের</span> সাথে পরিচিত হোন</>
+                )}
+              </h2>
+
+              <div className="flex flex-col items-center lg:items-start gap-1.5">
+                <span className="font-sans text-2xl sm:text-3xl font-black text-gray-900 dark:text-white tracking-tight">
+                  {currentLang === 'en' ? 'Mushfiqur Rahman Sanjid' : 'মুশফিকুর রহমান সানজিদ'}
+                </span>
+                <span className="inline-flex items-center gap-2 text-sm font-bold tracking-wide text-orange-600 dark:text-orange-400">
+                  <span className="h-1.5 w-1.5 rounded-full bg-orange-500" />
+                  {currentLang === 'en' ? 'Founder & CEO' : 'প্রতিষ্ঠাতা ও সিইও'}
+                </span>
+              </div>
+
+              <p className="text-sm sm:text-base text-gray-500 dark:text-gray-400 leading-relaxed max-w-xl mx-auto lg:mx-0">
+                {currentLang === 'en'
+                  ? 'Founder of Next Solution and a dedicated web development expert. He architects high-performance websites and scalable web applications using React, Next.js and TypeScript — ensuring every build delivers blazing-fast speed, pixel-perfect responsiveness and revenue-focused engineering.'
+                  : 'নেক্সট সলিউশনের প্রতিষ্ঠাতা এবং নিবেদিতপ্রাণ ওয়েব ডেভেলপমেন্ট এক্সপার্ট। তিনি HTML, React ও Next.js ব্যবহার করে উচ্চ-ক্ষমতাসম্পন্ন ওয়েবসাইট এবং স্কেলেবল ওয়েব অ্যাপ্লিকেশন ডিজাইন করেন — প্রতিটি প্রজেক্টে ব্লেজিং-ফাস্ট স্পিড, পিক্সেল-পারফেক্ট রেসপনসিভ ডিজাইন এবং রাজস্ব-কেন্দ্রিক ইঞ্জিনিয়ারিং নিশ্চিত করেন।'}
+              </p>
+
+              {/* Highlight chips */}
+              <div className="flex flex-wrap justify-center lg:justify-start gap-3 pt-2">
+                <div className="flex items-center gap-2.5 rounded-2xl border border-gray-100 dark:border-white/10 bg-gray-50/80 dark:bg-white/[0.04] px-4 py-3">
+                  <div className="h-9 w-9 rounded-xl bg-orange-50 dark:bg-orange-500/10 text-orange-500 flex items-center justify-center">
+                    <Award className="h-4 w-4" />
+                  </div>
+                  <div className="text-left">
+                    <p className="text-sm font-extrabold text-gray-900 dark:text-white">{currentLang === 'en' ? '4+ Years' : '৪+ বছর'}</p>
+                    <p className="text-[10px] font-semibold uppercase tracking-widest text-gray-400 dark:text-gray-500">{currentLang === 'en' ? 'Web Development' : 'ওয়েব ডেভেলপমেন্ট অভিজ্ঞতা'}</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2.5 rounded-2xl border border-gray-100 dark:border-white/10 bg-gray-50/80 dark:bg-white/[0.04] px-4 py-3">
+                  <div className="h-9 w-9 rounded-xl bg-orange-50 dark:bg-orange-500/10 text-orange-500 flex items-center justify-center">
+                    <Target className="h-4 w-4" />
+                  </div>
+                  <div className="text-left">
+                    <p className="text-sm font-extrabold text-gray-900 dark:text-white">{currentLang === 'en' ? 'Build Digital Impact' : 'ডিজিটাল ইমপ্যাক্ট'}</p>
+                    <p className="text-[10px] font-semibold uppercase tracking-widest text-gray-400 dark:text-gray-500">{currentLang === 'en' ? 'Business Mission' : 'ব্যবসায়িক মিশন'}</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Quote + CTA */}
+              <div className="pt-3">
+                <blockquote className="relative pl-5 border-l-2 border-orange-500 text-left">
+                  <p className="text-sm italic text-gray-600 dark:text-gray-300 leading-relaxed">
+                    {currentLang === 'en'
+                      ? 'Our mission is to build digital solutions that create lasting business impact.'
+                      : 'এমন ডিজিটাল সলিউশন তৈরি করা যা স্থায়ী ব্যবসায়িক প্রভাব ফেলে।'}
+                  </p>
+                </blockquote>
+              </div>
+
+              <div className="flex flex-wrap justify-center lg:justify-start gap-3 pt-2">
+                <button
+                  onClick={() => setTab?.('about')}
+                  className="group inline-flex items-center gap-2 rounded-xl bg-orange-600 hover:bg-orange-700 text-white px-6 py-3.5 text-sm font-bold shadow-[0_14px_30px_-10px_rgba(255,77,0,0.6)] transition-all duration-300 hover:-translate-y-0.5 cursor-pointer"
+                >
+                  {currentLang === 'en' ? 'Meet the Team' : 'টিমের সাথে পরিচিত হোন'}
+                  <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+                </button>
+                <button
+                  onClick={() => setTab?.('contact')}
+                  className="group inline-flex items-center gap-2 rounded-xl border-2 border-orange-200 dark:border-orange-500/30 bg-white dark:bg-neutral-900 text-orange-600 dark:text-orange-400 px-6 py-3.5 text-sm font-bold transition-all duration-300 hover:-translate-y-0.5 hover:border-orange-500 hover:bg-orange-50 dark:hover:bg-orange-500/10 cursor-pointer"
+                >
+                  {currentLang === 'en' ? 'Work With Us' : 'আমাদের সাথে কাজ করুন'}
+                  <ArrowUpRight className="h-4 w-4" />
+                </button>
+              </div>
+            </div>
+
+            {/* ── Portrait Column ── */}
+            <div className="order-1 lg:order-2 relative mx-auto w-full max-w-md lg:max-w-none">
+              {/* Decorative offset ring */}
+              <div className="absolute -top-6 -left-6 lg:-top-8 lg:-left-8 h-40 w-40 rounded-full border-2 border-dashed border-orange-200 dark:border-orange-500/30 pointer-events-none" />
+              <div className="absolute -bottom-6 -right-6 lg:-bottom-8 lg:-right-8 h-52 w-52 rounded-full bg-gradient-to-br from-orange-200/60 dark:from-orange-500/20 to-transparent blur-2xl pointer-events-none" />
+
+              <RevealGuard
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+                fallbackMs={900}
+                className="relative"
+              >
+                <div className="relative rounded-[28px] overflow-hidden border border-gray-100 dark:border-white/10 shadow-2xl shadow-orange-900/10">
+                  <img
+                    src="/about.png"
+                    alt={currentLang === 'en' ? 'Mushfiqur Rahman Sanjid — Founder & CEO' : 'মুশফিকুর রহমান সানজিদ — প্রতিষ্ঠাতা ও সিইও'}
+                    className="w-full h-full object-cover aspect-[4/5] sm:aspect-[16/13] lg:aspect-[4/5]"
+                  />
+                  {/* Premium gradient scrim */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                  {/* Bottom floating name tag */}
+                  <div className="absolute bottom-0 left-0 right-0 p-5 sm:p-6">
+                    <div className="inline-flex items-center gap-2 rounded-full bg-white/15 backdrop-blur-md border border-white/20 px-4 py-1.5">
+                      <span className="h-1.5 w-1.5 rounded-full bg-orange-400 animate-pulse" />
+                      <span className="text-[10px] font-bold text-white uppercase tracking-widest">
+                        {currentLang === 'en' ? 'Founder & CEO — Next Solution' : 'প্রতিষ্ঠাতা ও সিইও — নেক্সট সলিউশন'}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Floating badge — experience */}
+                <div className="absolute -top-5 -right-3 sm:-right-6 rounded-2xl bg-white dark:bg-neutral-900 border border-gray-100 dark:border-white/10 shadow-xl px-4 py-3 flex items-center gap-3">
+                  <div className="h-10 w-10 rounded-xl bg-orange-600 text-white flex items-center justify-center shadow-md shadow-orange-600/30">
+                    <Clock className="h-5 w-5" />
+                  </div>
+                  <div className="text-left">
+                    <p className="text-lg font-black text-gray-900 dark:text-white leading-none">4+</p>
+                    <p className="text-[9px] font-bold uppercase tracking-widest text-gray-400 dark:text-gray-500 pt-1">{currentLang === 'en' ? 'Years Exp' : 'বছরের অভিজ্ঞতা'}</p>
+                  </div>
+                </div>
+
+                {/* Floating badge — quote */}
+                <div className="absolute -bottom-5 -left-3 sm:-left-6 max-w-[240px] rounded-2xl bg-white dark:bg-neutral-900 border border-gray-100 dark:border-white/10 shadow-xl px-4 py-3.5">
+                  <div className="flex items-start gap-2.5">
+                    <Quote className="h-4 w-4 text-orange-500 shrink-0 mt-0.5" />
+                    <p className="text-[11px] font-semibold text-gray-600 dark:text-gray-300 leading-snug">
+                      {currentLang === 'en' ? 'Build fast. Build premium. Build impact that lasts.' : 'দ্রুত তৈরি করুন। প্রিমিয়াম তৈরি করুন। স্থায়ী ইমপ্যাক্ট তৈরি করুন।'}
+                    </p>
+                  </div>
+                </div>
+              </RevealGuard>
+            </div>
+          </div>
+        </div>
+      </section>
+
       </div>
   );
 }

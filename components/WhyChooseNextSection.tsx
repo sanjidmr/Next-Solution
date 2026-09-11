@@ -86,17 +86,8 @@ export default function WhyChooseNextSection({ currentLang }: WhyChooseNextSecti
   const isEn = currentLang === 'en';
 
   return (
-    <section id="why-next-solution" className="relative overflow-hidden py-24 sm:py-28">
-      {/* ambient orbs */}
-      <div aria-hidden className="pointer-events-none absolute inset-0">
-        <div className="absolute -top-40 left-1/4 h-[480px] w-[480px] rounded-full bg-orange-500/[0.04] blur-[130px]" />
-        <div className="absolute bottom-0 right-0 h-[420px] w-[420px] rounded-full bg-orange-600/[0.03] blur-[120px]" />
-      </div>
-
-      {/* grid texture */}
-      <div aria-hidden className="pointer-events-none absolute inset-0 [background-image:linear-gradient(to_right,rgba(10,10,10,0.05)_1px,transparent_1px),linear-gradient(to_bottom,rgba(10,10,10,0.05)_1px,transparent_1px)] dark:[background-image:linear-gradient(to_right,rgba(255,255,255,0.05)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.05)_1px,transparent_1px)] [background-size:44px_44px]" />
-
-      <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <section id="why-next-solution" className="py-24 sm:py-28">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* heading */}
         <div className="mx-auto max-w-3xl text-center">
           <span className="inline-flex items-center gap-2 rounded-full border border-orange-500/20 bg-orange-500/10 px-4 py-1.5 text-[11px] font-semibold uppercase tracking-[0.2em] text-orange-500 dark:text-orange-400">

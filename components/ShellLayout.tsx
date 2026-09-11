@@ -4,6 +4,7 @@ import React, { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
+import WhyChooseNextSection from '@/components/WhyChooseNextSection';
 import CookieConsent from '@/components/CookieConsent';
 import FloatingContact from '@/components/FloatingContact';
 import ErrorBoundary from '@/components/ErrorBoundary';
@@ -59,6 +60,7 @@ export default function ShellLayout({ children }: ShellLayoutProps) {
           {children}
         </ErrorBoundary>
       </main>
+      <WhyChooseNextSection currentLang={currentLang} />
       <Footer
         currentLang={currentLang}
         setTab={setTab}

@@ -7,7 +7,7 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Menu, X, Moon, Sun } from 'lucide-react';
+import { Menu, X, Moon, Sun, Facebook, Instagram } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { translations } from '@/data/translations';
 import { getPathForTab, navTabPaths } from '@/config/navigation';
@@ -177,6 +177,30 @@ export default function Navbar({
               </motion.div>
             </button>
 
+            {/* Social Links */}
+            <div className="flex items-center space-x-2">
+              <a
+                id="nav-social-facebook"
+                href="https://www.facebook.com/nextsolutionmym"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Facebook"
+                className={`${utilBtnBase} ${utilBtn}`}
+              >
+                <Facebook className="h-4 w-4" />
+              </a>
+              <a
+                id="nav-social-instagram"
+                href="https://www.instagram.com/nextsolutionmym/"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Instagram"
+                className={`${utilBtnBase} ${utilBtn}`}
+              >
+                <Instagram className="h-4 w-4" />
+              </a>
+            </div>
+
             {/* CTA Button */}
             <Link
               id="navbar-cta-btn"
@@ -190,6 +214,28 @@ export default function Navbar({
 
           {/* Mobile menu button */}
           <div id="nav-mobile-controls" className="flex flex-1 items-center justify-end space-x-2 lg:hidden">
+            {/* Social Links for mobile */}
+            <a
+              id="mobile-social-facebook"
+              href="https://www.facebook.com/nextsolutionmym"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Facebook"
+              className={`${utilBtnBase} ${utilBtn} ${heroIsDark ? 'active:bg-white/20' : 'active:bg-neutral-100'}`}
+            >
+              <Facebook className="h-4 w-4" />
+            </a>
+            <a
+              id="mobile-social-instagram"
+              href="https://www.instagram.com/nextsolutionmym/"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Instagram"
+              className={`${utilBtnBase} ${utilBtn} ${heroIsDark ? 'active:bg-white/20' : 'active:bg-neutral-100'}`}
+            >
+              <Instagram className="h-4 w-4" />
+            </a>
+
             {/* Dark Mode Toggle for mobile */}
             <button
               id="mobile-theme-toggle"

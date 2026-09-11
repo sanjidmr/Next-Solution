@@ -119,10 +119,7 @@ export default function Navbar({
     <header id="app-navbar" className={headerClass}>
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="relative flex h-16 items-center justify-between">
-          {/* Left balance spacer — forces centered logo on mobile only */}
-          <div className="flex-1 lg:hidden" aria-hidden="true" />
-
-          {/* Logo */}
+          {/* Logo — aligned to the left edge on mobile, centered balance handled by nav on desktop */}
           <Link
             id="nav-logo"
             href={getPathForTab('home')}

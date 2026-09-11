@@ -6,7 +6,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { 
-  MessageSquare, Phone, MessageCircle, X, ExternalLink, Headset, Sparkles 
+  MessageSquare, Phone, MessageCircle, X, ExternalLink, Headset 
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
@@ -160,22 +160,6 @@ export default function FloatingContact({ currentLang }: FloatingContactProps) {
           )}
         </AnimatePresence>
       </button>
-
-      {/* Mini notification pill showing when not open */}
-      <AnimatePresence>
-        {!isOpen && (
-          <motion.div
-            initial={{ opacity: 0, y: 10, scale: 0.8 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 10, scale: 0.8 }}
-            transition={{ delay: 1, duration: 0.3 }}
-            className="absolute bottom-16 right-0 bg-slate-900 text-white rounded-xl py-1 px-3 border border-slate-800 text-[10px] font-extrabold tracking-wider uppercase flex items-center space-x-1.5 shadow-xl select-none pointer-events-none whitespace-nowrap"
-          >
-            <Sparkles className="h-3 w-3 text-amber-400 animate-pulse" />
-            <span>{currentLang === 'en' ? 'Get Solution' : 'যোগাযোগ করুন'}</span>
-          </motion.div>
-        )}
-      </AnimatePresence>
     </div>
   );
 }

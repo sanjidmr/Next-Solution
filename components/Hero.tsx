@@ -278,7 +278,7 @@ export default function Hero({ currentLang, setTab }: HeroProps) {
               initial={{ opacity: 0, y: -26 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.65, delay: 0.5, ease: [0.22, 1, 0.36, 1] }}
-              className="mt-5 flex flex-wrap items-center justify-center gap-5 lg:mt-8 lg:justify-start"
+              className="mt-5 flex flex-wrap items-center justify-center gap-3 sm:gap-5 lg:mt-8 lg:justify-start"
             >
               <button
                 id="hero-primary-cta"
@@ -291,9 +291,9 @@ export default function Hero({ currentLang, setTab }: HeroProps) {
                   gap-3
                   rounded-xl
                   bg-orange-600
-                  px-8
-                  py-5
-                  text-base
+                  px-5
+                  py-3
+                  text-sm
                   font-bold
                   text-white
                   shadow-[0_16px_35px_-12px_rgba(255,77,0,0.65)]
@@ -303,13 +303,16 @@ export default function Hero({ currentLang, setTab }: HeroProps) {
                   hover:bg-orange-500
                   hover:shadow-[0_20px_45px_-10px_rgba(255,77,0,0.75)]
                   active:translate-y-0
+                  sm:px-8
+                  sm:py-5
+                  sm:text-base
                 "
               >
                 <span>
                   {isEn ? "Start Your Project" : "প্রজেক্ট শুরু করুন"}
                 </span>
 
-                <ArrowRight className="h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
+                <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1 sm:h-5 sm:w-5" />
               </button>
 
               <div className="flex items-center gap-3">
@@ -326,9 +329,9 @@ export default function Hero({ currentLang, setTab }: HeroProps) {
                     border-2
                     border-orange-200
                     bg-white
-                    px-8
-                    py-5
-                    text-base
+                    px-5
+                    py-3
+                    text-sm
                     font-bold
                     text-orange-600
                     shadow-sm
@@ -345,12 +348,15 @@ export default function Hero({ currentLang, setTab }: HeroProps) {
                     dark:hover:border-orange-400
                     dark:hover:bg-orange-500/10
                     active:translate-y-0
+                    sm:px-8
+                    sm:py-5
+                    sm:text-base
                   "
                 >
                   <span>
                     {isEn ? "Our Portfolio" : "আমাদের পোর্টফোলিও"}
                   </span>
-                  <ArrowRight className="h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
+                  <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1 sm:h-5 sm:w-5" />
                 </button>
               </div>
             </motion.div>

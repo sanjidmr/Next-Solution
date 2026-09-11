@@ -7,7 +7,6 @@
 import React from "react";
 import {
   ArrowRight,
-  Play,
   Award,
   Heart,
   Clock,
@@ -315,22 +314,22 @@ export default function Hero({ currentLang, setTab }: HeroProps) {
 
               <div className="flex items-center gap-3">
                 <button
+                  id="hero-secondary-cta"
                   onClick={() => setTab("portfolio")}
-                  aria-label={
-                    isEn
-                      ? "Watch Our Showreel"
-                      : "আমাদের শোরিল দেখুন"
-                  }
                   className="
-                    flex
-                    h-14
-                    w-14
+                    group
+                    inline-flex
                     items-center
                     justify-center
-                    rounded-full
-                    border
+                    gap-3
+                    rounded-xl
+                    border-2
                     border-orange-200
                     bg-white
+                    px-8
+                    py-5
+                    text-base
+                    font-bold
                     text-orange-600
                     shadow-sm
                     transition-all
@@ -339,27 +338,20 @@ export default function Hero({ currentLang, setTab }: HeroProps) {
                     hover:border-orange-500
                     hover:bg-orange-50
                     hover:shadow-lg
+                    hover:shadow-orange-500/10
                     dark:border-orange-500/30
                     dark:bg-neutral-900
                     dark:text-orange-400
                     dark:hover:border-orange-400
                     dark:hover:bg-orange-500/10
+                    active:translate-y-0
                   "
                 >
-                  <Play className="h-5 w-5 translate-x-px fill-orange-600 dark:fill-orange-400" />
+                  <span>
+                    {isEn ? "Our Portfolio" : "আমাদের পোর্টফোলিও"}
+                  </span>
+                  <ArrowRight className="h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
                 </button>
-
-                <div className="text-left">
-                  <p className="text-base font-bold text-[#090909] dark:text-white">
-                    {isEn
-                      ? "Watch Our Showreel"
-                      : "আমাদের শোরিল দেখুন"}
-                  </p>
-
-                  <p className="text-xs font-medium text-gray-500 dark:text-neutral-500">
-                    {isEn ? "2 min video" : "২ মিনিটের ভিডিও"}
-                  </p>
-                </div>
               </div>
             </motion.div>
           </motion.div>

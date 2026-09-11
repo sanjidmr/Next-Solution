@@ -294,9 +294,6 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
 
   // Selected Story milestone
   const [selectedMilestone, setSelectedMilestone] = useState(0);
-  
-  // Selected Ecosystem Category
-  const [selectedEcosystemCategory, setSelectedEcosystemCategory] = useState<'all' | 'dev' | 'design' | 'ai' | 'marketing'>('all');
 
 
   // Active Process Step state
@@ -451,128 +448,7 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
     }
   ], []);
 
-  // Services Bento Grid Data
-  const servicesList = useMemo(() => [
-    {
-      id: 'web-dev',
-      slug: 'web-development',
-      category: 'dev',
-      icon: Code2,
-      nameEn: 'Web Development',
-      nameBn: 'ওয়েব ডেভেলপমেন্ট',
-      descEn: 'Ultra-fast static and dynamic marketing sites built with optimized layouts and flawless SEO scores.',
-      descBn: 'উচ্চগতির স্ট্যাটিক ও ডাইনামিক ওয়েবসাইট যা দারুণভাবে সার্চ ইঞ্জিনে র‍্যাঙ্ক করতে সাহায্য করে।',
-      techs: ['Next.js', 'React', 'Tailwind', 'Cloudflare'],
-      benefitEn: '99+ Lighthouse speed score',
-      benefitBn: '৯৯+ লাইটহাউস স্পিড স্কোর'
-    },
-    {
-      id: 'ui-ux',
-      slug: 'ui-ux-design',
-      category: 'design',
-      icon: Layers,
-      nameEn: 'UI/UX Design',
-      nameBn: 'ইউআই/ইউএক্স ডিজাইন',
-      descEn: 'Immersive layouts, strict design systems, and responsive wireframes that perfectly blend brand story with usability.',
-      descBn: 'আকর্ষণীয় লেআউট, সুসংগঠিত ডিজাইন সিস্টেম এবং ব্যবহারকারী-বান্ধব ইন্টারফেস ডিজাইন।',
-      techs: ['Figma', 'Framer', 'Prototyping', 'Adobe CC'],
-      benefitEn: '100% bespoke design files',
-      benefitBn: 'শতভাগ ইউনিক ডিজাইন ফাইল'
-    },
-    {
-      id: 'seo',
-      slug: 'seo',
-      category: 'marketing',
-      icon: Search,
-      nameEn: 'SEO Optimization',
-      nameBn: 'এসইও অপ্টিমাইজেশন',
-      descEn: 'Semantic content structures, schema markup deployment, and technical audits that secure persistent search rankings.',
-      descBn: 'সার্চ ইঞ্জিনে র‍্যাঙ্ক পাওয়ার জন্য নিখুঁত কনটেন্ট স্ট্রাকচার এবং টেকনিক্যাল অডিট।',
-      techs: ['Semrush', 'Ahrefs', 'Schema.org', 'Console'],
-      benefitEn: 'Double-digit organic CTR lift',
-      benefitBn: 'দ্বিগুণ অর্গানিক ক্লিক রেট বৃদ্ধি'
-    },
-    {
-      id: 'marketing',
-      slug: 'digital-marketing',
-      category: 'marketing',
-      icon: Rocket,
-      nameEn: 'Digital Marketing',
-      nameBn: 'ডিজিটাল মার্কেটিং',
-      descEn: 'High-conversion paid campaigns, social ad targeting, and retargeting systems designed for maximum lead ROI.',
-      descBn: 'সর্বোচ্চ লাভ বা রিটার্ন অন ইনভেস্টমেন্ট নিশ্চিত করার জন্য হাই-কনভার্সন বিজ্ঞাপন প্রচার।',
-      techs: ['Meta Pixel', 'Google Ads', 'GA4', 'Tag Manager'],
-      benefitEn: '3.5x average ad spend return',
-      benefitBn: '৩.৫ গুণ বেশি বিজ্ঞাপন আরওআই'
-    },
-    {
-      id: 'graphic-design',
-      slug: 'graphic-design',
-      category: 'design',
-      icon: Palette,
-      nameEn: 'Graphic Design',
-      nameBn: 'গ্রাফিক ডিজাইন',
-      descEn: 'Visual assets, marketing banners, and vector packaging materials that cleanly communicate premium product value.',
-      descBn: 'আকর্ষণীয় ভিজ্যুয়াল অ্যাসেটস এবং ডিজিটাল ব্যানার যা আপনার পণ্যের মান তুলে ধরে।',
-      techs: ['Illustrator', 'Photoshop', 'InDesign', 'Vector'],
-      benefitEn: 'Pixel-perfect print files',
-      benefitBn: 'মুদ্রণযোগ্য পিক্সেল-পারফেক্ট ফাইল'
-    },
-    {
-      id: 'ai-automation',
-      slug: 'ai-automation',
-      category: 'ai',
-      icon: Cpu,
-      nameEn: 'AI Services',
-      nameBn: 'এআই সার্ভিস',
-      descEn: 'Automate repetitive back-office operations, sync data vectors, and streamline workflows with intelligent triggers.',
-      descBn: 'ব্যবসায়িক পুনরাবৃত্তিমূলক কাজ দূরীকরণ এবং স্বয়ংক্রিয় এআই সিস্টেম সংস্থাপন।',
-      techs: ['n8n', 'Make.com', 'Zapier', 'APIs'],
-      benefitEn: '70% manual labor hours saved',
-      benefitBn: '৭০% পর্যন্ত সময় ও শ্রম সাশ্রয়'
-    },
-    {
-      id: 'ai-agents',
-      slug: 'ai-automation',
-      category: 'ai',
-      icon: BrainCircuit,
-      nameEn: 'AI Agents',
-      nameBn: 'এআই এজেন্টস',
-      descEn: 'Develop proprietary autonomous cognitive agents capable of advanced reasoning, live translation, and complex task planning.',
-      descBn: 'উন্নত সিদ্ধান্ত গ্রহণ ও জটিল কাজ সম্পন্ন করতে সক্ষম স্বয়ংক্রিয় কগনিটিভ এজেন্ট।',
-      techs: ['Gemini SDK', 'OpenAI API', 'LangChain', 'VectorDB'],
-      benefitEn: '24/7 intelligent execution',
-      benefitBn: '২৪/৭ নির্ভুল স্বয়ংক্রিয় কার্যক্রম'
-    },
-    {
-      id: 'video-editing',
-      slug: 'video-editing',
-      category: 'design',
-      icon: Play,
-      nameEn: 'Video Editing',
-      nameBn: 'ভিডিও এডিটিং',
-      descEn: 'Premium high-retention commercial promos, kinetic titles, sound design, and color grading for digital channels.',
-      descBn: 'ডিজিটাল প্ল্যাটফর্মের জন্য প্রিমিয়াম প্রমোশনাল বিজ্ঞাপন, কালার গ্রেডিং ও সাউন্ড ডিজাইন।',
-      techs: ['Premiere Pro', 'After Effects', 'DaVinci Resolve'],
-      benefitEn: '40%+ social retention bump',
-      benefitBn: '৪০%+ সামাজিক যোগাযোগ মাধ্যমে রিটেনশন বৃদ্ধি'
-    },
-    {
-      id: 'branding',
-      slug: 'graphic-design',
-      category: 'design',
-      icon: Sparkles,
-      nameEn: 'Branding & Identity',
-      nameBn: 'ব্র্যান্ডিং ও আইডেন্টিটি',
-      descEn: 'Craft unforgettable brand strategies, unique logo marks, color guidebooks, and guidelines that establish market leadership.',
-      descBn: 'অনন্য ব্র্যান্ড কৌশল, লোগো মার্ক এবং কালার গাইডলাইন যা আপনার ব্র্যান্ডকে বাজারে শীর্ষস্থানে প্রতিষ্ঠিত করবে।',
-      techs: ['Figma', 'Illustrator', 'Brand Strategy'],
-      benefitEn: 'Indestructible market recall',
-      benefitBn: 'দীর্ঘস্থায়ী ব্র্যান্ড ভ্যালু ও বিশ্বাসযোগ্যতা'
-    }
-  ], []);
-
-  // Tech Stack categories
+// Tech Stack categories
   const techCategories = useMemo(() => [
     {
       titleEn: 'Frontend Frameworks & Libraries',
@@ -739,12 +615,6 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
       resultsBn: 'পেমেন্ট আটকে যাওয়া বা ডুপ্লিকেট হওয়া সম্পূর্ণ বন্ধ হয়ে যায়। প্রসেসিং লেটেন্সি ৬৪% কমে যায় যা ব্যবসায়িক লস পুরোপুরি দূর করে।'
     }
   ], []);
-
-  // Filtered Services based on selected category in Bento Grid
-  const filteredServices = useMemo(() => {
-    if (selectedEcosystemCategory === 'all') return servicesList;
-    return servicesList.filter(s => s.category === selectedEcosystemCategory);
-  }, [servicesList, selectedEcosystemCategory]);
 
   // Industries We Serve Data
   const industriesList = useMemo(() => [
@@ -1515,100 +1385,6 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
           06. COMPANY STATISTICS
          ======================================================== */}
 
-
-      {/* ========================================================
-          07. SERVICES ECOSYSTEM (Bento Grid)
-         ======================================================== */}
-      <section id="services-ecosystem" className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-24 relative z-10 overflow-hidden">
-
-        <div className="text-center space-y-4 max-w-2xl mx-auto mb-12">
-          <span className="text-xs font-bold uppercase tracking-widest text-blue-600 dark:text-blue-400">
-            {currentLang === 'en' ? 'OUR CAPABILITIES' : 'আমাদের সার্ভিস সমূহ'}
-          </span>
-          <h2 className="font-sans text-3xl font-black text-neutral-900 dark:text-white leading-tight">
-            {currentLang === 'en' ? 'Comprehensive Digital Services Portfolio' : 'সম্পূর্ণ ওয়ান-স্টপ ডিজিটাল সার্ভিস পোর্টফোলিও'}
-          </h2>
-
-          {/* Filters */}
-          <div className="flex flex-wrap justify-center gap-1.5 pt-4">
-            {[
-              { id: 'all', labelEn: 'All Services', labelBn: 'সকল সার্ভিস' },
-              { id: 'dev', labelEn: 'Development', labelBn: 'ডেভেলপমেন্ট' },
-              { id: 'design', labelEn: 'Design & Branding', labelBn: 'ডিজাইন ও ব্র্যান্ডিং' },
-              { id: 'ai', labelEn: 'AI Services', labelBn: 'এআই সার্ভিস' },
-              { id: 'marketing', labelEn: 'Marketing & SEO', labelBn: 'মার্কেটিং ও এসইও' }
-            ].map((cat) => (
-              <button
-                key={cat.id}
-                onClick={() => setSelectedEcosystemCategory(cat.id as any)}
-                className={`text-[10px] font-extrabold uppercase tracking-wider px-4 py-2 rounded-lg border transition-all duration-200 cursor-pointer ${
-                  selectedEcosystemCategory === cat.id 
-                    ? 'bg-neutral-900 border-neutral-900 text-white shadow-sm' 
-                    : 'bg-white dark:bg-[#141414] border-neutral-100 dark:border-neutral-800 text-neutral-500 dark:text-neutral-400 dark:text-neutral-500 hover:text-neutral-900 dark:text-white hover:border-neutral-200 dark:border-neutral-700'
-                }`}
-              >
-                {currentLang === 'en' ? cat.labelEn : cat.labelBn}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <AnimatePresence mode="popLayout">
-            {filteredServices.map((service, index) => (
-              <motion.div
-                key={service.id}
-                layout
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.95 }}
-                transition={{ duration: 0.3 }}
-                onClick={() => {
-                  if (setTab && service.slug) {
-                    sessionStorage.setItem('selected_service_slug', service.slug);
-                    setTab('services');
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
-                  }
-                }}
-                className="group relative cursor-pointer rounded-2xl border border-neutral-100 dark:border-neutral-800 bg-white dark:bg-[#141414] p-6 space-y-5 hover:border-blue-500/20 hover:shadow-xl transition-all duration-300 flex flex-col justify-between hover:-translate-y-0.5"
-              >
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <div className="h-10 w-10 rounded-xl bg-blue-50 dark:bg-blue-500/10 text-blue-600 dark:text-blue-400 flex items-center justify-center">
-                      <service.icon className="h-5 w-5" />
-                    </div>
-                    <span className="text-[9px] font-bold uppercase tracking-wider bg-neutral-50 dark:bg-neutral-900 text-neutral-400 dark:text-neutral-500 px-2 py-0.5 rounded">
-                      {service.category}
-                    </span>
-                  </div>
-
-                  <h3 className="text-sm font-extrabold text-neutral-900 dark:text-white group-hover:text-blue-600 dark:text-blue-400 transition-colors">
-                    {currentLang === 'en' ? service.nameEn : service.nameBn}
-                  </h3>
-
-                  <p className="text-xs text-neutral-500 dark:text-neutral-400 dark:text-neutral-500 leading-relaxed font-normal">
-                    {currentLang === 'en' ? service.descEn : service.descBn}
-                  </p>
-                </div>
-
-                <div className="space-y-3 pt-4 border-t border-neutral-50 dark:border-neutral-800">
-                  <div className="flex flex-wrap gap-1">
-                    {service.techs.map((tech) => (
-                      <span key={tech} className="text-[9px] bg-neutral-50 dark:bg-neutral-900 border border-neutral-100 dark:border-neutral-800 text-neutral-500 dark:text-neutral-400 dark:text-neutral-500 px-2 py-0.5 rounded">
-                        {tech}
-                      </span>
-                    ))}
-                  </div>
-                  <div className="flex items-center justify-between text-[10px] font-bold text-blue-600 dark:text-blue-400">
-                    <span>{currentLang === 'en' ? service.benefitEn : service.benefitBn}</span>
-                    <ArrowRight className="h-3.5 w-3.5 group-hover:translate-x-1 transition-transform" />
-                  </div>
-                </div>
-              </motion.div>
-            ))}
-          </AnimatePresence>
-        </div>
-      </section>
 
       {/* ========================================================
           08. INDUSTRIES WE SERVE

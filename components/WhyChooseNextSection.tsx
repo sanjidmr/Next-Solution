@@ -86,25 +86,25 @@ export default function WhyChooseNextSection({ currentLang }: WhyChooseNextSecti
   const isEn = currentLang === 'en';
 
   return (
-    <section id="why-next-solution" className="relative overflow-hidden bg-[#050505] py-24 sm:py-28 border-t border-white/[0.06]">
+    <section id="why-next-solution" className="relative overflow-hidden py-24 sm:py-28">
       {/* ambient orbs */}
       <div aria-hidden className="pointer-events-none absolute inset-0">
-        <div className="absolute -top-40 left-1/4 h-[480px] w-[480px] rounded-full bg-orange-500/[0.05] blur-[130px]" />
-        <div className="absolute bottom-0 right-0 h-[420px] w-[420px] rounded-full bg-orange-600/[0.04] blur-[120px]" />
+        <div className="absolute -top-40 left-1/4 h-[480px] w-[480px] rounded-full bg-orange-500/[0.04] blur-[130px]" />
+        <div className="absolute bottom-0 right-0 h-[420px] w-[420px] rounded-full bg-orange-600/[0.03] blur-[120px]" />
       </div>
 
       {/* grid texture */}
-      <div aria-hidden className="pointer-events-none absolute inset-0 opacity-[0.04] [background-image:linear-gradient(to_right,#fff_1px,transparent_1px),linear-gradient(to_bottom,#fff_1px,transparent_1px)] [background-size:44px_44px]" />
+      <div aria-hidden className="pointer-events-none absolute inset-0 [background-image:linear-gradient(to_right,rgba(10,10,10,0.05)_1px,transparent_1px),linear-gradient(to_bottom,rgba(10,10,10,0.05)_1px,transparent_1px)] dark:[background-image:linear-gradient(to_right,rgba(255,255,255,0.05)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.05)_1px,transparent_1px)] [background-size:44px_44px]" />
 
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* heading */}
         <div className="mx-auto max-w-3xl text-center">
-          <span className="inline-flex items-center gap-2 rounded-full border border-orange-500/20 bg-orange-500/10 px-4 py-1.5 text-[11px] font-semibold uppercase tracking-[0.2em] text-orange-400">
+          <span className="inline-flex items-center gap-2 rounded-full border border-orange-500/20 bg-orange-500/10 px-4 py-1.5 text-[11px] font-semibold uppercase tracking-[0.2em] text-orange-500 dark:text-orange-400">
             <Sparkles className="h-3.5 w-3.5" />
             {isEn ? 'Why Next Solution' : 'কেন নেক্সট সলিউশন'}
           </span>
 
-          <h2 className="mt-6 font-display text-3xl font-bold leading-[1.15] tracking-tight text-white sm:text-4xl lg:text-5xl">
+          <h2 className="mt-6 font-display text-3xl font-bold leading-[1.15] tracking-tight text-gray-900 dark:text-white sm:text-4xl lg:text-5xl">
             {isEn ? (
               <>Why Clients Choose <span className="bg-gradient-to-r from-orange-400 via-orange-500 to-orange-600 bg-clip-text text-transparent">Next Solution</span></>
             ) : (
@@ -112,7 +112,7 @@ export default function WhyChooseNextSection({ currentLang }: WhyChooseNextSecti
             )}
           </h2>
 
-          <p className="mx-auto mt-5 max-w-xl text-sm leading-relaxed text-gray-500">
+          <p className="mx-auto mt-5 max-w-xl text-sm leading-relaxed text-gray-500 dark:text-neutral-400">
             {isEn
               ? 'Trusted by startups, agencies, and growing brands that need a partner — not a vendor. Here\'s what makes us different.'
               : 'স্টার্টআপ, এজেন্সি ও গড়ে ওঠা ব্র্যান্ডদের কাছে বিশ্বস্ত — যাদের দরকার পার্টনার, ভেন্ডর নয়। এটাই আমাদের পার্থক্য।'}
@@ -127,38 +127,35 @@ export default function WhyChooseNextSection({ currentLang }: WhyChooseNextSecti
             return (
               <div
                 key={i}
-                className="group relative overflow-hidden rounded-2xl border border-white/[0.06] bg-white/[0.02] p-6 backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:border-orange-500/30 hover:bg-white/[0.04]"
+                className="group relative overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm dark:border-white/[0.06] dark:bg-white/[0.02] dark:shadow-none p-6 backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:border-orange-300 dark:hover:border-orange-500/30 hover:shadow-md dark:hover:shadow-none"
               >
-                <span className="pointer-events-none absolute right-4 top-3 font-display text-5xl font-bold text-white/[0.04] transition-colors duration-300 group-hover:text-orange-500/20">
+                <span className="pointer-events-none absolute right-4 top-3 font-display text-5xl font-bold text-gray-900/[0.06] transition-colors duration-300 group-hover:text-orange-500/15 dark:text-white/[0.04] dark:group-hover:text-orange-500/20">
                   {String(i + 1).padStart(2, '0')}
                 </span>
 
-                <div className="flex h-11 w-11 items-center justify-center rounded-xl border border-orange-500/20 bg-orange-500/10 text-orange-400 transition-transform duration-300 group-hover:scale-105">
+                <div className="flex h-11 w-11 items-center justify-center rounded-xl border border-orange-500/20 bg-orange-500/10 text-orange-600 dark:text-orange-400 transition-transform duration-300 group-hover:scale-105">
                   <Icon className="h-5 w-5" />
                 </div>
 
-                <h3 className="mt-5 text-base font-bold text-white">{copy.title}</h3>
-                <p className="mt-2 text-[13px] leading-relaxed text-gray-500">{copy.desc}</p>
+                <h3 className="mt-5 text-base font-bold text-gray-900 dark:text-white">{copy.title}</h3>
+                <p className="mt-2 text-[13px] leading-relaxed text-gray-500 dark:text-neutral-400">{copy.desc}</p>
               </div>
             );
           })}
         </div>
 
         {/* trust strip */}
-        <div className="mt-14 grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-white/[0.06] bg-white/[0.06] lg:grid-cols-4">
+        <div className="mt-14 grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-gray-200 bg-gray-200 dark:border-white/[0.06] dark:bg-white/[0.06] lg:grid-cols-4">
           {STATS.map((stat) => (
-            <div key={stat.value} className="bg-[#0a0a09] px-6 py-7 text-center">
-              <p className="font-display text-3xl font-bold text-orange-400">{stat.value}</p>
-              <p className="mt-1.5 text-[10px] font-semibold uppercase tracking-[0.18em] text-gray-500">
+            <div key={stat.value} className="bg-gray-50 px-6 py-7 text-center dark:bg-[#0a0a09]">
+              <p className="font-display text-3xl font-bold text-orange-500 dark:text-orange-400">{stat.value}</p>
+              <p className="mt-1.5 text-[10px] font-semibold uppercase tracking-[0.18em] text-gray-500 dark:text-neutral-500">
                 {isEn ? stat.en : stat.bn}
               </p>
             </div>
           ))}
         </div>
       </div>
-
-      {/* bottom fade into footer */}
-      <div aria-hidden className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-b from-transparent to-[#050505]" />
     </section>
   );
 }

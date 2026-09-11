@@ -60,7 +60,7 @@ export default function ShellLayout({ children }: ShellLayoutProps) {
           {children}
         </ErrorBoundary>
       </main>
-      <WhyChooseNextSection currentLang={currentLang} />
+      {pathname === '/' && <WhyChooseNextSection currentLang={currentLang} />}
       <Footer
         currentLang={currentLang}
         setTab={setTab}

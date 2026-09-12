@@ -1213,7 +1213,7 @@ className="group cursor-pointer"
             </div>
 
             {/* ── Portrait Column ── */}
-            <div className="order-1 lg:order-2 relative mx-auto w-full max-w-md lg:max-w-none">
+            <div className="order-1 lg:order-2 relative mx-auto w-full max-w-[240px] sm:max-w-[280px] lg:max-w-[320px] xl:max-w-[360px]">
               {/* Decorative offset ring */}
               <div className="absolute -top-6 -left-6 lg:-top-8 lg:-left-8 h-40 w-40 rounded-full border-2 border-dashed border-orange-200 dark:border-orange-500/30 pointer-events-none" />
               <div className="absolute -bottom-6 -right-6 lg:-bottom-8 lg:-right-8 h-52 w-52 rounded-full bg-gradient-to-br from-orange-200/60 dark:from-orange-500/20 to-transparent blur-2xl pointer-events-none" />

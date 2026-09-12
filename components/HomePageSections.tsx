@@ -1127,7 +1127,7 @@ className="group cursor-pointer"
         <div className="absolute inset-0 bg-[radial-gradient(#FF4A00_0.8px,transparent_0.8px)] [background-size:32px_32px] opacity-[0.03] dark:opacity-[0.02] pointer-events-none" />
 
         <div className="relative z-10 mx-auto max-w-[1400px] px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 items-center gap-12 lg:gap-20">
+          <div className="grid grid-cols-1 lg:grid-cols-[2fr_3fr] items-center gap-12 lg:gap-16 xl:gap-20">
             {/* ── Text Column ── */}
             <div className="order-2 lg:order-1 text-center lg:text-left space-y-6">
               <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-orange-50 dark:bg-orange-500/10 border border-orange-200/60 dark:border-orange-500/20">
@@ -1213,7 +1213,7 @@ className="group cursor-pointer"
             </div>
 
             {/* ── Portrait Column ── */}
-            <div className="order-1 lg:order-2 relative mx-auto w-full max-w-[320px] sm:max-w-[400px] lg:max-w-[480px] xl:max-w-[560px]">
+            <div className="order-1 lg:order-2 relative mx-auto w-full max-w-[380px] sm:max-w-[500px] lg:max-w-[620px] xl:max-w-[720px]">
               {/* Decorative offset ring */}
               <div className="absolute -top-6 -left-6 lg:-top-8 lg:-left-8 h-40 w-40 rounded-full border-2 border-dashed border-orange-200 dark:border-orange-500/30 pointer-events-none" />
               <div className="absolute -bottom-6 -right-6 lg:-bottom-8 lg:-right-8 h-52 w-52 rounded-full bg-gradient-to-br from-orange-200/60 dark:from-orange-500/20 to-transparent blur-2xl pointer-events-none" />
@@ -1225,7 +1225,7 @@ className="group cursor-pointer"
                 fallbackMs={900}
                 className="relative"
               >
-                <div className="relative rounded-[28px] overflow-hidden border border-gray-100 dark:border-white/10 shadow-2xl shadow-orange-900/10">
+                <div className="relative rounded-[28px] overflow-hidden shadow-2xl shadow-orange-900/10">
                   <img
                     src="/about.png"
                     alt={currentLang === 'en' ? 'Mushfiqur Rahman Sanjid — Founder & CEO' : 'মুশফিকুর রহমান সানজিদ — প্রতিষ্ঠাতা ও সিইও'}

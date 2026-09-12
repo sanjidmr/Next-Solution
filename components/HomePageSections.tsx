@@ -1210,61 +1210,62 @@ className="group cursor-pointer"
                   <ArrowUpRight className="h-4 w-4" />
                 </button>
               </div>
+
+              {/* Leadership Team Strip */}
+              <div className="pt-6 mt-4 border-t border-gray-100 dark:border-white/10">
+                <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400 dark:text-gray-500 mb-4">
+                  {currentLang === 'en' ? 'Leadership Team' : 'নেতৃত্ব পরিষদ'}
+                </p>
+                <div className="flex flex-col gap-3">
+                  {[
+                    { name: "Saa'd ibna bashar", nameBn: 'সা\'দ ইবনা বাশার', role: 'Co-Founder & MD', roleBn: 'সহ-প্রতিষ্ঠাতা ও এমডি' },
+                    { name: 'Al Amin Jisan', nameBn: 'আল আমিন জিসান', role: 'General Manager & SEO Expert', roleBn: 'জেনারেল ম্যানেজার ও এসইও এক্সপার্ট' },
+                    { name: 'Mustafizur Rahman', nameBn: 'মুস্তাফিজুর রহমান', role: 'Chief Architect', roleBn: 'চিফ আর্কিটেক্ট' },
+                  ].map((m, i) => (
+                    <div key={i} className="flex items-center gap-3">
+                      <div className="h-9 w-9 rounded-full bg-orange-50 dark:bg-orange-500/10 border border-orange-200/60 dark:border-orange-500/20 flex items-center justify-center shrink-0">
+                        <span className="text-[10px] font-black text-orange-600 dark:text-orange-400">{m.name.split(' ').map((w: string) => w.charAt(0)).join('').slice(0, 2)}</span>
+                      </div>
+                      <div>
+                        <p className="text-sm font-bold text-gray-900 dark:text-white leading-tight">{currentLang === 'en' ? m.name : m.nameBn}</p>
+                        <p className="text-[10px] font-semibold uppercase tracking-wider text-gray-400 dark:text-gray-500">{currentLang === 'en' ? m.role : m.roleBn}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
 
-            {/* ── Portrait Column ── */}
-            <div className="order-1 lg:order-2 relative mx-auto w-full max-w-[380px] sm:max-w-[500px] lg:max-w-[620px] xl:max-w-[720px]">
-              {/* Decorative offset ring */}
-              <div className="absolute -top-6 -left-6 lg:-top-8 lg:-left-8 h-40 w-40 rounded-full border-2 border-dashed border-orange-200 dark:border-orange-500/30 pointer-events-none" />
-              <div className="absolute -bottom-6 -right-6 lg:-bottom-8 lg:-right-8 h-52 w-52 rounded-full bg-gradient-to-br from-orange-200/60 dark:from-orange-500/20 to-transparent blur-2xl pointer-events-none" />
+            {/* ── Portrait Column (About hero style) ── */}
+            <div className="order-1 lg:order-2 relative mx-auto w-full max-w-[380px] sm:max-w-[500px] lg:max-w-[620px] xl:max-w-[720px] flex justify-center lg:justify-end">
 
-              <RevealGuard
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-                fallbackMs={900}
-                className="relative"
-              >
-                <div className="relative rounded-[28px] overflow-hidden shadow-2xl shadow-orange-900/10">
+              <div className="relative w-full">
+                {/* Circular glow frame — matches About hero */}
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[180px] h-[180px] sm:w-[360px] sm:h-[360px] lg:w-[500px] lg:h-[500px] xl:w-[580px] xl:h-[580px] rounded-full border border-[#FF5A00]/25 dark:border-[#FF5A00]/20 bg-gradient-to-br from-[#FF5A00]/5 via-[#FF5A00]/3 to-transparent pointer-events-none" />
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[210px] h-[210px] sm:w-[400px] sm:h-[400px] lg:w-[540px] lg:h-[540px] xl:w-[620px] xl:h-[620px] rounded-full border border-[#FF5A00]/10 dark:border-[#FF5A00]/8 pointer-events-none" />
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[160px] h-[160px] sm:w-[320px] sm:h-[320px] lg:w-[460px] lg:h-[460px] xl:w-[540px] xl:h-[540px] rounded-full bg-[#FF5A00]/[0.04] dark:bg-[#FF5A00]/[0.06] blur-[60px] pointer-events-none" />
+
+                <RevealGuard
+                  initial={{ opacity: 0, y: 30 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+                  fallbackMs={900}
+                  className="relative z-10"
+                >
                   <img
                     src="/about.png"
-                    alt={currentLang === 'en' ? 'Mushfiqur Rahman Sanjid — Founder & CEO' : 'মুশফিকুর রহমান সানজিদ — প্রতিষ্ঠাতা ও সিইও'}
-                    className="w-full object-cover aspect-[1697/927]"
+                    alt={currentLang === 'en' ? 'Next Solution Team' : 'নেক্সট সলিউশন টিম'}
+                    className="w-full h-auto origin-bottom dark:hidden"
+                    style={{ WebkitMaskImage: 'linear-gradient(to bottom, black 65%, transparent 100%)', maskImage: 'linear-gradient(to bottom, black 65%, transparent 100%)' }}
                   />
-                  {/* Premium gradient scrim */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-                  {/* Bottom floating name tag */}
-                  <div className="absolute bottom-0 left-0 right-0 p-5 sm:p-6">
-                    <div className="inline-flex items-center gap-2 rounded-full bg-white/15 backdrop-blur-md border border-white/20 px-4 py-1.5">
-                      <span className="h-1.5 w-1.5 rounded-full bg-orange-400 animate-pulse" />
-                      <span className="text-[10px] font-bold text-white uppercase tracking-widest">
-                        {currentLang === 'en' ? 'Founder & CEO — Next Solution' : 'প্রতিষ্ঠাতা ও সিইও — নেক্সট সলিউশন'}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Floating badge — experience */}
-                <div className="absolute -top-5 -right-3 sm:-right-6 rounded-2xl bg-white dark:bg-neutral-900 border border-gray-100 dark:border-white/10 shadow-xl px-4 py-3 flex items-center gap-3">
-                  <div className="h-10 w-10 rounded-xl bg-orange-600 text-white flex items-center justify-center shadow-md shadow-orange-600/30">
-                    <Clock className="h-5 w-5" />
-                  </div>
-                  <div className="text-left">
-                    <p className="text-lg font-black text-gray-900 dark:text-white leading-none">4+</p>
-                    <p className="text-[9px] font-bold uppercase tracking-widest text-gray-400 dark:text-gray-500 pt-1">{currentLang === 'en' ? 'Years Exp' : 'বছরের অভিজ্ঞতা'}</p>
-                  </div>
-                </div>
-
-                {/* Floating badge — quote */}
-                <div className="absolute -bottom-5 -left-3 sm:-left-6 max-w-[240px] rounded-2xl bg-white dark:bg-neutral-900 border border-gray-100 dark:border-white/10 shadow-xl px-4 py-3.5">
-                  <div className="flex items-start gap-2.5">
-                    <Quote className="h-4 w-4 text-orange-500 shrink-0 mt-0.5" />
-                    <p className="text-[11px] font-semibold text-gray-600 dark:text-gray-300 leading-snug">
-                      {currentLang === 'en' ? 'Build fast. Build premium. Build impact that lasts.' : 'দ্রুত তৈরি করুন। প্রিমিয়াম তৈরি করুন। স্থায়ী ইমপ্যাক্ট তৈরি করুন।'}
-                    </p>
-                  </div>
-                </div>
-              </RevealGuard>
+                  <img
+                    src="/aboutb.png"
+                    alt={currentLang === 'en' ? 'Next Solution Team' : 'নেক্সট সলিউশন টিম'}
+                    className="w-full h-auto origin-bottom hidden dark:block"
+                    style={{ WebkitMaskImage: 'linear-gradient(to bottom, black 65%, transparent 100%)', maskImage: 'linear-gradient(to bottom, black 65%, transparent 100%)' }}
+                  />
+                </RevealGuard>
+              </div>
             </div>
           </div>
         </div>

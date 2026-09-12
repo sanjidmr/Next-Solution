@@ -1213,7 +1213,7 @@ className="group cursor-pointer"
             </div>
 
             {/* ── Portrait Column ── */}
-            <div className="order-1 lg:order-2 relative mx-auto w-full max-w-[240px] sm:max-w-[280px] lg:max-w-[320px] xl:max-w-[360px]">
+            <div className="order-1 lg:order-2 relative mx-auto w-full max-w-[320px] sm:max-w-[400px] lg:max-w-[480px] xl:max-w-[560px]">
               {/* Decorative offset ring */}
               <div className="absolute -top-6 -left-6 lg:-top-8 lg:-left-8 h-40 w-40 rounded-full border-2 border-dashed border-orange-200 dark:border-orange-500/30 pointer-events-none" />
               <div className="absolute -bottom-6 -right-6 lg:-bottom-8 lg:-right-8 h-52 w-52 rounded-full bg-gradient-to-br from-orange-200/60 dark:from-orange-500/20 to-transparent blur-2xl pointer-events-none" />
@@ -1229,7 +1229,7 @@ className="group cursor-pointer"
                   <img
                     src="/about.png"
                     alt={currentLang === 'en' ? 'Mushfiqur Rahman Sanjid — Founder & CEO' : 'মুশফিকুর রহমান সানজিদ — প্রতিষ্ঠাতা ও সিইও'}
-                    className="w-full h-full object-cover aspect-[4/5] sm:aspect-[16/13] lg:aspect-[4/5]"
+                    className="w-full object-cover aspect-[1697/927]"
                   />
                   {/* Premium gradient scrim */}
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />

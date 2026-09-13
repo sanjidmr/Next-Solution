@@ -138,7 +138,7 @@ export const initialLegalPolicies: LegalPolicy[] = [
         id: 'sec-priv-contact',
         titleEn: 'Contact Information',
         titleBn: 'যোগাযোগের তথ্য',
-        contentEn: 'If you have questions, comments, or complaints about this Privacy Policy, or how we handle your personal data, please contact our Legal Team at:\n\nEmail: legal@nextsolution.co\nAddress: Suite 404, Silicon High-Street, Dhaka, Bangladesh\nPhone: +880 1711 000000',
+        contentEn: 'If you have questions, comments, or complaints about this Privacy Policy, or how we handle your personal data, please contact our Legal Team at:\n\nEmail: legal@nextsolution.co\nAddress: Suite 404, Silicon High-Street, Dhaka, Bangladesh\nPhone: +880 1955 417215',
         contentBn: 'এই গোপনীয়তা নীতি বা আমাদের তথ্য পরিচালনা সম্পর্কে কোনো প্রশ্ন, মন্তব্য বা অভিযোগ থাকলে অনুগ্রহ করে আমাদের লিগ্যাল টিমের সাথে যোগাযোগ করুন:\n\nইমেল: legal@nextsolution.co\nঠিকানা: স্যুট ৪০৪, সিলিকন হাই-স্ট্রিট, ঢাকা, বাংলাদেশ\nফোন: +৮৮০ ১৭১১ ০০০০০০'
       }
     ]

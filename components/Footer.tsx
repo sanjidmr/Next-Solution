@@ -120,10 +120,10 @@ export default function Footer({ currentLang, setTab }: FooterProps) {
             {/* Social as premium pills */}
             <div className="flex flex-wrap justify-center sm:justify-start gap-2.5 pt-1">
               {[
-                { icon: Facebook, label: 'Facebook', href: 'https://facebook.com' },
+                { icon: Facebook, label: 'Facebook', href: 'https://www.facebook.com/share/1C4XWLngUR/' },
                 { icon: Linkedin, label: 'LinkedIn', href: 'https://linkedin.com' },
-                { icon: Twitter, label: 'Twitter', href: 'https://twitter.com' },
-                { icon: Instagram, label: 'Instagram', href: 'https://instagram.com' },
+                { icon: Twitter, label: 'X', href: 'https://x.com/mrsanjid007' },
+                { icon: Instagram, label: 'Instagram', href: 'https://www.instagram.com/nextsolutionmym/' },
               ].map((s) => (
                 <a
                   key={s.label}
@@ -205,7 +205,7 @@ export default function Footer({ currentLang, setTab }: FooterProps) {
                 <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-white/[0.06] bg-white/[0.03]">
                   <Phone className="h-3.5 w-3.5 text-orange-500" />
                 </span>
-                <a href="tel:+8801711000000" className="text-[13px] text-gray-500 transition-colors hover:text-white">+880 1711 000000</a>
+                <a href="tel:+8801955417215" className="text-[13px] text-gray-500 transition-colors hover:text-white">+880 1955 417215</a>
               </li>
               <li className="flex items-center justify-center sm:justify-start gap-3">
                 <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-white/[0.06] bg-white/[0.03]">

@@ -7,13 +7,13 @@ export const siteConfig = {
   ogImage: "/logo.svg",
   contact: {
     email: "hello@nextsolution.co",
-    phone: "+880 1711 000000",
-    phoneHref: "tel:+8801711000000",
+    phone: "+880 1955 417215",
+    phoneHref: "tel:+8801955417215",
     address: "Suite 404, Silicon High-Street, Dhaka, Bangladesh",
     hours: "Mon - Fri: 9:00 AM - 6:00 PM (GMT+6)",
   },
   social: {
-    twitter: "https://twitter.com/nextsolution",
+    twitter: "https://x.com/mrsanjid007",
     linkedin: "https://linkedin.com/company/nextsolution",
     github: "https://github.com/nextsolution",
   },

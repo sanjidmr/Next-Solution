@@ -151,7 +151,7 @@ export default function ContactSection({ currentLang, isFullPage = false }: Cont
                   <div className="flex items-center justify-center h-8 w-8 rounded-full bg-orange-50 dark:bg-orange-500/10 text-orange-500">
                     <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z" /></svg>
                   </div>
-                  <span>{currentLang === 'en' ? '+880 1711 000000' : '+৮৮০ ১৭১১ ০০০০০০'}</span>
+                  <span>{currentLang === 'en' ? '+880 1955 417215' : '+৮৮০ ১৯৫৫ ৪১৭২১৫'}</span>
                 </div>
                 <div className="flex items-center gap-3 text-xs text-gray-500 dark:text-neutral-400">
                   <div className="flex items-center justify-center h-8 w-8 rounded-full bg-orange-50 dark:bg-orange-500/10 text-orange-500">
@@ -392,7 +392,7 @@ export default function ContactSection({ currentLang, isFullPage = false }: Cont
                 </li>
                 <li className="flex items-center space-x-3">
                   <Smartphone className="h-5 w-5 text-blue-600 dark:text-orange-400 shrink-0" />
-                  <a href="tel:+8801711000000" className="hover:text-blue-600 dark:text-orange-400 transition font-mono">+880 1711 000000</a>
+                  <a href="tel:+8801955417215" className="hover:text-blue-600 dark:text-orange-400 transition font-mono">+880 1955 417215</a>
                 </li>
                 <li className="flex items-center space-x-3">
                   <Mail className="h-5 w-5 text-blue-600 dark:text-orange-400 shrink-0" />
@@ -416,7 +416,7 @@ export default function ContactSection({ currentLang, isFullPage = false }: Cont
               
               <div className="grid grid-cols-2 gap-4">
                 <a
-                  href="https://wa.me/8801711000000"
+                  href="https://wa.me/8801955417215"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center justify-between p-4 rounded-xl border border-emerald-100 dark:border-emerald-500/20 bg-emerald-50 dark:bg-emerald-500/10 hover:bg-emerald-100/80 text-xs font-bold text-emerald-700 transition shadow-sm hover:shadow-md"
@@ -430,7 +430,7 @@ export default function ContactSection({ currentLang, isFullPage = false }: Cont
                   <ExternalLink className="h-3.5 w-3.5 text-emerald-500 dark:text-emerald-400" />
                 </a>
                 <a
-                  href="https://m.me/nextsolution"
+                  href="https://www.messenger.com/t/61591446761583"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center justify-between p-4 rounded-xl border border-blue-100 dark:border-orange-500/20 bg-blue-50 dark:bg-orange-500/10 hover:bg-blue-100/80 text-xs font-bold text-blue-700 transition shadow-sm hover:shadow-md"

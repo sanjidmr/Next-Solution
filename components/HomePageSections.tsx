@@ -1127,9 +1127,9 @@ className="group cursor-pointer"
         <div className="absolute inset-0 bg-[radial-gradient(#FF4A00_0.8px,transparent_0.8px)] [background-size:32px_32px] opacity-[0.03] dark:opacity-[0.02] pointer-events-none" />
 
         <div className="relative z-10 mx-auto max-w-[1400px] px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-[2fr_3fr] items-center gap-12 lg:gap-16 xl:gap-20">
-            {/* ── Text Column ── */}
-            <div className="order-1 lg:order-1 text-center lg:text-left space-y-4">
+          <div className="grid grid-cols-1 lg:grid-cols-[2fr_3fr] items-center gap-8 lg:gap-x-16 lg:gap-y-6">
+            {/* ── Text Above (mobile) / Left top (desktop): badge + heading + names ── */}
+            <div className="order-1 lg:order-1 lg:col-start-1 lg:row-start-1 text-center lg:text-left space-y-4">
               <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-orange-50 dark:bg-orange-500/10 border border-orange-200/60 dark:border-orange-500/20">
                 <Sparkles className="h-3.5 w-3.5 text-orange-500" />
                 <span className="text-[10px] font-black uppercase tracking-[0.2em] text-orange-600 dark:text-orange-400">
@@ -1150,7 +1150,7 @@ className="group cursor-pointer"
                   { name: 'Mushfiqur Rahman Sanjid', nameBn: 'মুশফিকুর রহমান সানজিদ', role: 'Founder & CEO', roleBn: 'প্রতিষ্ঠাতা ও সিইও' },
                   { name: "Saa'd ibna bashar", nameBn: 'সা\'দ ইবনা বাশার', role: 'Co-Founder & MD', roleBn: 'সহ-প্রতিষ্ঠাতা ও এমডি' },
                   { name: 'Al Amin Jisan', nameBn: 'আল আমিন জিসান', role: 'General Manager & SEO Expert', roleBn: 'জেনারেল ম্যানেজার ও এসইও এক্সপার্ট' },
-                  { name: 'Mustafizur Rahman', nameBn: 'মুস্তাফিজুর রহমান', role: 'Chief Architect', roleBn: 'চিফ আর্কিটেক্ট' },
+                  { name: 'Mustafizur Rahman', nameBn: 'মুস্তাফিজুর রহমান', role: 'Chief Architect & Graphic designer', roleBn: 'চিফ আর্কিটেক্ট' },
                 ].map((m, i) => (
                   <div key={i} className="flex flex-col items-center sm:items-start gap-1.5 text-center sm:text-left">
                     <span className="font-sans text-xl sm:text-2xl font-black text-gray-900 dark:text-white tracking-tight leading-tight">
@@ -1163,7 +1163,10 @@ className="group cursor-pointer"
                   </div>
                 ))}
               </div>
+            </div>
 
+            {/* Text below (mobile) / left bottom (desktop): bio + CTA buttons */}
+            <div className="order-3 lg:order-3 lg:col-start-1 lg:row-start-2 text-center lg:text-left space-y-4">
               <p className="text-sm sm:text-base text-gray-500 dark:text-gray-400 leading-normal max-w-xl mx-auto lg:mx-0">
                 {currentLang === 'en'
                   ? 'Founder of Next Solution and a dedicated web development expert. He architects high-performance websites and scalable web applications using React, Next.js and TypeScript — ensuring every build delivers blazing-fast speed, pixel-perfect responsiveness and revenue-focused engineering.'
@@ -1189,7 +1192,7 @@ className="group cursor-pointer"
             </div>
 
             {/* ── Portrait Column (About hero style) ── */}
-            <div className="order-2 lg:order-2 relative mx-auto w-full max-w-[380px] sm:max-w-[500px] lg:max-w-[680px] xl:max-w-[820px] flex justify-center lg:justify-end">
+            <div className="order-2 lg:order-2 lg:col-start-2 lg:row-start-1 lg:row-span-2 relative mx-auto w-full max-w-[380px] sm:max-w-[500px] lg:max-w-[680px] xl:max-w-[820px] flex justify-center lg:justify-end">
 
               <div className="relative w-full">
                 {/* Circular glow frame — matches About hero */}

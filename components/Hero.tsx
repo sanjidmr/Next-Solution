@@ -213,7 +213,7 @@ export default function Hero({ currentLang, setTab }: HeroProps) {
               transition={{ duration: 0.75, delay: 0.28, ease: [0.22, 1, 0.36, 1] }}
               className="
                 max-w-[720px]
-                text-[2.15rem]
+                text-[1.7rem]
                 font-black
                 leading-[1.05]
                 tracking-[-0.035em]
@@ -267,7 +267,7 @@ export default function Hero({ currentLang, setTab }: HeroProps) {
               initial={{ opacity: 0, y: -32 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.38, ease: [0.22, 1, 0.36, 1] }}
-              className="mx-auto mt-4 max-w-[560px] text-sm font-medium leading-6 text-gray-600 dark:text-neutral-400 sm:mt-7 sm:text-base lg:text-lg lg:mx-0"
+              className="mx-auto mt-2 max-w-[560px] text-sm font-medium leading-6 text-gray-600 dark:text-neutral-400 sm:mt-7 sm:text-base lg:text-lg lg:mx-0"
             >
               {isEn
                 ? "From powerful websites to digital growth strategies — we deliver complete solutions that drive real results."
@@ -278,7 +278,7 @@ export default function Hero({ currentLang, setTab }: HeroProps) {
               initial={{ opacity: 0, y: -26 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.65, delay: 0.5, ease: [0.22, 1, 0.36, 1] }}
-              className="mt-5 flex flex-wrap items-center justify-center gap-3 sm:gap-5 lg:mt-8 lg:justify-start"
+              className="mt-3 flex flex-wrap items-center justify-center gap-3 sm:gap-5 lg:mt-8 lg:justify-start"
             >
               <button
                 id="hero-primary-cta"
@@ -375,7 +375,7 @@ export default function Hero({ currentLang, setTab }: HeroProps) {
               z-20
               order-2
               flex
-              min-h-[200px]
+              min-h-[150px]
               items-center
               justify-center
               sm:min-h-[420px]
@@ -388,7 +388,7 @@ export default function Hero({ currentLang, setTab }: HeroProps) {
                 relative
                 flex
                 w-full
-                max-w-[480px]
+                max-w-[260px]
                 items-center
                 justify-center
                 sm:max-w-[620px]
@@ -494,11 +494,11 @@ export default function Hero({ currentLang, setTab }: HeroProps) {
           </motion.div>
         </div>
 
-        <div className="relative z-40 mt-2 pb-8 lg:-mt-4">
+        <div className="relative z-40 mt-0 pb-6 lg:-mt-4">
           <div
             className="
               grid
-              grid-cols-2
+              grid-cols-4
               overflow-hidden
               rounded-3xl
               border
@@ -508,7 +508,6 @@ export default function Hero({ currentLang, setTab }: HeroProps) {
               dark:border-neutral-800
               dark:bg-[#141414]
               dark:shadow-[0_30px_80px_-40px_rgba(0,0,0,0.8)]
-              lg:grid-cols-4
             "
           >
             {stats.map((stat, idx) => {
@@ -522,29 +521,25 @@ export default function Hero({ currentLang, setTab }: HeroProps) {
                     flex
                     items-center
                     justify-center
-                    gap-3
-                    px-4
-                    py-6
+                    gap-1
+                    px-1
+                    py-2
                     text-center
+                    flex-col
+                    sm:flex-row
                     sm:gap-4
-                    lg:py-5
-                    ${idx > 1
-                      ? "border-t border-gray-100 dark:border-neutral-800 lg:border-t-0"
-                      : ""
-                    }
-                    ${idx % 2 === 1
-                      ? "max-lg:border-l max-lg:border-gray-100 dark:max-lg:border-neutral-800"
-                      : ""
-                    }
+                    sm:px-4
+                    sm:py-5
                     ${idx > 0
-                      ? "lg:border-l lg:border-gray-100 dark:lg:border-neutral-800"
+                      ? "border-l border-gray-100 dark:border-neutral-800"
                       : ""
                     }
                   `}
                 >
                   <div
                     className="
-                      flex
+                      hidden
+                      sm:flex
                       h-12
                       w-12
                       shrink-0
@@ -563,12 +558,12 @@ export default function Hero({ currentLang, setTab }: HeroProps) {
                     <Icon className="h-6 w-6" />
                   </div>
 
-                  <div className="text-left">
-                    <p className="text-3xl font-black leading-none text-[#090909] dark:text-white sm:text-4xl">
+                  <div className="text-center sm:text-left">
+                    <p className="text-base font-black leading-none text-[#090909] dark:text-white sm:text-3xl">
                       <CountUp value={stat.value} duration={1.8} />
                     </p>
 
-                    <p className="mt-1.5 text-[10px] font-semibold uppercase tracking-wider text-orange-600/70 dark:text-orange-400/80 sm:text-xs">
+                    <p className="mt-1 text-[8px] font-semibold uppercase tracking-wide text-orange-600/70 dark:text-orange-400/80 sm:text-xs sm:tracking-wider">
                       {stat.label}
                     </p>
                   </div>

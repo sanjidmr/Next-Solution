@@ -1145,14 +1145,23 @@ className="group cursor-pointer"
                 )}
               </h2>
 
-              <div className="flex flex-col items-center lg:items-start gap-1.5">
-                <span className="font-sans text-2xl sm:text-3xl font-black text-gray-900 dark:text-white tracking-tight">
-                  {currentLang === 'en' ? 'Mushfiqur Rahman Sanjid' : 'মুশফিকুর রহমান সানজিদ'}
-                </span>
-                <span className="inline-flex items-center gap-2 text-sm font-bold tracking-wide text-orange-600 dark:text-orange-400">
-                  <span className="h-1.5 w-1.5 rounded-full bg-orange-500" />
-                  {currentLang === 'en' ? 'Founder & CEO' : 'প্রতিষ্ঠাতা ও সিইও'}
-                </span>
+              <div className="flex flex-col items-center lg:items-start gap-5">
+                {[
+                  { name: 'Mushfiqur Rahman Sanjid', nameBn: 'মুশফিকুর রহমান সানজিদ', role: 'Founder & CEO', roleBn: 'প্রতিষ্ঠাতা ও সিইও' },
+                  { name: "Saa'd ibna bashar", nameBn: 'সা\'দ ইবনা বাশার', role: 'Co-Founder & MD', roleBn: 'সহ-প্রতিষ্ঠাতা ও এমডি' },
+                  { name: 'Al Amin Jisan', nameBn: 'আল আমিন জিসান', role: 'General Manager & SEO Expert', roleBn: 'জেনারেল ম্যানেজার ও এসইও এক্সপার্ট' },
+                  { name: 'Mustafizur Rahman', nameBn: 'মুস্তাফিজুর রহমান', role: 'Chief Architect', roleBn: 'চিফ আর্কিটেক্ট' },
+                ].map((m, i) => (
+                  <div key={i} className="flex flex-col items-center lg:items-start gap-1.5">
+                    <span className="font-sans text-2xl sm:text-3xl font-black text-gray-900 dark:text-white tracking-tight">
+                      {currentLang === 'en' ? m.name : m.nameBn}
+                    </span>
+                    <span className="inline-flex items-center gap-2 text-sm font-bold tracking-wide text-orange-600 dark:text-orange-400">
+                      <span className="h-1.5 w-1.5 rounded-full bg-orange-500" />
+                      {currentLang === 'en' ? m.role : m.roleBn}
+                    </span>
+                  </div>
+                ))}
               </div>
 
               <p className="text-sm sm:text-base text-gray-500 dark:text-gray-400 leading-relaxed max-w-xl mx-auto lg:mx-0">
@@ -1209,25 +1218,6 @@ className="group cursor-pointer"
                   {currentLang === 'en' ? 'Work With Us' : 'আমাদের সাথে কাজ করুন'}
                   <ArrowUpRight className="h-4 w-4" />
                 </button>
-              </div>
-
-              {/* Leadership Team — same size & design as founder */}
-              <div className="flex flex-col gap-5 pt-6 mt-4 border-t border-gray-100 dark:border-white/10">
-                {[
-                  { name: "Saa'd ibna bashar", nameBn: 'সা\'দ ইবনা বাশার', role: 'Co-Founder & MD', roleBn: 'সহ-প্রতিষ্ঠাতা ও এমডি' },
-                  { name: 'Al Amin Jisan', nameBn: 'আল আমিন জিসান', role: 'General Manager & SEO Expert', roleBn: 'জেনারেল ম্যানেজার ও এসইও এক্সপার্ট' },
-                  { name: 'Mustafizur Rahman', nameBn: 'মুস্তাফিজুর রহমান', role: 'Chief Architect', roleBn: 'চিফ আর্কিটেক্ট' },
-                ].map((m, i) => (
-                    <div key={i} className="flex flex-col items-center lg:items-start gap-1.5">
-                      <span className="font-sans text-2xl sm:text-3xl font-black text-gray-900 dark:text-white tracking-tight">
-                        {currentLang === 'en' ? m.name : m.nameBn}
-                      </span>
-                      <span className="inline-flex items-center gap-2 text-sm font-bold tracking-wide text-orange-600 dark:text-orange-400">
-                        <span className="h-1.5 w-1.5 rounded-full bg-orange-500" />
-                        {currentLang === 'en' ? m.role : m.roleBn}
-                      </span>
-                    </div>
-                  ))}
               </div>
             </div>
 

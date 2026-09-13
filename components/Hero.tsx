@@ -213,9 +213,9 @@ export default function Hero({ currentLang, setTab }: HeroProps) {
               transition={{ duration: 0.75, delay: 0.28, ease: [0.22, 1, 0.36, 1] }}
               className="
                 max-w-[720px]
-                text-[1.7rem]
+                text-[2.05rem]
                 font-black
-                leading-[1.05]
+                leading-[1.08]
                 tracking-[-0.035em]
                 text-[#090909]
                 dark:text-white
@@ -388,7 +388,7 @@ export default function Hero({ currentLang, setTab }: HeroProps) {
                 relative
                 flex
                 w-full
-                max-w-[260px]
+                max-w-[340px]
                 items-center
                 justify-center
                 sm:max-w-[620px]

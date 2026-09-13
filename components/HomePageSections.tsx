@@ -1129,7 +1129,7 @@ className="group cursor-pointer"
         <div className="relative z-10 mx-auto max-w-[1400px] px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-[2fr_3fr] items-center gap-12 lg:gap-16 xl:gap-20">
             {/* ── Text Column ── */}
-            <div className="order-2 lg:order-1 text-center lg:text-left space-y-6">
+            <div className="order-1 lg:order-1 text-center lg:text-left space-y-4">
               <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-orange-50 dark:bg-orange-500/10 border border-orange-200/60 dark:border-orange-500/20">
                 <Sparkles className="h-3.5 w-3.5 text-orange-500" />
                 <span className="text-[10px] font-black uppercase tracking-[0.2em] text-orange-600 dark:text-orange-400">
@@ -1137,7 +1137,7 @@ className="group cursor-pointer"
                 </span>
               </div>
 
-              <h2 className="font-sans text-3xl sm:text-4xl lg:text-5xl font-black text-gray-900 dark:text-white leading-[1.1] tracking-tight">
+<h2 className="font-sans text-2xl sm:text-3xl lg:text-4xl font-black text-gray-900 dark:text-white leading-[1.1] tracking-tight">
                 {currentLang === 'en' ? (
                   <>Meet the <span className="text-orange-500">Mastermind</span><br />Behind the Growth.</>
                 ) : (
@@ -1145,15 +1145,15 @@ className="group cursor-pointer"
                 )}
               </h2>
 
-              <div className="flex flex-col items-center lg:items-start gap-5">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-3 sm:max-w-xl mx-auto lg:mx-0 w-full">
                 {[
                   { name: 'Mushfiqur Rahman Sanjid', nameBn: 'মুশফিকুর রহমান সানজিদ', role: 'Founder & CEO', roleBn: 'প্রতিষ্ঠাতা ও সিইও' },
                   { name: "Saa'd ibna bashar", nameBn: 'সা\'দ ইবনা বাশার', role: 'Co-Founder & MD', roleBn: 'সহ-প্রতিষ্ঠাতা ও এমডি' },
                   { name: 'Al Amin Jisan', nameBn: 'আল আমিন জিসান', role: 'General Manager & SEO Expert', roleBn: 'জেনারেল ম্যানেজার ও এসইও এক্সপার্ট' },
                   { name: 'Mustafizur Rahman', nameBn: 'মুস্তাফিজুর রহমান', role: 'Chief Architect', roleBn: 'চিফ আর্কিটেক্ট' },
                 ].map((m, i) => (
-                  <div key={i} className="flex flex-col items-center lg:items-start gap-1.5">
-                    <span className="font-sans text-2xl sm:text-3xl font-black text-gray-900 dark:text-white tracking-tight">
+                  <div key={i} className="flex flex-col items-center sm:items-start gap-1.5 text-center sm:text-left">
+                    <span className="font-sans text-xl sm:text-2xl font-black text-gray-900 dark:text-white tracking-tight leading-tight">
                       {currentLang === 'en' ? m.name : m.nameBn}
                     </span>
                     <span className="inline-flex items-center gap-2 text-sm font-bold tracking-wide text-orange-600 dark:text-orange-400">
@@ -1164,56 +1164,23 @@ className="group cursor-pointer"
                 ))}
               </div>
 
-              <p className="text-sm sm:text-base text-gray-500 dark:text-gray-400 leading-relaxed max-w-xl mx-auto lg:mx-0">
+              <p className="text-sm sm:text-base text-gray-500 dark:text-gray-400 leading-normal max-w-xl mx-auto lg:mx-0">
                 {currentLang === 'en'
                   ? 'Founder of Next Solution and a dedicated web development expert. He architects high-performance websites and scalable web applications using React, Next.js and TypeScript — ensuring every build delivers blazing-fast speed, pixel-perfect responsiveness and revenue-focused engineering.'
                   : 'নেক্সট সলিউশনের প্রতিষ্ঠাতা এবং নিবেদিতপ্রাণ ওয়েব ডেভেলপমেন্ট এক্সপার্ট। তিনি HTML, React ও Next.js ব্যবহার করে উচ্চ-ক্ষমতাসম্পন্ন ওয়েবসাইট এবং স্কেলেবল ওয়েব অ্যাপ্লিকেশন ডিজাইন করেন — প্রতিটি প্রজেক্টে ব্লেজিং-ফাস্ট স্পিড, পিক্সেল-পারফেক্ট রেসপনসিভ ডিজাইন এবং রাজস্ব-কেন্দ্রিক ইঞ্জিনিয়ারিং নিশ্চিত করেন।'}
               </p>
 
-              {/* Highlight chips */}
-              <div className="flex flex-wrap justify-center lg:justify-start gap-3 pt-2">
-                <div className="flex items-center gap-2.5 rounded-2xl border border-gray-100 dark:border-white/10 bg-gray-50/80 dark:bg-white/[0.04] px-4 py-3">
-                  <div className="h-9 w-9 rounded-xl bg-orange-50 dark:bg-orange-500/10 text-orange-500 flex items-center justify-center">
-                    <Award className="h-4 w-4" />
-                  </div>
-                  <div className="text-left">
-                    <p className="text-sm font-extrabold text-gray-900 dark:text-white">{currentLang === 'en' ? '4+ Years' : '৪+ বছর'}</p>
-                    <p className="text-[10px] font-semibold uppercase tracking-widest text-gray-400 dark:text-gray-500">{currentLang === 'en' ? 'Web Development' : 'ওয়েব ডেভেলপমেন্ট অভিজ্ঞতা'}</p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-2.5 rounded-2xl border border-gray-100 dark:border-white/10 bg-gray-50/80 dark:bg-white/[0.04] px-4 py-3">
-                  <div className="h-9 w-9 rounded-xl bg-orange-50 dark:bg-orange-500/10 text-orange-500 flex items-center justify-center">
-                    <Target className="h-4 w-4" />
-                  </div>
-                  <div className="text-left">
-                    <p className="text-sm font-extrabold text-gray-900 dark:text-white">{currentLang === 'en' ? 'Build Digital Impact' : 'ডিজিটাল ইমপ্যাক্ট'}</p>
-                    <p className="text-[10px] font-semibold uppercase tracking-widest text-gray-400 dark:text-gray-500">{currentLang === 'en' ? 'Business Mission' : 'ব্যবসায়িক মিশন'}</p>
-                  </div>
-                </div>
-              </div>
-
-              {/* Quote + CTA */}
-              <div className="pt-3">
-                <blockquote className="relative pl-5 border-l-2 border-orange-500 text-left">
-                  <p className="text-sm italic text-gray-600 dark:text-gray-300 leading-relaxed">
-                    {currentLang === 'en'
-                      ? 'Our mission is to build digital solutions that create lasting business impact.'
-                      : 'এমন ডিজিটাল সলিউশন তৈরি করা যা স্থায়ী ব্যবসায়িক প্রভাব ফেলে।'}
-                  </p>
-                </blockquote>
-              </div>
-
-              <div className="flex flex-wrap justify-center lg:justify-start gap-3 pt-2">
+              <div className="flex flex-wrap justify-center lg:justify-start gap-3 pt-1">
                 <button
                   onClick={() => setTab?.('about')}
-                  className="group inline-flex items-center gap-2 rounded-xl bg-orange-600 hover:bg-orange-700 text-white px-6 py-3.5 text-sm font-bold shadow-[0_14px_30px_-10px_rgba(255,77,0,0.6)] transition-all duration-300 hover:-translate-y-0.5 cursor-pointer"
+                  className="group inline-flex items-center gap-2 rounded-xl bg-orange-600 hover:bg-orange-700 text-white px-6 py-3 text-sm font-bold shadow-[0_14px_30px_-10px_rgba(255,77,0,0.6)] transition-all duration-300 hover:-translate-y-0.5 cursor-pointer"
                 >
                   {currentLang === 'en' ? 'Meet the Team' : 'টিমের সাথে পরিচিত হোন'}
                   <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
                 </button>
                 <button
                   onClick={() => setTab?.('contact')}
-                  className="group inline-flex items-center gap-2 rounded-xl border-2 border-orange-200 dark:border-orange-500/30 bg-white dark:bg-neutral-900 text-orange-600 dark:text-orange-400 px-6 py-3.5 text-sm font-bold transition-all duration-300 hover:-translate-y-0.5 hover:border-orange-500 hover:bg-orange-50 dark:hover:bg-orange-500/10 cursor-pointer"
+                  className="group inline-flex items-center gap-2 rounded-xl border-2 border-orange-200 dark:border-orange-500/30 bg-white dark:bg-neutral-900 text-orange-600 dark:text-orange-400 px-6 py-3 text-sm font-bold transition-all duration-300 hover:-translate-y-0.5 hover:border-orange-500 hover:bg-orange-50 dark:hover:bg-orange-500/10 cursor-pointer"
                 >
                   {currentLang === 'en' ? 'Work With Us' : 'আমাদের সাথে কাজ করুন'}
                   <ArrowUpRight className="h-4 w-4" />
@@ -1222,13 +1189,13 @@ className="group cursor-pointer"
             </div>
 
             {/* ── Portrait Column (About hero style) ── */}
-            <div className="order-1 lg:order-2 relative mx-auto w-full max-w-[380px] sm:max-w-[500px] lg:max-w-[620px] xl:max-w-[720px] flex justify-center lg:justify-end">
+            <div className="order-2 lg:order-2 relative mx-auto w-full max-w-[380px] sm:max-w-[500px] lg:max-w-[680px] xl:max-w-[820px] flex justify-center lg:justify-end">
 
               <div className="relative w-full">
                 {/* Circular glow frame — matches About hero */}
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[180px] h-[180px] sm:w-[360px] sm:h-[360px] lg:w-[500px] lg:h-[500px] xl:w-[580px] xl:h-[580px] rounded-full border border-[#FF5A00]/25 dark:border-[#FF5A00]/20 bg-gradient-to-br from-[#FF5A00]/5 via-[#FF5A00]/3 to-transparent pointer-events-none" />
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[210px] h-[210px] sm:w-[400px] sm:h-[400px] lg:w-[540px] lg:h-[540px] xl:w-[620px] xl:h-[620px] rounded-full border border-[#FF5A00]/10 dark:border-[#FF5A00]/8 pointer-events-none" />
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[160px] h-[160px] sm:w-[320px] sm:h-[320px] lg:w-[460px] lg:h-[460px] xl:w-[540px] xl:h-[540px] rounded-full bg-[#FF5A00]/[0.04] dark:bg-[#FF5A00]/[0.06] blur-[60px] pointer-events-none" />
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[180px] h-[180px] sm:w-[360px] sm:h-[360px] lg:w-[560px] lg:h-[560px] xl:w-[660px] xl:h-[660px] rounded-full border border-[#FF5A00]/25 dark:border-[#FF5A00]/20 bg-gradient-to-br from-[#FF5A00]/5 via-[#FF5A00]/3 to-transparent pointer-events-none" />
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[210px] h-[210px] sm:w-[400px] sm:h-[400px] lg:w-[600px] lg:h-[600px] xl:w-[700px] xl:h-[700px] rounded-full border border-[#FF5A00]/10 dark:border-[#FF5A00]/8 pointer-events-none" />
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[160px] h-[160px] sm:w-[320px] sm:h-[320px] lg:w-[520px] lg:h-[520px] xl:w-[600px] xl:h-[600px] rounded-full bg-[#FF5A00]/[0.04] dark:bg-[#FF5A00]/[0.06] blur-[60px] pointer-events-none" />
 
                 <RevealGuard
                   initial={{ opacity: 0, y: 30 }}

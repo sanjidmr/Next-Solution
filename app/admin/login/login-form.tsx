@@ -45,7 +45,7 @@ export default function LoginForm() {
               required
               autoComplete="email"
               className="block w-full rounded-lg border border-gray-200 dark:border-neutral-700 px-3 py-2.5 text-sm text-gray-900 dark:text-white placeholder-gray-400 focus:border-blue-500 dark:focus:border-orange-500 focus:outline-none focus:ring-1 focus:ring-blue-500 dark:focus:ring-orange-500"
-              placeholder="admin@nextsolution.co"
+              placeholder="admin@nextsolution.com"
             />
           </div>
 

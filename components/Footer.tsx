@@ -107,12 +107,12 @@ export default function Footer({ currentLang, setTab }: FooterProps) {
 
       {/* ─── MAIN FOOTER CONTENT ─── */}
       <div className="relative mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 gap-12 lg:grid-cols-12 lg:gap-8">
+        <div className="grid grid-cols-2 gap-x-6 gap-y-12 lg:grid-cols-12 lg:gap-8">
 
           {/* Brand — large column */}
-          <div className="lg:col-span-5 space-y-6 text-center sm:text-left">
+          <div className="col-span-2 lg:col-span-5 space-y-6 text-center sm:text-left">
             <Link href={getPathForTab('home')} onClick={() => handleQuickLink('home')} className="inline-flex cursor-pointer items-center">
-              <img src="/logow.png" alt="Next Solution" className="h-11 w-auto" />
+              <img src="/logow.png" alt="Next Solution" className="h-16 w-auto lg:h-11" />
             </Link>
             <p className="max-w-sm text-[13px] leading-relaxed text-gray-500 mx-auto sm:mx-0">
               {t.footerAbout}
@@ -140,7 +140,7 @@ export default function Footer({ currentLang, setTab }: FooterProps) {
           </div>
 
           {/* Navigation */}
-          <div className="lg:col-span-2 space-y-5 text-center sm:text-left">
+          <div className="col-span-1 lg:col-span-2 space-y-5 text-left">
             <h3 className="text-[11px] font-bold uppercase tracking-[0.2em] text-white/60">{t.footerQuickLinks}</h3>
             <ul className="space-y-3">
               {[
@@ -165,7 +165,7 @@ export default function Footer({ currentLang, setTab }: FooterProps) {
           </div>
 
           {/* Services */}
-          <div className="lg:col-span-2 space-y-5 text-center sm:text-left">
+          <div className="col-span-1 lg:col-span-2 space-y-5 text-left">
             <h3 className="text-[11px] font-bold uppercase tracking-[0.2em] text-white/60">{t.footerServices}</h3>
             <ul className="space-y-3">
               {[
@@ -190,7 +190,7 @@ export default function Footer({ currentLang, setTab }: FooterProps) {
           </div>
 
           {/* Contact */}
-          <div className="lg:col-span-3 space-y-5 text-center sm:text-left">
+          <div className="col-span-2 lg:col-span-3 space-y-5 text-center sm:text-left">
             <h3 className="text-[11px] font-bold uppercase tracking-[0.2em] text-white/60">{t.footerContact}</h3>
             <ul className="space-y-4">
               <li className="flex items-start justify-center sm:justify-start gap-3">
@@ -198,7 +198,7 @@ export default function Footer({ currentLang, setTab }: FooterProps) {
                   <MapPin className="h-3.5 w-3.5 text-orange-500" />
                 </span>
                 <span className="text-[13px] leading-relaxed text-gray-500">
-                  {currentLang === 'en' ? 'Suite 404, Silicon High-Street, Dhaka, Bangladesh' : 'স্যুট ৪০৪, সিলিকন হাই-স্ট্রিট, ঢাকা, বাংলাদেশ'}
+                  {currentLang === 'en' ? 'Mymensingh, Bangladesh' : 'স্যুট ৪০৪, সিলিকন হাই-স্ট্রিট, ঢাকা, বাংলাদেশ'}
                 </span>
               </li>
               <li className="flex items-center justify-center sm:justify-start gap-3">
@@ -211,7 +211,7 @@ export default function Footer({ currentLang, setTab }: FooterProps) {
                 <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-white/[0.06] bg-white/[0.03]">
                   <Mail className="h-3.5 w-3.5 text-orange-500" />
                 </span>
-                <a href="mailto:hello@nextsolution.co" className="text-[13px] text-gray-500 transition-colors hover:text-white">hello@nextsolution.co</a>
+                <a href="mailto:hello@nextsolutionmym.com" className="text-[13px] text-gray-500 transition-colors hover:text-white">hello@nextsolutionmym.com</a>
               </li>
               <li className="flex items-start justify-center sm:justify-start gap-3">
                 <span className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-white/[0.06] bg-white/[0.03]">

@@ -157,7 +157,7 @@ export default function ContactSection({ currentLang, isFullPage = false }: Cont
                   <div className="flex items-center justify-center h-8 w-8 rounded-full bg-orange-50 dark:bg-orange-500/10 text-orange-500">
                     <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" /><polyline points="22,6 12,13 2,6" /></svg>
                   </div>
-                  <span>hello@nextsolution.co</span>
+                  <span>hello@nextsolutionmym.com</span>
                 </div>
               </div>
             </div>
@@ -388,7 +388,7 @@ export default function ContactSection({ currentLang, isFullPage = false }: Cont
               <ul className="space-y-4 text-sm text-gray-600 dark:text-neutral-300">
                 <li className="flex items-start space-x-3">
                   <MapPin className="h-5 w-5 text-blue-600 dark:text-orange-400 shrink-0 mt-0.5" />
-                  <span className="leading-relaxed">Suite 404, Silicon High-Street, Dhaka, Bangladesh</span>
+                  <span className="leading-relaxed">Mymensingh, Bangladesh</span>
                 </li>
                 <li className="flex items-center space-x-3">
                   <Smartphone className="h-5 w-5 text-blue-600 dark:text-orange-400 shrink-0" />
@@ -396,7 +396,7 @@ export default function ContactSection({ currentLang, isFullPage = false }: Cont
                 </li>
                 <li className="flex items-center space-x-3">
                   <Mail className="h-5 w-5 text-blue-600 dark:text-orange-400 shrink-0" />
-                  <a href="mailto:hello@nextsolution.co" className="hover:text-blue-600 dark:text-orange-400 transition font-mono">hello@nextsolution.co</a>
+                  <a href="mailto:hello@nextsolutionmym.com" className="hover:text-blue-600 dark:text-orange-400 transition font-mono">hello@nextsolutionmym.com</a>
                 </li>
                 <li className="flex items-start space-x-3 pt-2 border-t border-gray-50 dark:border-neutral-800">
                   <Clock className="h-5 w-5 text-blue-600 dark:text-orange-400 shrink-0 mt-0.5" />

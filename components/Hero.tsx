@@ -497,7 +497,8 @@ export default function Hero({ currentLang, setTab }: HeroProps) {
         <div className="relative z-40 mt-0 pb-6 lg:-mt-4">
           <div
             className="
-              grid
+              hidden
+              lg:grid
               grid-cols-4
               overflow-hidden
               rounded-3xl

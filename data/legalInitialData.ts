@@ -76,7 +76,7 @@ export const initialLegalPolicies: LegalPolicy[] = [
         titleEn: 'Introduction',
         titleBn: 'ভূমিকা',
         contentEn: 'Welcome to Next Solution ("we", "our", or "us"). We are highly committed to protecting your personal information and your right to privacy. If you have any questions or concerns about our policy, or our practices with regards to your personal information, please contact us at legal@nextsolution.co.\n\nWhen you visit our website or use our design, development, and consultation services, you trust us with your personal information. We take this trust very seriously. In this privacy policy, we seek to explain to you in the clearest way possible what information we collect, how we use it, and what rights you have in relation to it.',
-        contentBn: 'নেক্সট সলিউশনে ("আমরা", "আমাদের") আপনাকে স্বাগতম। আমরা আপনার ব্যক্তিগত তথ্য এবং গোপনীয়তার অধিকার রক্ষায় অত্যন্ত প্রতিশ্রুতিবদ্ধ। আমাদের নীতি বা আপনার ব্যক্তিগত তথ্যের বিষয়ে কোনো প্রশ্ন থাকলে legal@nextsolution.co ঠিকানায় যোগাযোগ করুন।\n\nআপনি যখন আমাদের ওয়েবসাইট পরিদর্শন করেন বা আমাদের ডিজাইন, ডেভেলপমেন্ট এবং কনসালটেশন সেবা গ্রহণ করেন, তখন আপনি আমাদের উপর আস্থা রাখেন। আমরা এই আস্থাকে অত্যন্ত গুরুত্ব সহকারে নিই। এই গোপনীয়তা নীতিতে আমরা অত্যন্ত স্পষ্ট ভাষায় আমাদের ডেটা সংগ্রহ ও ব্যবহারের প্রক্রিয়া এবং আপনার অধিকারগুলো তুলে ধরেছি।'
+        contentBn: 'নেক্সট সলিউশনে ("আমরা", "আমাদের") আপনাকে স্বাগতম। আমরা আপনার ব্যক্তিগত তথ্য এবং গোপনীয়তার অধিকার রক্ষায় অত্যন্ত প্রতিশ্রুতিবদ্ধ। আমাদের নীতি বা আপনার ব্যক্তিগত তথ্যের বিষয়ে কোনো প্রশ্ন থাকলে legal@nextsolution.com ঠিকানায় যোগাযোগ করুন।\n\nআপনি যখন আমাদের ওয়েবসাইট পরিদর্শন করেন বা আমাদের ডিজাইন, ডেভেলপমেন্ট এবং কনসালটেশন সেবা গ্রহণ করেন, তখন আপনি আমাদের উপর আস্থা রাখেন। আমরা এই আস্থাকে অত্যন্ত গুরুত্ব সহকারে নিই। এই গোপনীয়তা নীতিতে আমরা অত্যন্ত স্পষ্ট ভাষায় আমাদের ডেটা সংগ্রহ ও ব্যবহারের প্রক্রিয়া এবং আপনার অধিকারগুলো তুলে ধরেছি।'
       },
       {
         id: 'sec-priv-collect',
@@ -138,7 +138,7 @@ export const initialLegalPolicies: LegalPolicy[] = [
         id: 'sec-priv-contact',
         titleEn: 'Contact Information',
         titleBn: 'যোগাযোগের তথ্য',
-        contentEn: 'If you have questions, comments, or complaints about this Privacy Policy, or how we handle your personal data, please contact our Legal Team at:\n\nEmail: legal@nextsolution.co\nAddress: Suite 404, Silicon High-Street, Dhaka, Bangladesh\nPhone: +880 1955 417215',
+        contentEn: 'If you have questions, comments, or complaints about this Privacy Policy, or how we handle your personal data, please contact our Legal Team at:\n\nEmail: legal@nextsolution.co\nAddress: Myemsningh, Bangladesh\nPhone: +880 1955 417215',
         contentBn: 'এই গোপনীয়তা নীতি বা আমাদের তথ্য পরিচালনা সম্পর্কে কোনো প্রশ্ন, মন্তব্য বা অভিযোগ থাকলে অনুগ্রহ করে আমাদের লিগ্যাল টিমের সাথে যোগাযোগ করুন:\n\nইমেল: legal@nextsolution.co\nঠিকানা: স্যুট ৪০৪, সিলিকন হাই-স্ট্রিট, ঢাকা, বাংলাদেশ\nফোন: +৮৮০ ১৭১১ ০০০০০০'
       }
     ]

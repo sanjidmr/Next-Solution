@@ -9,7 +9,7 @@ export const siteConfig = {
     email: "hello@nextsolution.co",
     phone: "+880 1955 417215",
     phoneHref: "tel:+8801955417215",
-    address: "Suite 404, Silicon High-Street, Dhaka, Bangladesh",
+    address: "Mymensingh, Bangladesh",
     hours: "Mon - Fri: 9:00 AM - 6:00 PM (GMT+6)",
   },
   social: {

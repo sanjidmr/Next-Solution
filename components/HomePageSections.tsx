@@ -718,7 +718,6 @@ export default function HomePageSections({ currentLang, setTab, portfolioData }:
 {/* ========================================================
           SECTION 7: FEATURED PORTFOLIO (WITH CATEGORY FILTERING)
          ======================================================== */}
-      {filteredPortfolio.length > 0 && (
       <section id="featured-portfolio" className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-10">
         {/* Header Block */}
         <div className="text-center space-y-4 max-w-3xl mx-auto">
@@ -774,6 +773,7 @@ export default function HomePageSections({ currentLang, setTab, portfolioData }:
             transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: 0.15 }}
             fallbackMs={1000}
           >
+            {filteredPortfolio.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               <AnimatePresence mode="popLayout">
                 {filteredPortfolio.slice(0, 6).map((item, idx) => (
@@ -856,6 +856,17 @@ className="group cursor-pointer"
                 ))}
               </AnimatePresence>
             </div>
+            ) : (
+              <div className="flex flex-col items-center justify-center gap-4 rounded-2xl border border-dashed border-neutral-200 dark:border-neutral-700 bg-neutral-50/60 dark:bg-white/[0.02] px-6 py-16 text-center">
+                <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-neutral-100 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700">
+                  <Search className="h-6 w-6 text-neutral-400 dark:text-neutral-500" />
+                </div>
+                <div>
+                  <p className="text-sm font-bold text-neutral-700 dark:text-neutral-200">{currentLang === 'en' ? 'No projects in this category yet' : 'এই ক্যাটাগরিতে এখনও কোনো প্রজেক্ট নেই'}</p>
+                  <p className="text-xs text-neutral-400 dark:text-neutral-500 mt-1">{currentLang === 'en' ? 'Try selecting a different service to explore more work.' : 'আরও কাজ দেখতে একটি ভিন্ন সেবা বেছে নিন।'}</p>
+                </div>
+              </div>
+            )}
           </RevealGuard>
         </div>
 
@@ -869,7 +880,6 @@ className="group cursor-pointer"
           </button>
         </div>
       </section>
-      )}
       {/* ========================================================
           SECTION 8: INDUSTRIES WE SERVE (PREMIUM ASYMMETRIC EDITORIAL)
          ======================================================== */}

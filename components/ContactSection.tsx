@@ -253,7 +253,7 @@ export default function ContactSection({ currentLang, isFullPage = false }: Cont
                       value={name}
                       onChange={(e) => setName(e.target.value)}
                       placeholder={currentLang === 'en' ? 'e.g. John Doe' : 'à¦¯à§‡à¦®à¦¨: à¦œà¦¨ à¦¡à§‹'}
-                      className="w-full rounded-xl border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#1a1a1a] px-4 py-3 text-sm text-gray-800 dark:text-neutral-100 placeholder-gray-400 focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 transition dark:focus:border-orange-500 dark:focus:ring-orange-500/20"
+                      className="w-full border-0 border-b border-transparent bg-transparent px-1 py-3 text-sm text-gray-800 dark:text-neutral-100 placeholder-gray-400/60 outline-none focus:outline-none focus:ring-0 focus:border-transparent transition"
                     />
                   </div>
 
@@ -269,7 +269,7 @@ export default function ContactSection({ currentLang, isFullPage = false }: Cont
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       placeholder={currentLang === 'en' ? 'e.g. john@example.com' : 'à¦¯à§‡à¦®à¦¨: john@example.com'}
-                      className="w-full rounded-xl border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#1a1a1a] px-4 py-3 text-sm text-gray-800 dark:text-neutral-100 placeholder-gray-400 focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 transition dark:focus:border-orange-500 dark:focus:ring-orange-500/20"
+                      className="w-full border-0 border-b border-transparent bg-transparent px-1 py-3 text-sm text-gray-800 dark:text-neutral-100 placeholder-gray-400/60 outline-none focus:outline-none focus:ring-0 focus:border-transparent transition"
                     />
                   </div>
                 </div>
@@ -287,7 +287,7 @@ export default function ContactSection({ currentLang, isFullPage = false }: Cont
                       value={phone}
                       onChange={(e) => setPhone(e.target.value)}
                       placeholder={currentLang === 'en' ? 'e.g. +880 1700-000000' : 'à¦¯à§‡à¦®à¦¨: +à§®à§®à§¦ à§§à§­à§¦à§¦-à§¦à§¦à§¦à§¦à§¦à§¦'}
-                      className="w-full rounded-xl border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#1a1a1a] px-4 py-3 text-sm text-gray-800 dark:text-neutral-100 placeholder-gray-400 focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 transition dark:focus:border-orange-500 dark:focus:ring-orange-500/20"
+                      className="w-full border-0 border-b border-transparent bg-transparent px-1 py-3 text-sm text-gray-800 dark:text-neutral-100 placeholder-gray-400/60 outline-none focus:outline-none focus:ring-0 focus:border-transparent transition"
                     />
                   </div>
 
@@ -300,7 +300,7 @@ export default function ContactSection({ currentLang, isFullPage = false }: Cont
                       id="contact-budget"
                       value={budget}
                       onChange={(e) => setBudget(e.target.value)}
-                      className="w-full rounded-xl border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#1a1a1a] px-4 py-3 text-sm text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 transition dark:focus:border-orange-500 dark:focus:ring-orange-500/20"
+                      className="w-full appearance-none border-0 border-b border-transparent bg-transparent px-1 py-3 text-sm text-gray-800 dark:text-neutral-100 focus:outline-none focus:ring-0 focus:border-transparent transition"
                     >
                       <option value="">{currentLang === 'en' ? 'Select estimated budget' : 'à¦†à¦¨à§à¦®à¦¾à¦¨à¦¿à¦• à¦¬à¦¾à¦œà§‡à¦Ÿ à¦¨à¦¿à¦°à§à¦¬à¦¾à¦šà¦¨ à¦•à¦°à§à¦¨'}</option>
                       <option value="Under $5,000">Under $5,000</option>
@@ -320,7 +320,7 @@ export default function ContactSection({ currentLang, isFullPage = false }: Cont
                       id="contact-service"
                       value={service}
                       onChange={(e) => setService(e.target.value)}
-                      className="w-full rounded-xl border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#1a1a1a] px-4 py-3 text-sm text-gray-800 dark:text-neutral-100 focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 transition dark:focus:border-orange-500 dark:focus:ring-orange-500/20"
+                      className="w-full appearance-none border-0 border-b border-transparent bg-transparent px-1 py-3 text-sm text-gray-800 dark:text-neutral-100 focus:outline-none focus:ring-0 focus:border-transparent transition"
                     >
                       <option value="">{currentLang === 'en' ? 'Select a capability' : 'সার্ভিস নির্বাচন করুন'}</option>
                       {(services || defaultServices).map((srv) => (
@@ -344,7 +344,7 @@ export default function ContactSection({ currentLang, isFullPage = false }: Cont
                     value={message}
                     onChange={(e) => setMessage(e.target.value)}
                     placeholder={currentLang === 'en' ? 'Describe your project goals, milestones, and design requirements...' : 'à¦†à¦ªà¦¨à¦¾à¦° à¦ªà§à¦°à¦œà§‡à¦•à§à¦Ÿà§‡à¦° à¦²à¦•à§à¦·à§à¦¯ à¦à¦¬à¦‚ à¦ªà§à¦°à§Ÿà§‹à¦œà¦¨à§€à§Ÿà¦¤à¦¾ à¦‰à¦²à§à¦²à§‡à¦– à¦•à¦°à§à¦¨...'}
-                    className="w-full rounded-xl border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#1a1a1a] px-4 py-3 text-sm text-gray-800 dark:text-neutral-100 placeholder-gray-400 focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 transition dark:focus:border-orange-500 dark:focus:ring-orange-500/20 resize-none"
+                    className="w-full border-0 border-b border-transparent bg-transparent px-1 py-3 text-sm text-gray-800 dark:text-neutral-100 placeholder-gray-400/60 outline-none focus:outline-none focus:ring-0 focus:border-transparent transition resize-none"
                   />
                 </div>
 

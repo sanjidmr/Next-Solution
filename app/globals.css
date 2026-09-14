@@ -274,7 +274,6 @@ body {
 .dark input:active,
 .dark textarea:active,
 .dark select:active {
-  background-color: #1a1a1a !important;
   color: #f5f5f5 !important;
 }
 

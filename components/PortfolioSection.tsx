@@ -166,7 +166,7 @@ export default function PortfolioSection({ currentLang, setTab, isFullPage = fal
               </div>
               <div className="h-px w-12 bg-gradient-to-r from-orange-500 to-transparent mx-auto sm:mx-0" />
 
-              <h1 className="text-[1.55rem] sm:text-[2.5rem] lg:text-[3.5rem] xl:text-[4rem] font-black leading-[1.05] tracking-tight">
+              <h1 className="text-[2rem] sm:text-[2.5rem] lg:text-[3.5rem] xl:text-[4rem] font-black leading-[1.05] tracking-tight">
                 <span className="text-gray-900 dark:text-white">{isEn ? 'Ideas We Design.' : 'আমরা যে আইডিয়া ডিজাইন করি।'}</span>
                 <br />
                 <span className="text-gray-900 dark:text-white">{isEn ? 'Solutions We ' : 'সমাধান যা আমরা '}</span>

@@ -751,7 +751,7 @@ export default function ServicesSection({ currentLang, setTab, isFullPage = fals
                 </span>
               </div>
 
-              <h1 className="text-[1.65rem] sm:text-5xl lg:text-[4rem] font-black text-neutral-900 dark:text-white leading-[1.05] tracking-tight">
+              <h1 className="text-[2.1rem] sm:text-5xl lg:text-[4rem] font-black text-neutral-900 dark:text-white leading-[1.05] tracking-tight">
                 {currentLang === 'en' ? (
                   <>All Digital Problems.<br /><span className="text-orange-500">One Trusted Solution.</span></>
                 ) : (
@@ -797,10 +797,10 @@ export default function ServicesSection({ currentLang, setTab, isFullPage = fals
 
             {/* Right Column: Logo + Orbiting Services — slides up from below */}
             <HeroEntrance direction="up" distance={120} duration={1} delay={0.15}>
-            <div className="relative flex items-center justify-center min-h-[250px] sm:min-h-[440px] lg:min-h-[650px]">
+            <div className="relative flex items-center justify-center min-h-[320px] sm:min-h-[440px] lg:min-h-[650px]">
 
               {/* Responsive orbit wrapper â€” scales down on mobile */}
-              <div className="relative w-full h-full scale-[0.40] sm:scale-75 lg:scale-100 origin-center">
+              <div className="relative w-full h-full scale-[0.52] sm:scale-75 lg:scale-100 origin-center">
 
                 {/* Outer orbit ring â€” 6 services, rotates clockwise */}
                 <div className="absolute inset-0 animate-[spin_70s_linear_infinite]">
@@ -1114,7 +1114,7 @@ export default function ServicesSection({ currentLang, setTab, isFullPage = fals
           }
         `}} />
 
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-16">
+        <div className="w-full space-y-16 px-4 sm:px-6 lg:px-8">
           <div className="text-center space-y-4 max-w-2xl mx-auto">
             <span className="text-xs font-bold uppercase tracking-widest text-blue-600 dark:text-blue-400">
               {currentLang === 'en' ? 'OUR TECH STACK' : 'আমাদের আধুনিক প্রযুক্তি'}
@@ -1129,7 +1129,7 @@ export default function ServicesSection({ currentLang, setTab, isFullPage = fals
             </p>
           </div>
 
-          <div className="space-y-10 max-w-6xl mx-auto">
+          <div className="space-y-10 w-full">
             {techCategories.map((cat, i) => {
               // Duplicate techs array to create infinite scroll effect
               const duplicatedTechs = [...cat.techs, ...cat.techs];
@@ -1162,9 +1162,9 @@ export default function ServicesSection({ currentLang, setTab, isFullPage = fals
                       {duplicatedTechs.map((tech, tIdx) => (
                         <div 
                           key={tIdx} 
-                          className="w-48 sm:w-52 shrink-0 bg-neutral-50/50 dark:bg-neutral-900/50 hover:bg-white dark:bg-[#141414] border border-neutral-100/60 rounded-2xl p-3 flex items-center gap-3 transition-all duration-300 hover:scale-[1.03] hover:shadow-[0_4px_15px_rgba(0,0,0,0.03)] hover:border-blue-500/20 group cursor-pointer"
+                          className="w-40 sm:w-44 shrink-0 bg-neutral-50/50 dark:bg-neutral-900/50 hover:bg-white dark:bg-[#141414] border border-neutral-100/60 rounded-2xl p-2.5 flex items-center gap-2.5 transition-all duration-300 hover:scale-[1.03] hover:shadow-[0_4px_15px_rgba(0,0,0,0.03)] hover:border-blue-500/20 group cursor-pointer"
                         >
-                          <div className="h-9 w-9 rounded-xl border border-neutral-100 dark:border-neutral-800 bg-white dark:bg-[#141414] shadow-sm flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+                          <div className="h-8 w-8 rounded-xl border border-neutral-100 dark:border-neutral-800 bg-white dark:bg-[#141414] shadow-sm flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
                             <TechIcon logo={tech.logo} />
                           </div>
                           <div className="overflow-hidden min-w-0">

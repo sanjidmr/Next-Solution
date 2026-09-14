@@ -990,7 +990,7 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
                 </div>
 
                 {/* Key Metrics Row — below PNG */}
-                <div className="relative z-10 mt-10 sm:mt-12 grid grid-cols-4 gap-2 sm:gap-3 lg:hidden">
+                <div className="relative z-10 mt-16 sm:mt-14 grid grid-cols-4 gap-2 sm:gap-3 lg:hidden">
                   {[
                     { value: '2+', labelEn: 'Years Technical', labelBn: 'বছরের অভিজ্ঞতা' },
                     { value: '2+', labelEn: 'Years Agency', labelBn: 'বছরের এজেন্সি' },

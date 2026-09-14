@@ -856,7 +856,7 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
                 initial={{ opacity: 0, x: -50 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.8, delay: 0.28, ease: [0.22, 1, 0.36, 1] }}
-                className="font-sans text-[1.45rem] xs:text-[1.75rem] sm:text-[2.6rem] lg:text-[3.4rem] font-black tracking-tight leading-[1.05] text-neutral-900 dark:text-white line-clamp-3 sm:line-clamp-none"
+                className="font-sans text-[1.75rem] xs:text-[2rem] sm:text-[2.6rem] lg:text-[3.4rem] font-black tracking-tight leading-[1.05] text-neutral-900 dark:text-white"
               >
                 {currentLang === 'en' ? (
                   <>
@@ -986,7 +986,7 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
                 </div>
 
                 {/* Key Metrics Row — below PNG */}
-                <div className="relative z-10 mt-4 sm:mt-6 grid grid-cols-4 gap-2 sm:gap-3 lg:hidden">
+                <div className="relative z-10 mt-10 sm:mt-12 grid grid-cols-4 gap-2 sm:gap-3 lg:hidden">
                   {[
                     { value: '2+', labelEn: 'Years Technical', labelBn: 'বছরের অভিজ্ঞতা' },
                     { value: '2+', labelEn: 'Years Agency', labelBn: 'বছরের এজেন্সি' },

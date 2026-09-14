@@ -215,7 +215,7 @@ export default function ContactSection({ currentLang, isFullPage = false }: Cont
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-stretch">
           
           {/* Contact Form Container (Left Column) */}
-          <div className="lg:col-span-7 bg-white dark:bg-[#141414] rounded-2xl border border-gray-200 dark:border-neutral-700/60 p-8 sm:p-10 shadow-sm flex flex-col justify-between">
+          <div className="lg:col-span-7 rounded-2xl border border-gray-200 dark:border-neutral-700/60 p-8 sm:p-10 shadow-sm flex flex-col justify-between">
             {isSuccess ? (
               <div id="contact-success" className="text-center py-12 space-y-6 max-w-md mx-auto my-auto">
                 <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-green-50 text-green-600 border border-green-100">

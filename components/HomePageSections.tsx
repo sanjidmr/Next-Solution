@@ -566,7 +566,7 @@ export default function HomePageSections({ currentLang, setTab, portfolioData }:
       {/* ========================================================
           TRUSTED BY INDUSTRY LEADERS — right beneath Our Services
          ======================================================== */}
-      <section id="trusted-by" className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10 sm:py-12">
+      <section id="trusted-by" className="relative w-full py-10 sm:py-12">
         <TrustedByMarquee currentLang={currentLang} />
       </section>
 

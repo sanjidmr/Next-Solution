@@ -1155,7 +1155,7 @@ className="group cursor-pointer"
                 )}
               </h2>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-3 sm:max-w-xl mx-auto lg:mx-0 w-full">
+              <div className="grid grid-cols-2 gap-x-10 gap-y-3 sm:max-w-xl mx-auto lg:mx-0 w-full">
                 {[
                   { name: 'Mushfiqur Rahman Sanjid', nameBn: 'মুশফিকুর রহমান সানজিদ', role: 'Founder & CEO', roleBn: 'প্রতিষ্ঠাতা ও সিইও' },
                   { name: "Saa'd ibna bashar", nameBn: 'সা\'দ ইবনা বাশার', role: 'Co-Founder & MD', roleBn: 'সহ-প্রতিষ্ঠাতা ও এমডি' },
@@ -1182,23 +1182,6 @@ className="group cursor-pointer"
                   ? 'Founder of Next Solution and a dedicated web development expert. He architects high-performance websites and scalable web applications using React, Next.js and TypeScript — ensuring every build delivers blazing-fast speed, pixel-perfect responsiveness and revenue-focused engineering.'
                   : 'নেক্সট সলিউশনের প্রতিষ্ঠাতা এবং নিবেদিতপ্রাণ ওয়েব ডেভেলপমেন্ট এক্সপার্ট। তিনি HTML, React ও Next.js ব্যবহার করে উচ্চ-ক্ষমতাসম্পন্ন ওয়েবসাইট এবং স্কেলেবল ওয়েব অ্যাপ্লিকেশন ডিজাইন করেন — প্রতিটি প্রজেক্টে ব্লেজিং-ফাস্ট স্পিড, পিক্সেল-পারফেক্ট রেসপনসিভ ডিজাইন এবং রাজস্ব-কেন্দ্রিক ইঞ্জিনিয়ারিং নিশ্চিত করেন।'}
               </p>
-
-              <div className="flex flex-wrap justify-center lg:justify-start gap-3 pt-1">
-                <button
-                  onClick={() => setTab?.('about')}
-                  className="group inline-flex items-center gap-2 rounded-xl bg-orange-600 hover:bg-orange-700 text-white px-6 py-3 text-sm font-bold shadow-[0_14px_30px_-10px_rgba(255,77,0,0.6)] transition-all duration-300 hover:-translate-y-0.5 cursor-pointer"
-                >
-                  {currentLang === 'en' ? 'Meet the Team' : 'টিমের সাথে পরিচিত হোন'}
-                  <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
-                </button>
-                <button
-                  onClick={() => setTab?.('contact')}
-                  className="group inline-flex items-center gap-2 rounded-xl border-2 border-orange-200 dark:border-orange-500/30 bg-white dark:bg-neutral-900 text-orange-600 dark:text-orange-400 px-6 py-3 text-sm font-bold transition-all duration-300 hover:-translate-y-0.5 hover:border-orange-500 hover:bg-orange-50 dark:hover:bg-orange-500/10 cursor-pointer"
-                >
-                  {currentLang === 'en' ? 'Work With Us' : 'আমাদের সাথে কাজ করুন'}
-                  <ArrowUpRight className="h-4 w-4" />
-                </button>
-              </div>
             </div>
 
             {/* ── Portrait Column (About hero style) ── */}

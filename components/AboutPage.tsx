@@ -14,7 +14,7 @@ import {
   Cpu, Star, Zap, Check, MessageSquare, Quote, Server, Layers,
   MapPin, BookOpen, Laptop, Rocket, FileText, Share2, Compass,
   DollarSign, Activity, Settings as SettingsIcon, BrainCircuit, Search, Play,
-  Mail, Linkedin, Smartphone
+  Mail, Linkedin, Smartphone, Facebook
 } from 'lucide-react';
 import { translations } from '@/data/translations';
 import { getSettings, getTestimonials } from '@/lib/db';
@@ -227,6 +227,7 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
       skillsBn: ['ওয়েব ডেভেলপমেন্ট', 'রিয়্যাক্ট ও নেক্সট.জেএস', 'বিজনেস স্ট্র্যাটেজি'],
       email: 'mushfiqurrahmansanjid@gmail.com',
       linkedin: 'https://linkedin.com/',
+      facebook: 'https://www.facebook.com/share/1C4XWLngUR/',
       statusEn: 'Available for Advisory',
       statusBn: 'পরামর্শের জন্য উপলব্ধ'
     },
@@ -247,6 +248,7 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
       skillsBn: ['এআই ইন্টিগ্রেটেড মার্কেটিং', 'ডিজিটাল মার্কেটিং', 'ব্র্যান্ডিং'],
       email: 'saadibnebashar@gmail.com',
       linkedin: 'https://linkedin.com/',
+      facebook: 'https://www.facebook.com/share/1C4XWLngUR/',
       statusEn: 'Designing Solutions',
       statusBn: 'সলিউশন ডিজাইনে ব্যস্ত'
     },
@@ -267,6 +269,7 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
       skillsBn: ['টেকনিক্যাল এসইও', 'কিওয়ার্ড স্ট্র্যাটেজি', 'প্রজেক্ট ম্যানেজমেন্ট'],
       email: 'alaminjisan@gmail.com',
       linkedin: 'https://linkedin.com/',
+      facebook: 'https://www.facebook.com/share/1C4XWLngUR/',
       statusEn: 'Consulting Partners',
       statusBn: 'অংশীদারদের সাথে কনসাল্টিংয়ে ব্যস্ত'
     },
@@ -287,6 +290,7 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
       skillsBn: ['গ্রাফিক ডিজাইন', 'ব্র্যান্ড আইডেন্টিটি', 'ডিজাইন সিস্টেম'],
       email: 'mustafiz@gmail.com',
       linkedin: 'https://linkedin.com/',
+      facebook: 'https://www.facebook.com/share/1C4XWLngUR/',
       statusEn: 'Managing Milestones',
       statusBn: 'মাইলস্টোন পরিচালনায় ব্যস্ত'
     }
@@ -1256,12 +1260,12 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
                   key={leader.id}
                   className="flex flex-col sm:flex-row-reverse bg-white dark:bg-[#141414] rounded-3xl border border-neutral-100 dark:border-neutral-800 shadow-[0_4px_20px_rgba(0,0,0,0.02)] overflow-hidden hover:shadow-[0_20px_50px_rgba(0,0,0,0.08)] hover:border-blue-500/10 transition-all duration-500 group relative"
                 >
-                  {/* Top/Mobile: Image — bigger on mobile, right side on desktop */}
-                  <div className="relative w-full h-60 sm:h-64 md:w-2/5 md:h-auto shrink-0 overflow-hidden bg-neutral-50 dark:bg-neutral-900">
+                  {/* Top/Mobile: Full image — right side on desktop */}
+                  <div className="relative w-full h-auto md:w-2/5 md:h-auto md:shrink-0 overflow-hidden bg-neutral-50 dark:bg-neutral-900">
                     <img 
                       src={typeof leader.portrait === 'string' ? leader.portrait : leader.portrait.src} 
                       alt={leader.nameEn}
-                      className="absolute inset-0 w-full h-full object-cover object-top group-hover:scale-[1.04] transition-all duration-700 ease-out"
+                      className="relative w-full h-auto object-cover object-top group-hover:scale-[1.04] md:absolute md:inset-0 md:h-full md:object-cover md:object-top transition-all duration-700 ease-out"
                       referrerPolicy="no-referrer"
                     />
                     {/* Subtle overlay to blend into card */}
@@ -1271,29 +1275,29 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
                   {/* Bottom: Info */}
                   <div className="p-5 md:p-8 flex flex-col justify-between flex-1 space-y-3 md:space-y-4">
                     <div className="space-y-2">
-                      <div className="flex items-center space-x-2">
+                      <div className="hidden md:flex items-center space-x-2">
                         <span className="h-1.5 w-1.5 rounded-full bg-blue-600 animate-pulse" />
                         <span className="text-[9px] font-black uppercase tracking-widest text-blue-600 dark:text-orange-400 font-mono">
                           {currentLang === 'en' ? leader.experienceEn : leader.experienceBn}
                         </span>
                       </div>
-                      
+
                       <h3 className="text-lg md:text-2xl font-black text-neutral-900 dark:text-white group-hover:text-blue-600 dark:text-orange-400 transition-colors duration-300">
                         {currentLang === 'en' ? leader.nameEn : leader.nameBn}
                       </h3>
-                      
+
                       <p className="text-[11px] font-bold text-neutral-400 dark:text-neutral-500 font-mono uppercase tracking-wider">
                         {currentLang === 'en' ? leader.roleEn : leader.roleBn}
                       </p>
                     </div>
 
-                    <p className="text-[11px] md:text-xs text-neutral-500 dark:text-neutral-400 dark:text-neutral-500 leading-relaxed font-normal line-clamp-3 md:line-clamp-none">
+                    <p className="hidden md:block text-[11px] md:text-xs text-neutral-500 dark:text-neutral-400 leading-relaxed font-normal">
                       {currentLang === 'en' ? leader.bioEn : leader.bioBn}
                     </p>
 
                     {/* Motto/Quote */}
-                    <div className="border-l-2 border-neutral-200 dark:border-neutral-700 pl-3 py-0.5">
-                      <p className="text-[10px] md:text-[11px] italic text-neutral-400 dark:text-neutral-500 font-normal leading-relaxed line-clamp-2 md:line-clamp-none">
+                    <div className="hidden md:block border-l-2 border-neutral-200 dark:border-neutral-700 pl-3 py-0.5">
+                      <p className="text-[10px] md:text-[11px] italic text-neutral-400 dark:text-neutral-500 font-normal leading-relaxed">
                         "{currentLang === 'en' ? leader.mottoEn : leader.mottoBn}"
                       </p>
                     </div>
@@ -1303,22 +1307,31 @@ export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
                       <div className="flex items-center space-x-3">
                         <a 
                           href={`mailto:${leader.email}`} 
-                          className="p-1.5 rounded-lg bg-neutral-50 dark:bg-neutral-900 hover:bg-neutral-100 dark:bg-neutral-800 hover:text-blue-600 dark:text-orange-400 text-neutral-400 dark:text-neutral-500 transition-all"
+                          className="p-1.5 rounded-lg bg-neutral-50 dark:bg-neutral-900 hover:bg-neutral-100 dark:hover:bg-neutral-800 hover:text-blue-600 dark:text-orange-400 text-neutral-400 dark:text-neutral-500 transition-all"
                           title={leader.email}
                         >
                           <Mail className="h-3.5 w-3.5" />
                         </a>
                         <a 
+                          href={leader.facebook} 
+                          target="_blank" 
+                          rel="noreferrer" 
+                          className="md:hidden p-1.5 rounded-lg bg-neutral-50 dark:bg-neutral-900 hover:bg-neutral-100 dark:hover:bg-neutral-800 hover:text-blue-600 dark:text-orange-400 text-neutral-400 dark:text-neutral-500 transition-all"
+                          title="Facebook"
+                        >
+                          <Facebook className="h-3.5 w-3.5" />
+                        </a>
+                        <a 
                           href={leader.linkedin} 
                           target="_blank" 
                           rel="noreferrer" 
-                          className="p-1.5 rounded-lg bg-neutral-50 dark:bg-neutral-900 hover:bg-neutral-100 dark:bg-neutral-800 hover:text-blue-600 dark:text-orange-400 text-neutral-400 dark:text-neutral-500 transition-all"
+                          className="hidden md:inline-flex p-1.5 rounded-lg bg-neutral-50 dark:bg-neutral-900 hover:bg-neutral-100 dark:hover:bg-neutral-800 hover:text-blue-600 dark:text-orange-400 text-neutral-400 dark:text-neutral-500 transition-all"
                         >
                           <Linkedin className="h-3.5 w-3.5" />
                         </a>
                       </div>
 
-                      <div className="flex items-center space-x-1.5 bg-neutral-50 dark:bg-neutral-900 px-2 py-1 rounded-lg">
+                      <div className="hidden md:flex items-center space-x-1.5 bg-neutral-50 dark:bg-neutral-900 px-2 py-1 rounded-lg">
                         <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
                         <span className="text-[9px] font-bold font-mono text-neutral-500 dark:text-neutral-400 dark:text-neutral-500">
                           {currentLang === 'en' ? leader.statusEn : leader.statusBn}

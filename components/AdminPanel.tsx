@@ -69,12 +69,37 @@ const LEAD_STATUS_META: Record<LeadStatusValue, { labelEn: string; labelBn: stri
   },
 };
 
+const MESSAGE_FILTERS: Array<{ id: 'all' | LeadStatusValue; labelEn: string; labelBn: string; icon: React.ElementType; cls: string }> = [
+  { id: 'all', labelEn: 'All', labelBn: 'সব', icon: InboxIcon, cls: 'bg-gray-100 text-gray-700 dark:bg-neutral-800 dark:text-neutral-200 border-gray-200/70 dark:border-neutral-700' },
+  { id: 'unread', labelEn: 'New', labelBn: 'নতুন', icon: InboxIcon, cls: LEAD_STATUS_META.unread.badge },
+  { id: 'contacted', labelEn: 'Contacted', labelBn: 'যোগাযোগ', icon: PhoneCallIcon, cls: LEAD_STATUS_META.contacted.badge },
+  { id: 'in_progress', labelEn: 'In Progress', labelBn: 'চলমান', icon: Clock3Icon, cls: LEAD_STATUS_META.in_progress.badge },
+  { id: 'converted', labelEn: 'Converted', labelBn: 'কনভার্টেড', icon: CheckCircle2Icon, cls: LEAD_STATUS_META.converted.badge },
+  { id: 'closed', labelEn: 'Closed', labelBn: 'বন্ধ', icon: XCircleIcon, cls: LEAD_STATUS_META.closed.badge },
+];
+
+function timeAgo(dateStr?: string, lang: 'en' | 'bn' = 'en'): string {
+  if (!dateStr) return '—';
+  const then = new Date(dateStr).getTime();
+  const diff = Date.now() - then;
+  if (Number.isNaN(then) || diff < 0) return lang === 'en' ? '—' : '—';
+  if (diff < 60000) return lang === 'en' ? 'just now' : 'এইমাত্র';
+  const mins = Math.floor(diff / 60000);
+  if (mins < 60) return lang === 'en' ? mins + 'm ago' : mins + ' মিনিট আগে';
+  const hrs = Math.floor(mins / 60);
+  if (hrs < 24) return lang === 'en' ? hrs + 'h ago' : hrs + ' ঘণ্টা আগে';
+  const days = Math.floor(hrs / 24);
+  if (days < 30) return lang === 'en' ? days + 'd ago' : days + ' দিন আগে';
+  return new Date(dateStr).toLocaleDateString();
+}
+
 import { 
   Lock as LockIcon, CheckCircle2 as CheckCircle2Icon, Trash2 as Trash2Icon, Mail as MailIcon, Users as UsersIcon, BookOpen as BookOpenIcon, Settings as SettingsIcon, 
   RotateCcw as RotateCcwIcon, Sparkles as SparklesIcon, Plus as PlusIcon, Edit2 as Edit2Icon, BarChart3 as BarChart3Icon, FolderKanban as FolderKanbanIcon, 
   MessageSquare as MessageSquareIcon, UserCheck as UserCheckIcon, Image as ImageIcon, Shield as ShieldIcon,
   Search as SearchIcon, Eye as EyeIcon, ArrowUpRight as ArrowUpRightIcon, Cpu as CpuIcon, ShoppingBag as ShoppingBagIcon,
-  ChevronDown as ChevronDownIcon, Inbox as InboxIcon, PhoneCall as PhoneCallIcon, Clock3 as Clock3Icon, XCircle as XCircleIcon
+  ChevronDown as ChevronDownIcon, Inbox as InboxIcon, PhoneCall as PhoneCallIcon, Clock3 as Clock3Icon, XCircle as XCircleIcon,
+  AlertTriangle as AlertTriangleIcon, RefreshCw as RefreshCwIcon, FileText as FileTextIcon
 } from 'lucide-react';
 
 interface AdminPanelProps {
@@ -89,7 +114,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
   // If the middleware session cookie is present, skip the redundant in-panel
   // passcode gate — the server already verified the credentials.
   useEffect(() => {
-    if (typeof document !== 'undefined' && document.cookie.split(';').some(c => c.trim().startsWith('ns_admin=1'))) {
+    if (typeof document !== 'undefined' && typeof document.cookie === 'string' && document.cookie.split(';').some(c => c.trim().startsWith('ns_admin=1'))) {
       setIsAuthenticated(true);
     }
   }, []);
@@ -205,6 +230,29 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
 
   // Database lists state
   const [messages, setMessages] = useState<ContactMessage[]>([]);
+  // ── Data-load diagnostics & Messages inbox state ──────────────────────
+  // Failures are collected and shown in a visible banner (never silent).
+  const [dataErrors, setDataErrors] = useState<string[]>([]);
+  const [messagesError, setMessagesError] = useState<string>('');
+  const [messageFilter, setMessageFilter] = useState<'all' | LeadStatusValue>('all');
+  const [messageSearch, setMessageSearch] = useState('');
+
+  const countByStatus = (s: 'all' | LeadStatusValue): number =>
+    s === 'all'
+      ? messages.length
+      : messages.filter((m) => (m.status as LeadStatusValue) === s).length;
+
+  const filteredMessages = messages
+    .filter((m) => messageFilter === 'all' || (m.status as LeadStatusValue) === messageFilter)
+    .filter((m) => {
+      const q = messageSearch.trim().toLowerCase();
+      if (!q) return true;
+      return [m.name, m.email, m.phone, m.subject, m.message, m.service, m.budget]
+        .filter(Boolean)
+        .join(' ')
+        .toLowerCase()
+        .includes(q);
+    });
   const [subscribers, setSubscribers] = useState<Subscriber[]>([]);
   const [blogs, setBlogs] = useState<BlogPost[]>([]);
   const [services, setServices] = useState<Service[]>([]);
@@ -327,79 +375,133 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
   // Helper to safely get flag
   const currFlag = (c: any) => c?.flag || '🏳️';
 
-  // Load Admin Data from central simulated DB with auxiliary loaders
+  // Load Admin Data — every collection loads independently so one failing
+  // table (e.g. /api/admin/messages when the staff session is invalid) can
+  // never blank the whole panel. Failures show up in a visible banner.
   const loadAdminData = async () => {
-    try {
-    const msgs = await adminDB.getAllMessages(); setMessages(msgs || []);
-    const subs = await adminDB.getAllSubscribers(); setSubscribers(subs || []);
-    const blgs = await adminDB.getAllBlogs(); setBlogs(blgs || []);
-    const svcs = await adminDB.getAllServices(); setServices(svcs || []);
-    const stgs = await adminDB.getSettings(); setSettings(stgs || {} as SiteSettings);
-    const pfs = await adminDB.getAllPortfolio(); setPortfolios(pfs || []);
-    const tsts = await adminDB.getAllTestimonials(); setTestimonials(tsts || []);
-    const curs = await adminDB.getAllCurrencies(); setCurrencies(curs || []);
-    const currSets = await adminDB.getCurrencySettings(); if (currSets) setCurrencySettingsState(currSets);
-    const vids = await adminDB.getAllTestimonialVideos(); setTestimonialVideos(vids || []);
-    const strs = await adminDB.getAllSuccessStories(); setSuccessStories(strs || []);
-    const clogs = await adminDB.getAllClientLogos(); setClientLogos(clogs || []);
-    const tstsStats = await adminDB.getTestimonialStatistics(); setTestimonialStatistics(tstsStats || null);
-    const rvw = await adminDB.getReviewSettings(); setReviewSettings(rvw || null);
+    const errors: string[] = [];
+    const run = async (label: string, fn: () => Promise<void>) => {
+      try {
+        await fn();
+      } catch (err: any) {
+        errors.push(label + ': ' + (err?.message || String(err)));
+      }
+    };
+
+    await Promise.allSettled([
+      run('messages', async () => {
+        const msgs = await adminDB.getAllMessages();
+        setMessages(msgs || []);
+        setMessagesError('');
+      }),
+      run('subscribers', async () => {
+        const subs = await adminDB.getAllSubscribers();
+        setSubscribers(subs || []);
+      }),
+      run('blogs', async () => {
+        const blgs = await adminDB.getAllBlogs();
+        setBlogs(blgs || []);
+      }),
+      run('services', async () => {
+        const svcs = await adminDB.getAllServices();
+        setServices(svcs || []);
+      }),
+      run('settings', async () => {
+        const stgs = await adminDB.getSettings();
+        setSettings(stgs || ({} as SiteSettings));
+      }),
+      run('portfolio', async () => {
+        const pfs = await adminDB.getAllPortfolio();
+        setPortfolios(pfs || []);
+      }),
+      run('testimonials', async () => {
+        const tsts = await adminDB.getAllTestimonials();
+        setTestimonials(tsts || []);
+      }),
+      run('currencies', async () => {
+        const curs = await adminDB.getAllCurrencies();
+        setCurrencies(curs || []);
+      }),
+      run('currency-settings', async () => {
+        const currSets = await adminDB.getCurrencySettings();
+        if (currSets) setCurrencySettingsState(currSets);
+      }),
+      run('testimonial-videos', async () => {
+        const vids = await adminDB.getAllTestimonialVideos();
+        setTestimonialVideos(vids || []);
+      }),
+      run('success-stories', async () => {
+        const strs = await adminDB.getAllSuccessStories();
+        setSuccessStories(strs || []);
+      }),
+      run('client-logos', async () => {
+        const clogs = await adminDB.getAllClientLogos();
+        setClientLogos(clogs || []);
+      }),
+      run('testimonial-statistics', async () => {
+        const tstsStats = await adminDB.getTestimonialStatistics();
+        setTestimonialStatistics(tstsStats || null);
+      }),
+      run('review-settings', async () => {
+        const rvw = await adminDB.getReviewSettings();
+        setReviewSettings(rvw || null);
+      }),
+      run('why-choose-us', async () => {
+        const wcuC = await adminDB.getAllWhyChooseUsCards(); setWhyChooseUsCardsState(wcuC || []);
+        const wcuS = await adminDB.getAllWhyChooseUsStats(); setWhyChooseUsStatsState(wcuS || []);
+        const wcuB = await adminDB.getAllWhyChooseUsBadges(); setWhyChooseUsBadgesState(wcuB || []);
+        const wcuT = await adminDB.getAllWhyChooseUsTechs(); setWhyChooseUsTechsState(wcuT || []);
+        const ctaData = await adminDB.getWhyChooseUsCTA();
+        setWhyChooseUsCTAState(ctaData);
+        setWhyCTAForm(ctaData || { taglineEn: '', taglineBn: '', headlineEn: '', headlineBn: '', descriptionEn: '', descriptionBn: '', primaryButtonTextEn: '', primaryButtonTextBn: '', secondaryButtonTextEn: '', secondaryButtonTextBn: '' });
+      }),
+      run('process', async () => {
+        const pSteps = await adminDB.getAllProcessSteps(); setProcessStepsState(pSteps || []);
+        const pctData = await adminDB.getProcessCTA();
+        setProcessCTAState(pctData);
+        setProcessCTAForm(pctData || { titleEn: '', titleBn: '', highlightEn: '', highlightBn: '', subtitleEn: '', subtitleBn: '', ctaHeadlineEn: '', ctaHeadlineBn: '', ctaSubtitleEn: '', ctaSubtitleBn: '', ctaPrimaryTextEn: '', ctaPrimaryTextBn: '', ctaSecondaryTextEn: '', ctaSecondaryTextBn: '' });
+      }),
+      run('tech-service-cards', async () => {
+        const tsCards = await adminDB.getAllTechServiceCards();
+        setTechServiceCardsState(tsCards || []);
+      }),
+    ]);
 
     // Auxiliary collections with local persistence
-    if (!getLocalItem('next_solution_team')) {
-      const defaultTeam = [
-        { id: 'team-1', name: 'Sanjid Rahman', roleEn: 'Founder & CEO', roleBn: 'প্রতিষ্ঠাতা ও সিইও', departmentEn: 'Executive', departmentBn: 'নির্বাহী', avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=400', email: 'sanjid@nextsolutionmym.com', linkedin: 'https://linkedin.com/in/sanjid', bioEn: 'Sanjid oversees Next Solutions strategic direction, drawing on 12+ years of enterprise SaaS architecture.', bioBn: 'সানজিদ নেক্সট সলিউশনের কৌশলগত পরিকল্পনা পরিচালনা করেন, তার ১২ বছরের স্যাস আর্কিটেকচারের অভিজ্ঞতা রয়েছে।' },
-        { id: 'team-2', name: 'Tasnim Ahmed', roleEn: 'Head of Product Engineering', roleBn: 'হেড অফ প্রোডাক্ট ইঞ্জিনিয়ারিং', departmentEn: 'Engineering', departmentBn: 'প্রকৌশল', avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=400', email: 'tasnim@nextsolution.com', linkedin: 'https://linkedin.com/in/tasnim', bioEn: 'Tasnim directs the frontend and cloud systems deployment with a deep focus on Webflow and Next.js scale.', bioBn: 'তাসনিম ওয়েবফ্লো এবং নেক্সট জেএস স্কেলের ওপর গভীর ফোকাস দিয়ে ফ্রন্টএন্ড এবং ক্লাউড সিস্টেম পরিচালনা করেন।' }
-      ];
-      setLocalItem('next_solution_team', JSON.stringify(defaultTeam));
+    try {
+      if (!getLocalItem('next_solution_team')) {
+        const defaultTeam = [
+          { id: 'team-1', name: 'Sanjid Rahman', roleEn: 'Founder & CEO', roleBn: 'প্রতিষ্ঠাতা ও সিইও', departmentEn: 'Executive', departmentBn: 'নির্বাহী', avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=400', email: 'sanjid@nextsolutionmym.com', linkedin: 'https://linkedin.com/in/sanjid', bioEn: 'Sanjid oversees Next Solutions strategic direction, drawing on 12+ years of enterprise SaaS architecture.', bioBn: 'সানজিদ নেক্সট সলিউশনের কৌশলগত পরিকল্পনা পরিচালনা করেন, তার ১২ বছরের স্যাস আর্কিটেকচারের অভিজ্ঞতা রয়েছে।' },
+          { id: 'team-2', name: 'Tasnim Ahmed', roleEn: 'Head of Product Engineering', roleBn: 'হেড অফ প্রোডাক্ট ইঞ্জিনিয়ারিং', departmentEn: 'Engineering', departmentBn: 'প্রকৌশল', avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=400', email: 'tasnim@nextsolution.com', linkedin: 'https://linkedin.com/in/tasnim', bioEn: 'Tasnim directs the frontend and cloud systems deployment with a deep focus on Webflow and Next.js scale.', bioBn: 'তাসনিম ওয়েবফ্লো এবং নেক্সট জেএস স্কেলের ওপর গভীর ফোকাস দিয়ে ফ্রন্টএন্ড এবং ক্লাউড সিস্টেম পরিচালনা করেন।' }
+        ];
+        setLocalItem('next_solution_team', JSON.stringify(defaultTeam));
+      }
+      setTeamMembers(JSON.parse(getLocalItem('next_solution_team') || '[]'));
+
+      if (!getLocalItem('next_solution_media')) {
+        const defaultMedia = [
+          { id: 'media-1', title: 'Enterprise Dashboard', group: 'portfolio', url: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=600' },
+          { id: 'media-2', title: 'Strategic Team Audit', group: 'about', url: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&q=80&w=600' },
+          { id: 'media-3', title: 'Tech Stack Diagram', group: 'services', url: 'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&q=80&w=600' }
+        ];
+        setLocalItem('next_solution_media', JSON.stringify(defaultMedia));
+      }
+      setMediaItems(JSON.parse(getLocalItem('next_solution_media') || '[]'));
+
+      if (!getLocalItem('next_solution_admin_users')) {
+        const defaultUsers = [
+          { id: 'user-1', username: 'admin', role: 'SuperAdmin', status: 'active', email: 'admin@nextsolution.com', lastActive: new Date().toISOString() },
+          { id: 'user-2', username: 'moderator_tasnim', role: 'Editor', status: 'active', email: 'tasnim@nextsolution.com', lastActive: new Date().toISOString() }
+        ];
+        setLocalItem('next_solution_admin_users', JSON.stringify(defaultUsers));
+      }
+      setAdminUsers(JSON.parse(getLocalItem('next_solution_admin_users') || '[]'));
+    } catch (err: any) {
+      errors.push('local-data: ' + (err?.message || String(err)));
     }
-    setTeamMembers(JSON.parse(getLocalItem('next_solution_team') || '[]'));
 
-    if (!getLocalItem('next_solution_media')) {
-      const defaultMedia = [
-        { id: 'media-1', title: 'Enterprise Dashboard', group: 'portfolio', url: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=600' },
-        { id: 'media-2', title: 'Strategic Team Audit', group: 'about', url: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&q=80&w=600' },
-        { id: 'media-3', title: 'Tech Stack Diagram', group: 'services', url: 'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&q=80&w=600' }
-      ];
-      setLocalItem('next_solution_media', JSON.stringify(defaultMedia));
-    }
-    setMediaItems(JSON.parse(getLocalItem('next_solution_media') || '[]'));
-
-    if (!getLocalItem('next_solution_admin_users')) {
-      const defaultUsers = [
-        { id: 'user-1', username: 'admin', role: 'SuperAdmin', status: 'active', email: 'admin@nextsolution.com', lastActive: new Date().toISOString() },
-        { id: 'user-2', username: 'moderator_tasnim', role: 'Editor', status: 'active', email: 'tasnim@nextsolution.com', lastActive: new Date().toISOString() }
-      ];
-      setLocalItem('next_solution_admin_users', JSON.stringify(defaultUsers));
-    }
-    setAdminUsers(JSON.parse(getLocalItem('next_solution_admin_users') || '[]'));
-
-    // Load Why Choose Us data
-    const wcuC = await adminDB.getAllWhyChooseUsCards(); setWhyChooseUsCardsState(wcuC || []);
-    const wcuS = await adminDB.getAllWhyChooseUsStats(); setWhyChooseUsStatsState(wcuS || []);
-    const wcuB = await adminDB.getAllWhyChooseUsBadges(); setWhyChooseUsBadgesState(wcuB || []);
-    const wcuT = await adminDB.getAllWhyChooseUsTechs(); setWhyChooseUsTechsState(wcuT || []);
-    const ctaData = await adminDB.getWhyChooseUsCTA();
-    setWhyChooseUsCTAState(ctaData);
-    setWhyCTAForm(ctaData || {
-      taglineEn: '', taglineBn: '', headlineEn: '', headlineBn: '', descriptionEn: '', descriptionBn: '', primaryButtonTextEn: '', primaryButtonTextBn: '', secondaryButtonTextEn: '', secondaryButtonTextBn: ''
-    });
-
-    // Load Process Workflow data
-    const pSteps = await adminDB.getAllProcessSteps(); setProcessStepsState(pSteps || []);
-    const pctData = await adminDB.getProcessCTA();
-    setProcessCTAState(pctData);
-    setProcessCTAForm(pctData || {
-      titleEn: '', titleBn: '', highlightEn: '', highlightBn: '', subtitleEn: '', subtitleBn: '', ctaHeadlineEn: '', ctaHeadlineBn: '', ctaSubtitleEn: '', ctaSubtitleBn: '', ctaPrimaryTextEn: '', ctaPrimaryTextBn: '', ctaSecondaryTextEn: '', ctaSecondaryTextBn: ''
-    });
-
-    // Load Tech Service Cards
-    const tsCards = await adminDB.getAllTechServiceCards(); setTechServiceCardsState(tsCards || []);
-    } catch (err) {
-      console.error('Admin data load failed (continuing):', err);
-    }
+    setDataErrors(errors);
   };
-
   useEffect(() => {
     if (isAuthenticated) {
       loadAdminData();
@@ -449,6 +551,62 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
     },
   );
 
+// Fast safety-net polling for contact messages while the Messages tab or
+  // the Overview desk is open (realtime events can be blocked by RLS for
+  // anonymous web clients, so we never rely on them alone).
+  useEffect(() => {
+    if (!isAuthenticated) return;
+    if (activeSubTab !== 'messages' && activeSubTab !== 'overview') return;
+    const id = setInterval(() => {
+      adminDB
+        .getAllMessages()
+        .then((msgs) => {
+          setMessages(msgs || []);
+          setMessagesError('');
+        })
+        .catch((err: any) => setMessagesError(err?.message || String(err)));
+    }, 15000);
+    return () => clearInterval(id);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isAuthenticated, activeSubTab]);
+
+  const refreshMessages = async () => {
+    try {
+      const msgs = await adminDB.getAllMessages();
+      setMessages(msgs || []);
+      setMessagesError('');
+      triggerNotice(currentLang === 'en' ? 'Messages refreshed!' : 'বার্তা রিফ্রেশ করা হয়েছে!');
+    } catch (err: any) {
+      setMessagesError(err?.message || String(err));
+      triggerNotice(currentLang === 'en' ? 'Failed to refresh messages — see the error banner.' : 'বার্তা রিফ্রেশ করা যায়নি — নিচের এরর দেখুন।');
+    }
+  };
+
+  const runContactDiagnostics = async () => {
+    try {
+      const res = await fetch('/api/admin/contact-diagnostics');
+      const data = await res.json();
+      if (!res.ok) {
+        window.alert('Diagnostics failed: ' + (data.error || res.status));
+        return;
+      }
+      const w = data.anonymousWriteTest || {};
+      const lines = [
+        'Table "contact_messages": ' + (data.contact_messages?.tableExists ? 'EXISTS ✓' : 'MISSING ✗'),
+        'Messages in DB (admin view): ' + (data.contact_messages?.messageCount || 0),
+        'Public submit test: ' + (w.ok ? 'SUCCESS ✓' : 'FAILED ✗'),
+      ];
+      if (w.error) lines.push('Reason: ' + w.error);
+      lines.push(
+        w.ok
+          ? 'Everything healthy — new contact submissions will appear here.'
+          : 'Fix: Supabase SQL Editor → run supabase/fix_contact_messages_minimal.sql → then Refresh.',
+      );
+      window.alert(lines.join('\n'));
+    } catch (err: any) {
+      window.alert('Could not reach diagnostics: ' + (err?.message || String(err)));
+    }
+  };
   // Polling safety net (60s) so live dashboards recover even if a table is
   // not (yet) enabled on the Supabase realtime publication.
   useEffect(() => {
@@ -1566,6 +1724,32 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
           {/* Tab Work Desk (Right panel) */}
           <div className="lg:col-span-9 bg-white dark:bg-[#141414] border border-gray-200 dark:border-neutral-700/80 rounded-2xl p-5 md:p-6 shadow-sm overflow-hidden">
             
+{dataErrors.length > 0 && (
+              <div className="rounded-xl border border-amber-300 dark:border-amber-500/40 bg-amber-50 dark:bg-amber-500/10 p-3.5 text-[11px] text-amber-800 dark:text-amber-300 space-y-2 shadow-sm">
+                <div className="flex items-center gap-2 font-bold">
+                  <AlertTriangleIcon className="h-4 w-4 shrink-0" />
+                  <span>{currentLang === 'en' ? 'Some admin data could not be loaded from the database' : 'কিছু অ্যাডমিন ডেটা ডেটাবেজ থেকে লোড হয়নি'}</span>
+                </div>
+                <ul className="list-disc pl-4 space-y-1 font-mono text-[10px]">
+                  {dataErrors.slice(0, 6).map((e) => (
+                    <li key={e}>{e}</li>
+                  ))}
+                </ul>
+                <div className="flex flex-wrap items-center gap-2">
+                  <button
+                    onClick={() => { setDataErrors([]); loadAdminData(); }}
+                    className="inline-flex items-center gap-1.5 rounded-lg bg-amber-500 hover:bg-amber-600 text-white text-[10.5px] font-bold px-3 py-1.5 transition"
+                  >
+                    <RefreshCwIcon className="h-3.5 w-3.5" />
+                    {currentLang === 'en' ? 'Retry load' : 'আবার লোড করুন'}
+                  </button>
+                  <span className="text-[10px] text-amber-700 dark:text-amber-400/80">
+                    {currentLang === 'en' ? 'If this keeps happening, open the Messages tab and press "Test Connection".' : 'বারবার হলে Messages ট্যাবে "কানেকশন টেস্ট" টিপুন।'}
+                  </span>
+                </div>
+              </div>
+            )}
+            
             {/* T0: DASHBOARD OVERVIEW & ANALYTICS (premium real-time) */}
             {activeSubTab === 'overview' && (
               <div id="panel-overview-desk">
@@ -1580,172 +1764,215 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
             )}
             
             {/* T1: INBOUND LEADS SECTION */}
-            {activeSubTab === 'messages' && (
+{activeSubTab === 'messages' && (
               <div id="panel-leads-desk" className="space-y-5">
                 <div className="flex flex-wrap items-center justify-between gap-3 border-b border-gray-200 dark:border-neutral-700/80 pb-3">
-                  <h3 className="text-sm font-bold text-gray-900 dark:text-white">
-                    {currentLang === 'en' ? 'Inbound Customer Leads' : 'প্রাপ্ত কাস্টমার লিডসমূহ'}
-                  </h3>
-                  <div className="flex items-center gap-2">
+                  <div>
+                    <h3 className="text-sm font-bold text-gray-900 dark:text-white">
+                      {currentLang === 'en' ? 'Inbound Customer Messages' : 'ইনবাউন্ড কাস্টমার মেসেজ'}
+                    </h3>
+                    <p className="text-[10px] text-gray-400 dark:text-neutral-500 mt-0.5">
+                      {currentLang === 'en' ? 'Contact form submissions appear here instantly' : 'যোগাযোগ ফর্মের মেসেজ এখানে রিয়েল-টাইমে দেখা যাবে'}
+                    </p>
+                  </div>
+                  <div className="flex flex-wrap items-center gap-2">
                     <span className="inline-flex items-center gap-1.5 rounded-full bg-orange-50 dark:bg-orange-500/10 text-orange-600 dark:text-orange-400 text-[10px] font-bold px-2.5 py-1">
                       <span className="h-1.5 w-1.5 rounded-full bg-orange-500 animate-pulse" />
                       LIVE
                     </span>
                     <span className="inline-flex items-center gap-1.5 rounded-full bg-gray-100 dark:bg-neutral-800 text-gray-600 dark:text-neutral-300 text-[10px] font-bold px-2.5 py-1">
                       <MailIcon className="h-3 w-3" />
-                      {messages.length} {currentLang === 'en' ? 'total' : 'মোট'}
+                      {filteredMessages.length} / {messages.length} {currentLang === 'en' ? 'total' : 'মোট'}
                     </span>
+                    <button
+                      onClick={() => refreshMessages()}
+                      className="inline-flex items-center gap-1.5 rounded-full bg-blue-600 dark:bg-orange-500 hover:bg-blue-700 dark:hover:bg-orange-400 text-white text-[10px] font-bold px-3 py-1.5 transition shadow-sm"
+                    >
+                      <RefreshCwIcon className="h-3 w-3" />
+                      {currentLang === 'en' ? 'Refresh' : 'রিফ্রেশ'}
+                    </button>
+                    <button
+                      onClick={() => runContactDiagnostics()}
+                      className="inline-flex items-center gap-1.5 rounded-full border border-gray-200 dark:border-neutral-700 hover:bg-gray-100 dark:hover:bg-neutral-800 text-gray-600 dark:text-neutral-300 text-[10px] font-bold px-3 py-1.5 transition"
+                    >
+                      <AlertTriangleIcon className="h-3 w-3" />
+                      {currentLang === 'en' ? 'Test Connection' : 'কানেকশন টেস্ট'}
+                    </button>
                   </div>
                 </div>
 
-                <div className="space-y-3">
-                  {messages.map((msg) => {
-                    const st: LeadStatusValue = (LEAD_STATUS_META[msg.status as LeadStatusValue] ? msg.status as LeadStatusValue : 'unread');
-                    const meta = LEAD_STATUS_META[st];
-                    const StatusIcon = meta.icon;
-                    const isOpen = openStatusMenu === msg.id;
+                {messagesError && (
+                  <div className="rounded-xl border border-red-300 dark:border-red-500/40 bg-red-50 dark:bg-red-500/10 p-3.5 text-[11px] font-bold text-red-600 dark:text-red-400 flex items-start gap-2">
+                    <AlertTriangleIcon className="h-4 w-4 shrink-0" />
+                    <div>
+                      {currentLang === 'en'
+                        ? 'Messages could not be loaded (showing the last known list). Error: '
+                        : 'মেসেজ লোড করা যায়নি (সর্বশেষ তালিকা দেখানো হচ্ছে)। এরর: '}
+                      <span className="font-mono text-[10px]">{messagesError}</span>
+                    </div>
+                  </div>
+                )}
+
+                {/* Status filter chips + search */}
+                <div className="flex flex-wrap items-center gap-1.5">
+                  {MESSAGE_FILTERS.map((f) => {
+                    const Icon = f.icon;
                     return (
-                      <div
-                        key={msg.id}
-                        className={`relative rounded-2xl border p-4 text-xs space-y-3 transition bg-white dark:bg-[#151515] shadow-sm ${
-                          st === 'unread'
-                            ? 'border-orange-200 dark:border-orange-500/30'
-                            : 'border-gray-100 dark:border-neutral-700/70'
-                        } hover:border-gray-300 dark:hover:border-neutral-600`}
+                      <button
+                        key={f.id}
+                        onClick={() => setMessageFilter(f.id)}
+                        className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[10px] font-bold transition ${
+                          messageFilter === f.id
+                            ? f.cls
+                            : 'bg-white dark:bg-[#151515] text-gray-500 dark:text-neutral-400 border-gray-200 dark:border-neutral-700'
+                        }`}
                       >
-                        <div className="flex flex-wrap items-center justify-between gap-2">
-                          <div className="flex items-center gap-3 min-w-0">
-                            <div className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl font-black text-sm ${meta.badge}`}>
-                              {msg.name ? msg.name.charAt(0).toUpperCase() : '?'}
-                            </div>
-                            <div className="min-w-0">
-                              <div className="flex items-center gap-2">
-                                <span className="font-bold text-sm text-gray-900 dark:text-white truncate">{msg.name}</span>
-                                {st === 'unread' && (
-                                  <span className="text-[8px] font-black uppercase tracking-wider text-orange-500 bg-orange-50 dark:bg-orange-500/10 rounded-full px-1.5 py-0.5">
-                                    {currentLang === 'en' ? 'New' : 'নতুন'}
-                                  </span>
-                                )}
-                              </div>
-                              <span className="text-gray-400 dark:text-neutral-500 font-mono text-[10px] truncate">
-                                {msg.email}{msg.phone ? ` | ${msg.phone}` : ''}
-                              </span>
-                            </div>
-                          </div>
-
-                          <div className="flex items-center space-x-2">
-                            {/* Status dropdown */}
-                            <div className="relative">
-                              <button
-                                id={`status-toggle-${msg.id}`}
-                                onClick={() => setOpenStatusMenu(isOpen ? null : msg.id)}
-                                className={`inline-flex items-center gap-1.5 rounded-lg border px-2.5 py-1.5 text-[10px] font-bold uppercase transition hover:brightness-95 ${meta.badge}`}
-                              >
-                                <StatusIcon className="h-3.5 w-3.5" />
-                                {currentLang === 'en' ? meta.labelEn : meta.labelBn}
-                                <ChevronDownIcon className={`h-3 w-3 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
-                              </button>
-
-                              {isOpen && (
-                                <>
-                                  <div className="fixed inset-0 z-20" onClick={() => setOpenStatusMenu(null)} />
-                                  <div className="absolute right-0 z-30 mt-1.5 w-44 rounded-xl border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#151515] shadow-xl py-1.5">
-                                    {(['unread', 'contacted', 'in_progress', 'converted', 'closed'] as LeadStatusValue[]).map((opt) => {
-                                      const om = LEAD_STATUS_META[opt];
-                                      const Icon = om.icon;
-                                      const isActive = opt === st;
-                                      return (
-                                        <button
-                                          key={opt}
-                                          onClick={() => { setOpenStatusMenu(null); handleSetMessageStatus(msg.id, opt); }}
-                                          className={`w-full flex items-center gap-2 px-3 py-1.5 text-left text-[11px] font-semibold transition ${
-                                            isActive
-                                              ? 'bg-gray-50 dark:bg-neutral-800 text-gray-900 dark:text-white'
-                                              : 'text-gray-600 dark:text-neutral-300 hover:bg-gray-50 dark:hover:bg-neutral-800'
-                                          }`}
-                                        >
-                                          <Icon className={`h-3.5 w-3.5 ${om.dot}`} />
-                                          {currentLang === 'en' ? om.labelEn : om.labelBn}
-                                          {isActive && <span className={`ml-auto h-1.5 w-1.5 rounded-full ${om.dot}`} />}
-                                        </button>
-                                      );
-                                    })}
-                                    <div className="my-1 border-t border-gray-100 dark:border-neutral-800" />
-                                    <button
-                                      onClick={() => { setOpenStatusMenu(null); handleToggleMessageStatus(msg.id, st); }}
-                                      className="w-full flex items-center gap-2 px-3 py-1.5 text-left text-[11px] font-semibold text-gray-500 dark:text-neutral-400 hover:bg-gray-50 dark:hover:bg-neutral-800 transition"
-                                    >
-                                      <RotateCcwIcon className="h-3.5 w-3.5" />
-                                      {currentLang === 'en' ? 'Advance one step' : 'এক ধাপ অগ্রসর'}
-                                    </button>
-                                  </div>
-                                </>
-                              )}
-                            </div>
-
-                            <button
-                              id={`delete-msg-${msg.id}`}
-                              onClick={() => handleDeleteMessage(msg.id)}
-                              className="p-1.5 text-gray-400 dark:text-neutral-500 hover:text-red-500 rounded-lg transition hover:bg-red-50 dark:hover:bg-red-500/10"
-                            >
-                              <Trash2Icon className="h-4 w-4" />
-                            </button>
-                          </div>
-                        </div>
-
-                        <div className="grid grid-cols-2 gap-3">
-                          <div className="rounded-xl bg-gray-50 dark:bg-[#141414] px-3 py-2">
-                            <span className="block text-[9px] font-bold uppercase tracking-wider text-gray-400 dark:text-neutral-500">
-                              {currentLang === 'en' ? 'Desired Service' : 'পছন্দের সেবা'}
-                            </span>
-                            <span className="text-[11px] font-bold text-gray-800 dark:text-neutral-100">{msg.service || '—'}</span>
-                          </div>
-                          <div className="rounded-xl bg-gray-50 dark:bg-[#141414] px-3 py-2">
-                            <span className="block text-[9px] font-bold uppercase tracking-wider text-gray-400 dark:text-neutral-500">
-                              {currentLang === 'en' ? 'Estimated Budget' : 'আনুমানিক বাজেট'}
-                            </span>
-                            <span className="text-[11px] font-bold text-gray-800 dark:text-neutral-100">{msg.budget || '—'}</span>
-                          </div>
-                          {msg.subject && (
-                            <div className="col-span-2 rounded-xl bg-gray-50 dark:bg-[#141414] px-3 py-2">
-                              <span className="block text-[9px] font-bold uppercase tracking-wider text-gray-400 dark:text-neutral-500">
-                                {currentLang === 'en' ? 'Subject' : 'বিষয়'}
-                              </span>
-                              <span className="text-[11px] font-bold text-gray-800 dark:text-neutral-100">{msg.subject}</span>
-                            </div>
-                          )}
-                        </div>
-
-                        <p className="text-gray-700 dark:text-neutral-200 leading-relaxed text-[11px] whitespace-pre-line bg-gray-50 dark:bg-[#141414] p-3 rounded-xl">
-                          {msg.message}
-                        </p>
-
-                        <div className="flex items-center justify-between text-[10px] text-gray-400 dark:text-neutral-500 font-medium">
-                          <span>{currentLang === 'en' ? 'Received on' : 'প্রাপ্তির সময়'}: {new Date(msg.createdAt).toLocaleString()}</span>
-                          <button
-                            onClick={() => handleToggleMessageStatus(msg.id, st)}
-                            className="inline-flex items-center gap-1 text-gray-400 dark:text-neutral-500 hover:text-orange-500 transition"
-                          >
-                            <RotateCcwIcon className="h-3 w-3" />
-                            {currentLang === 'en' ? 'Advance status' : 'স্ট্যাটাস অগ্রসর করুন'}
-                          </button>
-                        </div>
-                      </div>
+                        <Icon className="h-3 w-3" />
+                        {currentLang === 'en' ? f.labelEn : f.labelBn}
+                        <span className="font-mono">{countByStatus(f.id)}</span>
+                      </button>
                     );
                   })}
-
-                  {messages.length === 0 && (
-                    <div className="text-center py-14 text-gray-400 dark:text-neutral-500 italic">
-                      {currentLang === 'en'
-                        ? 'No inbound customer messages stored yet. Submissions from the Contact page appear here in real-time!'
-                        : 'এখনো কোনো ইনবাউন্ড কাস্টমার মেসেজ সংরক্ষিত নেই। যোগাযোগ পেজের ফর্ম থেকে মেসেজ রিয়েল-টাইমে এখানে দেখা যাবে!'}
-                    </div>
-                  )}
+                  <div className="relative ml-auto">
+                    <SearchIcon className="absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-gray-400 dark:text-neutral-500" />
+                    <input
+                      value={messageSearch}
+                      onChange={(e) => setMessageSearch(e.target.value)}
+                      placeholder={currentLang === 'en' ? 'Search name, email, message…' : 'নাম, ইমেইল, মেসেজ খুঁজুন…'}
+                      className="w-56 rounded-lg border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#151515] pl-8 pr-3 py-1.5 text-[11px] text-gray-800 dark:text-neutral-100 outline-none focus:border-orange-500 transition"
+                    />
+                  </div>
                 </div>
+
+                <div className="space-y-3">{filteredMessages.map((msg) => {
+                const st: LeadStatusValue = LEAD_STATUS_META[msg.status as LeadStatusValue] ? (msg.status as LeadStatusValue) : 'unread';
+                const meta = LEAD_STATUS_META[st];
+                const StatusIcon = meta.icon;
+                const isOpen = openStatusMenu === msg.id;
+                const mailUrl = 'mailto:' + msg.email + '?subject=' + encodeURIComponent('Re: ' + (msg.subject || 'Your inquiry'));
+                return (
+                  <div key={msg.id} className={`relative rounded-2xl border p-4 text-xs space-y-3 transition bg-white dark:bg-[#151515] shadow-sm ${st === 'unread' ? 'border-orange-300 dark:border-orange-500/40' : 'border-gray-100 dark:border-neutral-700/70'} hover:border-gray-300 dark:hover:border-neutral-600`}>
+                    <div className="flex flex-wrap items-center justify-between gap-2">
+                      <div className="flex items-center gap-3 min-w-0">
+                        <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl font-black text-sm ${meta.badge}`}>
+                          {msg.name ? msg.name.charAt(0).toUpperCase() : '?'}
+                        </div>
+                        <div className="min-w-0">
+                          <div className="flex items-center gap-2">
+                            <span className="font-bold text-sm text-gray-900 dark:text-white truncate">{msg.name}</span>
+                            {st === 'unread' && (
+                              <span className="text-[8px] font-black uppercase tracking-wider text-orange-500 bg-orange-50 dark:bg-orange-500/10 rounded-full px-1.5 py-0.5">{currentLang === 'en' ? 'New' : 'নতুন'}</span>
+                            )}
+                            <span className="text-gray-400 dark:text-neutral-500 text-[10px] font-mono">{timeAgo(msg.createdAt, currentLang)}</span>
+                          </div>
+                          <span className="text-gray-400 dark:text-neutral-500 font-mono text-[10px] truncate">
+                            {msg.email}{msg.phone ? ' | ' + msg.phone : ''}
+                          </span>
+                        </div>
+                      </div>
+
+                      <div className="flex items-center space-x-2">
+                        <a href={mailUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 rounded-lg border border-blue-200 dark:border-blue-500/30 bg-blue-50 dark:bg-blue-500/10 hover:bg-blue-100/80 text-blue-600 dark:text-blue-400 text-[10px] font-bold px-2.5 py-1.5 transition" title={msg.email}>
+                          <MailIcon className="h-3.5 w-3.5" />
+                          {currentLang === 'en' ? 'Reply' : 'উত্তর'}
+                        </a><div className="relative">
+                          <button id={`status-toggle-${msg.id}`} onClick={() => setOpenStatusMenu(isOpen ? null : msg.id)} className={`inline-flex items-center gap-1.5 rounded-lg border px-2.5 py-1.5 text-[10px] font-bold uppercase transition hover:brightness-95 ${meta.badge}`}>
+                            <StatusIcon className="h-3.5 w-3.5" />
+                            <span className="hidden lg:inline">{currentLang === 'en' ? meta.labelEn : meta.labelBn}</span>
+                            <ChevronDownIcon className={`h-3 w-3 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
+                          </button>
+                          {isOpen && (
+                            <>
+                              <div className="fixed inset-0 z-20" onClick={() => setOpenStatusMenu(null)} />
+                              <div className="absolute right-0 z-30 mt-1.5 w-44 rounded-xl border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#151515] shadow-xl py-1.5">
+                                {(['unread', 'contacted', 'in_progress', 'converted', 'closed'] as LeadStatusValue[]).map((opt) => {
+                                  const om = LEAD_STATUS_META[opt];
+                                  const Icon = om.icon;
+                                  const isActive = opt === st;
+                                  return (
+                                    <button key={opt} onClick={() => { setOpenStatusMenu(null); handleSetMessageStatus(msg.id, opt); }} className={`w-full flex items-center gap-2 px-3 py-1.5 text-left text-[11px] font-semibold transition ${isActive ? 'bg-gray-50 dark:bg-neutral-800 text-gray-900 dark:text-white' : 'text-gray-600 dark:text-neutral-300 hover:bg-gray-50 dark:hover:bg-neutral-800'}`}>
+                                      <Icon className={`h-3.5 w-3.5 ${om.dot}`} />
+                                      {currentLang === 'en' ? om.labelEn : om.labelBn}
+                                      {isActive && <span className={`ml-auto h-1.5 w-1.5 rounded-full ${om.dot}`} />}
+                                    </button>
+                                  );
+                                })}
+                                <div className="my-1 border-t border-gray-100 dark:border-neutral-800" />
+                                <button onClick={() => { setOpenStatusMenu(null); handleToggleMessageStatus(msg.id, st); }} className="w-full flex items-center gap-2 px-3 py-1.5 text-left text-[11px] font-semibold text-gray-500 dark:text-neutral-400 hover:bg-gray-50 dark:hover:bg-neutral-800 transition">
+                                  <RotateCcwIcon className="h-3.5 w-3.5" />
+                                  {currentLang === 'en' ? 'Advance one step' : 'এক ধাপ অগ্রসর'}
+                                </button>
+                              </div>
+                            </>
+                          )}
+                        </div><button id={`delete-msg-${msg.id}`} onClick={() => handleDeleteMessage(msg.id)} className="p-1.5 text-gray-400 dark:text-neutral-500 hover:text-red-500 rounded-lg transition hover:bg-red-50 dark:hover:bg-red-500/10">
+                          <Trash2Icon className="h-4 w-4" />
+                        </button>
+                      </div>
+                    </div>
+
+                    {(msg.service || msg.budget || msg.subject) && (
+                      <div className="grid grid-cols-2 gap-3">
+                        {msg.service && (
+                          <div className="rounded-xl bg-gray-50 dark:bg-[#141414] px-3 py-2">
+                            <span className="block text-[9px] font-bold uppercase tracking-wider text-gray-400 dark:text-neutral-500">{currentLang === 'en' ? 'Desired Service' : 'পছন্দের সেবা'}</span>
+                            <span className="text-[11px] font-bold text-gray-800 dark:text-neutral-100">{msg.service}</span>
+                          </div>
+                        )}
+                        {msg.budget && (
+                          <div className="rounded-xl bg-gray-50 dark:bg-[#141414] px-3 py-2">
+                            <span className="block text-[9px] font-bold uppercase tracking-wider text-gray-400 dark:text-neutral-500">{currentLang === 'en' ? 'Estimated Budget' : 'আনুমানিক বাজেট'}</span>
+                            <span className="text-[11px] font-bold text-gray-800 dark:text-neutral-100">{msg.budget || '—'}</span>
+                          </div>
+                        )}
+                        {msg.subject && !msg.service && !msg.budget && (
+                          <div className="col-span-2 rounded-xl bg-gray-50 dark:bg-[#141414] px-3 py-2">
+                            <span className="block text-[9px] font-bold uppercase tracking-wider text-gray-400 dark:text-neutral-500">{currentLang === 'en' ? 'Subject' : 'বিষয়'}</span>
+                            <span className="text-[11px] font-bold text-gray-800 dark:text-neutral-100">{msg.subject}</span>
+                          </div>
+                        )}
+                      </div>
+                    )}{msg.subject && msg.service && (
+                      <div className="flex items-center gap-2 text-gray-400 dark:text-neutral-500">
+                        <span className="truncate font-bold text-[11px] text-gray-600 dark:text-neutral-300">{msg.subject}</span>
+                      </div>
+                    )}
+
+                    <p className="text-gray-700 dark:text-neutral-200 leading-relaxed text-[11px] whitespace-pre-line bg-gray-50 dark:bg-[#141414] p-3 rounded-xl">
+                      {msg.message}
+                    </p>
+
+                    <div className="flex items-center justify-between text-[10px] text-gray-400 dark:text-neutral-500 font-medium">
+                      <span>{currentLang === 'en' ? 'Received on' : 'প্রাপ্তির সময়'}: {msg.createdAt ? new Date(msg.createdAt).toLocaleString() : '—'}</span>
+                      <button onClick={() => handleToggleMessageStatus(msg.id, st)} className="inline-flex items-center gap-1 text-gray-400 dark:text-neutral-500 hover:text-orange-500 transition">
+                        <RotateCcwIcon className="h-3 w-3" />
+                        {currentLang === 'en' ? 'Advance status' : 'স্ট্যাটাস অগ্রসর করুন'}
+                      </button>
+                    </div>
+                  </div>
+                );
+              })}
+
+            {filteredMessages.length === 0 && (
+              <div className="rounded-xl border border-dashed border-gray-200 dark:border-neutral-700 bg-gray-50/50 dark:bg-neutral-900/30 py-12 text-center text-gray-400 dark:text-neutral-500">
+                <InboxIcon className="h-8 w-8 mx-auto mb-2 opacity-60" />
+                <p className="text-xs font-bold">
+                  {currentLang === 'en' ? 'No messages match this filter yet' : 'এই ফিল্টারে কোনো মেসেজ নেই'}
+                </p>
+                <p className="text-[11px] mt-1 max-w-md mx-auto">
+                  {currentLang === 'en'
+                    ? 'Submissions from the Contact page appear here in real-time. If you just submitted one and it does not show, press "Test Connection" — when the public submit test fails, run supabase/fix_contact_messages_minimal.sql in the Supabase SQL Editor.'
+                    : 'যোগাযোগ পেজের ফর্ম থেকে আসা মেসেজ এখানে রিয়েল-টাইমে দেখা যায়। মেসেজ দিয়েও না দেখালে "কানেকশন টেস্ট" টিপুন — ব্যর্থ হলে Supabase SQL Editor-এ supabase/fix_contact_messages_minimal.sql চালান।'}
+                </p>
+                <button onClick={() => { setMessageFilter('all'); setMessageSearch(''); refreshMessages(); }} className="mt-3 inline-flex items-center gap-1.5 rounded-lg bg-blue-600 dark:bg-orange-500 hover:bg-blue-700 dark:hover:bg-orange-400 text-white text-[11px] font-bold px-4 py-2 transition">
+                  <RefreshCwIcon className="h-3.5 w-3.5" />
+                  {currentLang === 'en' ? 'Clear filters & refresh' : 'ফিল্টার মুছে রিফ্রেশ করুন'}
+                </button>
               </div>
             )}
-
-            {/* T2: NEWSLETTER SUBSCRIBERS LIST */}
+          </div>
+        </div>
+      )}            {/* T2: NEWSLETTER SUBSCRIBERS LIST */}
             {activeSubTab === 'subscribers' && (
               <div id="panel-subs-desk" className="space-y-6">
                 <h3 className="text-sm font-bold text-gray-900 dark:text-white border-b border-gray-50 dark:border-neutral-800 pb-3">

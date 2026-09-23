@@ -46,8 +46,17 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ success: true });
   } catch (error: any) {
+    // Surface the exact Supabase/PostgREST reason so the site owner can see
+    // why the write failed (missing table, missing anonymous-INSERT RLS
+    // policy, missing message_status enum, ...) instead of the frontend
+    // silently pretending the message was sent.
     return NextResponse.json(
-      { error: error.message || "Failed to send message." },
+      {
+        error: error.message || "Failed to send message.",
+        details: error.details,
+        hint: error.hint,
+        code: error.code,
+      },
       { status: 500 }
     );
   }

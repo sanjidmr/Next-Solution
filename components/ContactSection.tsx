@@ -65,17 +65,17 @@ export default function ContactSection({ currentLang, isFullPage = false }: Cont
     }
   }, []);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMsg('');
-    
+
     if (!name.trim() || !email.trim() || !phone.trim() || !message.trim()) {
-      setErrorMsg(currentLang === 'en' ? 'All fields with * are required.' : 'à¦šà¦¿à¦¹à§à¦¨à¦¿à¦¤ à¦˜à¦°à¦—à§à¦²à§‹ à¦ªà§‚à¦°à¦£ à¦•à¦°à¦¾ à¦†à¦¬à¦¶à§à¦¯à¦•à¥¤');
+      setErrorMsg(currentLang === 'en' ? 'All fields with * are required.' : 'চিহ্নিত ঘরগুলো পূরণ করা আবশ্যক।');
       return;
     }
 
     if (!email.includes('@')) {
-      setErrorMsg(currentLang === 'en' ? 'Please enter a valid email address.' : 'à¦…à¦¨à§à¦—à§à¦°à¦¹ à¦•à¦°à§‡ à¦¸à¦ à¦¿à¦• à¦‡à¦®à§‡à¦² à¦à¦¡à§à¦°à§‡à¦¸ à¦¦à¦¿à¦¨à¥¤');
+      setErrorMsg(currentLang === 'en' ? 'Please enter a valid email address.' : 'অনুগ্রহ করে সঠিক ইমেইল ঠিকানা দিন।');
       return;
     }
 
@@ -97,21 +97,52 @@ export default function ContactSection({ currentLang, isFullPage = false }: Cont
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
       });
-      if (!res.ok) throw new Error('contact-api-failed');
-    } catch {
-      addMessage(payload);
-    }
 
-    setIsSubmitting(false);
-    setIsSuccess(true);
-    
-    // Clear fields
-    setName('');
-    setEmail('');
-    setPhone('');
-    setService('');
-    setBudget('');
-    setMessage('');
+      if (res.ok) {
+        // Confirmed: the row was written to the contact_messages table, so it
+        // will appear in the Admin Panel's Messages tab.
+        setIsSubmitting(false);
+        setIsSuccess(true);
+
+        // Clear fields
+        setName('');
+        setEmail('');
+        setPhone('');
+        setService('');
+        setBudget('');
+        setMessage('');
+        return;
+      }
+
+      // The server answered with an error. Read the actual reason (missing RLS
+      // policy, missing table, missing status enum, ...) and show it to the
+      // user instead of pretending the message was sent successfully.
+      let serverError = '';
+      try {
+        const body = await res.json();
+        if (typeof body?.error === 'string') serverError = body.error;
+      } catch {
+        /* response had no parseable JSON body */
+      }
+
+      setIsSubmitting(false);
+      setErrorMsg(
+        currentLang === 'en'
+          ? `Message could not be saved to the server${serverError ? ` — server says: ${serverError}` : '. Please try again later.'}`
+          : `বার্তাটি সার্ভারে সংরক্ষণ করা যায়নি${serverError ? ` — সার্ভারের উত্তর: ${serverError}` : '। অনুগ্রহ করে পরে আবার চেষ্টা করুন।'}`
+      );
+    } catch {
+      // No response at all (offline / server unreachable). Keep the local
+      // fallback, but tell the user honestly that the message only saved on
+      // this device and will NOT reach the Admin Panel.
+      addMessage(payload);
+      setIsSubmitting(false);
+      setErrorMsg(
+        currentLang === 'en'
+          ? 'Could not reach the server. Your message was saved only on this device and will NOT appear in the Admin Panel — please try again when the connection is back.'
+          : 'সার্ভারে সংযোগ করা যায়নি। আপনার বার্তাটি শুধু এই ডিভাইসে সংরক্ষণ হয়েছে এবং অ্যাডমিন প্যানেলে যাবে না — সংযোগ ঠিক হলে আবার পাঠান।'
+      );
+    }
   };
 
   return (
@@ -223,7 +254,7 @@ export default function ContactSection({ currentLang, isFullPage = false }: Cont
                 </div>
                 <div className="space-y-2">
                   <h3 className="text-xl font-bold text-gray-900 dark:text-white">
-                    {currentLang === 'en' ? 'Message Sent Successfully!' : 'à¦¬à¦¾à¦°à§à¦¤à¦¾ à¦¸à¦«à¦²à¦­à¦¾à¦¬à§‡ à¦ªà¦¾à¦ à¦¾à¦¨à§‹ à¦¹à§Ÿà§‡à¦›à§‡!'}
+                    {currentLang === 'en' ? 'Message Sent Successfully!' : 'বার্তা সফলভাবে পাঠানো হয়েছে!'}
                   </h3>
                   <p className="text-sm text-gray-500 dark:text-neutral-400 leading-relaxed">
                     {t.contactSuccessMessage}
@@ -233,7 +264,7 @@ export default function ContactSection({ currentLang, isFullPage = false }: Cont
                   onClick={() => setIsSuccess(false)}
                   className="rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold px-6 py-3 transition shadow-md"
                 >
-                  {currentLang === 'en' ? 'Send Another Message' : 'à¦†à¦°à§‡à¦•à¦Ÿà¦¿ à¦¬à¦¾à¦°à§à¦¤à¦¾ à¦ªà¦¾à¦ à¦¾à¦¨'}
+                  {currentLang === 'en' ? 'Send Another Message' : 'আরেকটি বার্তা পাঠান'}
                 </button>
               </div>
             ) : (

@@ -177,18 +177,29 @@ body {
   animation: pulse-soft 1.4s ease-in-out infinite;
 }
 
-/* "Trusted by Industry Leaders" marquee — seamless infinite loop. */
+/* "Trusted by Industry Leaders" marquee — seamless infinite loop.
+   The track duplicates the partner list so the −50% keyframe always
+   lands on an identical frame — names never visibly run out. */
 @keyframes trustedMarquee {
   from { transform: translateX(0); }
   to { transform: translateX(-50%); }
 }
 
 .trusted-marquee {
-  animation: trustedMarquee 30s linear infinite;
+  animation: trustedMarquee 36s linear infinite;
+  will-change: transform;
+  transform: translateZ(0);
+  backface-visibility: hidden;
 }
 
 .trusted-marquee:hover {
   animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .trusted-marquee {
+    animation: none;
+  }
 }
 
 /* Hide horizontal scrollbar but keep scrollability */

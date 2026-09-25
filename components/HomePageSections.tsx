@@ -502,6 +502,30 @@ export default function HomePageSections({ currentLang, setTab, portfolioData }:
     return cat === 'All' ? 'All Work' : cat;
   };
 
+  // Direct-open helper for Case Study cards: the live website (new tab)
+  // takes priority, then the rich case-study detail page. The home-page
+  // card NEVER bounces users to the plain portfolio listing.
+  const openPortfolioItem = (item: PortfolioItem) => {
+    if (!item) return;
+    const isWebDev = item.category === 'Web Development';
+    const externalHref =
+      (isWebDev ? item.liveUrl : null) ||
+      item.projectData?.websiteUrl ||
+      item.projectData?.projectUrl ||
+      item.projectData?.demoUrl ||
+      (item.liveUrl || '');
+
+    if (externalHref) {
+      window.open(externalHref, '_blank', 'noopener,noreferrer');
+      return;
+    }
+    if (item.slug) {
+      window.location.href = `/portfolio/${encodeURIComponent(item.slug)}`;
+      return;
+    }
+    // No live URL or detail page yet — stay on the home page.
+  };
+
   // Static Details for Industries (Section 8)
   const industries = [
     { id: 'ind-1', nameEn: 'E-Commerce & Retail', nameBn: 'ই-কমার্স ও রিটেইল', descEn: 'Digital experiences that turn visitors into loyal customers.', descBn: 'ডিজিটাল অভিজ্ঞতা যা ভিজিটরদের অনুগত কাস্টমারে রূপান্তর করে।', image: '/industry1.jpg', icon: 'ShoppingCart' },
@@ -784,14 +808,19 @@ export default function HomePageSections({ currentLang, setTab, portfolioData }:
                     animate={{ opacity: 1, x: 0 }}
                     exit={{ opacity: 0, scale: 0.95 }}
                     transition={{ duration: 0.35, delay: idx * 0.05 }}
-                    onClick={() => {
-                      setTab('portfolio');
-                      window.scrollTo({ top: 0, behavior: 'smooth' });
+                    onClick={() => openPortfolioItem(item)}
+                    role="link"
+                    tabIndex={0}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        openPortfolioItem(item);
+                      }
                     }}
-className="group cursor-pointer"
+className="group h-full cursor-pointer rounded-[20px] overflow-hidden border border-neutral-200/80 dark:border-neutral-800 bg-white dark:bg-[#151515] shadow-sm hover:-translate-y-1 hover:border-orange-500/60 hover:shadow-[0_18px_45px_-18px_rgba(255,77,0,0.45)] transition-all duration-300"
                   >
 {/* 1. Image with border (top/right/left) - only image has border */}
-                    <div className="relative overflow-hidden rounded-xl border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-900">
+                    <div className="relative overflow-hidden rounded-t-[20px] border border-neutral-200/60 dark:border-neutral-700/60">
                       <img
                         src={item.image}
                         alt={item.titleEn}
@@ -842,7 +871,7 @@ className="group cursor-pointer"
                         </span>
                       </div>
                       <div className="flex flex-wrap gap-1">
-                        {item.technologies.slice(0, 4).map((tech) => (
+                        {(item.technologies || []).slice(0, 4).map((tech) => (
                           <span suppressHydrationWarning
                             key={tech}
                             className="rounded-full bg-neutral-50 dark:bg-neutral-900 border border-neutral-200/60 dark:border-neutral-700/60 text-[9px] font-bold text-neutral-500 dark:text-neutral-400 font-mono px-2 py-0.5 transition-colors duration-200"
@@ -851,6 +880,16 @@ className="group cursor-pointer"
                           </span>
                         ))}
                       </div>
+                    </div>
+
+                    {/* 4. Footer CTA — opens the live site / case-study detail directly */}
+                    <div className="mt-3 flex items-center justify-between rounded-lg px-3 py-2 border border-neutral-200/70 dark:border-neutral-700/70 bg-neutral-50/70 dark:bg-white/[0.04]">
+                      <span className="text-[10px] font-black uppercase tracking-wider text-neutral-500 dark:text-neutral-400">
+                        {currentLang === 'en' ? 'View Case Study' : 'কেস স্টাডি দেখুন'}
+                      </span>
+                      <span className="h-6 w-6 rounded-full bg-orange-500/10 border border-orange-500/30 flex items-center justify-center group-hover:bg-orange-500 group-hover:text-white transition-all duration-300">
+                        <ArrowUpRight className="h-3 w-3 text-orange-500 -rotate-45 transition-transform duration-300 group-hover:text-white" />
+                      </span>
                     </div>
                   </motion.div>
                 ))}
@@ -922,10 +961,10 @@ className="group cursor-pointer"
             <svg className="absolute inset-0 w-full h-full pointer-events-none z-0" style={{ overflow: 'visible' }}>
               {/* Dots pattern connecting cards to center */}
               {industries.slice(0, 4).map((_, i) => (
-                <circle key={`ldot-${i}`} cx="33%" cy={`${14 + i * 24}%`} r={hoveredIndustry !== null ? 3 : 2} fill={hoveredIndustry !== null ? '#FF4A00' : '#d1d5db'} className="transition-all duration-500" />
+                <circle key={`ldot-${i}`} cx="33%" cy={`${14 + i * 24}%`} r={hoveredIndustry !== null ? 3 : 2} fill={hoveredIndustry !== null ? '#FF4D00' : '#d1d5db'} className="transition-all duration-500" />
               ))}
               {industries.slice(4, 8).map((_, i) => (
-                <circle key={`rdot-${i}`} cx="67%" cy={`${14 + i * 24}%`} r={hoveredIndustry !== null ? 3 : 2} fill={hoveredIndustry !== null ? '#FF4A00' : '#d1d5db'} className="transition-all duration-500" />
+                <circle key={`rdot-${i}`} cx="67%" cy={`${14 + i * 24}%`} r={hoveredIndustry !== null ? 3 : 2} fill={hoveredIndustry !== null ? '#FF4D00' : '#d1d5db'} className="transition-all duration-500" />
               ))}
             </svg>
 
@@ -942,26 +981,27 @@ className="group cursor-pointer"
                     whileHover={{ y: -6 }}
                     onMouseEnter={() => setHoveredIndustry(ind.id)}
                     fallbackMs={800 + idx * 120}
-                    className={`relative group cursor-pointer rounded-[22px] overflow-hidden border transition-all duration-400 ${isHovered ? 'border-orange-400 shadow-[0_12px_40px_rgba(255,74,0,0.15)]' : 'border-gray-200 dark:border-white/10 shadow-sm hover:shadow-lg'}`}
+                    className={`group relative cursor-pointer rounded-[20px] overflow-hidden border transition-all duration-400 ${isHovered ? 'border-orange-500/70 -translate-y-0.5 shadow-[0_20px_55px_-14px_rgba(255,77,0,0.32)]' : 'border-neutral-200 dark:border-white/10 shadow-sm hover:-translate-y-1 hover:border-orange-500/50 hover:shadow-[0_16px_45px_-14px_rgba(0,0,0,0.28)] dark:hover:shadow-[0_16px_45px_-14px_rgba(255,77,0,0.2)]'}`}
                     style={{ transform: idx % 2 === 1 ? 'translateX(8px)' : 'none' }}
                   >
                     <div className="relative w-full h-[155px]">
                       <img src={ind.image} alt={currentLang === 'en' ? ind.nameEn : ind.nameBn} className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-[#0b0b0b]/90 via-[#0b0b0b]/30 to-transparent" />
                       {/* Icon */}
-                      <div className="absolute top-3 left-3 w-8 h-8 rounded-full bg-black/50 border border-orange-500/40 flex items-center justify-center backdrop-blur-sm group-hover:border-orange-500 group-hover:shadow-[0_0_12px_rgba(255,74,0,0.3)] transition-all duration-400">
+                      <div className="absolute top-3 left-3 w-8 h-8 rounded-full bg-black/45 border border-orange-500/45 backdrop-blur-md flex items-center justify-center group-hover:border-orange-500 group-hover:bg-orange-500/15 group-hover:shadow-[0_0_14px_rgba(255,77,0,0.4)] transition-all duration-300">
                         {renderLucideIcon(ind.icon, 'h-3.5 w-3.5 text-orange-400')}
                       </div>
                       {/* Arrow button */}
-                      <div className="absolute top-3 right-3 w-7 h-7 rounded-full bg-white/10 border border-white/20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 backdrop-blur-sm">
+                      <div className="absolute top-3 right-3 w-7 h-7 rounded-full bg-orange-500/10 border border-orange-500/40 flex items-center justify-center opacity-0 group-hover:opacity-100 group-hover:bg-orange-500 group-hover:text-white transition-all duration-300 backdrop-blur-sm">
                         <ArrowRight className="h-3 w-3 text-white -rotate-45" />
                       </div>
                       {/* Text */}
                       <div className="absolute bottom-0 left-0 right-0 p-4">
-                        <h4 className="text-[13px] font-bold text-white leading-tight mb-0.5">
+                        <h4 className="flex items-center gap-1.5 text-[13px] font-black text-white leading-tight mb-1">
+                          <span className="h-3.5 w-1 rounded-full bg-orange-500 shrink-0" />
                           {currentLang === 'en' ? ind.nameEn : ind.nameBn}
                         </h4>
-                        <p className="text-[10px] text-gray-300 leading-snug opacity-80 group-hover:opacity-100 transition-opacity duration-300 line-clamp-2">
+                        <p className="mt-0.5 text-[10px] text-white/85 leading-snug opacity-80 group-hover:opacity-100 transition-opacity duration-300 line-clamp-2">
                           {currentLang === 'en' ? ind.descEn : ind.descBn}
                         </p>
                       </div>
@@ -979,23 +1019,24 @@ className="group cursor-pointer"
               fallbackMs={900}
               className="flex items-center justify-center z-10"
             >
-              <div className={`relative w-full aspect-square max-w-[400px] rounded-full transition-all duration-500 ${hoveredIndustry !== null ? 'shadow-[0_0_60px_rgba(255,74,0,0.12)]' : ''}`}>
-                {/* Outer ring */}
-                <div className={`absolute -inset-3 rounded-full border-2 border-dashed transition-all duration-500 ${hoveredIndustry !== null ? 'border-orange-400/50' : 'border-gray-200 dark:border-white/10'}`} />
-                {/* Inner ring */}
-                <div className={`absolute -inset-1 rounded-full border transition-all duration-500 ${hoveredIndustry !== null ? 'border-orange-400' : 'border-gray-300 dark:border-white/15'}`} />
+              <div className={`relative w-full aspect-square max-w-[400px] rounded-full transition-all duration-500 ${hoveredIndustry !== null ? 'shadow-[0_24px_80px_-20px_rgba(255,77,0,0.25)]' : 'shadow-xl shadow-black/20 dark:shadow-black/40'}`}>
+                {/* Orbit ring */}
+                <div className={`absolute -inset-4 rounded-full border-2 border-dashed transition-all duration-500 ${hoveredIndustry !== null ? 'border-orange-500/40 animate-spin' : 'border-neutral-300/70 dark:border-white/10'}`} style={{ animationDuration: '14s' }} />
+                {/* Solid ring */}
+                <div className={`absolute -inset-1 rounded-full border-2 transition-all duration-500 ${hoveredIndustry !== null ? 'border-orange-500/70' : 'border-neutral-300 dark:border-white/20'}`} />
                 {/* Image */}
-                <div className="w-full h-full rounded-full overflow-hidden border-4 border-white dark:border-[#1a1a1a] shadow-2xl">
+                <div className="w-full h-full rounded-full overflow-hidden border-4 border-white dark:border-[#1a1a1a] shadow-2xl shadow-orange-500/5">
                   <img
                     src={hoveredIndustry ? industries.find(i => i.id === hoveredIndustry)?.image || industries[0].image : industries[0].image}
                     alt="Industries"
-                    className="w-full h-full object-cover transition-all duration-700"
+                    className="w-full h-full object-cover scale-105 transition-all duration-700"
                   />
                 </div>
-                {/* Center label */}
-                <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-white/10 rounded-full px-5 py-2 shadow-lg">
+                {/* Floating label */}
+                <div className="absolute -bottom-5 left-1/2 -translate-x-1/2 bg-white dark:bg-[#151515] border border-neutral-200 dark:border-white/15 rounded-full px-5 py-2 shadow-lg flex items-center gap-1.5">
+                  <span className="h-1.5 w-1.5 rounded-full bg-orange-500 animate-pulse" />
                   <span className="text-[10px] font-black uppercase tracking-[0.15em] text-gray-900 dark:text-white">
-                    {currentLang === 'en' ? '9+ INDUSTRIES' : '৯+ সেক্টর'}
+                    {currentLang === 'en' ? '9+ Industries' : '৯+ সেক্টর'}
                   </span>
                 </div>
               </div>
@@ -1014,23 +1055,24 @@ className="group cursor-pointer"
                     whileHover={{ y: -6 }}
                     onMouseEnter={() => setHoveredIndustry(ind.id)}
                     fallbackMs={800 + (idx + 4) * 120}
-                    className={`relative group cursor-pointer rounded-[22px] overflow-hidden border transition-all duration-400 ${isHovered ? 'border-orange-400 shadow-[0_12px_40px_rgba(255,74,0,0.15)]' : 'border-gray-200 dark:border-white/10 shadow-sm hover:shadow-lg'}`}
+                    className={`group relative cursor-pointer rounded-[20px] overflow-hidden border transition-all duration-400 ${isHovered ? 'border-orange-500/70 -translate-y-0.5 shadow-[0_20px_55px_-14px_rgba(255,77,0,0.32)]' : 'border-neutral-200 dark:border-white/10 shadow-sm hover:-translate-y-1 hover:border-orange-500/50 hover:shadow-[0_16px_45px_-14px_rgba(0,0,0,0.28)] dark:hover:shadow-[0_16px_45px_-14px_rgba(255,77,0,0.2)]'}`}
                     style={{ transform: idx % 2 === 0 ? 'translateX(-8px)' : 'none' }}
                   >
                     <div className="relative w-full h-[155px]">
                       <img src={ind.image} alt={currentLang === 'en' ? ind.nameEn : ind.nameBn} className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
-                      <div className="absolute top-3 left-3 w-8 h-8 rounded-full bg-black/50 border border-orange-500/40 flex items-center justify-center backdrop-blur-sm group-hover:border-orange-500 group-hover:shadow-[0_0_12px_rgba(255,74,0,0.3)] transition-all duration-400">
+                      <div className="absolute inset-0 bg-gradient-to-t from-[#0b0b0b]/90 via-[#0b0b0b]/30 to-transparent" />
+                      <div className="absolute top-3 left-3 w-8 h-8 rounded-full bg-black/45 border border-orange-500/45 backdrop-blur-md flex items-center justify-center group-hover:border-orange-500 group-hover:bg-orange-500/15 group-hover:shadow-[0_0_14px_rgba(255,77,0,0.4)] transition-all duration-300">
                         {renderLucideIcon(ind.icon, 'h-3.5 w-3.5 text-orange-400')}
                       </div>
-                      <div className="absolute top-3 right-3 w-7 h-7 rounded-full bg-white/10 border border-white/20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 backdrop-blur-sm">
+                      <div className="absolute top-3 right-3 w-7 h-7 rounded-full bg-orange-500/10 border border-orange-500/40 flex items-center justify-center opacity-0 group-hover:opacity-100 group-hover:bg-orange-500 group-hover:text-white transition-all duration-300 backdrop-blur-sm">
                         <ArrowRight className="h-3 w-3 text-white -rotate-45" />
                       </div>
                       <div className="absolute bottom-0 left-0 right-0 p-4">
-                        <h4 className="text-[13px] font-bold text-white leading-tight mb-0.5">
+                        <h4 className="flex items-center gap-1.5 text-[13px] font-black text-white leading-tight mb-1">
+                          <span className="h-3.5 w-1 rounded-full bg-orange-500 shrink-0" />
                           {currentLang === 'en' ? ind.nameEn : ind.nameBn}
                         </h4>
-                        <p className="text-[10px] text-gray-300 leading-snug opacity-80 group-hover:opacity-100 transition-opacity duration-300 line-clamp-2">
+                        <p className="mt-0.5 text-[10px] text-white/85 leading-snug opacity-80 group-hover:opacity-100 transition-opacity duration-300 line-clamp-2">
                           {currentLang === 'en' ? ind.descEn : ind.descBn}
                         </p>
                       </div>
@@ -1047,25 +1089,32 @@ className="group cursor-pointer"
             animate={{ opacity: 1, clipPath: 'inset(0% 0% 0% 0%)' }}
             transition={{ delay: 0.5, duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
             fallbackMs={1300}
-            className="hidden lg:block mt-6 relative mx-auto max-w-3xl group cursor-pointer rounded-[24px] overflow-hidden border border-gray-200 dark:border-white/10 shadow-sm hover:shadow-xl transition-all duration-400 hover:border-orange-400"
+            className="hidden lg:block mt-6 relative mx-auto max-w-3xl group cursor-pointer rounded-[24px] overflow-hidden border border-neutral-200 dark:border-white/10 shadow-sm hover:shadow-xl transition-all duration-400 hover:border-orange-500"
           >
-            <div className="relative h-[180px] flex">
-              <img src={industries[8].image} alt={currentLang === 'en' ? industries[8].nameEn : industries[8].nameBn} className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
-              <div className="absolute inset-0 bg-gradient-to-r from-black/75 via-black/40 to-transparent" />
+            <div className="relative h-[190px] flex">
+              <img src={industries[8].image} alt={currentLang === 'en' ? industries[8].nameEn : industries[8].nameBn} className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105" loading="lazy" />
+              <div className="absolute inset-0 bg-gradient-to-r from-[#0b0b0b]/90 via-[#0b0b0b]/45 to-transparent" />
+              <div className="absolute top-3 left-3 inline-flex items-center gap-1.5 rounded-full bg-black/45 border border-white/15 backdrop-blur-md px-2.5 py-1">
+                <span className="h-1.5 w-1.5 rounded-full bg-orange-500 animate-pulse" />
+                <span className="text-[9px] font-black uppercase tracking-[0.2em] text-white font-mono">
+                  {currentLang === 'en' ? 'Featured Industry' : 'ফিচার্ড সেক্টর'}
+                </span>
+              </div>
               <div className="relative z-10 flex items-center gap-6 p-8 w-full">
-                <div className="w-14 h-14 rounded-2xl bg-black/50 border border-orange-500/40 flex items-center justify-center backdrop-blur-sm shrink-0 group-hover:border-orange-500 group-hover:shadow-[0_0_20px_rgba(255,74,0,0.3)] transition-all duration-400">
+                <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-black/70 to-black/40 border border-orange-500/40 flex items-center justify-center backdrop-blur-md shrink-0 group-hover:border-orange-500 group-hover:shadow-[0_0_22px_rgba(255,77,0,0.35)] transition-all duration-400">
                   {renderLucideIcon(industries[8].icon, 'h-6 w-6 text-orange-400')}
                 </div>
                 <div className="space-y-1.5">
-                  <h4 className="text-lg font-bold text-white">
+                  <h4 className="flex items-center gap-2 text-lg font-black text-white">
+                    <span className="text-[10px] font-mono text-white/60">09</span>
                     {currentLang === 'en' ? industries[8].nameEn : industries[8].nameBn}
                   </h4>
-                  <p className="text-xs text-gray-300 max-w-md leading-relaxed">
+                  <p className="text-xs text-white/85 max-w-md leading-relaxed">
                     {currentLang === 'en' ? industries[8].descEn : industries[8].descBn}
                   </p>
                 </div>
-                <div className="ml-auto shrink-0 w-10 h-10 rounded-full bg-white/10 border border-white/20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 backdrop-blur-sm">
-                  <ArrowRight className="h-4 w-4 text-white -rotate-45" />
+                <div className="ml-auto shrink-0 w-11 h-11 rounded-full bg-orange-500/15 border border-orange-500/40 flex items-center justify-center group-hover:bg-orange-500 group-hover:text-white transition-all duration-300">
+                  <ArrowRight className="h-4 w-4 text-orange-400 -rotate-45 transition-transform duration-300 group-hover:text-white" />
                 </div>
               </div>
             </div>
@@ -1079,7 +1128,7 @@ className="group cursor-pointer"
               animate={{ opacity: 1, clipPath: 'inset(0% 0% 0% 0%)' }}
               transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
               fallbackMs={1100}
-              className="relative rounded-[24px] overflow-hidden aspect-[16/9] sm:aspect-[21/9]"
+              className="relative rounded-[22px] overflow-hidden border border-neutral-200 dark:border-white/10 shadow-lg aspect-[16/9] sm:aspect-[21/9]"
             >
               <img src={industries[0].image} alt="Industries" className="w-full h-full object-cover" />
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
@@ -1103,19 +1152,20 @@ className="group cursor-pointer"
                   animate={{ opacity: 1, y: 0, clipPath: 'inset(0% 0% 0% 0%)' }}
                   transition={{ delay: idx * 0.05, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
                   fallbackMs={900 + idx * 60}
-                  className="group cursor-pointer rounded-[18px] overflow-hidden border border-gray-200 dark:border-white/10 shadow-sm hover:shadow-lg hover:border-orange-300 transition-all duration-300"
+                  className="group cursor-pointer rounded-[18px] overflow-hidden border border-neutral-200 dark:border-white/10 shadow-sm hover:border-orange-500/60 hover:shadow-[0_12px_35px_-10px_rgba(255,77,0,0.25)] transition-all duration-300"
                 >
                   <div className="relative h-[110px] sm:h-[130px]">
                     <img src={ind.image} alt={currentLang === 'en' ? ind.nameEn : ind.nameBn} className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
-                    <div className="absolute top-2 left-2 w-7 h-7 rounded-full bg-black/50 border border-orange-500/40 flex items-center justify-center backdrop-blur-sm">
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#0b0b0b]/90 via-[#0b0b0b]/30 to-transparent" />
+                    <div className="absolute top-2 left-2 w-7 h-7 rounded-full bg-black/45 border border-orange-500/40 backdrop-blur-md flex items-center justify-center group-hover:bg-orange-500/20 group-hover:shadow-[0_0_12px_rgba(255,77,0,0.4)] transition-all duration-300">
                       {renderLucideIcon(ind.icon, 'h-3 w-3 text-orange-400')}
                     </div>
                     <div className="absolute bottom-0 left-0 right-0 p-3">
-                      <h4 className="text-[11px] sm:text-[12px] font-bold text-white leading-tight mb-0.5">
+                      <h4 className="flex items-center gap-1 text-[11px] sm:text-[12px] font-black text-white leading-tight mb-1">
+                        <span className="h-3 w-1 rounded-full bg-orange-500 shrink-0" />
                         {currentLang === 'en' ? ind.nameEn : ind.nameBn}
                       </h4>
-                      <p className="text-[9px] sm:text-[10px] text-gray-300 leading-snug line-clamp-2 opacity-80">
+                      <p className="text-[9px] sm:text-[10px] text-white/85 leading-snug line-clamp-2 opacity-80">
                         {currentLang === 'en' ? ind.descEn : ind.descBn}
                       </p>
                     </div>

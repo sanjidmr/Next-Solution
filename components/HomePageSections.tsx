@@ -5,7 +5,7 @@
  */
 
 import React, { useState, useEffect, useRef } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
+import { useRouter } from 'next/navigation';
 import { 
   ArrowRight, CheckCircle, ChevronRight, HelpCircle, Star, Quote, 
   Sparkles, Layers, Cpu, ShieldCheck, Heart, ArrowUpRight, Code, 
@@ -17,13 +17,14 @@ import {
 } from 'lucide-react';
 
 import { translations } from '@/data/translations';
+import { useContentSync } from '@/hooks/useContentSync';
 import TrustedByMarquee from '@/components/motion/TrustedByMarquee';
 import HorizontalServices from '@/components/motion/HorizontalServices';
 import StackingCards from '@/components/motion/StackingCards';
 import RevealGuard from '@/components/motion/RevealGuard';
 import { 
   getSettings, getClientLogos, getSuccessStories, 
-  getTestimonials, getBlogs,
+  getTestimonials, getBlogs, getPortfolio, mergePortfolioData,
   addSubscriber, getWhyChooseUsCards, getWhyChooseUsStats, 
   getWhyChooseUsBadges, getWhyChooseUsTechs, getWhyChooseUsCTA,
   getProcessSteps, getProcessCTA, getTechServiceCards
@@ -337,6 +338,10 @@ interface HomePageSectionsProps {
 
 export default function HomePageSections({ currentLang, setTab, portfolioData }: HomePageSectionsProps) {
   const t = translations[currentLang];
+  // Re-render (never re-mount) when the public content cache refreshes so the
+  // localStorage-backed getters below re-read fresh data WITHOUT replaying the
+  // page-entrance animations.
+  useContentSync();
   const settings = getSettings();
 
   // Load dynamic content from database
@@ -378,7 +383,14 @@ export default function HomePageSections({ currentLang, setTab, portfolioData }:
 
   const testimonials = getTestimonials();
   const blogs = getBlogs().filter(b => b.status === 'published');
-  const portfolio = portfolioData ?? [];
+  // Case-study source for the home grid: live (DB-backed) rows first, then the
+  // seeded showcase items that aren't already present (mergePortfolioData drops
+  // drafts, keeps live order and never duplicates). The grid below then selects
+  // up to 6 items spanning as many distinct categories as this data allows, so
+  // it never degenerates into 6 projects from a single service.
+  const livePortfolio = portfolioData && portfolioData.length > 0 ? portfolioData : getPortfolio();
+  const portfolio = mergePortfolioData(livePortfolio);
+  const livePortfolioIds = new Set(livePortfolio.map((p) => p.id || p.slug || ''));
 
   const whyChooseUsCards = getWhyChooseUsCards().filter(c => c.visible !== false).sort((a, b) => a.displayOrder - b.displayOrder);
   const whyChooseUsStats = getWhyChooseUsStats().filter(s => s.visible !== false).sort((a, b) => a.displayOrder - b.displayOrder);
@@ -406,10 +418,15 @@ export default function HomePageSections({ currentLang, setTab, portfolioData }:
     { slug: 'ai-automation', icon: Cpu, title: 'AI Services / AI Solutions', desc: 'Custom AI agents and workflows that sell, support and save time 24/7.', techs: ['OpenAI', 'Gemini', 'Claude', 'n8n', 'Make'], popular: ['AI Support Bots', 'Workflow Automation', 'AI Voice Agents'], benefits: ['Round-the-clock automation', 'Reduced operating costs'] },
   ];
 
+  const router = useRouter();
+
+  // Every service card navigates directly to its own service detail page.
+  // The slug is also kept in sessionStorage so legacy deep links (about-page
+  // capability cards, orbit dials) still open the correct detail view via the
+  // ServicesSection session-storage sync.
   const openService = (slug: string) => {
     sessionStorage.setItem('selected_service_slug', slug);
-    setTab('services');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    router.push(`/services/${encodeURIComponent(slug)}`);
   };
 
   // States for interactive components
@@ -419,7 +436,6 @@ export default function HomePageSections({ currentLang, setTab, portfolioData }:
   const [isSubscribed, setIsSubscribed] = useState(false);
   const [newsletterError, setNewsletterError] = useState('');
   const [hoveredEcosystem, setHoveredEcosystem] = useState<any>(null);
-  const [hoveredIndustry, setHoveredIndustry] = useState<string | null>(null);
 
   // Horizontal scroll ref for featured portfolio row
   const portfolioRowRef = useRef<HTMLDivElement>(null);
@@ -468,11 +484,55 @@ export default function HomePageSections({ currentLang, setTab, portfolioData }:
     return <IconComp className={className} />;
   };
 
-  // Filter portfolio items
-  const filteredPortfolio = portfolio.filter((item) => {
-    if (activePortfolioFilter === 'All') return true;
-    return item.category === activePortfolioFilter;
-  });
+  // Dynamically pick up to `count` case-study cards with maximum category
+  // diversity: one item per distinct service/category first, then fill any
+  // remaining slots with the next best items. Ordering priority is:
+  //   1. items that came from the live database (so real DB projects win),
+  //   2. featured items,
+  //   3. the existing sort order.
+  // Nothing is hardcoded or duplicated — everything comes from the live data.
+  const pickVariedCaseStudies = (
+    items: PortfolioItem[],
+    count = 6,
+    preferredIds?: Set<string>
+  ): PortfolioItem[] => {
+    const isPreferred = (item: PortfolioItem) =>
+      preferredIds?.has(item.id || item.slug || '') ? 0 : 1;
+
+    const ranked = [...items].sort((a, b) => {
+      const ap = isPreferred(a);
+      const bp = isPreferred(b);
+      if (ap !== bp) return ap - bp;
+      const af = a.featured ? 0 : 1;
+      const bf = b.featured ? 0 : 1;
+      if (af !== bf) return af - bf;
+      return (a.sortOrder ?? Number.MAX_SAFE_INTEGER) - (b.sortOrder ?? Number.MAX_SAFE_INTEGER);
+    });
+
+    const picked: PortfolioItem[] = [];
+    const usedCategories = new Set<string>();
+
+    for (const item of ranked) {
+      if (picked.length >= count) break;
+      const cat = item.category || 'Other';
+      if (!usedCategories.has(cat)) {
+        usedCategories.add(cat);
+        picked.push(item);
+      }
+    }
+    for (const item of ranked) {
+      if (picked.length >= count) break;
+      if (!picked.includes(item)) picked.push(item);
+    }
+    return picked;
+  };
+
+  // Filter portfolio items. The "All" view shows exactly 6 cards that span as
+  // many different services/categories as the live data allows — never 6 items
+  // of the same category. A specific category filter shows that category's work.
+  const filteredPortfolio = activePortfolioFilter === 'All'
+    ? pickVariedCaseStudies(portfolio, 6, livePortfolioIds)
+    : portfolio.filter((item) => item.category === activePortfolioFilter).slice(0, 6);
 
   const portfolioCategories = [
     'All', 
@@ -790,97 +850,97 @@ export default function HomePageSections({ currentLang, setTab, portfolioData }:
             })}
           </RevealGuard>
 
-          {/* Right: Portfolio cards in a grid (same size as services cards) */}
+          {/* Right: Case-study cards — exactly 6, spanning distinct categories */}
           <RevealGuard
-            initial={{ opacity: 0, x: 64 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: 0.15 }}
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1], delay: 0.1 }}
             fallbackMs={1000}
           >
             {filteredPortfolio.length > 0 ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-              <AnimatePresence mode="popLayout">
-                {filteredPortfolio.slice(0, 6).map((item, idx) => (
-                  <motion.div
-                    layout
-                    key={item.id}
-                    initial={{ opacity: 0, x: 24 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, scale: 0.95 }}
-                    transition={{ duration: 0.35, delay: idx * 0.05 }}
-                    onClick={() => openPortfolioItem(item)}
-                    role="link"
-                    tabIndex={0}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter' || e.key === ' ') {
-                        e.preventDefault();
-                        openPortfolioItem(item);
-                      }
-                    }}
-className="group h-full cursor-pointer rounded-[20px] overflow-hidden border border-neutral-200/80 dark:border-neutral-800 bg-white dark:bg-[#151515] shadow-sm hover:-translate-y-1 hover:border-orange-500/60 hover:shadow-[0_18px_45px_-18px_rgba(255,77,0,0.45)] transition-all duration-300"
-                  >
-{/* 1. Image with border (top/right/left) - only image has border */}
-                    <div className="relative overflow-hidden rounded-t-[20px] border border-neutral-200/60 dark:border-neutral-700/60">
+            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
+              {filteredPortfolio.map((item, idx) => (
+                <div
+                  key={item.id || item.slug || idx}
+                  onClick={() => openPortfolioItem(item)}
+                  role="link"
+                  tabIndex={0}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault();
+                      openPortfolioItem(item);
+                    }
+                  }}
+                  className="group relative h-full cursor-pointer rounded-[22px] overflow-hidden border border-neutral-200/80 dark:border-neutral-800 bg-white dark:bg-[#151515] shadow-sm transition-all duration-300 hover:-translate-y-1.5 hover:border-orange-500/70 hover:shadow-[0_22px_55px_-20px_rgba(255,77,0,0.35)]"
+                >
+{/* 1. Media — image, category chip, serial number */}
+                    <div className="relative overflow-hidden aspect-[16/10]">
                       <img
                         src={item.image}
                         alt={item.titleEn}
-                        className="aspect-[16/9] w-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
                         referrerPolicy="no-referrer"
                         loading="lazy"
                       />
+                      <div className="absolute inset-0 bg-gradient-to-t from-[#0b0b0b]/65 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
-                      {/* Category Badge over Image (top right) */}
-                      <div suppressHydrationWarning className="absolute top-3 right-3 bg-white/90 dark:bg-neutral-900/90 backdrop-blur-md text-neutral-800 dark:text-neutral-100 font-mono text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider border border-neutral-200/50 dark:border-neutral-700/50 shadow-sm">
+                      {/* Category chip (top-left) */}
+                      <div suppressHydrationWarning className="absolute top-3 left-3 bg-white/90 dark:bg-neutral-900/90 backdrop-blur-md text-neutral-800 dark:text-neutral-100 font-mono text-[9px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider border border-neutral-200/50 dark:border-neutral-700/50 shadow-sm">
                         {getPortfolioCategoryLabel(item.category)}
                       </div>
 
-                      {/* Hover arrow */}
-                      <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                        <div className="bg-white dark:bg-[#0D0D0D] text-neutral-900 dark:text-white rounded-full p-3 shadow-lg transform translate-y-1 group-hover:translate-y-0 transition-all duration-300">
-                          <ArrowUpRight className="h-5 w-5 text-orange-500 dark:text-orange-400" />
-                        </div>
+                      {/* Serial number (bottom-left) */}
+                      <span className="absolute bottom-3 left-3 font-mono text-[10px] font-black text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.6)]">
+                        {String(idx + 1).padStart(2, '0')}
+                      </span>
+
+                      {/* Hover arrow (bottom-right) */}
+                      <div className="absolute bottom-3 right-3 h-8 w-8 rounded-full bg-orange-500/10 border border-orange-500/40 opacity-0 group-hover:opacity-100 group-hover:bg-orange-500 group-hover:text-white transition-all duration-300 flex items-center justify-center backdrop-blur-sm">
+                        <ArrowUpRight className="h-4 w-4 text-white -rotate-45 transition-transform duration-300 group-hover:text-white" />
                       </div>
                     </div>
 
-                    {/* 2. Below image: industry + duration, name, description */}
-                    <div className="mt-3 space-y-2 px-0.5">
-                      <div className="flex items-center justify-between text-[10px] font-mono tracking-wide">
-                        <span suppressHydrationWarning className="font-extrabold uppercase text-orange-500 dark:text-orange-400">
+                    {/* 2. Body — industry + duration, name, description */}
+                    <div className="p-4 sm:p-5">
+                      <div className="flex items-center justify-between gap-2 text-[10px] font-mono tracking-wide">
+                        <span suppressHydrationWarning className="font-extrabold uppercase text-orange-500 dark:text-orange-400 truncate">
                           {currentLang === 'en' ? item.industryEn || 'Digital Product' : item.industryBn || 'ডিজিটাল প্রোডাক্ট'}
                         </span>
-                        <span suppressHydrationWarning className="text-neutral-400 dark:text-neutral-500 font-medium bg-neutral-50 dark:bg-neutral-900 px-2 py-0.5 rounded border border-neutral-100 dark:border-neutral-800">
-                          {item.duration}
+                        <span suppressHydrationWarning className="text-neutral-400 dark:text-neutral-500 font-medium bg-neutral-50 dark:bg-neutral-900 px-2 py-0.5 rounded border border-neutral-100 dark:border-neutral-800 shrink-0">
+                          {item.duration || item.completionYear || (currentLang === 'en' ? 'Case Study' : 'কেস স্টাডি')}
                         </span>
                       </div>
 
-                      <h3 suppressHydrationWarning className="font-sans text-base md:text-lg font-bold text-neutral-900 dark:text-white group-hover:text-orange-500 dark:group-hover:text-orange-400 transition-colors duration-200 leading-snug line-clamp-1">
+                      <h3 suppressHydrationWarning className="mt-2.5 font-sans text-base md:text-lg font-bold text-neutral-900 dark:text-white leading-snug line-clamp-2 group-hover:text-orange-500 dark:group-hover:text-orange-400 transition-colors duration-200">
                         {currentLang === 'en' ? item.titleEn : item.titleBn}
                       </h3>
 
-<p suppressHydrationWarning className="text-xs text-neutral-500 dark:text-neutral-400 leading-relaxed line-clamp-2">
-                        {currentLang === 'en' ? item.descriptionEn : item.descriptionBn}
-                      </p>
+                      {(currentLang === 'en' ? item.descriptionEn : item.descriptionBn) ? (
+                        <p suppressHydrationWarning className="mt-1.5 text-xs text-neutral-500 dark:text-neutral-400 leading-relaxed line-clamp-2">
+                          {currentLang === 'en' ? item.descriptionEn : item.descriptionBn}
+                        </p>
+                      ) : (item.technologies || []).length === 0 ? (
+                        <p suppressHydrationWarning className="mt-1.5 text-xs text-neutral-500 dark:text-neutral-400 leading-relaxed line-clamp-2">
+                          {currentLang === 'en'
+                            ? 'A bespoke digital product delivered end-to-end by Next Solution.'
+                            : 'নেক্সট সলিউশন দ্বারা সম্পূর্ণভাবে ডেলিভার করা একটি কাস্টম ডিজিটাল প্রোডাক্ট।'}
+                        </p>
+                      ) : null}
                     </div>
 
-                    {/* 3. Built with tags - orange label */}
-<div className="mt-3 pt-3 border-t border-neutral-50 dark:border-neutral-800">
-                      <div className="flex items-center space-x-1 mb-1.5">
-                        <Code className="h-3 w-3 text-orange-500 dark:text-orange-400" />
-                        <span className="text-[9px] font-bold text-orange-500 dark:text-orange-400 uppercase tracking-wider font-mono">
-                          {currentLang === 'en' ? 'Built with:' : 'যা দিয়ে তৈরি:'}
-                        </span>
-                      </div>
-                      <div className="flex flex-wrap gap-1">
-                        {(item.technologies || []).slice(0, 4).map((tech) => (
+                    {/* 3. Built with tags */}
+                    {(item.technologies || []).slice(0, 3).length > 0 && (
+                      <div className="px-4 pt-4 flex flex-wrap gap-1.5 sm:px-5">
+                        {(item.technologies || []).slice(0, 3).map((tech) => (
                           <span suppressHydrationWarning
                             key={tech}
-                            className="rounded-full bg-neutral-50 dark:bg-neutral-900 border border-neutral-200/60 dark:border-neutral-700/60 text-[9px] font-bold text-neutral-500 dark:text-neutral-400 font-mono px-2 py-0.5 transition-colors duration-200"
+                            className="rounded-full bg-neutral-50 dark:bg-neutral-900 border border-neutral-200/60 dark:border-neutral-700/60 text-[9px] font-bold text-neutral-500 dark:text-neutral-400 font-mono px-2 py-0.5"
                           >
                             {tech}
                           </span>
                         ))}
                       </div>
-                    </div>
+                    )}
 
                     {/* 4. Footer CTA — opens the live site / case-study detail directly */}
                     <div className="mt-3 flex items-center justify-between rounded-lg px-3 py-2 border border-neutral-200/70 dark:border-neutral-700/70 bg-neutral-50/70 dark:bg-white/[0.04]">
@@ -891,10 +951,9 @@ className="group h-full cursor-pointer rounded-[20px] overflow-hidden border bor
                         <ArrowUpRight className="h-3 w-3 text-orange-500 -rotate-45 transition-transform duration-300 group-hover:text-white" />
                       </span>
                     </div>
-                  </motion.div>
+                  </div>
                 ))}
-              </AnimatePresence>
-            </div>
+              </div>
             ) : (
               <div className="flex flex-col items-center justify-center gap-4 rounded-2xl border border-dashed border-neutral-200 dark:border-neutral-700 bg-neutral-50/60 dark:bg-white/[0.02] px-6 py-16 text-center">
                 <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-neutral-100 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700">
@@ -951,229 +1010,79 @@ className="group h-full cursor-pointer rounded-[20px] overflow-hidden border bor
             </p>
           </div>
 
-          {/* ── Desktop Asymmetric Layout ── */}
-          <div
-            className="hidden lg:grid relative"
-            style={{ gridTemplateColumns: 'minmax(0,1fr) minmax(0,1.6fr) minmax(0,1fr)', gridTemplateRows: 'repeat(4, auto)', gap: '16px 20px', alignItems: 'center' }}
-            onMouseLeave={() => setHoveredIndustry(null)}
-          >
-            {/* Subtle connecting lines SVG (behind everything) */}
-            <svg className="absolute inset-0 w-full h-full pointer-events-none z-0" style={{ overflow: 'visible' }}>
-              {/* Dots pattern connecting cards to center */}
-              {industries.slice(0, 4).map((_, i) => (
-                <circle key={`ldot-${i}`} cx="33%" cy={`${14 + i * 24}%`} r={hoveredIndustry !== null ? 3 : 2} fill={hoveredIndustry !== null ? '#FF4D00' : '#d1d5db'} className="transition-all duration-500" />
-              ))}
-              {industries.slice(4, 8).map((_, i) => (
-                <circle key={`rdot-${i}`} cx="67%" cy={`${14 + i * 24}%`} r={hoveredIndustry !== null ? 3 : 2} fill={hoveredIndustry !== null ? '#FF4D00' : '#d1d5db'} className="transition-all duration-500" />
-              ))}
-            </svg>
-
-            {/* ── Left Column (4 cards) ── */}
-            <div className="flex flex-col gap-4 z-10">
-              {industries.slice(0, 4).map((ind, idx) => {
-                const isHovered = hoveredIndustry === ind.id;
-                return (
-                  <RevealGuard
-                    key={ind.id}
-                    initial={{ opacity: 0, x: -30, clipPath: 'inset(0% 100% 0% 0%)', scale: 0.96 }}
-                    animate={{ opacity: 1, x: 0, clipPath: 'inset(0% 0% 0% 0%)', scale: 1 }}
-                    transition={{ delay: idx * 0.1, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-                    whileHover={{ y: -6 }}
-                    onMouseEnter={() => setHoveredIndustry(ind.id)}
-                    fallbackMs={800 + idx * 120}
-                    className={`group relative cursor-pointer rounded-[20px] overflow-hidden border transition-all duration-400 ${isHovered ? 'border-orange-500/70 -translate-y-0.5 shadow-[0_20px_55px_-14px_rgba(255,77,0,0.32)]' : 'border-neutral-200 dark:border-white/10 shadow-sm hover:-translate-y-1 hover:border-orange-500/50 hover:shadow-[0_16px_45px_-14px_rgba(0,0,0,0.28)] dark:hover:shadow-[0_16px_45px_-14px_rgba(255,77,0,0.2)]'}`}
-                    style={{ transform: idx % 2 === 1 ? 'translateX(8px)' : 'none' }}
-                  >
-                    <div className="relative w-full h-[155px]">
-                      <img src={ind.image} alt={currentLang === 'en' ? ind.nameEn : ind.nameBn} className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
-                      <div className="absolute inset-0 bg-gradient-to-t from-[#0b0b0b]/90 via-[#0b0b0b]/30 to-transparent" />
-                      {/* Icon */}
-                      <div className="absolute top-3 left-3 w-8 h-8 rounded-full bg-black/45 border border-orange-500/45 backdrop-blur-md flex items-center justify-center group-hover:border-orange-500 group-hover:bg-orange-500/15 group-hover:shadow-[0_0_14px_rgba(255,77,0,0.4)] transition-all duration-300">
-                        {renderLucideIcon(ind.icon, 'h-3.5 w-3.5 text-orange-400')}
-                      </div>
-                      {/* Arrow button */}
-                      <div className="absolute top-3 right-3 w-7 h-7 rounded-full bg-orange-500/10 border border-orange-500/40 flex items-center justify-center opacity-0 group-hover:opacity-100 group-hover:bg-orange-500 group-hover:text-white transition-all duration-300 backdrop-blur-sm">
-                        <ArrowRight className="h-3 w-3 text-white -rotate-45" />
-                      </div>
-                      {/* Text */}
-                      <div className="absolute bottom-0 left-0 right-0 p-4">
-                        <h4 className="flex items-center gap-1.5 text-[13px] font-black text-white leading-tight mb-1">
-                          <span className="h-3.5 w-1 rounded-full bg-orange-500 shrink-0" />
-                          {currentLang === 'en' ? ind.nameEn : ind.nameBn}
-                        </h4>
-                        <p className="mt-0.5 text-[10px] text-white/85 leading-snug opacity-80 group-hover:opacity-100 transition-opacity duration-300 line-clamp-2">
-                          {currentLang === 'en' ? ind.descEn : ind.descBn}
-                        </p>
-                      </div>
-                    </div>
-                  </RevealGuard>
-                );
-              })}
-            </div>
-
-            {/* ── Center Featured Area ── */}
-            <RevealGuard
-              initial={{ opacity: 0, scale: 0.85 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1], delay: 0.15 }}
-              fallbackMs={900}
-              className="flex items-center justify-center z-10"
-            >
-              <div className={`relative w-full aspect-square max-w-[400px] rounded-full transition-all duration-500 ${hoveredIndustry !== null ? 'shadow-[0_24px_80px_-20px_rgba(255,77,0,0.25)]' : 'shadow-xl shadow-black/20 dark:shadow-black/40'}`}>
-                {/* Orbit ring */}
-                <div className={`absolute -inset-4 rounded-full border-2 border-dashed transition-all duration-500 ${hoveredIndustry !== null ? 'border-orange-500/40 animate-spin' : 'border-neutral-300/70 dark:border-white/10'}`} style={{ animationDuration: '14s' }} />
-                {/* Solid ring */}
-                <div className={`absolute -inset-1 rounded-full border-2 transition-all duration-500 ${hoveredIndustry !== null ? 'border-orange-500/70' : 'border-neutral-300 dark:border-white/20'}`} />
-                {/* Image */}
-                <div className="w-full h-full rounded-full overflow-hidden border-4 border-white dark:border-[#1a1a1a] shadow-2xl shadow-orange-500/5">
-                  <img
-                    src={hoveredIndustry ? industries.find(i => i.id === hoveredIndustry)?.image || industries[0].image : industries[0].image}
-                    alt="Industries"
-                    className="w-full h-full object-cover scale-105 transition-all duration-700"
-                  />
-                </div>
-                {/* Floating label */}
-                <div className="absolute -bottom-5 left-1/2 -translate-x-1/2 bg-white dark:bg-[#151515] border border-neutral-200 dark:border-white/15 rounded-full px-5 py-2 shadow-lg flex items-center gap-1.5">
-                  <span className="h-1.5 w-1.5 rounded-full bg-orange-500 animate-pulse" />
-                  <span className="text-[10px] font-black uppercase tracking-[0.15em] text-gray-900 dark:text-white">
-                    {currentLang === 'en' ? '9+ Industries' : '৯+ সেক্টর'}
-                  </span>
-                </div>
-              </div>
-            </RevealGuard>
-
-            {/* ── Right Column (4 cards) ── */}
-            <div className="flex flex-col gap-4 z-10">
-              {industries.slice(4, 8).map((ind, idx) => {
-                const isHovered = hoveredIndustry === ind.id;
-                return (
-                  <RevealGuard
-                    key={ind.id}
-                    initial={{ opacity: 0, x: 30, clipPath: 'inset(0% 0% 0% 100%)', scale: 0.96 }}
-                    animate={{ opacity: 1, x: 0, clipPath: 'inset(0% 0% 0% 0%)', scale: 1 }}
-                    transition={{ delay: (idx + 4) * 0.1, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-                    whileHover={{ y: -6 }}
-                    onMouseEnter={() => setHoveredIndustry(ind.id)}
-                    fallbackMs={800 + (idx + 4) * 120}
-                    className={`group relative cursor-pointer rounded-[20px] overflow-hidden border transition-all duration-400 ${isHovered ? 'border-orange-500/70 -translate-y-0.5 shadow-[0_20px_55px_-14px_rgba(255,77,0,0.32)]' : 'border-neutral-200 dark:border-white/10 shadow-sm hover:-translate-y-1 hover:border-orange-500/50 hover:shadow-[0_16px_45px_-14px_rgba(0,0,0,0.28)] dark:hover:shadow-[0_16px_45px_-14px_rgba(255,77,0,0.2)]'}`}
-                    style={{ transform: idx % 2 === 0 ? 'translateX(-8px)' : 'none' }}
-                  >
-                    <div className="relative w-full h-[155px]">
-                      <img src={ind.image} alt={currentLang === 'en' ? ind.nameEn : ind.nameBn} className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
-                      <div className="absolute inset-0 bg-gradient-to-t from-[#0b0b0b]/90 via-[#0b0b0b]/30 to-transparent" />
-                      <div className="absolute top-3 left-3 w-8 h-8 rounded-full bg-black/45 border border-orange-500/45 backdrop-blur-md flex items-center justify-center group-hover:border-orange-500 group-hover:bg-orange-500/15 group-hover:shadow-[0_0_14px_rgba(255,77,0,0.4)] transition-all duration-300">
-                        {renderLucideIcon(ind.icon, 'h-3.5 w-3.5 text-orange-400')}
-                      </div>
-                      <div className="absolute top-3 right-3 w-7 h-7 rounded-full bg-orange-500/10 border border-orange-500/40 flex items-center justify-center opacity-0 group-hover:opacity-100 group-hover:bg-orange-500 group-hover:text-white transition-all duration-300 backdrop-blur-sm">
-                        <ArrowRight className="h-3 w-3 text-white -rotate-45" />
-                      </div>
-                      <div className="absolute bottom-0 left-0 right-0 p-4">
-                        <h4 className="flex items-center gap-1.5 text-[13px] font-black text-white leading-tight mb-1">
-                          <span className="h-3.5 w-1 rounded-full bg-orange-500 shrink-0" />
-                          {currentLang === 'en' ? ind.nameEn : ind.nameBn}
-                        </h4>
-                        <p className="mt-0.5 text-[10px] text-white/85 leading-snug opacity-80 group-hover:opacity-100 transition-opacity duration-300 line-clamp-2">
-                          {currentLang === 'en' ? ind.descEn : ind.descBn}
-                        </p>
-                      </div>
-                    </div>
-                  </RevealGuard>
-                );
-              })}
-            </div>
-          </div>
-
-          {/* ── 9th Industry — Featured Wide Card (Desktop) ── */}
-          <RevealGuard
-            initial={{ opacity: 0, clipPath: 'inset(0% 100% 0% 0%)' }}
-            animate={{ opacity: 1, clipPath: 'inset(0% 0% 0% 0%)' }}
-            transition={{ delay: 0.5, duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
-            fallbackMs={1300}
-            className="hidden lg:block mt-6 relative mx-auto max-w-3xl group cursor-pointer rounded-[24px] overflow-hidden border border-neutral-200 dark:border-white/10 shadow-sm hover:shadow-xl transition-all duration-400 hover:border-orange-500"
-          >
-            <div className="relative h-[190px] flex">
-              <img src={industries[8].image} alt={currentLang === 'en' ? industries[8].nameEn : industries[8].nameBn} className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105" loading="lazy" />
-              <div className="absolute inset-0 bg-gradient-to-r from-[#0b0b0b]/90 via-[#0b0b0b]/45 to-transparent" />
-              <div className="absolute top-3 left-3 inline-flex items-center gap-1.5 rounded-full bg-black/45 border border-white/15 backdrop-blur-md px-2.5 py-1">
-                <span className="h-1.5 w-1.5 rounded-full bg-orange-500 animate-pulse" />
-                <span className="text-[9px] font-black uppercase tracking-[0.2em] text-white font-mono">
-                  {currentLang === 'en' ? 'Featured Industry' : 'ফিচার্ড সেক্টর'}
-                </span>
-              </div>
-              <div className="relative z-10 flex items-center gap-6 p-8 w-full">
-                <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-black/70 to-black/40 border border-orange-500/40 flex items-center justify-center backdrop-blur-md shrink-0 group-hover:border-orange-500 group-hover:shadow-[0_0_22px_rgba(255,77,0,0.35)] transition-all duration-400">
-                  {renderLucideIcon(industries[8].icon, 'h-6 w-6 text-orange-400')}
-                </div>
-                <div className="space-y-1.5">
-                  <h4 className="flex items-center gap-2 text-lg font-black text-white">
-                    <span className="text-[10px] font-mono text-white/60">09</span>
-                    {currentLang === 'en' ? industries[8].nameEn : industries[8].nameBn}
-                  </h4>
-                  <p className="text-xs text-white/85 max-w-md leading-relaxed">
-                    {currentLang === 'en' ? industries[8].descEn : industries[8].descBn}
-                  </p>
-                </div>
-                <div className="ml-auto shrink-0 w-11 h-11 rounded-full bg-orange-500/15 border border-orange-500/40 flex items-center justify-center group-hover:bg-orange-500 group-hover:text-white transition-all duration-300">
-                  <ArrowRight className="h-4 w-4 text-orange-400 -rotate-45 transition-transform duration-300 group-hover:text-white" />
-                </div>
-              </div>
-            </div>
-          </RevealGuard>
-
-          {/* ── Mobile / Tablet Layout ── */}
-          <div className="lg:hidden space-y-6">
-            {/* Featured image on mobile */}
-            <RevealGuard
-              initial={{ opacity: 0, clipPath: 'inset(0% 0% 100% 0%)' }}
-              animate={{ opacity: 1, clipPath: 'inset(0% 0% 0% 0%)' }}
-              transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
-              fallbackMs={1100}
-              className="relative rounded-[22px] overflow-hidden border border-neutral-200 dark:border-white/10 shadow-lg aspect-[16/9] sm:aspect-[21/9]"
-            >
-              <img src={industries[0].image} alt="Industries" className="w-full h-full object-cover" />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-              <div className="absolute bottom-0 left-0 right-0 p-5 sm:p-8">
-                <div className="inline-flex items-center gap-2 bg-white/15 backdrop-blur-sm rounded-full px-3 py-1 mb-3 border border-white/20">
-                  <span className="h-1.5 w-1.5 rounded-full bg-orange-400" />
-                  <span className="text-[9px] font-bold text-white uppercase tracking-widest">{currentLang === 'en' ? 'Our Expertise' : 'আমাদের দক্ষতা'}</span>
-                </div>
-                <h3 className="text-xl sm:text-2xl font-black text-white leading-tight">
-                  {currentLang === 'en' ? 'Digital Solutions Across Every Industry' : 'প্রতিটি সেক্টরে ডিজিটাল সলিউশন'}
-                </h3>
-              </div>
-            </RevealGuard>
-
-            {/* Industry cards grid */}
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4">
-              {industries.map((ind, idx) => (
+          {/* ── Industry Mosaic — 9 industries in an intentional bento rhythm ── */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-4 sm:gap-5 lg:gap-6">
+            {industries.map((ind, idx) => {
+              // Desktop 12-column spans keep an editorial rhythm — each row
+              // always sums to 12: 7+5 / 4+4+4 / 6+6 / 4+8.
+              const spans = [
+                'lg:col-span-7',
+                'lg:col-span-5',
+                'lg:col-span-4',
+                'lg:col-span-4',
+                'lg:col-span-4',
+                'lg:col-span-6',
+                'lg:col-span-6',
+                'lg:col-span-4',
+                'lg:col-span-8',
+              ];
+              const tileHeights = [
+                'h-[250px]', 'h-[250px]', 'h-[210px]', 'h-[210px]', 'h-[210px]',
+                'h-[250px]', 'h-[250px]', 'h-[210px]', 'h-[210px]',
+              ];
+              const isFeature = idx === 0;
+              const num = String(idx + 1).padStart(2, '0');
+              return (
                 <RevealGuard
                   key={ind.id}
-                  initial={{ opacity: 0, y: 15, clipPath: 'inset(100% 0% 0% 0%)' }}
-                  animate={{ opacity: 1, y: 0, clipPath: 'inset(0% 0% 0% 0%)' }}
-                  transition={{ delay: idx * 0.05, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+                  initial={{ opacity: 0, y: 18 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: idx * 0.05, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+                  whileHover={{ y: -6 }}
                   fallbackMs={900 + idx * 60}
-                  className="group cursor-pointer rounded-[18px] overflow-hidden border border-neutral-200 dark:border-white/10 shadow-sm hover:border-orange-500/60 hover:shadow-[0_12px_35px_-10px_rgba(255,77,0,0.25)] transition-all duration-300"
+                  className={`group relative cursor-pointer overflow-hidden rounded-[22px] border border-neutral-200 dark:border-white/10 shadow-sm transition-all duration-300 ${spans[idx]} ${tileHeights[idx]} hover:border-orange-500/70 hover:shadow-[0_18px_50px_-16px_rgba(255,77,0,0.3)]`}
                 >
-                  <div className="relative h-[110px] sm:h-[130px]">
-                    <img src={ind.image} alt={currentLang === 'en' ? ind.nameEn : ind.nameBn} className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#0b0b0b]/90 via-[#0b0b0b]/30 to-transparent" />
-                    <div className="absolute top-2 left-2 w-7 h-7 rounded-full bg-black/45 border border-orange-500/40 backdrop-blur-md flex items-center justify-center group-hover:bg-orange-500/20 group-hover:shadow-[0_0_12px_rgba(255,77,0,0.4)] transition-all duration-300">
-                      {renderLucideIcon(ind.icon, 'h-3 w-3 text-orange-400')}
-                    </div>
-                    <div className="absolute bottom-0 left-0 right-0 p-3">
-                      <h4 className="flex items-center gap-1 text-[11px] sm:text-[12px] font-black text-white leading-tight mb-1">
-                        <span className="h-3 w-1 rounded-full bg-orange-500 shrink-0" />
-                        {currentLang === 'en' ? ind.nameEn : ind.nameBn}
-                      </h4>
-                      <p className="text-[9px] sm:text-[10px] text-white/85 leading-snug line-clamp-2 opacity-80">
-                        {currentLang === 'en' ? ind.descEn : ind.descBn}
-                      </p>
-                    </div>
+                  <img
+                    src={ind.image}
+                    alt={currentLang === 'en' ? ind.nameEn : ind.nameBn}
+                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                    loading="lazy"
+                  />
+                  {/* Readability gradient — names stay legible at all times */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#0b0b0b]/95 via-[#0b0b0b]/40 to-[#0b0b0b]/10" />
+                  <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-orange-500/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+
+                  {/* Icon chip (top-left) */}
+                  <div className="absolute top-4 left-4 w-10 h-10 rounded-xl bg-black/50 border border-orange-500/45 backdrop-blur-md flex items-center justify-center group-hover:border-orange-500 group-hover:bg-orange-500/15 group-hover:shadow-[0_0_14px_rgba(255,77,0,0.4)] transition-all duration-300">
+                    {renderLucideIcon(ind.icon, 'h-4.5 w-4.5 text-orange-400')}
+                  </div>
+
+                  {/* Serial number (top-right) */}
+                  <div className="absolute top-4 right-4 min-w-8 h-8 px-2 rounded-full border border-white/15 bg-black/40 backdrop-blur-md inline-flex items-center justify-center font-mono text-[9px] font-black text-white leading-none">
+                    {num}
+                  </div>
+
+                  {/* Hover arrow (bottom-right) */}
+                  <div className="absolute bottom-4 right-4 h-9 w-9 rounded-full bg-orange-500/10 border border-orange-500/40 opacity-0 group-hover:opacity-100 group-hover:bg-orange-500 group-hover:text-white transition-all duration-300 flex items-center justify-center">
+                    <ArrowRight className="h-4 w-4 text-white -rotate-45" />
+                  </div>
+
+                  {/* Name + description */}
+                  <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-5">
+                    <h4 className={`flex items-center gap-2 ${isFeature ? 'text-xl sm:text-2xl lg:text-[26px]' : 'text-base sm:text-lg'} font-black text-white leading-tight mb-1`}>
+                      <span className="h-4 w-1 rounded-full bg-orange-500 shrink-0" />
+                      <span className="drop-shadow-[0_2px_6px_rgba(0,0,0,0.65)]">{currentLang === 'en' ? ind.nameEn : ind.nameBn}</span>
+                    </h4>
+                    <p className="mt-1 text-[11px] sm:text-xs text-white/85 leading-snug line-clamp-2 opacity-80 group-hover:opacity-100 transition-opacity duration-300 drop-shadow-[0_1px_3px_rgba(0,0,0,0.6)]">
+                      {currentLang === 'en' ? ind.descEn : ind.descBn}
+                    </p>
                   </div>
                 </RevealGuard>
-              ))}
-            </div>
+              );
+            })}
           </div>
+
+
         </div>
       </section>
 

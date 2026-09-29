@@ -13,6 +13,7 @@ import { Testimonial, TestimonialCategory, TestimonialVideo, SuccessStory, Clien
 import { TRUSTED_BY } from '@/data/trustedBy';
 import { motion, AnimatePresence } from 'motion/react';
 import { getLocalItem } from '@/lib/utils';
+import { useContentSync } from '@/hooks/useContentSync';
 import TestimonialsAdmin from '@/components/TestimonialsAdmin';
 import TestimonialsVisuals from './TestimonialsVisuals';
 
@@ -22,6 +23,10 @@ interface TestimonialsPageProps {
 }
 
 export default function TestimonialsPage({ currentLang, setTab }: TestimonialsPageProps) {
+  // Re-render (never re-mount) after content sync so loadData() below re-reads
+  // freshly synced data without replaying the page animations.
+  const contentVersion = useContentSync();
+
   // DB States
   const [categories, setCategories] = useState<TestimonialCategory[]>([]);
   const [videos, setVideos] = useState<TestimonialVideo[]>([]);
@@ -80,7 +85,7 @@ export default function TestimonialsPage({ currentLang, setTab }: TestimonialsPa
 
   useEffect(() => {
     loadData();
-  }, []);
+  }, [contentVersion]);
 
   // Filter testimonials logic
   const filteredTestimonials = testimonials.filter(t => {

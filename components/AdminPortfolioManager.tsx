@@ -43,6 +43,47 @@ const inputCls =
 const labelCls =
   "block text-[11px] font-bold text-gray-500 dark:text-neutral-400 uppercase tracking-wider mb-1.5";
 
+/**
+ * Normalize a URL-typed field value before saving.
+ *
+ * Designers routinely paste Behance/Dribbble/Figma links without a scheme
+ * ("behance.net/…", "dribbble.com/shots/…"). Browsers treat such values as
+ * invalid for `<input type="url">`, which silently blocks form submission
+ * with no save ever reaching the server. To keep the form submittable we
+ * render URL fields as plain text inputs and normalize here instead:
+ * scheme-less host/path values become absolute `https://…` URLs, values that
+ * already carry a scheme (or that are not URLs at all) pass through
+ * untouched, so stored links always open correctly on the public site.
+ */
+function normalizeUrl(value: string): string {
+  const trimmed = value.trim();
+  if (!trimmed) return "";
+  if (/^[a-zA-Z][a-zA-Z0-9+.-]*:/.test(trimmed)) return trimmed;
+  if (/^(www\.|([\w-]+\.)+[a-zA-Z]{2,})([/:?#]|$)/.test(trimmed)) {
+    return `https://${trimmed}`;
+  }
+  return trimmed;
+}
+
+/** Apply `normalizeUrl` to every URL-suffixed service field in `projectData`. */
+const URL_FIELD_SUFFIXES = ["Url"];
+function normalizeProjectDataUrls(
+  projectData: Record<string, any>
+): Record<string, any> {
+  const normalized: Record<string, any> = {};
+  for (const [key, value] of Object.entries(projectData || {})) {
+    if (
+      typeof value === "string" &&
+      URL_FIELD_SUFFIXES.some((suffix) => key.endsWith(suffix))
+    ) {
+      normalized[key] = normalizeUrl(value);
+    } else {
+      normalized[key] = value;
+    }
+  }
+  return normalized;
+}
+
 const emptyForm: Partial<PortfolioItem> = {
   titleEn: "",
   category: "Web Development",
@@ -95,9 +136,29 @@ function FieldInput({
       />
     );
   }
+  if (field.type === "url") {
+    // NOTE: `url`-typed service fields intentionally render as plain text
+    // inputs (with a URL keyboard on touch devices). Native
+    // `<input type="url">` silently blocks form submission whenever a designer
+    // pastes a scheme-less Behance/Dribbble/Figma link, with no error surfaced
+    // to the admin. Normalization happens in `normalizeUrl` on value change and
+    // again at save time.
+    return (
+      <input
+        type="text"
+        inputMode="url"
+        autoComplete="url"
+        spellCheck={false}
+        placeholder={field.placeholder || "https://…"}
+        value={value || ""}
+        onChange={(e) => onChange(normalizeUrl(e.target.value))}
+        className={inputCls}
+      />
+    );
+  }
   return (
     <input
-      type={field.type === "url" ? "url" : "text"}
+      type="text"
       placeholder={field.placeholder || ""}
       value={value || ""}
       onChange={(e) => onChange(e.target.value)}
@@ -213,9 +274,11 @@ export default function AdminPortfolioManager({
       galleryJson: JSON.stringify(gallery),
       featuresEn: Array.isArray(form.featuresEn) ? form.featuresEn : [],
       featuresBn: [],
-      liveUrl: form.liveUrl || "",
+      liveUrl: normalizeUrl(form.liveUrl || ""),
       githubUrl: "",
-      projectData: form.projectData || {},
+      // Belt-and-suspenders: normalize any service-specific URL field at save
+      // time so rows edited elsewhere can never store an un-openable link.
+      projectData: normalizeProjectDataUrls(form.projectData || {}),
       seoTitleEn: "",
       seoTitleBn: "",
       seoDescEn: form.descriptionEn?.slice(0, 155) || "",
@@ -480,9 +543,12 @@ export default function AdminPortfolioManager({
             <div className="space-y-1.5">
               <label className={labelCls}>Live URL (Web Dev opens direct)</label>
               <input
-                type="url"
+                type="text"
+                inputMode="url"
+                autoComplete="url"
+                spellCheck={false}
                 value={form.liveUrl || ""}
-                onChange={(e) => setForm({ ...form, liveUrl: e.target.value })}
+                onChange={(e) => setForm({ ...form, liveUrl: normalizeUrl(e.target.value) })}
                 placeholder="https://..."
                 className={inputCls}
               />

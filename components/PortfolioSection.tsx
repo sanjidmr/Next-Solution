@@ -9,6 +9,7 @@ import {
 } from 'lucide-react';
 import { getPortfolio } from '@/lib/db';
 import { PortfolioItem } from '@/types';
+import { useContentSync } from '@/hooks/useContentSync';
 import Reveal from '@/components/motion/Reveal';
 import HeroEntrance from '@/components/motion/HeroEntrance';
 
@@ -83,8 +84,15 @@ export default function PortfolioSection({ currentLang, setTab, isFullPage = fal
   const [activeCategory, setActiveCategory] = useState('all');
   const [modalProject, setModalProject] = useState<PortfolioItem | null>(null);
 
+  // Re-render (never re-mount) after content sync so getPortfolio() re-reads
+  // the fresh localStorage cache without replaying the page animations.
+  const contentVersion = useContentSync();
+
   const portfolio = useMemo(() => {
     try {
+      // `contentVersion` is referenced deliberately: it invalidates this memo
+      // after a content sync so getPortfolio() re-reads the fresh cache.
+      void contentVersion;
       const data = portfolioData && portfolioData.length > 0
         ? portfolioData
         : getPortfolio();
@@ -92,7 +100,7 @@ export default function PortfolioSection({ currentLang, setTab, isFullPage = fal
     } catch {
       return [];
     }
-  }, [portfolioData]);
+  }, [portfolioData, contentVersion]);
 
   const filteredProjects = useMemo(() => {
     if (activeCategory === 'all') return portfolio;

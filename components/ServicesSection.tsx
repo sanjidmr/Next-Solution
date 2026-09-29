@@ -4,12 +4,13 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import * as Icons from 'lucide-react';
 import { translations } from '@/data/translations';
 import { getServices } from '@/lib/db';
 import { initialServices } from '@/data/initialData';
 import { Service } from '@/types';
+import { useContentSync } from '@/hooks/useContentSync';
 import Reveal from '@/components/motion/Reveal';
 import HeroEntrance from '@/components/motion/HeroEntrance';
 
@@ -190,15 +191,28 @@ interface ServicesSectionProps {
   currentLang: 'en' | 'bn';
   setTab: (tab: string) => void;
   isFullPage?: boolean;
+  /** When set (e.g. from /services/[slug]), the matching service opens directly. */
+  initialServiceSlug?: string;
 }
 
-export default function ServicesSection({ currentLang, setTab, isFullPage = false }: ServicesSectionProps) {
+export default function ServicesSection({ currentLang, setTab, isFullPage = false, initialServiceSlug }: ServicesSectionProps) {
   const t = translations[currentLang];
+  // Re-render (never re-mount) when the public content cache refreshes so the
+  // services list re-reads freshly synced data without replaying animations.
+  const contentVersion = useContentSync();
   const [services, setServices] = useState<Service[]>(initialServices);
   useEffect(() => {
     setServices(getServices());
-  }, []);
-  const [selectedService, setSelectedService] = useState<Service | null>(null);
+  }, [contentVersion]);
+  // When a real /services/[slug] deep link is used, open that service straight
+  // away (deterministic on the server and on hydration, so there is no flash
+  // and no hydration mismatch). Session-storage deep links are handled below.
+  const [selectedService, setSelectedService] = useState<Service | null>(() => {
+    if (!initialServiceSlug) return null;
+    return initialServices.find((s) => s.slug === initialServiceSlug) ?? null;
+  });
+  // Tracks the deep-linked slug already opened so it opens exactly once.
+  const openedInitialSlugRef = useRef<string | null>(initialServiceSlug ?? null);
   const [activeTechTab, setActiveTechTab] = useState<'frontend' | 'backend' | 'design' | 'automation' | 'video' | 'marketing'>('frontend');
 
   // Tech Stack categories
@@ -410,22 +424,42 @@ export default function ServicesSection({ currentLang, setTab, isFullPage = fals
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  // Sync with session storage for preselected routing (e.g. from orbit dials,
-  // home page bento cards and about page capability cards).
+  // Open the requested service directly:
+  //   1. /services/[slug] route param takes priority — a true deep link.
+  //   2. sessionStorage slug (legacy deep links from orbit dials, about-page
+  //      capability cards and other sections) is consumed as a fallback.
   useEffect(() => {
-    const slug = sessionStorage.getItem('selected_service_slug');
-    if (slug) {
+    const openBySlug = (slug: string) => {
       const match =
         services.find(s => s.slug === slug) ||
         initialServices.find(s => s.slug === slug);
       if (match) {
         setSelectedService(match);
+        return true;
+      }
+      return false;
+    };
+
+    if (initialServiceSlug) {
+      // Open the deep-linked service once per slug so a later re-render (e.g.
+      // after content sync) never overrides a user who has returned to the
+      // capabilities catalog.
+      if (openedInitialSlugRef.current !== initialServiceSlug) {
+        openedInitialSlugRef.current = initialServiceSlug;
+        openBySlug(initialServiceSlug);
+      }
+      return;
+    }
+
+    const slug = sessionStorage.getItem('selected_service_slug');
+    if (slug) {
+      if (openBySlug(slug)) {
         sessionStorage.removeItem('selected_service_slug');
       }
       // No match yet -> keep the slug in storage so this effect can retry
       // once the services list finishes syncing from local storage.
     }
-  }, [services]);
+  }, [services, contentVersion, initialServiceSlug]);
 
   const getIcon = (name: string, className = "h-5 w-5") => {
     if (name && Object.prototype.hasOwnProperty.call(Icons, name)) {

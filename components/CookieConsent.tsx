@@ -5,6 +5,7 @@ import { Shield, X, Check, Settings, Info, AlertCircle, Save } from 'lucide-reac
 import { getCookieCategories, getCookieSettings, saveCookieSettings } from '@/lib/db';
 import { CookieCategory } from '@/types';
 import { getLocalItem, setLocalItem } from '@/lib/utils';
+import { useContentSync } from '@/hooks/useContentSync';
 
 interface CookieConsentProps {
   currentLang: 'en' | 'bn';
@@ -12,6 +13,9 @@ interface CookieConsentProps {
 }
 
 export default function CookieConsent({ currentLang, onOpenPrivacyPolicy }: CookieConsentProps) {
+  // Re-render (never re-mount) after content sync so the banner re-reads the
+  // freshly synced cookie categories/settings without replaying animations.
+  const contentVersion = useContentSync();
   const [showBanner, setShowBanner] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [categories, setCategories] = useState<CookieCategory[]>([]);
@@ -51,7 +55,7 @@ export default function CookieConsent({ currentLang, onOpenPrivacyPolicy }: Cook
       });
       setPreferences(defaultPrefs);
     }
-  }, []);
+  }, [contentVersion]);
 
   const handleAcceptAll = () => {
     const allAccepted: Record<string, boolean> = {};

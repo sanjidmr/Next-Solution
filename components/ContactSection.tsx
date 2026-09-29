@@ -11,6 +11,7 @@ import {
 } from 'lucide-react';
 import { translations } from '@/data/translations';
 import { addMessage, getServices } from '@/lib/db';
+import { useContentSync } from '@/hooks/useContentSync';
 import Reveal from '@/components/motion/Reveal';
 
 // Default services for server-side rendering fallback
@@ -32,10 +33,13 @@ interface ContactSectionProps {
 
 export default function ContactSection({ currentLang, isFullPage = false }: ContactSectionProps) {
   const t = translations[currentLang];
+  // Re-render (never re-mount) after content sync so getServices() below
+  // re-reads the freshly synced list without replaying the page animations.
+  const contentVersion = useContentSync();
   const [services, setServices] = useState<any[]>(defaultServices);
   useEffect(() => {
     setServices(getServices());
-  }, []);
+  }, [contentVersion]);
 
   // Form states
   const [name, setName] = useState('');

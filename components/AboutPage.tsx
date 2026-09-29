@@ -18,6 +18,7 @@ import {
 } from 'lucide-react';
 import { translations } from '@/data/translations';
 import { getSettings, getTestimonials } from '@/lib/db';
+import { useContentSync } from '@/hooks/useContentSync';
 import Reveal from '@/components/motion/Reveal';
 
 import sanjidImage from "../assets/images/sanjid.jpg";
@@ -206,6 +207,9 @@ interface AboutPageProps {
 
 export default function AboutPage({ currentLang, setTab }: AboutPageProps) {
   const t = translations[currentLang];
+  // Re-render (never re-mount) after content sync so the getters below re-read
+  // fresh data without replaying the page-entrance animations.
+  useContentSync();
   const settings = getSettings();
   const testimonials = getTestimonials();
 

@@ -7,6 +7,7 @@ import {
 } from 'lucide-react';
 import { getLegalPolicies } from '@/lib/db';
 import { LegalPolicy, LegalSection } from '@/types';
+import { useContentSync } from '@/hooks/useContentSync';
 
 interface LegalDocPageProps {
   currentLang: 'en' | 'bn';
@@ -15,6 +16,9 @@ interface LegalDocPageProps {
 }
 
 export default function LegalDocPage({ currentLang, policyType, setTab }: LegalDocPageProps) {
+  // Re-render (never re-mount) after content sync so the matching policy
+  // re-reads freshly synced policies without replaying animations.
+  const contentVersion = useContentSync();
   const [policy, setPolicy] = useState<LegalPolicy | null>(null);
   const [activeSectionId, setActiveSectionId] = useState<string>('');
   const [copied, setCopied] = useState(false);
@@ -32,7 +36,7 @@ export default function LegalDocPage({ currentLang, policyType, setTab }: LegalD
         setActiveSectionId(found.sections[0].id);
       }
     }
-  }, [policyType]);
+  }, [policyType, contentVersion]);
 
   // Read scroll progress, show back to top button and run Scroll Spy
   useEffect(() => {

@@ -9,7 +9,7 @@ import {
   getTestimonialVideos, getTestimonialStatistics, 
   getSuccessStories, getReviewSettings, getClientMoments
 } from '@/lib/db';
-import { Testimonial, TestimonialCategory, TestimonialVideo, SuccessStory, ClientMoment } from '@/types';
+import { Testimonial, TestimonialCategory, TestimonialVideo, TestimonialStatistics, SuccessStory, ClientMoment } from '@/types';
 import { TRUSTED_BY } from '@/data/trustedBy';
 import { motion, AnimatePresence } from 'motion/react';
 import { getLocalItem } from '@/lib/utils';
@@ -30,7 +30,7 @@ export default function TestimonialsPage({ currentLang, setTab }: TestimonialsPa
   // DB States
   const [categories, setCategories] = useState<TestimonialCategory[]>([]);
   const [videos, setVideos] = useState<TestimonialVideo[]>([]);
-  const [statistics, setStatistics] = useState<any>(null);
+  const [statistics, setStatistics] = useState<TestimonialStatistics | null>(null);
   const [stories, setStories] = useState<SuccessStory[]>([]);
   const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
   const [settings, setSettings] = useState<any>(null);
@@ -161,6 +161,20 @@ export default function TestimonialsPage({ currentLang, setTab }: TestimonialsPa
       [reviewId]: true
     }));
   };
+
+  const trustMetrics = statistics
+    ? [
+        { label: "Projects completed", value: statistics.projectsCompleted, suffix: "" },
+        { label: "Happy clients", value: statistics.happyClients, suffix: "" },
+        { label: "Client satisfaction", value: statistics.clientSatisfaction, suffix: "%" },
+        { label: "Average rating", value: statistics.averageRating, suffix: " / 5" },
+        { label: "Industries served", value: statistics.industriesServed, suffix: "" },
+        { label: "Five-star reviews", value: statistics.fiveStarReviews, suffix: "" },
+      ].filter(
+        (metric): metric is typeof metric & { value: number } =>
+          typeof metric.value === "number" && Number.isFinite(metric.value),
+      )
+    : [];
 
   return (
     <div id="testimonials-page-root" data-space-page className="bg-white dark:bg-[#0a0a0a] min-h-screen text-slate-900 dark:text-white font-sans">
@@ -373,57 +387,27 @@ export default function TestimonialsPage({ currentLang, setTab }: TestimonialsPa
       )}
 
       {/* 02. CLIENT SUCCESS OVERVIEW (BENTO GRID) */}
-      {sectionVisibility.overview && statistics && (
+      {sectionVisibility.overview && trustMetrics.length > 0 && (
         <section id="reviews-overview" className="py-20 bg-white dark:bg-[#141414]">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-10">
             <div className="text-center max-w-xl mx-auto space-y-2">
-              <span className="text-xs font-bold text-blue-600 dark:text-orange-400 uppercase tracking-widest">02. CLIENT RETENTION ENGINE</span>
+              <span className="text-xs font-bold text-blue-600 dark:text-orange-400 uppercase tracking-widest">02. CLIENT METRICS</span>
               <h2 className="font-display text-3xl sm:text-4xl font-black text-slate-900 dark:text-white tracking-tight leading-tight">
-                {currentLang === 'en' ? 'The Scale of Trust in Numbers' : 'পরিসংখ্যানে আমাদের বিশ্বস্ততার প্রমাণ'}
+                {currentLang === 'en' ? 'Client metrics' : 'ক্লায়েন্ট পরিসংখ্যান'}
               </h2>
             </div>
-
-            {/* Bento Grid layout */}
-            <div className="grid grid-cols-1 md:grid-cols-12 gap-6 max-w-5xl mx-auto">
-              
-              <div className="md:col-span-4 bg-slate-50 dark:bg-[#141414] rounded-2xl border border-slate-150 dark:border-neutral-700/60 p-6 hover:shadow-md transition flex flex-col justify-between">
-                <span className="text-[10px] font-bold text-slate-400 dark:text-neutral-500 uppercase tracking-widest block">Completed Projects</span>
-                <h3 className="text-4xl font-black text-blue-600 dark:text-orange-400 mt-3">{statistics.projectsCompleted}+</h3>
-                <p className="text-xs text-slate-500 dark:text-neutral-400 mt-2">Delivered custom codebases, design assets, and scalable cloud systems on time.</p>
-              </div>
-
-              <div className="md:col-span-4 bg-slate-50 dark:bg-[#141414] rounded-2xl border border-slate-150 dark:border-neutral-700/60 p-6 hover:shadow-md transition flex flex-col justify-between">
-                <span className="text-[10px] font-bold text-slate-400 dark:text-neutral-500 uppercase tracking-widest block">Client Retention Ratio</span>
-                <h3 className="text-4xl font-black text-indigo-600 dark:text-orange-400 mt-3">{statistics.clientSatisfaction}%</h3>
-                <p className="text-xs text-slate-500 dark:text-neutral-400 mt-2">Satisfied corporate businesses who trust us for multi-year ongoing scaling projects.</p>
-              </div>
-
-              <div className="md:col-span-4 bg-slate-50 dark:bg-[#141414] rounded-2xl border border-slate-150 dark:border-neutral-700/60 p-6 hover:shadow-md transition flex flex-col justify-between">
-                <span className="text-[10px] font-bold text-slate-400 dark:text-neutral-500 uppercase tracking-widest block">Countries Served</span>
-                <h3 className="text-4xl font-black text-cyan-600 dark:text-cyan-400 mt-3">{statistics.industriesServed}+</h3>
-                <p className="text-xs text-slate-500 dark:text-neutral-400 mt-2">Serving enterprises globally from USA, Europe, Southeast Asia, and Australia.</p>
-              </div>
-
-              {/* Large bento card */}
-              <div className="md:col-span-8 bg-slate-900 dark:bg-[#141414] text-white rounded-2xl border border-slate-800 dark:border-neutral-700 p-6 hover:shadow-lg transition flex flex-col sm:flex-row justify-between items-center gap-6">
-                <div className="space-y-2">
-                  <span className="text-[10px] font-bold text-cyan-400 uppercase tracking-widest block">Repeat Clients</span>
-                  <h3 className="text-2xl font-bold tracking-tight">4 Out of 5 Clients Partner Long Term</h3>
-                  <p className="text-xs text-slate-400 max-w-sm">Our dedication to surgical engineering and continuous technical maintenance means clients stay with us forever.</p>
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {trustMetrics.map(({ label, value, suffix }) => (
+                <div
+                  key={label}
+                  className="rounded-xl border border-gray-200 bg-gray-50 p-5 dark:border-neutral-700 dark:bg-neutral-900"
+                >
+                  <p className="text-sm text-gray-500 dark:text-neutral-400">{label}</p>
+                  <p className="mt-2 text-3xl font-semibold text-gray-900 dark:text-white">
+                    {value.toLocaleString()}{suffix}
+                  </p>
                 </div>
-                <div className="bg-slate-800 border border-slate-700 rounded-xl px-5 py-4 text-center">
-                  <span className="text-3xl font-black text-cyan-400 block">85%</span>
-                  <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block">Repeat Ratio</span>
-                </div>
-              </div>
-
-              {/* Small bento card */}
-              <div className="md:col-span-4 bg-slate-50 dark:bg-[#141414] rounded-2xl border border-slate-150 dark:border-neutral-700/60 p-6 hover:shadow-md transition flex flex-col justify-between">
-                <span className="text-[10px] font-bold text-slate-400 dark:text-neutral-500 uppercase tracking-widest block">SLA Response Time</span>
-                <h3 className="text-2xl font-black text-emerald-600 dark:text-emerald-400 mt-3">&lt; 15 Minutes</h3>
-                <p className="text-xs text-slate-500 dark:text-neutral-400 mt-1">Surgical response times across Slack, WhatsApp and direct developer channels.</p>
-              </div>
-
+              ))}
             </div>
           </div>
         </section>

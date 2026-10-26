@@ -232,6 +232,109 @@ body {
   opacity: 1 !important;
 }
 
+.dark .contact-form input::placeholder,
+.dark .contact-form textarea::placeholder {
+  color: rgba(255, 255, 255, 0.82) !important;
+  opacity: 1 !important;
+}
+
+.admin-console,
+.admin-console * {
+  font-family: Inter, Arial, Helvetica, sans-serif;
+}
+
+.admin-console {
+  letter-spacing: normal;
+  background: #f7f8fa;
+  color: #202124;
+  padding-block: 2rem;
+}
+
+.dark .admin-console {
+  background: #101113;
+  color: #f3f4f6;
+}
+
+.admin-console h1,
+.admin-console h2,
+.admin-console h3,
+.admin-console h4 {
+  letter-spacing: normal !important;
+  font-weight: 650 !important;
+}
+
+.admin-console [class*="tracking-"] {
+  letter-spacing: normal !important;
+}
+
+.admin-console [class~="font-black"] {
+  font-weight: 650 !important;
+}
+
+.admin-console [class~="font-mono"] {
+  font-family: Inter, Arial, Helvetica, sans-serif !important;
+}
+
+.admin-console [class~="text-[9px]"],
+.admin-console [class~="text-[10px]"] {
+  font-size: 0.75rem !important;
+  line-height: 1.25rem !important;
+}
+
+.admin-console [class~="text-[11px]"] {
+  font-size: 0.8125rem !important;
+  line-height: 1.25rem !important;
+}
+
+.admin-console .rounded-2xl,
+.admin-console .rounded-xl {
+  border-radius: 0.75rem !important;
+}
+
+.admin-console .shadow-sm,
+.admin-console .shadow-md,
+.admin-console .shadow-lg,
+.admin-console .shadow-xl {
+  box-shadow: 0 1px 2px rgb(15 23 42 / 0.05) !important;
+}
+
+.admin-console button {
+  min-height: 2.25rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  letter-spacing: normal;
+  transition-duration: 120ms;
+}
+
+.admin-console input:not([type="checkbox"]):not([type="radio"]),
+.admin-console textarea,
+.admin-console select {
+  max-width: 100%;
+  border-radius: 0.5rem;
+  font-family: Inter, Arial, Helvetica, sans-serif;
+}
+
+.admin-console table {
+  border-collapse: collapse;
+}
+
+@media (max-width: 767px) {
+  .admin-console {
+    padding-block: 1.25rem;
+  }
+
+  .admin-console > div {
+    padding-inline: 1rem;
+  }
+
+  .admin-console table {
+    display: block;
+    max-width: 100%;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+}
+
 /* Kill autofill white flash */
 .dark input:-webkit-autofill,
 .dark input:-webkit-autofill:hover,

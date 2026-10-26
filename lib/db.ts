@@ -318,16 +318,6 @@ export const initialClientMoments: ClientMoment[] = [
   }
 ];
 
-export const initialTestimonialStatistics: TestimonialStatistics = {
-  id: 'stats-default',
-  projectsCompleted: 520,
-  happyClients: 310,
-  clientSatisfaction: 98,
-  averageRating: 4.9,
-  industriesServed: 28,
-  fiveStarReviews: 150
-};
-
 export const initialClientLogos: ClientLogo[] = [
   { id: 'logo-1', name: 'Fintech Spark', logoUrl: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&q=80&w=150', featured: true, displayOrder: 1 },
   { id: 'logo-2', name: 'Sora Web3', logoUrl: 'https://images.unsplash.com/photo-1614028674026-a65e31bfd27c?auto=format&fit=crop&q=80&w=150', featured: true, displayOrder: 2 },
@@ -707,9 +697,6 @@ export function initDB(): void {
   }
   if (!localStorage.getItem(KEYS.CLIENT_MOMENTS)) {
     setLocal(KEYS.CLIENT_MOMENTS, initialClientMoments);
-  }
-  if (!localStorage.getItem(KEYS.TESTIMONIAL_STATISTICS)) {
-    setLocal(KEYS.TESTIMONIAL_STATISTICS, initialTestimonialStatistics);
   }
   if (!localStorage.getItem(KEYS.CLIENT_LOGOS)) {
     setLocal(KEYS.CLIENT_LOGOS, initialClientLogos);
@@ -1312,8 +1299,23 @@ export function deleteClientMoment(id: string): void {
 }
 
 // TESTIMONIAL STATISTICS CRUD
-export function getTestimonialStatistics(): TestimonialStatistics {
-  return getLocal<TestimonialStatistics>(KEYS.TESTIMONIAL_STATISTICS, initialTestimonialStatistics);
+export function getTestimonialStatistics(): TestimonialStatistics | null {
+  const statistics = getLocal<TestimonialStatistics | null>(
+    KEYS.TESTIMONIAL_STATISTICS,
+    null,
+  );
+  if (
+    statistics?.id === 'stats-default' &&
+    statistics.projectsCompleted === 520 &&
+    statistics.happyClients === 310 &&
+    statistics.clientSatisfaction === 98 &&
+    statistics.averageRating === 4.9 &&
+    statistics.industriesServed === 28 &&
+    statistics.fiveStarReviews === 150
+  ) {
+    return null;
+  }
+  return statistics;
 }
 export function saveTestimonialStatistics(stats: TestimonialStatistics): void {
   setLocal(KEYS.TESTIMONIAL_STATISTICS, stats);
@@ -1503,7 +1505,5 @@ export function deleteTechServiceCard(id: string): void {
 export function restoreTechServiceCards(): void {
   setLocal(KEYS.TECH_SERVICE_CARDS, initialTechServiceCards);
 }
-
-
 
 

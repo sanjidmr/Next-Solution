@@ -15,7 +15,7 @@ import {
   getClientMoments, saveClientMoment, deleteClientMoment
 } from '@/lib/db';
 import { getLocalItem, setLocalItem } from '@/lib/utils';
-import { Testimonial, TestimonialCategory, TestimonialVideo, SuccessStory, ClientLogo, ReviewSettings, ClientMoment } from '@/types';
+import { Testimonial, TestimonialCategory, TestimonialVideo, SuccessStory, ClientLogo, ReviewSettings, ClientMoment, TestimonialStatistics } from '@/types';
 
 interface TestimonialsAdminProps {
   currentLang: 'en' | 'bn';
@@ -35,7 +35,7 @@ export default function TestimonialsAdmin({ currentLang, isOpen, onClose, onData
   const [videos, setVideos] = useState<TestimonialVideo[]>([]);
   const [stories, setStories] = useState<SuccessStory[]>([]);
   const [logos, setLogos] = useState<ClientLogo[]>([]);
-  const [stats, setStats] = useState<any>(null);
+  const [stats, setStats] = useState<Partial<TestimonialStatistics>>({});
   const [reviewSettings, setReviewSettings] = useState<ReviewSettings | null>(null);
   const [moments, setMoments] = useState<ClientMoment[]>([]);
 
@@ -61,7 +61,7 @@ export default function TestimonialsAdmin({ currentLang, isOpen, onClose, onData
     setVideos(getTestimonialVideos());
     setStories(getSuccessStories());
     setLogos(getClientLogos());
-    setStats(getTestimonialStatistics());
+    setStats(getTestimonialStatistics() || {});
     setReviewSettings(getReviewSettings());
     setMoments(getClientMoments());
 
@@ -272,8 +272,21 @@ export default function TestimonialsAdmin({ currentLang, isOpen, onClose, onData
   // STATS & LOGOS SAVE
   const handleSaveStats = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!stats) return;
-    saveTestimonialStatistics(stats);
+    const averageRating = stats.averageRating;
+    if (
+      typeof stats.projectsCompleted !== 'number' || !Number.isFinite(stats.projectsCompleted) ||
+      typeof stats.happyClients !== 'number' || !Number.isFinite(stats.happyClients) ||
+      typeof stats.clientSatisfaction !== 'number' || !Number.isFinite(stats.clientSatisfaction) ||
+      typeof averageRating !== 'number' || !Number.isFinite(averageRating) ||
+      typeof stats.industriesServed !== 'number' || !Number.isFinite(stats.industriesServed) ||
+      typeof stats.fiveStarReviews !== 'number' || !Number.isFinite(stats.fiveStarReviews) ||
+      stats.clientSatisfaction < 0 || stats.clientSatisfaction > 100 ||
+      averageRating < 0 || averageRating > 5
+    ) {
+      alert('Enter valid values for all statistics before saving.');
+      return;
+    }
+    saveTestimonialStatistics({ ...stats, averageRating });
     alert('Statistics updated successfully!');
     onDataChanged();
   };
@@ -1155,54 +1168,31 @@ export default function TestimonialsAdmin({ currentLang, isOpen, onClose, onData
                   </div>
 
                   <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-                    <div>
-                      <label className="block text-[11px] font-bold text-slate-500 dark:text-neutral-400 dark:text-neutral-500 uppercase tracking-wider mb-1">Projects Completed</label>
-                      <input 
-                        type="number" value={stats.projectsCompleted || 300} 
-                        onChange={e => setStats({...stats, projectsCompleted: Number(e.target.value)})}
-                        className="w-full rounded-lg border border-slate-200 dark:border-neutral-700 px-3 py-1.5 text-xs bg-white dark:bg-[#141414] text-gray-900 dark:text-neutral-100 focus:border-blue-500 dark:focus:border-orange-500 focus:outline-none"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-[11px] font-bold text-slate-500 dark:text-neutral-400 dark:text-neutral-500 uppercase tracking-wider mb-1">Happy Corporate Clients</label>
-                      <input 
-                        type="number" value={stats.happyClients || 150} 
-                        onChange={e => setStats({...stats, happyClients: Number(e.target.value)})}
-                        className="w-full rounded-lg border border-slate-200 dark:border-neutral-700 px-3 py-1.5 text-xs bg-white dark:bg-[#141414] text-gray-900 dark:text-neutral-100 focus:border-blue-500 dark:focus:border-orange-500 focus:outline-none"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-[11px] font-bold text-slate-500 dark:text-neutral-400 dark:text-neutral-500 uppercase tracking-wider mb-1">Client Satisfaction Rate (%)</label>
-                      <input 
-                        type="number" value={stats.clientSatisfaction || 98} 
-                        onChange={e => setStats({...stats, clientSatisfaction: Number(e.target.value)})}
-                        className="w-full rounded-lg border border-slate-200 dark:border-neutral-700 px-3 py-1.5 text-xs bg-white dark:bg-[#141414] text-gray-900 dark:text-neutral-100 focus:border-blue-500 dark:focus:border-orange-500 focus:outline-none"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-[11px] font-bold text-slate-500 dark:text-neutral-400 dark:text-neutral-500 uppercase tracking-wider mb-1">Average Star Rating</label>
-                      <input 
-                        type="number" step="0.1" value={stats.averageRating || 4.9} 
-                        onChange={e => setStats({...stats, averageRating: Number(e.target.value)})}
-                        className="w-full rounded-lg border border-slate-200 dark:border-neutral-700 px-3 py-1.5 text-xs bg-white dark:bg-[#141414] text-gray-900 dark:text-neutral-100 focus:border-blue-500 dark:focus:border-orange-500 focus:outline-none"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-[11px] font-bold text-slate-500 dark:text-neutral-400 dark:text-neutral-500 uppercase tracking-wider mb-1">Industries Served</label>
-                      <input 
-                        type="number" value={stats.industriesServed || 20} 
-                        onChange={e => setStats({...stats, industriesServed: Number(e.target.value)})}
-                        className="w-full rounded-lg border border-slate-200 dark:border-neutral-700 px-3 py-1.5 text-xs bg-white dark:bg-[#141414] text-gray-900 dark:text-neutral-100 focus:border-blue-500 dark:focus:border-orange-500 focus:outline-none"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-[11px] font-bold text-slate-500 dark:text-neutral-400 dark:text-neutral-500 uppercase tracking-wider mb-1">Five Star Reviews Count</label>
-                      <input 
-                        type="number" value={stats.fiveStarReviews || 120} 
-                        onChange={e => setStats({...stats, fiveStarReviews: Number(e.target.value)})}
-                        className="w-full rounded-lg border border-slate-200 dark:border-neutral-700 px-3 py-1.5 text-xs bg-white dark:bg-[#141414] text-gray-900 dark:text-neutral-100 focus:border-blue-500 dark:focus:border-orange-500 focus:outline-none"
-                      />
-                    </div>
+                    {([
+                      ['projectsCompleted', 'Projects Completed', 0],
+                      ['happyClients', 'Happy Corporate Clients', 0],
+                      ['clientSatisfaction', 'Client Satisfaction Rate (%)', 0],
+                      ['averageRating', 'Average Star Rating', 0],
+                      ['industriesServed', 'Industries Served', 0],
+                      ['fiveStarReviews', 'Five Star Reviews Count', 0],
+                    ] as const).map(([key, label, min]) => (
+                      <div key={key}>
+                        <label className="block text-[11px] font-bold text-slate-500 dark:text-neutral-400 uppercase tracking-wider mb-1">{label}</label>
+                        <input
+                          type="number"
+                          min={min}
+                          max={key === 'clientSatisfaction' ? 100 : key === 'averageRating' ? 5 : undefined}
+                          step={key === 'averageRating' ? 0.1 : 1}
+                          required
+                          value={stats[key] ?? ''}
+                          onChange={e => setStats({
+                            ...stats,
+                            [key]: e.target.value === '' ? undefined : Number(e.target.value),
+                          })}
+                          className="w-full rounded-lg border border-slate-200 dark:border-neutral-700 px-3 py-1.5 text-xs bg-white dark:bg-[#141414] text-gray-900 dark:text-neutral-100 focus:border-blue-500 dark:focus:border-orange-500 focus:outline-none"
+                        />
+                      </div>
+                    ))}
                   </div>
 
                   <div className="flex justify-end pt-2">

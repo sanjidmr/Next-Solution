@@ -250,55 +250,27 @@ export async function POST(
     }
 
     return NextResponse.json({ success: true });
-  } catch (error: any) {
-    // Graceful fallback: if a save fails only because the `project_data`
-    // JSONB column is missing from the hosted database (migration
-    // 20260901000001_portfolio_project_data.sql not applied yet), retry the
-    // upsert WITHOUT project_data so the portfolio item still saves without
-    // an error. Other errors are reported as usual.
-    const missingColumn =
-      /project_data|PGRST204|42703/.test(
-        (error.message || "") + (error.details || "")
-      ) &&
-      String(error.message || "").includes("column");
-
-    if (missingColumn) {
-      try {
-        const body2 = await request.clone().json();
-        const items2 = Array.isArray(body2) ? body2 : [body2];
-        const retryItems = items2.map((item) => {
-          const row = toDb(item);
-          delete row.project_data;
-          return row;
-        });
-
-        const supabase = createAdminClient();
-        if (SINGLETON_TABLES.has(tableName) && retryItems.length === 1) {
-          const { error: e2 } = await supabase
-            .from(tableName)
-            .upsert({ id: "default", ...retryItems[0] }, { onConflict: "id" });
-          if (e2) throw e2;
-        } else {
-          const { error: e2 } = await supabase.from(tableName).upsert(retryItems);
-          if (e2) throw e2;
-        }
-
-        return NextResponse.json({
-          success: true,
-          warning:
-            "Saved without service-specific details: the `project_data` column is missing in the database. Apply migration 20260901000001_portfolio_project_data.sql to enable them.",
-        });
-      } catch (retryError: any) {
-        return NextResponse.json(
-          { error: retryError.message || "Failed to save data" },
-          { status: 500 }
-        );
-      }
+  } catch (error: unknown) {
+    console.error("Admin data save failed.", error);
+    const errorMessage =
+      typeof error === "object" &&
+      error !== null &&
+      "message" in error &&
+      typeof error.message === "string"
+        ? error.message
+        : "Failed to save data.";
+    if (
+      /project_data/i.test(errorMessage) &&
+      /(PGRST204|42703|column)/i.test(errorMessage)
+    ) {
+      return NextResponse.json(
+        {
+          error:
+            "The database is missing portfolio project details. Apply migration 20260901000001_portfolio_project_data.sql and retry.",
+        },
+        { status: 503 },
+      );
     }
-
-    return NextResponse.json(
-      { error: error.message || "Failed to save data" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: errorMessage }, { status: 500 });
   }
 }

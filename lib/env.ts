@@ -16,11 +16,17 @@ export type PublicEnv = z.infer<typeof publicEnvSchema>;
 export type ServerEnv = z.infer<typeof serverEnvSchema>;
 
 function readPublicEnv() {
+  const vercelUrl =
+    process.env.VERCEL_ENV === "production"
+      ? process.env.VERCEL_PROJECT_PRODUCTION_URL || process.env.VERCEL_URL
+      : process.env.VERCEL_URL || process.env.VERCEL_PROJECT_PRODUCTION_URL;
   return {
     NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL,
     NEXT_PUBLIC_SUPABASE_ANON_KEY: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
     NEXT_PUBLIC_SITE_URL:
-      process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000",
+      process.env.NEXT_PUBLIC_SITE_URL ||
+      (vercelUrl ? `https://${vercelUrl.replace(/^https?:\/\//, "")}` : undefined) ||
+      (process.env.NODE_ENV === "production" ? undefined : "http://localhost:3000"),
   };
 }
 

@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
 
 /**
@@ -9,55 +10,55 @@ import { createClient } from "@/lib/supabase/server";
  */
 export const runtime = "nodejs";
 
+const contactSubmissionSchema = z.object({
+  submissionId: z.string().uuid().optional(),
+  name: z.string().trim().min(2).max(120),
+  email: z.string().trim().email().max(320),
+  phone: z.string().trim().max(40).optional().default(""),
+  subject: z.string().trim().max(180).optional().default(""),
+  message: z.string().trim().min(10).max(5000),
+  service: z.string().trim().max(120).optional().default(""),
+  budget: z.string().trim().max(120).optional().default(""),
+});
+
 export async function POST(req: NextRequest) {
   try {
-    const body = await req.json();
+    let body: unknown;
+    try {
+      body = await req.json();
+    } catch {
+      return NextResponse.json({ error: "Invalid request body." }, { status: 400 });
+    }
 
-    const name = String(body.name || "").trim();
-    const email = String(body.email || "").trim();
-    const phone = String(body.phone || "").trim();
-    const subject = String(body.subject || "").trim();
-    const message = String(body.message || "").trim();
-    const service = String(body.service || "").trim();
-    const budget = String(body.budget || "").trim();
-
-    if (!name || !email || !message) {
+    const parsed = contactSubmissionSchema.safeParse(body);
+    if (!parsed.success) {
       return NextResponse.json(
-        { error: "Name, email and message are required." },
-        { status: 400 }
+        { error: "Please provide a valid name, email, and message." },
+        { status: 400 },
       );
     }
+    const { submissionId, ...message } = parsed.data;
 
     const supabase = await createClient();
     const { error } = await supabase.from("contact_messages").insert([
       {
-        name,
-        email,
-        phone,
-        subject,
-        message,
-        service,
-        budget,
+        id: submissionId || crypto.randomUUID(),
+        ...message,
         status: "unread",
       },
     ]);
 
+    if (error?.code === "23505" && submissionId) {
+      return NextResponse.json({ success: true, duplicate: true });
+    }
     if (error) throw error;
 
     return NextResponse.json({ success: true });
-  } catch (error: any) {
-    // Surface the exact Supabase/PostgREST reason so the site owner can see
-    // why the write failed (missing table, missing anonymous-INSERT RLS
-    // policy, missing message_status enum, ...) instead of the frontend
-    // silently pretending the message was sent.
+  } catch (error) {
+    console.error("Contact message could not be saved.", error);
     return NextResponse.json(
-      {
-        error: error.message || "Failed to send message.",
-        details: error.details,
-        hint: error.hint,
-        code: error.code,
-      },
-      { status: 500 }
+      { error: "We couldn't save your message. Please try again later." },
+      { status: 500 },
     );
   }
 }

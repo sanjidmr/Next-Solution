@@ -1,29 +1,29 @@
 import { NextResponse, type NextRequest } from "next/server";
-import { ADMIN_SESSION_COOKIE } from "@/lib/admin-auth";
+import { createServerClient, type CookieOptions } from "@supabase/ssr";
+import { getPublicEnv } from "@/lib/env";
 
 export async function updateSession(request: NextRequest) {
-  const response = NextResponse.next({
-    request,
-  });
+  let response = NextResponse.next({ request });
+  const { NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_ANON_KEY } =
+    getPublicEnv();
 
-  const { pathname } = request.nextUrl;
-  const isAdminRoute = pathname.startsWith("/admin");
-  const isAdminLogin = pathname === "/admin/login" || pathname.startsWith("/admin/login/");
-  const hasAdminSession = request.cookies.get(ADMIN_SESSION_COOKIE)?.value === "1";
+  const supabase = createServerClient(
+    NEXT_PUBLIC_SUPABASE_URL,
+    NEXT_PUBLIC_SUPABASE_ANON_KEY,
+    {
+      cookies: {
+        getAll: () => request.cookies.getAll(),
+        setAll(cookiesToSet: { name: string; value: string; options: CookieOptions }[]) {
+          cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value));
+          response = NextResponse.next({ request });
+          cookiesToSet.forEach(({ name, value, options }) =>
+            response.cookies.set(name, value, options),
+          );
+        },
+      },
+    },
+  );
 
-  if (isAdminRoute && !isAdminLogin && !hasAdminSession) {
-    const url = request.nextUrl.clone();
-    url.pathname = "/admin/login";
-    url.searchParams.set("next", pathname);
-    return NextResponse.redirect(url);
-  }
-
-  if (isAdminLogin && hasAdminSession) {
-    const url = request.nextUrl.clone();
-    url.pathname = "/admin";
-    url.search = "";
-    return NextResponse.redirect(url);
-  }
-
+  await supabase.auth.getUser();
   return response;
 }

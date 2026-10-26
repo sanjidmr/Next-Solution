@@ -1,12 +1,18 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getAdminClient, isSupabaseConfigured } from "@/services/database";
 import { productRepository } from "@/repositories/productRepository";
+import { requireStaff } from "@/lib/require-admin";
 
 export async function POST(
   req: NextRequest,
   context: { params: Promise<{ id: string }> }
 ) {
   try {
+    const denied = await requireStaff();
+    if (denied) {
+      return NextResponse.json({ error: denied.error }, { status: denied.status });
+    }
+
     const { id } = await context.params;
     if (!isSupabaseConfigured()) {
       return NextResponse.json(
@@ -41,6 +47,11 @@ export async function PATCH(
   context: { params: Promise<{ id: string }> }
 ) {
   try {
+    const denied = await requireStaff();
+    if (denied) {
+      return NextResponse.json({ error: denied.error }, { status: denied.status });
+    }
+
     const { id } = await context.params;
     if (!isSupabaseConfigured()) {
       return NextResponse.json(
@@ -75,6 +86,11 @@ export async function DELETE(
   context: { params: Promise<{ id: string }> }
 ) {
   try {
+    const denied = await requireStaff();
+    if (denied) {
+      return NextResponse.json({ error: denied.error }, { status: denied.status });
+    }
+
     const { id } = await context.params;
     if (!isSupabaseConfigured()) {
       return NextResponse.json(

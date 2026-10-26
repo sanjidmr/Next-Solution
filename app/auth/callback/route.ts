@@ -1,18 +1,24 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
+import { getPublicEnv } from "@/lib/env";
 
 export async function GET(request: Request) {
-  const { searchParams, origin } = new URL(request.url);
+  const { searchParams } = new URL(request.url);
+  const { NEXT_PUBLIC_SITE_URL } = getPublicEnv();
+  const siteUrl = new URL(NEXT_PUBLIC_SITE_URL);
   const code = searchParams.get("code");
-  const next = searchParams.get("next") ?? "/admin";
+  const candidate = searchParams.get("next") ?? "/admin";
+  const next = candidate.startsWith("/") && !candidate.startsWith("//") && !candidate.includes("\\")
+    ? candidate
+    : "/admin";
 
   if (code) {
     const supabase = await createClient();
     const { error } = await supabase.auth.exchangeCodeForSession(code);
     if (!error) {
-      return NextResponse.redirect(`${origin}${next}`);
+      return NextResponse.redirect(new URL(next, siteUrl));
     }
   }
 
-  return NextResponse.redirect(`${origin}/admin/login?error=auth_failed`);
+  return NextResponse.redirect(new URL("/admin/login?error=auth_failed", siteUrl));
 }

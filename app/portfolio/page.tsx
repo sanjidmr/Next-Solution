@@ -8,6 +8,8 @@ export const metadata: Metadata = {
   description: 'Browse our portfolio of web development, design and marketing projects delivered for clients worldwide.',
 };
 
+export const dynamic = 'force-dynamic';
+
 async function getPortfolioFromSupabase() {
   try {
     const supabase = await createClient();

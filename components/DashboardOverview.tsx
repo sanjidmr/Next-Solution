@@ -5,8 +5,7 @@
  * state. Realtime events forward upserts/deletes to the parent so counts and
  * lists stay live without full page reloads.
  */
-import React, { useMemo, useState } from "react";
-import { motion, AnimatePresence } from "motion/react";
+import { useMemo, useState } from "react";
 import {
   Mail,
   Users,
@@ -18,12 +17,8 @@ import {
   Clock3,
   PhoneCall,
   CheckCircle2,
-  ArrowUpRight,
-  FolderOpen,
   FileText,
   Sparkles,
-  RefreshCw,
-  AlertTriangle,
   Loader2,
   XCircle,
 } from "lucide-react";
@@ -94,22 +89,15 @@ function StatCard({
   sub,
   icon: Icon,
   tone,
-  delay,
 }: {
   label: string;
   value: string | number;
   sub: string;
   icon: any;
   tone: string;
-  delay: number;
 }) {
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 12 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.35, delay }}
-      className="group rounded-2xl border border-gray-200 dark:border-neutral-700/70 bg-white dark:bg-[#151515] p-5 shadow-sm hover:shadow-lg hover:shadow-black/[0.04] dark:hover:shadow-black/30 transition-all duration-200 hover:-translate-y-0.5"
-    >
+    <div className="group rounded-2xl border border-gray-200 dark:border-neutral-700/70 bg-white dark:bg-[#151515] p-5 shadow-sm">
       <div className="flex items-start justify-between">
         <span className="block text-[10px] font-bold text-gray-400 dark:text-neutral-500 uppercase tracking-widest">
           {label}
@@ -126,7 +114,7 @@ function StatCard({
       <span className="text-[10px] text-gray-400 dark:text-neutral-500 font-semibold flex items-center gap-1 mt-1">
         {sub}
       </span>
-    </motion.div>
+    </div>
   );
 }
 
@@ -165,27 +153,6 @@ function Sparkline({ data }: { data: number[] }) {
   );
 }
 
-function LeadSkeleton() {
-  return (
-    <div className="space-y-3">
-      {[0, 1, 2].map((i) => (
-        <div
-          key={i}
-          className="animate-pulse rounded-xl border border-gray-100 dark:border-neutral-800 p-3.5 space-y-2"
-        >
-          <div className="flex gap-3">
-            <div className="h-9 w-9 rounded-full bg-gray-100 dark:bg-neutral-800" />
-            <div className="flex-1 space-y-2">
-              <div className="h-3 w-2/5 rounded bg-gray-100 dark:bg-neutral-800" />
-              <div className="h-2.5 w-3/5 rounded bg-gray-100 dark:bg-neutral-800" />
-            </div>
-          </div>
-        </div>
-      ))}
-    </div>
-  );
-}
-
 export default function DashboardOverview({
   messages,
   subscribers,
@@ -193,20 +160,7 @@ export default function DashboardOverview({
   services,
   portfolios,
 }: DashProps) {
-  const [loading, setLoading] = useState(true);
   const [range, setRange] = useState<"7" | "30">("7");
-  const [pulse, setPulse] = useState(false);
-
-  React.useEffect(() => {
-    const t = setTimeout(() => setLoading(false), 700);
-    return () => clearTimeout(t);
-  }, []);
-
-  React.useEffect(() => {
-    setPulse(true);
-    const t = setTimeout(() => setPulse(false), 600);
-    return () => clearTimeout(t);
-  }, [messages.length]);
 
   const publishedBlogs = blogs.filter((b) => b.status === "published").length;
   const draftBlogs = blogs.filter((b) => b.status === "draft").length;
@@ -231,14 +185,21 @@ export default function DashboardOverview({
 
   // Leads over time — group by day from anonymized buckets (real counts).
   const leadSeries = useMemo(() => {
-    const n = range === "7" ? 7 : 14;
-    const out: number[] = [];
-    for (let i = 0; i < n; i++) {
-      const bucket = messages.length > 0 ? Math.max(messages.length - i * 2, 0) : (i % 3) + 1;
-      out.push(i === 0 ? messages.length : bucket);
-    }
-    return out;
-  }, [messages.length, range]);
+    const days = Number(range);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    return Array.from({ length: days }, (_, index) => {
+      const start = new Date(today);
+      start.setDate(today.getDate() - days + index + 1);
+      const end = new Date(start);
+      end.setDate(start.getDate() + 1);
+      return messages.filter((message) => {
+        if (!message.createdAt) return false;
+        const createdAt = new Date(message.createdAt).getTime();
+        return createdAt >= start.getTime() && createdAt < end.getTime();
+      }).length;
+    });
+  }, [messages, range]);
 
   const byService = useMemo(() => {
     const map = new Map<string, number>();
@@ -260,7 +221,7 @@ export default function DashboardOverview({
   const conversionRate =
     messages.length > 0
       ? ((convertedLeads / messages.length) * 100).toFixed(1)
-      : "0.0";
+      : "—";
 
   const recentLeads = [...messages]
     .sort(
@@ -289,16 +250,15 @@ export default function DashboardOverview({
               Dashboard Overview
             </h3>
             <p className="text-[11px] text-gray-400 dark:text-neutral-500 font-medium">
-              Real-time business operations at a glance
+              Website and lead data at a glance
             </p>
           </div>
         </div>
         <div className="flex items-center gap-2">
           <span
-            className={`inline-flex items-center gap-1.5 rounded-full border border-emerald-200/70 bg-emerald-50 dark:bg-emerald-500/10 dark:border-emerald-500/20 px-3 py-1 text-[10px] font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-widest ${pulse ? "animate-pulse" : ""}`}
+            className="inline-flex items-center rounded-full border border-gray-200 bg-gray-50 px-3 py-1 text-[10px] font-bold text-gray-600 dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-300 uppercase tracking-widest"
           >
-            <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
-            Live
+            Database records
           </span>
         </div>
       </div>
@@ -311,7 +271,6 @@ export default function DashboardOverview({
           sub={`${newLeads} new waiting`}
           icon={Mail}
           tone="bg-orange-50 dark:bg-orange-500/10 text-orange-500"
-          delay={0}
         />
         <StatCard
           label="Portfolio Projects"
@@ -319,7 +278,6 @@ export default function DashboardOverview({
           sub={`${publishedPortfolios} published`}
           icon={FolderKanban}
           tone="bg-gray-100 dark:bg-neutral-800 text-gray-700 dark:text-white"
-          delay={0.04}
         />
         <StatCard
           label="Core Services"
@@ -327,25 +285,18 @@ export default function DashboardOverview({
           sub={`${publishedServices} live`}
           icon={Settings}
           tone="bg-gray-100 dark:bg-neutral-800 text-gray-700 dark:text-white"
-          delay={0.08}
         />
         <StatCard
           label="Newsletter Subscribers"
           value={subscribers.length}
-          sub="Active list"
+          sub="Database total"
           icon={Users}
           tone="bg-gray-100 dark:bg-neutral-800 text-gray-700 dark:text-white"
-          delay={0.12}
         />
       </div>
 
       {/* Secondary lead pipeline row */}
-      <motion.div
-        initial={{ opacity: 0, y: 12 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.35, delay: 0.16 }}
-        className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3"
-      >
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
         {[
           {
             label: "New Leads",
@@ -379,7 +330,7 @@ export default function DashboardOverview({
           },
           {
             label: "Conversion",
-            val: `${conversionRate}%`,
+            val: messages.length ? `${conversionRate}%` : "—",
             icon: TrendingUp,
             cls: "border-neutral-200 dark:border-neutral-700 bg-gray-50 dark:bg-neutral-800/50 text-gray-700 dark:text-white",
           },
@@ -401,17 +352,12 @@ export default function DashboardOverview({
             </div>
           </div>
         ))}
-      </motion.div>
+      </div>
 
       {/* Charts row */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         {/* Lead volume */}
-        <motion.div
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.35, delay: 0.2 }}
-          className="lg:col-span-8 rounded-2xl border border-gray-200 dark:border-neutral-700/70 bg-white dark:bg-[#151515] p-5 shadow-sm"
-        >
+        <div className="lg:col-span-8 rounded-2xl border border-gray-200 dark:border-neutral-700/70 bg-white dark:bg-[#151515] p-5 shadow-sm">
           <div className="flex items-center justify-between mb-3">
             <div>
               <h4 className="text-xs font-black text-gray-900 dark:text-white uppercase tracking-wide">
@@ -437,22 +383,23 @@ export default function DashboardOverview({
               ))}
             </div>
           </div>
-          <div className="rounded-xl bg-gray-50/60 dark:bg-neutral-950/40 border border-gray-100 dark:border-neutral-800 p-3">
-            <Sparkline data={leadSeries} />
-          </div>
+          {leadSeries.some((count) => count > 0) ? (
+            <div className="rounded-xl bg-gray-50/60 dark:bg-neutral-950/40 border border-gray-100 dark:border-neutral-800 p-3">
+              <Sparkline data={leadSeries} />
+            </div>
+          ) : (
+            <p className="rounded-xl border border-dashed border-gray-200 p-6 text-center text-sm text-gray-500 dark:border-neutral-700 dark:text-neutral-400">
+              No contact submissions recorded in this period.
+            </p>
+          )}
           <div className="mt-2 flex items-center gap-2 text-[10px] font-semibold text-gray-400 dark:text-neutral-500">
             <span className="h-2 w-2 rounded-full bg-orange-500" />
             Leads received (last {range} period)
           </div>
-        </motion.div>
+        </div>
 
         {/* Portfolio by service */}
-        <motion.div
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.35, delay: 0.24 }}
-          className="lg:col-span-4 rounded-2xl border border-gray-200 dark:border-neutral-700/70 bg-white dark:bg-[#151515] p-5 shadow-sm"
-        >
+        <div className="lg:col-span-4 rounded-2xl border border-gray-200 dark:border-neutral-700/70 bg-white dark:bg-[#151515] p-5 shadow-sm">
           <h4 className="text-xs font-black text-gray-900 dark:text-white uppercase tracking-wide">
             Portfolio by Service
           </h4>
@@ -480,16 +427,11 @@ export default function DashboardOverview({
               </div>
             ))}
           </div>
-        </motion.div>
+        </div>
       </div>
 
       {/* Recent Leads */}
-      <motion.div
-        initial={{ opacity: 0, y: 12 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.35, delay: 0.28 }}
-        className="rounded-2xl border border-gray-200 dark:border-neutral-700/70 bg-white dark:bg-[#151515] p-5 shadow-sm"
-      >
+      <div className="rounded-2xl border border-gray-200 dark:border-neutral-700/70 bg-white dark:bg-[#151515] p-5 shadow-sm">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
             <FileText className="h-4 w-4 text-orange-500" />
@@ -497,12 +439,12 @@ export default function DashboardOverview({
               Recent Leads
             </h4>
           </div>
-          <span className="text-[10px] font-bold text-orange-500">Live</span>
+          <span className="text-[10px] font-medium text-gray-500 dark:text-neutral-400">
+            Latest
+          </span>
         </div>
 
-        {loading ? (
-          <LeadSkeleton />
-        ) : recentLeads.length === 0 ? (
+        {recentLeads.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-10 text-center">
             <span className="flex h-12 w-12 items-center justify-center rounded-full bg-gray-50 dark:bg-neutral-800 text-gray-300 dark:text-neutral-600">
               <Inbox className="h-6 w-6" />
@@ -511,7 +453,7 @@ export default function DashboardOverview({
               No inbound leads yet
             </p>
             <p className="text-[10px] text-gray-400 dark:text-neutral-500 mt-1">
-              New contact form submissions will appear here instantly.
+              Contact form submissions are listed here after they are saved.
             </p>
           </div>
         ) : (
@@ -548,54 +490,49 @@ export default function DashboardOverview({
             })}
           </div>
         )}
-      </motion.div>
+      </div>
 
-      {/* System status */}
+      {/* Content totals */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {[
           {
-            label: "Services",
-            val: `${publishedServices}/${services.length}`,
+            label: "Published services",
+            val: publishedServices,
+            sub: `${services.length} total`,
             icon: Settings,
-            ok: true,
           },
           {
             label: "Published Blogs",
-            val: `${publishedBlogs}`,
+            val: publishedBlogs,
+            sub: `${blogs.length} total`,
             icon: BookOpen,
-            ok: true,
           },
           {
             label: "Draft Blogs",
-            val: `${draftBlogs}`,
+            val: draftBlogs,
+            sub: "Not visible on the public site",
             icon: Clock3,
-            ok: true,
           },
-        ].map((s, i) => (
-          <motion.div
+        ].map((s) => (
+          <div
             key={s.label}
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.35, delay: 0.32 + i * 0.04 }}
-            className="rounded-2xl border border-gray-200 dark:border-neutral-700/70 bg-white dark:bg-[#151515] p-4 shadow-sm flex items-center justify-between"
+            className="rounded-2xl border border-gray-200 dark:border-neutral-700/70 bg-white dark:bg-[#151515] p-4 shadow-sm flex items-center gap-3"
           >
-            <div className="flex items-center gap-3">
-              <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-gray-50 dark:bg-neutral-800 text-gray-500 dark:text-orange-400">
-                <s.icon className="h-4 w-4" />
-              </span>
-              <div>
-                <p className="text-xs font-bold text-gray-900 dark:text-white">
-                  {s.label}
-                </p>
-                <p className="text-[10px] text-gray-400 dark:text-neutral-500">
-                  {s.val} active
-                </p>
-              </div>
-            </div>
-            <span className="flex h-6 w-6 items-center justify-center rounded-full bg-emerald-50 dark:bg-emerald-500/10 text-emerald-500">
-              <ArrowUpRight className="h-3.5 w-3.5" />
+            <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-gray-50 dark:bg-neutral-800 text-gray-500 dark:text-orange-400">
+              <s.icon className="h-4 w-4" />
             </span>
-          </motion.div>
+            <div>
+              <p className="text-xs font-semibold text-gray-900 dark:text-white">
+                {s.label}
+              </p>
+              <p className="text-sm font-medium text-gray-700 dark:text-neutral-200">
+                {s.val}
+                <span className="ml-2 text-xs font-normal text-gray-500 dark:text-neutral-400">
+                  {s.sub}
+                </span>
+              </p>
+            </div>
+          </div>
         ))}
       </div>
     </div>

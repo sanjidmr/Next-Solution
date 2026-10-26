@@ -1,8 +1,9 @@
 import { NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { getServerEnv } from "@/lib/env";
+import { timingSafeEqual } from "node:crypto";
 
-export async function GET() {
+export async function POST(request: Request) {
   try {
     const env = getServerEnv();
     const email = env.ADMIN_BOOTSTRAP_EMAIL;
@@ -13,6 +14,16 @@ export async function GET() {
         { error: "Admin bootstrap environment variables are not configured." },
         { status: 400 }
       );
+    }
+
+    const suppliedToken = request.headers.get("authorization")?.replace(/^Bearer\s+/i, "") || "";
+    const suppliedBytes = Buffer.from(suppliedToken);
+    const expectedBytes = Buffer.from(password);
+    if (
+      suppliedBytes.length !== expectedBytes.length ||
+      !timingSafeEqual(suppliedBytes, expectedBytes)
+    ) {
+      return NextResponse.json({ error: "Unauthorized." }, { status: 401 });
     }
 
     const supabase = createAdminClient();
@@ -38,7 +49,7 @@ export async function GET() {
     }
 
     // Create the super admin user using Admin client
-    const { data: authUser, error: authError } = await supabase.auth.admin.createUser({
+    const { error: authError } = await supabase.auth.admin.createUser({
       email,
       password,
       email_confirm: true,
@@ -54,11 +65,7 @@ export async function GET() {
     }
 
     return NextResponse.json(
-      {
-        message: "Super admin bootstrapped successfully.",
-        userId: authUser.user?.id,
-        email: authUser.user?.email,
-      },
+      { message: "Super admin bootstrapped successfully." },
       { status: 201 }
     );
   } catch (error: any) {

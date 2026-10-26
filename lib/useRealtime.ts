@@ -24,6 +24,7 @@ export function useRealtime(
 ) {
   const callbackRef = useRef(onEvent);
   callbackRef.current = onEvent;
+  const tableKey = tables.join(",");
 
   useEffect(() => {
     let client: ReturnType<typeof createClient> | null = null;
@@ -39,7 +40,7 @@ export function useRealtime(
 
     channel = client.channel("admin-realtime");
 
-    for (const table of tables) {
+    for (const table of tableKey ? tableKey.split(",") : []) {
       channel = channel
         .on(
           "postgres_changes",
@@ -79,5 +80,5 @@ export function useRealtime(
         /* noop */
       }
     };
-  }, []);
+  }, [tableKey]);
 }

@@ -180,11 +180,23 @@ export default function AdminPortfolioManager({
   const [editing, setEditing] = useState<PortfolioItem | null>(null);
   const [form, setForm] = useState<Partial<PortfolioItem>>(emptyForm);
   const [uploading, setUploading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
+  const [formError, setFormError] = useState("");
+  const [loadError, setLoadError] = useState("");
+  const [page, setPage] = useState(1);
+  const [saving, setSaving] = useState(false);
 
   const load = async () => {
-    const data = await adminDB.getAllPortfolio();
-    setItems(data || []);
-    setLoading(false);
+    try {
+      const data = await adminDB.getAllPortfolio();
+      setItems(data || []);
+      setLoadError("");
+      setPage(1);
+    } catch (error) {
+      setLoadError(error instanceof Error ? error.message : "Projects could not be loaded.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   React.useEffect(() => {
@@ -205,26 +217,55 @@ export default function AdminPortfolioManager({
     });
   };
 
-  const uploadFile = async (file: File) => {
+  const uploadFile = (file: File) => {
     const fd = new FormData();
     fd.append("file", file);
     fd.append("folder", "projects");
-    const res = await fetch("/api/admin/upload", { method: "POST", body: fd });
-    const json = await res.json();
-    if (!res.ok) throw new Error(json.error || "Upload failed");
-    return json.data.url;
+    return new Promise<string>((resolve, reject) => {
+      const request = new XMLHttpRequest();
+      request.open("POST", "/api/admin/upload");
+      request.upload.onprogress = (event) => {
+        if (event.lengthComputable) {
+          setUploadProgress(Math.round((event.loaded / event.total) * 100));
+        }
+      };
+      request.onerror = () => reject(new Error("Image upload failed. Check your connection and try again."));
+      request.onload = () => {
+        let result: { data?: { url?: string }; error?: string };
+        try {
+          result = JSON.parse(request.responseText);
+        } catch {
+          reject(new Error("The upload server returned an invalid response."));
+          return;
+        }
+        if (request.status < 200 || request.status >= 300 || !result.data?.url) {
+          reject(new Error(result.error || "Image upload failed."));
+          return;
+        }
+        resolve(result.data.url);
+      };
+      request.send(fd);
+    });
   };
 
   const handleImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
+    setFormError("");
+    if (file.size > 4 * 1024 * 1024) {
+      setFormError("Choose an image smaller than 4 MB.");
+      e.target.value = "";
+      return;
+    }
     setUploading(true);
+    setUploadProgress(0);
     try {
       const url = await uploadFile(file);
       setForm({ ...form, image: url });
+      setUploadProgress(100);
       notice("Featured image uploaded.");
-    } catch (err: any) {
-      notice(err.message || "Upload failed");
+    } catch (err: unknown) {
+      setFormError(err instanceof Error ? err.message : "Image upload failed.");
     } finally {
       setUploading(false);
       e.target.value = "";
@@ -236,6 +277,17 @@ export default function AdminPortfolioManager({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setFormError("");
+    if (!form.titleEn?.trim()) {
+      setFormError("Enter a project title.");
+      return;
+    }
+    if (!form.image) {
+      setFormError("Upload a project image before saving.");
+      return;
+    }
+    if (uploading || saving) return;
+    setSaving(true);
     const id = editing ? editing.id : `portfolio-${Date.now()}`;
     const slug = form.slug || buildSlug(form.titleEn || "") || `project-${Date.now()}`;
     const gallery: string[] = [];
@@ -263,9 +315,7 @@ export default function AdminPortfolioManager({
       resultEn: "",
       resultBn: "",
       technologies: Array.isArray(form.technologies) ? form.technologies : [],
-      image:
-        form.image ||
-        "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=600",
+      image: form.image,
       featured: !!form.featured,
       rating: 5,
       slug,
@@ -292,8 +342,10 @@ export default function AdminPortfolioManager({
       setEditing(null);
       setForm(emptyForm);
       notice(res?.warning || "Portfolio project saved.");
-    } catch (err: any) {
-      notice(err?.message || "Failed to save portfolio project. If you filled service-specific fields, make sure the `project_data` DB migration has been applied.");
+    } catch (err: unknown) {
+      setFormError(err instanceof Error ? err.message : "Failed to save project.");
+    } finally {
+      setSaving(false);
     }
   };
 
@@ -326,6 +378,9 @@ export default function AdminPortfolioManager({
     const matchesFilter = activeFilter === "All" || i.category === activeFilter;
     return matchesSearch && matchesFilter;
   });
+  const pageSize = 12;
+  const pageCount = Math.max(1, Math.ceil(filtered.length / pageSize));
+  const pageItems = filtered.slice((page - 1) * pageSize, page * pageSize);
 
   return (
     <div className="space-y-6">
@@ -365,7 +420,10 @@ export default function AdminPortfolioManager({
           {["All", ...SERVICES].map((s) => (
             <button
               key={s}
-              onClick={() => setActiveFilter(s)}
+              onClick={() => {
+                setActiveFilter(s);
+                setPage(1);
+              }}
               className={`px-2.5 py-1 rounded-md text-[10px] font-bold transition border ${
                 activeFilter === s
                   ? "bg-orange-500 text-white border-orange-500"
@@ -380,7 +438,10 @@ export default function AdminPortfolioManager({
           <Search className="h-3.5 w-3.5 absolute left-2.5 top-1/2 -translate-y-1/2 text-gray-400 dark:text-neutral-500" />
           <input
             value={search}
-            onChange={(e) => setSearch(e.target.value)}
+            onChange={(e) => {
+              setSearch(e.target.value);
+              setPage(1);
+            }}
             placeholder="Search projects..."
             className="pl-8 rounded-lg border border-gray-200 dark:border-neutral-600 bg-white dark:bg-neutral-900 px-3 py-2 text-xs text-gray-800 dark:text-neutral-100 placeholder:text-gray-400 w-full md:w-56 focus:outline-none focus:ring-2 focus:ring-orange-500/30 focus:border-orange-500"
           />
@@ -393,6 +454,11 @@ export default function AdminPortfolioManager({
           onSubmit={handleSubmit}
           className="rounded-2xl border border-gray-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 p-5 space-y-6"
         >
+          {formError && (
+            <p role="alert" className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700 dark:border-red-900 dark:bg-red-950/30 dark:text-red-300">
+              {formError}
+            </p>
+          )}
           <div className="flex items-center justify-between border-b border-gray-100 dark:border-neutral-800 pb-3">
             <h4 className="text-sm font-black text-gray-900 dark:text-white">
               {editing ? `Edit: ${editing.titleEn}` : "Create New Case Study"}
@@ -464,7 +530,7 @@ export default function AdminPortfolioManager({
           {/* Image upload */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-1.5">
-              <label className={labelCls}>Project Image</label>
+              <label className={labelCls}>Project Image *</label>
               <div className="flex items-center gap-3">
                 {form.image ? (
                   <div className="relative h-16 w-24 rounded-lg overflow-hidden border border-gray-200 dark:border-neutral-700">
@@ -488,10 +554,19 @@ export default function AdminPortfolioManager({
                     ) : (
                       <Upload className="h-5 w-5" />
                     )}
-                    <input type="file" accept="image/*" className="hidden" onChange={handleImage} />
+                    <input type="file" accept="image/png,image/jpeg,image/webp,image/gif,image/avif" className="hidden" onChange={handleImage} />
                   </label>
                 )}
               </div>
+              <p className="text-xs text-gray-500 dark:text-neutral-400">PNG, JPEG, WebP, GIF, or AVIF · up to 4 MB</p>
+              {uploading && (
+                <div className="space-y-1" aria-live="polite">
+                  <div className="h-2 overflow-hidden rounded-full bg-gray-100 dark:bg-neutral-800">
+                    <div className="h-full rounded-full bg-orange-500 transition-[width]" style={{ width: `${uploadProgress}%` }} />
+                  </div>
+                  <p className="text-xs text-gray-500 dark:text-neutral-400">Uploading image… {uploadProgress}%</p>
+                </div>
+              )}
             </div>
 
             <div className="space-y-1.5">
@@ -587,9 +662,10 @@ export default function AdminPortfolioManager({
               </button>
               <button
                 type="submit"
-                className="rounded-lg bg-orange-500 hover:bg-orange-600 text-white px-5 py-2 text-xs font-bold transition shadow-sm shadow-orange-500/20"
+                disabled={uploading || saving}
+                className="rounded-lg bg-orange-500 hover:bg-orange-600 text-white px-5 py-2 text-xs font-bold transition shadow-sm shadow-orange-500/20 disabled:cursor-not-allowed disabled:opacity-50"
               >
-                {editing ? "Save Changes" : "Create Project"}
+                {saving ? "Saving…" : editing ? "Save Changes" : "Create Project"}
               </button>
             </div>
           </div>
@@ -607,6 +683,10 @@ export default function AdminPortfolioManager({
             </div>
           ))}
         </div>
+      ) : loadError ? (
+        <p role="alert" className="rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-700 dark:border-red-900 dark:bg-red-950/30 dark:text-red-300">
+          {loadError}
+        </p>
       ) : filtered.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-14 text-center rounded-2xl border border-dashed border-gray-200 dark:border-neutral-700">
           <span className="flex h-12 w-12 items-center justify-center rounded-full bg-gray-50 dark:bg-neutral-800 text-gray-300 dark:text-neutral-600">
@@ -621,7 +701,7 @@ export default function AdminPortfolioManager({
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {filtered.map((p) => {
+          {pageItems.map((p) => {
             const pFields = getPortfolioFields(p.category || "");
             const meta = p.projectData || {};
             const previewKey = pFields?.fields.find((f) => f.type !== "url")?.key;
@@ -701,6 +781,32 @@ export default function AdminPortfolioManager({
             );
           })}
         </div>
+      )}
+      {!formOpen && !loading && !loadError && pageCount > 1 && (
+        <nav aria-label="Project pages" className="flex items-center justify-between border-t border-gray-200 pt-4 dark:border-neutral-800">
+          <p className="text-xs text-gray-500 dark:text-neutral-400">
+            Showing {(page - 1) * pageSize + 1}–{Math.min(page * pageSize, filtered.length)} of {filtered.length}
+          </p>
+          <div className="flex gap-2">
+            <button
+              type="button"
+              disabled={page === 1}
+              onClick={() => setPage((current) => current - 1)}
+              className="rounded-md border border-gray-200 px-3 py-1.5 text-xs disabled:opacity-40 dark:border-neutral-700"
+            >
+              Previous
+            </button>
+            <span className="px-2 py-1.5 text-xs text-gray-600 dark:text-neutral-300">{page} / {pageCount}</span>
+            <button
+              type="button"
+              disabled={page === pageCount}
+              onClick={() => setPage((current) => current + 1)}
+              className="rounded-md border border-gray-200 px-3 py-1.5 text-xs disabled:opacity-40 dark:border-neutral-700"
+            >
+              Next
+            </button>
+          </div>
+        </nav>
       )}
     </div>
   );

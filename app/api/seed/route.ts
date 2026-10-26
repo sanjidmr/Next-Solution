@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { requireStaff } from "@/lib/require-admin";
 import {
   initialServices, initialPortfolio, initialBlogs, initialTestimonials,
   defaultSiteSettings, initialTechServiceCards
@@ -15,7 +16,7 @@ import {
 import {
   mapService, mapPortfolioItem, mapBlogPost, mapTestimonial, mapSiteSettings,
   mapCurrency, mapCurrencySettings,
-  mapTestimonialVideo, mapClientMoment, mapTestimonialStatistics, mapClientLogo, mapSuccessStory,
+  mapTestimonialVideo, mapClientMoment, mapClientLogo, mapSuccessStory,
   mapReviewSettings, mapLegalPolicy, mapLegalRevision, mapCookieCategory, mapCookieSettings,
   mapWhyChooseUsCard, mapWhyChooseUsStat, mapWhyChooseUsBadge, mapWhyChooseUsTech, mapWhyChooseUsCTA,
   mapProcessStep, mapProcessCTA, mapTechServiceCard, mapContactMessage, mapSubscriber
@@ -108,11 +109,23 @@ const defaultCurrencySettings = {
 // Let's check what testimonial sub-arrays are available. We'll extract them.
 import {
   initialTestimonialCategories, initialTestimonialVideos, initialClientMoments,
-  initialTestimonialStatistics, initialClientLogos, initialSuccessStories,
+  initialClientLogos, initialSuccessStories,
   defaultReviewSettings
 } from "@/lib/db";
 
 export async function GET() {
+  const denied = await requireStaff();
+  if (denied) {
+    return NextResponse.json({ error: denied.error }, { status: denied.status });
+  }
+
+  if (process.env.NODE_ENV === "production") {
+    return NextResponse.json(
+      { error: "Seed data cannot be applied in production." },
+      { status: 403 },
+    );
+  }
+
   try {
     const supabase = createAdminClient();
 
@@ -162,10 +175,7 @@ export async function GET() {
       await supabase.from("client_moments").upsert(itemsToInsert);
     }
 
-    // 13. Seed Testimonial Statistics & Review Settings
-    if (initialTestimonialStatistics) {
-      await supabase.from("testimonial_statistics").upsert(mapTestimonialStatistics.toDb(initialTestimonialStatistics));
-    }
+    // 13. Seed Review Settings
     if (defaultReviewSettings) {
       await supabase.from("review_settings").upsert(mapReviewSettings.toDb(defaultReviewSettings));
     }

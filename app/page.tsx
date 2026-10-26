@@ -8,6 +8,8 @@ export const metadata: Metadata = {
   description: 'Full-service digital agency specialising in web development, UI/UX design, SEO and digital marketing.',
 };
 
+export const dynamic = 'force-dynamic';
+
 async function getFeaturedPortfolio() {
   const maxAttempts = 3;
 

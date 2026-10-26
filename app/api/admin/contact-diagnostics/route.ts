@@ -72,6 +72,7 @@ export async function GET() {
     let anonWrite: Record<string, unknown> = { attempted: false };
     if (tableExists) {
       const testRow = {
+        id: crypto.randomUUID(),
         name: "__connectivity_test__",
         email: "connectivity@nextsolution.local",
         phone: "",

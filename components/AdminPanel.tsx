@@ -20,7 +20,9 @@ import AdminLegalCMS from '@/components/AdminLegalCMS';
 import AdminProductsCMS from '@/components/AdminProductsCMS';
 import AdminPortfolioManager from '@/components/AdminPortfolioManager';
 import DashboardOverview from '@/components/DashboardOverview';
+import AdminAnalytics from '@/components/AdminAnalytics';
 import { useRealtime } from '@/lib/useRealtime';
+import { signOut } from '@/actions/auth';
 
 type LeadStatusValue = 'unread' | 'read' | 'replied' | 'contacted' | 'in_progress' | 'converted' | 'closed';
 
@@ -95,7 +97,7 @@ function timeAgo(dateStr?: string, lang: 'en' | 'bn' = 'en'): string {
 
 import { 
   Lock as LockIcon, CheckCircle2 as CheckCircle2Icon, Trash2 as Trash2Icon, Mail as MailIcon, Users as UsersIcon, BookOpen as BookOpenIcon, Settings as SettingsIcon, 
-  RotateCcw as RotateCcwIcon, Sparkles as SparklesIcon, Plus as PlusIcon, Edit2 as Edit2Icon, BarChart3 as BarChart3Icon, FolderKanban as FolderKanbanIcon, 
+  RotateCcw as RotateCcwIcon, Sparkles as SparklesIcon, Plus as PlusIcon, Edit2 as Edit2Icon, BarChart3 as BarChart3Icon, FolderKanban as FolderKanbanIcon,
   MessageSquare as MessageSquareIcon, UserCheck as UserCheckIcon, Image as ImageIcon, Shield as ShieldIcon,
   Search as SearchIcon, Eye as EyeIcon, ArrowUpRight as ArrowUpRightIcon, Cpu as CpuIcon, ShoppingBag as ShoppingBagIcon,
   ChevronDown as ChevronDownIcon, Inbox as InboxIcon, PhoneCall as PhoneCallIcon, Clock3 as Clock3Icon, XCircle as XCircleIcon,
@@ -107,18 +109,7 @@ interface AdminPanelProps {
 }
 
 export default function AdminPanel({ currentLang }: AdminPanelProps) {
-  // Auth states
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [password, setPassword] = useState('');
-
-  // If the middleware session cookie is present, skip the redundant in-panel
-  // passcode gate — the server already verified the credentials.
-  useEffect(() => {
-    if (typeof document !== 'undefined' && typeof document.cookie === 'string' && document.cookie.split(';').some(c => c.trim().startsWith('ns_admin=1'))) {
-      setIsAuthenticated(true);
-    }
-  }, []);
-  const [authError, setAuthError] = useState('');
+  const isAuthenticated = true;
   const [openStatusMenu, setOpenStatusMenu] = useState<string | null>(null);
 
   // Tab State
@@ -236,6 +227,9 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
   const [messagesError, setMessagesError] = useState<string>('');
   const [messageFilter, setMessageFilter] = useState<'all' | LeadStatusValue>('all');
   const [messageSearch, setMessageSearch] = useState('');
+  const [messagePage, setMessagePage] = useState(1);
+  const messagesPerPage = 10;
+  const [dataLoading, setDataLoading] = useState(true);
 
   const countByStatus = (s: 'all' | LeadStatusValue): number =>
     s === 'all'
@@ -253,6 +247,14 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
         .toLowerCase()
         .includes(q);
     });
+  const messagePageCount = Math.max(1, Math.ceil(filteredMessages.length / messagesPerPage));
+  const pagedMessages = filteredMessages.slice(
+    (messagePage - 1) * messagesPerPage,
+    messagePage * messagesPerPage,
+  );
+  useEffect(() => {
+    setMessagePage((page) => Math.min(page, messagePageCount));
+  }, [messagePageCount]);
   const [subscribers, setSubscribers] = useState<Subscriber[]>([]);
   const [blogs, setBlogs] = useState<BlogPost[]>([]);
   const [services, setServices] = useState<Service[]>([]);
@@ -263,7 +265,6 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
   const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
   const [teamMembers, setTeamMembers] = useState<any[]>([]);
   const [mediaItems, setMediaItems] = useState<any[]>([]);
-  const [adminUsers, setAdminUsers] = useState<any[]>([]);
 
   // Success toast/banner notice
   const [successNotice, setSuccessNotice] = useState('');
@@ -286,10 +287,6 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
   // Edit / Create States for Team Members
   const [editingTeamMember, setEditingTeamMember] = useState<any | null>(null);
   const [isCreatingTeamMember, setIsCreatingTeamMember] = useState(false);
-
-  // Edit / Create States for User Management
-  const [editingUser, setEditingUser] = useState<any | null>(null);
-  const [isCreatingUser, setIsCreatingUser] = useState(false);
 
   // Media Library state controls
   const [mediaSearch, setMediaSearch] = useState('');
@@ -334,7 +331,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
   const [testimonialVideos, setTestimonialVideos] = useState<TestimonialVideo[]>([]);
   const [successStories, setSuccessStories] = useState<SuccessStory[]>([]);
   const [clientLogos, setClientLogos] = useState<ClientLogo[]>([]);
-  const [testimonialStatistics, setTestimonialStatistics] = useState<TestimonialStatistics | null>(null);
+  const [testimonialStatistics, setTestimonialStatistics] = useState<Partial<TestimonialStatistics> | null>(null);
   const [reviewSettings, setReviewSettings] = useState<ReviewSettings | null>(null);
 
   // Sub-tab for testimonials admin panel
@@ -367,11 +364,6 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
     avatar: '', email: '', linkedin: '', bioEn: '', bioBn: ''
   });
 
-  // Form states for Admin Users
-  const [userForm, setUserForm] = useState<any>({
-    username: '', password: '', role: 'Editor', status: 'active', email: ''
-  });
-
   // Helper to safely get flag
   const currFlag = (c: any) => c?.flag || '🏳️';
 
@@ -384,7 +376,9 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
       try {
         await fn();
       } catch (err: any) {
-        errors.push(label + ': ' + (err?.message || String(err)));
+        const message = err?.message || String(err);
+        errors.push(label + ': ' + message);
+        if (label === 'messages') setMessagesError(message);
       }
     };
 
@@ -469,39 +463,32 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
 
     // Auxiliary collections with local persistence
     try {
-      if (!getLocalItem('next_solution_team')) {
-        const defaultTeam = [
-          { id: 'team-1', name: 'Sanjid Rahman', roleEn: 'Founder & CEO', roleBn: 'প্রতিষ্ঠাতা ও সিইও', departmentEn: 'Executive', departmentBn: 'নির্বাহী', avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=400', email: 'sanjid@nextsolutionmym.com', linkedin: 'https://linkedin.com/in/sanjid', bioEn: 'Sanjid oversees Next Solutions strategic direction, drawing on 12+ years of enterprise SaaS architecture.', bioBn: 'সানজিদ নেক্সট সলিউশনের কৌশলগত পরিকল্পনা পরিচালনা করেন, তার ১২ বছরের স্যাস আর্কিটেকচারের অভিজ্ঞতা রয়েছে।' },
-          { id: 'team-2', name: 'Tasnim Ahmed', roleEn: 'Head of Product Engineering', roleBn: 'হেড অফ প্রোডাক্ট ইঞ্জিনিয়ারিং', departmentEn: 'Engineering', departmentBn: 'প্রকৌশল', avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=400', email: 'tasnim@nextsolution.com', linkedin: 'https://linkedin.com/in/tasnim', bioEn: 'Tasnim directs the frontend and cloud systems deployment with a deep focus on Webflow and Next.js scale.', bioBn: 'তাসনিম ওয়েবফ্লো এবং নেক্সট জেএস স্কেলের ওপর গভীর ফোকাস দিয়ে ফ্রন্টএন্ড এবং ক্লাউড সিস্টেম পরিচালনা করেন।' }
-        ];
-        setLocalItem('next_solution_team', JSON.stringify(defaultTeam));
-      }
       setTeamMembers(JSON.parse(getLocalItem('next_solution_team') || '[]'));
 
-      if (!getLocalItem('next_solution_media')) {
-        const defaultMedia = [
-          { id: 'media-1', title: 'Enterprise Dashboard', group: 'portfolio', url: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=600' },
-          { id: 'media-2', title: 'Strategic Team Audit', group: 'about', url: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&q=80&w=600' },
-          { id: 'media-3', title: 'Tech Stack Diagram', group: 'services', url: 'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&q=80&w=600' }
-        ];
-        setLocalItem('next_solution_media', JSON.stringify(defaultMedia));
-      }
       setMediaItems(JSON.parse(getLocalItem('next_solution_media') || '[]'));
 
-      if (!getLocalItem('next_solution_admin_users')) {
-        const defaultUsers = [
-          { id: 'user-1', username: 'admin', role: 'SuperAdmin', status: 'active', email: 'admin@nextsolution.com', lastActive: new Date().toISOString() },
-          { id: 'user-2', username: 'moderator_tasnim', role: 'Editor', status: 'active', email: 'tasnim@nextsolution.com', lastActive: new Date().toISOString() }
-        ];
-        setLocalItem('next_solution_admin_users', JSON.stringify(defaultUsers));
+      const storedUsers = getLocalItem('next_solution_admin_users');
+      if (storedUsers) {
+        const legacyUsers = JSON.parse(storedUsers);
+        if (Array.isArray(legacyUsers)) {
+          const sanitizedUsers = legacyUsers
+            .filter((user) => !['user-1', 'user-2'].includes(user.id))
+            .map(({ password: _password, ...user }) => user);
+          setLocalItem('next_solution_admin_users', JSON.stringify(sanitizedUsers));
+        }
       }
-      setAdminUsers(JSON.parse(getLocalItem('next_solution_admin_users') || '[]'));
     } catch (err: any) {
       errors.push('local-data: ' + (err?.message || String(err)));
     }
 
     setDataErrors(errors);
+    setDataLoading(false);
   };
+  const overviewDataUnavailable =
+    dataLoading ||
+    dataErrors.some((error) =>
+      /^(messages|subscribers|blogs|services|portfolio):/.test(error),
+    );
   useEffect(() => {
     if (isAuthenticated) {
       loadAdminData();
@@ -567,7 +554,6 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
         .catch((err: any) => setMessagesError(err?.message || String(err)));
     }, 15000);
     return () => clearInterval(id);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isAuthenticated, activeSubTab]);
 
   const refreshMessages = async () => {
@@ -615,19 +601,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
       loadAdminData();
     }, 60000);
     return () => clearInterval(id);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isAuthenticated]);
-
-  const handleLogin = (e: React.FormEvent) => {
-    e.preventDefault();
-    setAuthError('');
-    if (password === 'admin') {
-      setIsAuthenticated(true);
-      setPassword('');
-    } else {
-      setAuthError(currentLang === 'en' ? 'Incorrect credential. Try again.' : 'ভুল পাসওয়ার্ড। আবার চেষ্টা করুন।');
-    }
-  };
 
   // Messages operations
   const handleToggleMessageStatus = async (id: string, currentStatus: 'unread' | 'read' | 'replied' | 'contacted' | 'in_progress' | 'converted' | 'closed') => {
@@ -677,10 +651,10 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
       contentBn: blogForm.contentBn || '',
       categoryEn: blogForm.categoryEn || 'Technology',
       categoryBn: blogForm.categoryBn || 'প্রযুক্তি',
-      tags: blogForm.tags || ['General'],
-      image: blogForm.image || 'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&q=80&w=800',
-      author: blogForm.author || 'Sanjid Rahman',
-      readTime: blogForm.readTime || '5 Min Read',
+      tags: blogForm.tags || [],
+      image: blogForm.image || '',
+      author: blogForm.author || '',
+      readTime: blogForm.readTime || '',
       publishedAt: publishedDate,
       status: blogForm.status || 'draft'
     };
@@ -826,7 +800,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
       resultEn: portfolioForm.resultEn || '',
       resultBn: portfolioForm.resultBn || '',
       technologies: portfolioForm.technologies || [],
-      image: portfolioForm.image || 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=600',
+      image: portfolioForm.image || '',
       featured: portfolioForm.featured || false,
       rating: portfolioForm.rating || 5,
       reviewEn: portfolioForm.reviewEn || '',
@@ -893,7 +867,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
       feedbackEn: testimonialForm.feedbackEn || '',
       feedbackBn: testimonialForm.feedbackBn || '',
       rating: testimonialForm.rating || 5,
-      avatar: testimonialForm.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=150'
+      avatar: testimonialForm.avatar || ''
     };
 
     await adminDB.saveTestimonial(completedTestimonial);
@@ -925,10 +899,10 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
       titleBn: videoForm.titleBn || 'ভিডিও রিভিউ',
       clientName: videoForm.clientName || 'Anonymous',
       company: videoForm.company || 'Enterprise Inc',
-      avatar: videoForm.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=150',
+      avatar: videoForm.avatar || '',
       rating: videoForm.rating || 5,
       videoUrl: videoForm.videoUrl || 'https://www.youtube.com/embed/dQw4w9WgXcQ',
-      thumbnailUrl: videoForm.thumbnailUrl || 'https://images.unsplash.com/photo-1551434678-e076c223a692?auto=format&fit=crop&q=80&w=800',
+      thumbnailUrl: videoForm.thumbnailUrl || '',
       shortDescriptionEn: videoForm.shortDescriptionEn || '',
       shortDescriptionBn: videoForm.shortDescriptionBn || '',
       featured: videoForm.featured ?? true,
@@ -976,13 +950,13 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
       timelineBn: successStoryForm.timelineBn || '',
       resultsEn: successStoryForm.resultsEn || '',
       resultsBn: successStoryForm.resultsBn || '',
-      beforeImage: successStoryForm.beforeImage || 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=800',
-      afterImage: successStoryForm.afterImage || 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=800',
+      beforeImage: successStoryForm.beforeImage || '',
+      afterImage: successStoryForm.afterImage || '',
       clientQuoteEn: successStoryForm.clientQuoteEn || '',
       clientQuoteBn: successStoryForm.clientQuoteBn || '',
       clientRoleEn: successStoryForm.clientRoleEn || '',
       clientRoleBn: successStoryForm.clientRoleBn || '',
-      clientPhoto: successStoryForm.clientPhoto || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=150',
+      clientPhoto: successStoryForm.clientPhoto || '',
       featured: successStoryForm.featured ?? true,
       displayOrder: Number(successStoryForm.displayOrder) || 1
     };
@@ -1038,8 +1012,29 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
   // Statistics and Settings operations
   const handleSaveTestimonialStatistics = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!testimonialStatistics) return;
-    await adminDB.saveTestimonialStatistics(testimonialStatistics);
+    if (
+      typeof testimonialStatistics?.totalClients !== 'number' ||
+      !Number.isFinite(testimonialStatistics.totalClients) ||
+      testimonialStatistics.totalClients < 0 ||
+      typeof testimonialStatistics.satisfactionRate !== 'number' ||
+      !Number.isFinite(testimonialStatistics.satisfactionRate) ||
+      testimonialStatistics.satisfactionRate < 0 ||
+      testimonialStatistics.satisfactionRate > 100 ||
+      typeof testimonialStatistics.averageRating !== 'number' ||
+      !Number.isFinite(testimonialStatistics.averageRating) ||
+      testimonialStatistics.averageRating < 0 ||
+      testimonialStatistics.averageRating > 5 ||
+      typeof testimonialStatistics.successStoryCount !== 'number' ||
+      !Number.isFinite(testimonialStatistics.successStoryCount) ||
+      testimonialStatistics.successStoryCount < 0
+    ) {
+      triggerNotice(currentLang === 'en' ? 'Enter valid values for all statistics before saving.' : 'সংরক্ষণের আগে সব পরিসংখ্যানের সঠিক মান দিন।');
+      return;
+    }
+    await adminDB.saveTestimonialStatistics({
+      ...testimonialStatistics,
+      averageRating: testimonialStatistics.averageRating,
+    });
     triggerNotice(currentLang === 'en' ? 'Statistics successfully updated!' : 'পরিসংখ্যান সফলভাবে আপডেট করা হয়েছে!');
   };
 
@@ -1157,9 +1152,9 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
       roleBn: teamMemberForm.roleBn || 'প্রোডাক্ট ইঞ্জিনিয়ার',
       departmentEn: teamMemberForm.departmentEn || 'Engineering',
       departmentBn: teamMemberForm.departmentBn || 'প্রকৌশল',
-      avatar: teamMemberForm.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=400',
-      email: teamMemberForm.email || 'hello@nextsolution.com',
-      linkedin: teamMemberForm.linkedin || 'https://linkedin.com',
+      avatar: teamMemberForm.avatar || '',
+      email: teamMemberForm.email || '',
+      linkedin: teamMemberForm.linkedin || '',
       bioEn: teamMemberForm.bioEn || '',
       bioBn: teamMemberForm.bioBn || ''
     };
@@ -1189,52 +1184,6 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
     setLocalItem('next_solution_team', JSON.stringify(list));
     setTeamMembers(list);
     triggerNotice(currentLang === 'en' ? 'Team member deleted.' : 'টিম মেম্বারকে বাদ দেওয়া হয়েছে।');
-  };
-
-  // Admin User operations
-  const handleSaveUser = (e: React.FormEvent) => {
-    e.preventDefault();
-    const list = [...adminUsers];
-    const userId = editingUser ? editingUser.id : `user-${Date.now()}`;
-    const completedUser = {
-      id: userId,
-      username: userForm.username || 'user',
-      password: userForm.password || 'password',
-      role: userForm.role || 'Editor',
-      status: userForm.status || 'active',
-      email: userForm.email || 'editor@nextsolution.com',
-      lastActive: new Date().toISOString()
-    };
-
-    const index = list.findIndex(u => u.id === userId);
-    if (index >= 0) {
-      list[index] = completedUser;
-    } else {
-      list.push(completedUser);
-    }
-
-    setLocalItem('next_solution_admin_users', JSON.stringify(list));
-    setAdminUsers(list);
-    setIsCreatingUser(false);
-    setEditingUser(null);
-    triggerNotice(currentLang === 'en' ? 'User account updated!' : 'ইউজার অ্যাকাউন্ট আপডেট করা হয়েছে!');
-  };
-
-  const handleEditUserTrigger = (u: any) => {
-    setEditingUser(u);
-    setUserForm(u);
-    setIsCreatingUser(true);
-  };
-
-  const handleDeleteUser = (id: string) => {
-    if (id === 'user-1') {
-      alert(currentLang === 'en' ? 'Primary Admin account cannot be deleted for safety.' : 'নিরাপত্তার স্বার্থে প্রধান অ্যাডমিন অ্যাকাউন্ট মুছে ফেলা সম্ভব নয়।');
-      return;
-    }
-    const list = adminUsers.filter(u => u.id !== id);
-    setLocalItem('next_solution_admin_users', JSON.stringify(list));
-    setAdminUsers(list);
-    triggerNotice(currentLang === 'en' ? 'User deleted.' : 'ইউজার অ্যাকাউন্ট মুছে ফেলা হয়েছে।');
   };
 
   // Why Choose Us operations
@@ -1511,77 +1460,14 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
     triggerNotice(currentLang === 'en' ? 'Process CTA saved successfully!' : 'প্রসেস কল-টু-অ্যাকশন সফলভাবে সংরক্ষণ করা হয়েছে!');
   };
 
-  // Reset database callback
-  const handleResetDB = async () => {
-    if (confirm(currentLang === 'en' ? 'Are you sure you want to reset all database entries? This deletes custom submissions.' : 'আপনি কি সত্যিই সম্পূর্ণ ডাটাবেস রিসেট করতে চান?')) {
-      await fetch('/api/seed', { method: 'GET' });
-      await loadAdminData();
-      triggerNotice(currentLang === 'en' ? 'Database restored to high-end seeds!' : 'ডাটাবেস সফলভাবে আদি ফ্যাক্টরি সেটিংসে রিসেট করা হয়েছে!');
-    }
-  };
-
   const triggerNotice = (msg: string) => {
     setSuccessNotice(msg);
     setTimeout(() => setSuccessNotice(''), 4000);
   };
 
-  // Authentication Screen Layout
-  if (!isAuthenticated) {
-    return (
-      <section id="admin-auth-screen" className="flex items-center justify-center min-h-[70vh] bg-white dark:bg-[#141414] px-4 py-16">
-        <div className="w-full max-w-md rounded-2xl border border-gray-100 dark:border-neutral-800 bg-white dark:bg-[#141414] p-6 md:p-8 shadow-xl text-center space-y-6">
-          <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-blue-50 dark:bg-orange-500/10 text-blue-600 dark:text-orange-400">
-            <LockIcon className="h-6 w-6" />
-          </div>
-          <div>
-            <h2 className="text-xl font-bold text-gray-900 dark:text-white">
-              {currentLang === 'en' ? 'Enter Administrative Console' : 'প্রশাসনিক কনসোলে প্রবেশ করুন'}
-            </h2>
-            <p className="text-xs text-gray-400 dark:text-neutral-500 mt-1.5">
-              {currentLang === 'en' ? 'Provide security credentials to unlock active CRUD operations.' : 'অ্যাক্টিভ CRUD ক্রিয়াকলাপগুলি আনলক করতে পিন সরবরাহ করুন।'}
-            </p>
-          </div>
-
-          <form onSubmit={handleLogin} className="space-y-4 text-left">
-            <div className="space-y-2">
-              <label className="block text-[10px] font-bold text-gray-400 dark:text-neutral-500 uppercase tracking-wider">
-                {currentLang === 'en' ? 'Passcode' : 'পাসকোড'}
-              </label>
-              <input
-                id="admin-passcode-input"
-                type="password"
-                required
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder={currentLang === 'en' ? 'Enter admin to access' : 'প্রবেশ করতে admin লিখুন'}
-                className="w-full rounded-lg border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-3 py-2.5 text-sm text-gray-800 dark:text-neutral-100 placeholder-gray-400 focus:outline-none focus:border-blue-500 dark:focus:border-orange-500 transition"
-              />
-            </div>
-
-            {authError && (
-              <span className="block text-xs text-red-500 dark:text-red-400 font-semibold">{authError}</span>
-            )}
-
-            <button
-              id="admin-login-btn"
-              type="submit"
-              className="w-full rounded-lg bg-blue-600 dark:bg-orange-500 hover:bg-blue-700 dark:hover:bg-orange-400 text-white text-xs font-bold py-3 transition shadow-sm"
-            >
-              {currentLang === 'en' ? 'Unlock Control Panel' : 'প্যানেল আনলক করুন'}
-            </button>
-          </form>
-
-          <div className="rounded bg-blue-50/50 border border-blue-100 dark:border-orange-500/20 p-3 text-[10px] text-gray-500 dark:text-neutral-400 max-w-xs mx-auto">
-            💡 {currentLang === 'en' ? 'Security Notice: Input passcode "admin" to explore complete database controls.' : 'নিরাপত্তা বিজ্ঞপ্তি: সম্পূর্ণ ডাটাবেস নিয়ন্ত্রণ করতে পাসকোড "admin" লিখুন।'}
-          </div>
-        </div>
-      </section>
-    );
-  }
-
   // Primary Authenticated Admin Console Layout
   return (
-    <section id="admin-main-dashboard" className="bg-gray-50 dark:bg-[#0c0c0c] py-12 min-h-screen text-gray-900 dark:text-white">
+    <section id="admin-main-dashboard" className="admin-console bg-gray-50 dark:bg-[#0c0c0c] py-12 min-h-screen text-gray-900 dark:text-white">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         
         {/* Header Block */}
@@ -1592,33 +1478,21 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
               <span>{currentLang === 'en' ? 'Next Solution Console' : 'নেক্সট সリューション কনসোল'}</span>
             </h2>
             <p className="text-xs text-gray-400 dark:text-neutral-500 mt-1">
-              {currentLang === 'en' ? 'Live administration dashboard with direct localStorage persistence.' : 'সরাসরি লোকালস্টোরেজ ডাটাবেস সহ লাইভ অ্যাডমিন প্যানেল।'}
+              {currentLang === 'en' ? 'Manage website content, projects, and client inquiries.' : 'ওয়েবসাইটের তথ্য, প্রকল্প এবং গ্রাহকের বার্তা পরিচালনা করুন।'}
             </p>
           </div>
 
           <div className="flex items-center space-x-3">
             {/* Quick Lock option */}
-            <button
-              id="admin-lock-btn"
-              onClick={() => {
-                document.cookie = 'ns_admin=; Max-Age=0; path=/; SameSite=Lax';
-                setIsAuthenticated(false);
-              }}
-              className="rounded-lg bg-gray-100 dark:bg-neutral-800 text-gray-600 dark:text-neutral-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-200 dark:hover:bg-neutral-700 px-3 py-1.5 text-xs font-bold transition flex items-center gap-1.5"
-            >
-              <LockIcon className="h-3.5 w-3.5" />
-              <span>{currentLang === 'en' ? 'Lock Console' : 'লক কনসোল'}</span>
-            </button>
-            
-            {/* Database Reset */}
-            <button
-              id="admin-reset-db-btn"
-              onClick={handleResetDB}
-              className="rounded-lg border border-red-200 dark:border-red-500/30 bg-red-50/50 text-red-600 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-500/20 px-3 py-1.5 text-xs font-bold transition flex items-center gap-1.5"
-            >
-              <RotateCcwIcon className="h-3.5 w-3.5" />
-              <span>{currentLang === 'en' ? 'Reset DB' : 'ডাটাবেস রিসেট'}</span>
-            </button>
+            <form action={signOut}>
+              <button
+                id="admin-lock-btn"
+                type="submit"
+                className="rounded-lg bg-gray-100 dark:bg-neutral-800 text-gray-600 dark:text-neutral-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-200 dark:hover:bg-neutral-700 px-3 py-1.5 text-xs font-bold transition"
+              >
+                {currentLang === 'en' ? 'Sign out' : 'সাইন আউট'}
+              </button>
+            </form>
           </div>
         </div>
 
@@ -1630,54 +1504,27 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
           </div>
         )}
 
-        {/* Console Overview indicators */}
-        <div id="admin-metrics-grid" className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-          <div className="rounded-xl border border-gray-200 dark:border-neutral-700/80 bg-white dark:bg-[#141414] p-4 shadow-sm">
-            <span className="block text-[9px] font-bold text-gray-400 dark:text-neutral-500 uppercase tracking-widest flex items-center gap-1">
-              <MailIcon className="h-3.5 w-3.5 text-blue-500 dark:text-orange-400" />
-              <span>Inbound Leads</span>
-            </span>
-            <span className="text-lg font-bold text-gray-900 dark:text-white block mt-1.5">{messages.length} Total</span>
-            <span className="text-[10px] text-gray-400 dark:text-neutral-500">{messages.filter(m => m.status === 'unread').length} Unread</span>
-          </div>
-          <div className="rounded-xl border border-gray-200 dark:border-neutral-700/80 bg-white dark:bg-[#141414] p-4 shadow-sm">
-            <span className="block text-[9px] font-bold text-gray-400 dark:text-neutral-500 uppercase tracking-widest flex items-center gap-1">
-              <UsersIcon className="h-3.5 w-3.5 text-blue-500 dark:text-orange-400" />
-              <span>Intel Subscriptions</span>
-            </span>
-            <span className="text-lg font-bold text-gray-900 dark:text-white block mt-1.5">{subscribers.length} Members</span>
-            <span className="text-[10px] text-gray-400 dark:text-neutral-500">Live persistence</span>
-          </div>
-          <div className="rounded-xl border border-gray-200 dark:border-neutral-700/80 bg-white dark:bg-[#141414] p-4 shadow-sm">
-            <span className="block text-[9px] font-bold text-gray-400 dark:text-neutral-500 uppercase tracking-widest flex items-center gap-1">
-              <BookOpenIcon className="h-3.5 w-3.5 text-blue-500 dark:text-orange-400" />
-              <span>Published Blogs</span>
-            </span>
-            <span className="text-lg font-bold text-gray-900 dark:text-white block mt-1.5">{blogs.filter(b => b.status === 'published').length} Live</span>
-            <span className="text-[10px] text-gray-400 dark:text-neutral-500">{blogs.filter(b => b.status === 'draft').length} Drafts</span>
-          </div>
-          <div className="rounded-xl border border-gray-200 dark:border-neutral-700/80 bg-white dark:bg-[#141414] p-4 shadow-sm">
-            <span className="block text-[9px] font-bold text-gray-400 dark:text-neutral-500 uppercase tracking-widest flex items-center gap-1">
-              <SettingsIcon className="h-3.5 w-3.5 text-blue-500 dark:text-orange-400" />
-              <span>Core Services</span>
-            </span>
-            <span className="text-lg font-bold text-gray-900 dark:text-white block mt-1.5">{services.length} Capabilities</span>
-            <span className="text-[10px] text-gray-400 dark:text-neutral-500">Dual translations</span>
-          </div>
-        </div>
-
         {/* Dashboard Navigation & Working Desk split */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           
           {/* Sub Tab selection (Sidebar left) */}
-          <div className="lg:col-span-3 rounded-xl border border-gray-200 dark:border-neutral-700/80 bg-white dark:bg-[#141414] p-3 flex flex-row lg:flex-col gap-1 overflow-x-auto lg:overflow-x-visible shadow-sm">
+          <div className="lg:col-span-3 rounded-xl border border-gray-200 dark:border-neutral-700/80 bg-white dark:bg-[#141414] p-3 flex flex-row lg:flex-col gap-1 overflow-x-auto lg:max-h-[calc(100vh-8rem)] lg:overflow-y-auto shadow-sm">
 {[
               { id: 'overview', label: currentLang === 'en' ? 'Dashboard Overview' : 'ড্যাশবোর্ড ওভারভিউ', icon: BarChart3Icon },
               { id: 'messages', label: currentLang === 'en' ? 'Inbound Leads' : 'প্রাপ্ত বার্তা সমূহ', icon: MailIcon },
+              { id: 'subscribers', label: currentLang === 'en' ? 'Subscribers' : 'সাবস্ক্রাইবার', icon: UsersIcon },
+              { id: 'blogs', label: currentLang === 'en' ? 'Blog Posts' : 'ব্লগ পোস্ট', icon: BookOpenIcon },
               { id: 'services', label: currentLang === 'en' ? 'Manage Services' : 'সার্ভিস পরিবর্তন', icon: SettingsIcon },
               { id: 'portfolio', label: currentLang === 'en' ? 'Manage Portfolio' : 'পোর্টফোলিও পরিচালনা', icon: FolderKanbanIcon },
+              { id: 'testimonials', label: currentLang === 'en' ? 'Testimonials & Stories' : 'মতামত ও সাফল্যের গল্প', icon: MessageSquareIcon },
               { id: 'team', label: currentLang === 'en' ? 'Team Members' : 'টিম মেম্বার্স', icon: UserCheckIcon },
+              { id: 'media', label: currentLang === 'en' ? 'Media Library' : 'মিডিয়া লাইব্রেরি', icon: ImageIcon },
               { id: 'settings', label: currentLang === 'en' ? 'Site Config & SEO' : 'সাইটের তথ্য ও এসইও', icon: SettingsIcon },
+              { id: 'users', label: currentLang === 'en' ? 'Admin Access' : 'অ্যাডমিন অ্যাক্সেস', icon: ShieldIcon },
+              { id: 'legal', label: currentLang === 'en' ? 'Legal Content' : 'আইনি তথ্য', icon: FileTextIcon },
+              { id: 'whychooseus', label: currentLang === 'en' ? 'Why Choose Us' : 'কেন আমাদের বেছে নেবেন', icon: SparklesIcon },
+              { id: 'process', label: currentLang === 'en' ? 'Process Workflow' : 'কাজের প্রক্রিয়া', icon: SettingsIcon },
+              { id: 'techstack', label: currentLang === 'en' ? 'Technology Stack' : 'টেক স্ট্যাক', icon: CpuIcon },
               { id: 'products', label: currentLang === 'en' ? 'Manage Products' : 'প্রোডাক্টস পরিচালনা', icon: ShoppingBagIcon }
             ].map((tab) => (
               <button
@@ -1694,8 +1541,6 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                   setIsCreatingTestimonial(false);
                   setEditingTeamMember(null);
                   setIsCreatingTeamMember(false);
-                  setEditingUser(null);
-                  setIsCreatingUser(false);
                   setEditingWhyCard(null);
                   setIsCreatingWhyCard(false);
                   setEditingWhyStat(null);
@@ -1737,7 +1582,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                 </ul>
                 <div className="flex flex-wrap items-center gap-2">
                   <button
-                    onClick={() => { setDataErrors([]); loadAdminData(); }}
+                    onClick={() => { setDataErrors([]); setDataLoading(true); loadAdminData(); }}
                     className="inline-flex items-center gap-1.5 rounded-lg bg-amber-500 hover:bg-amber-600 text-white text-[10.5px] font-bold px-3 py-1.5 transition"
                   >
                     <RefreshCwIcon className="h-3.5 w-3.5" />
@@ -1753,13 +1598,22 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
             {/* T0: DASHBOARD OVERVIEW & ANALYTICS (premium real-time) */}
             {activeSubTab === 'overview' && (
               <div id="panel-overview-desk">
-                <DashboardOverview
-                  messages={messages as any}
-                  subscribers={subscribers as any}
-                  blogs={blogs as any}
-                  services={services as any}
-                  portfolios={portfolios}
-                />
+                <AdminAnalytics />
+                {overviewDataUnavailable ? (
+                  <div role="status" className="mt-4 rounded-xl border border-gray-200 bg-white p-5 text-sm text-gray-500 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-400">
+                    {dataLoading
+                      ? 'Loading dashboard data…'
+                      : 'Dashboard totals are unavailable because one or more required collections could not be loaded. Retry loading the data above.'}
+                  </div>
+                ) : (
+                  <DashboardOverview
+                    messages={messages}
+                    subscribers={subscribers}
+                    blogs={blogs}
+                    services={services}
+                    portfolios={portfolios}
+                  />
+                )}
               </div>
             )}
             
@@ -1772,17 +1626,18 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                       {currentLang === 'en' ? 'Inbound Customer Messages' : 'ইনবাউন্ড কাস্টমার মেসেজ'}
                     </h3>
                     <p className="text-[10px] text-gray-400 dark:text-neutral-500 mt-0.5">
-                      {currentLang === 'en' ? 'Contact form submissions appear here instantly' : 'যোগাযোগ ফর্মের মেসেজ এখানে রিয়েল-টাইমে দেখা যাবে'}
+                          {currentLang === 'en' ? 'Contact form submissions update automatically' : 'যোগাযোগ ফর্মের মেসেজ স্বয়ংক্রিয়ভাবে আপডেট হয়'}
                     </p>
                   </div>
                   <div className="flex flex-wrap items-center gap-2">
                     <span className="inline-flex items-center gap-1.5 rounded-full bg-orange-50 dark:bg-orange-500/10 text-orange-600 dark:text-orange-400 text-[10px] font-bold px-2.5 py-1">
-                      <span className="h-1.5 w-1.5 rounded-full bg-orange-500 animate-pulse" />
-                      LIVE
+                      {currentLang === 'en' ? 'AUTO-REFRESH · 15s' : 'স্বয়ংক্রিয় রিফ্রেশ · ১৫ সেকেন্ড'}
                     </span>
                     <span className="inline-flex items-center gap-1.5 rounded-full bg-gray-100 dark:bg-neutral-800 text-gray-600 dark:text-neutral-300 text-[10px] font-bold px-2.5 py-1">
                       <MailIcon className="h-3 w-3" />
-                      {filteredMessages.length} / {messages.length} {currentLang === 'en' ? 'total' : 'মোট'}
+                      {dataLoading
+                        ? (currentLang === 'en' ? 'Loading messages…' : 'বার্তা লোড হচ্ছে…')
+                        : `${filteredMessages.length} / ${messages.length} ${currentLang === 'en' ? 'total' : 'মোট'}`}
                     </span>
                     <button
                       onClick={() => refreshMessages()}
@@ -1820,7 +1675,10 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                     return (
                       <button
                         key={f.id}
-                        onClick={() => setMessageFilter(f.id)}
+                        onClick={() => {
+                          setMessageFilter(f.id);
+                          setMessagePage(1);
+                        }}
                         className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[10px] font-bold transition ${
                           messageFilter === f.id
                             ? f.cls
@@ -1837,14 +1695,20 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                     <SearchIcon className="absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-gray-400 dark:text-neutral-500" />
                     <input
                       value={messageSearch}
-                      onChange={(e) => setMessageSearch(e.target.value)}
+                      onChange={(e) => {
+                        setMessageSearch(e.target.value);
+                        setMessagePage(1);
+                      }}
                       placeholder={currentLang === 'en' ? 'Search name, email, message…' : 'নাম, ইমেইল, মেসেজ খুঁজুন…'}
                       className="w-56 rounded-lg border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#151515] pl-8 pr-3 py-1.5 text-[11px] text-gray-800 dark:text-neutral-100 outline-none focus:border-orange-500 transition"
                     />
                   </div>
                 </div>
 
-                <div className="space-y-3">{filteredMessages.map((msg) => {
+                <div className="space-y-3">
+                {dataLoading ? (
+                  <p role="status" className="py-8 text-center text-sm text-gray-500 dark:text-neutral-400">Loading contact messages…</p>
+                ) : pagedMessages.map((msg) => {
                 const st: LeadStatusValue = LEAD_STATUS_META[msg.status as LeadStatusValue] ? (msg.status as LeadStatusValue) : 'unread';
                 const meta = LEAD_STATUS_META[st];
                 const StatusIcon = meta.icon;
@@ -1953,7 +1817,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                 );
               })}
 
-            {filteredMessages.length === 0 && (
+            {!dataLoading && !messagesError && filteredMessages.length === 0 && (
               <div className="rounded-xl border border-dashed border-gray-200 dark:border-neutral-700 bg-gray-50/50 dark:bg-neutral-900/30 py-12 text-center text-gray-400 dark:text-neutral-500">
                 <InboxIcon className="h-8 w-8 mx-auto mb-2 opacity-60" />
                 <p className="text-xs font-bold">
@@ -1964,11 +1828,37 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                     ? 'Submissions from the Contact page appear here in real-time. If you just submitted one and it does not show, press "Test Connection" — when the public submit test fails, run supabase/fix_contact_messages_minimal.sql in the Supabase SQL Editor.'
                     : 'যোগাযোগ পেজের ফর্ম থেকে আসা মেসেজ এখানে রিয়েল-টাইমে দেখা যায়। মেসেজ দিয়েও না দেখালে "কানেকশন টেস্ট" টিপুন — ব্যর্থ হলে Supabase SQL Editor-এ supabase/fix_contact_messages_minimal.sql চালান।'}
                 </p>
-                <button onClick={() => { setMessageFilter('all'); setMessageSearch(''); refreshMessages(); }} className="mt-3 inline-flex items-center gap-1.5 rounded-lg bg-blue-600 dark:bg-orange-500 hover:bg-blue-700 dark:hover:bg-orange-400 text-white text-[11px] font-bold px-4 py-2 transition">
+                <button onClick={() => { setMessageFilter('all'); setMessageSearch(''); setMessagePage(1); refreshMessages(); }} className="mt-3 inline-flex items-center gap-1.5 rounded-lg bg-blue-600 dark:bg-orange-500 hover:bg-blue-700 dark:hover:bg-orange-400 text-white text-[11px] font-bold px-4 py-2 transition">
                   <RefreshCwIcon className="h-3.5 w-3.5" />
                   {currentLang === 'en' ? 'Clear filters & refresh' : 'ফিল্টার মুছে রিফ্রেশ করুন'}
                 </button>
               </div>
+            )}
+            {!dataLoading && filteredMessages.length > messagesPerPage && (
+              <nav aria-label="Message pages" className="flex items-center justify-between border-t border-gray-200 pt-3 dark:border-neutral-800">
+                <span className="text-xs text-gray-500 dark:text-neutral-400">
+                  Showing {(messagePage - 1) * messagesPerPage + 1}–{Math.min(messagePage * messagesPerPage, filteredMessages.length)} of {filteredMessages.length}
+                </span>
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    disabled={messagePage === 1}
+                    onClick={() => setMessagePage((page) => page - 1)}
+                    className="rounded-md border border-gray-200 px-3 py-1.5 text-xs disabled:opacity-40 dark:border-neutral-700"
+                  >
+                    Previous
+                  </button>
+                  <span className="text-xs text-gray-600 dark:text-neutral-300">{messagePage} / {messagePageCount}</span>
+                  <button
+                    type="button"
+                    disabled={messagePage === messagePageCount}
+                    onClick={() => setMessagePage((page) => page + 1)}
+                    className="rounded-md border border-gray-200 px-3 py-1.5 text-xs disabled:opacity-40 dark:border-neutral-700"
+                  >
+                    Next
+                  </button>
+                </div>
+              </nav>
             )}
           </div>
         </div>
@@ -2032,9 +1922,8 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                         setEditingBlog(null);
                         setBlogForm({
                           titleEn: '', titleBn: '', excerptEn: '', excerptBn: '', contentEn: '', contentBn: '',
-                          categoryEn: 'Technology', categoryBn: 'প্রযুক্তি', tags: ['Code', 'Engineering'],
-                          image: 'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&q=80&w=800',
-                          author: 'Sanjid Rahman (CTO)', readTime: '5 Min Read', status: 'published'
+                          categoryEn: '', categoryBn: '', tags: [],
+                          image: '', author: '', readTime: '', status: 'draft'
                         });
                       }}
                       className="rounded bg-blue-600 dark:bg-orange-500 hover:bg-blue-700 dark:hover:bg-orange-400 text-white text-xs font-bold px-3 py-1.5 flex items-center gap-1 transition shadow-sm"
@@ -3704,23 +3593,24 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                           <label className="font-bold text-gray-500 dark:text-neutral-400">Total Clients Served</label>
                           <input
                             type="number" required
-                            value={testimonialStatistics?.totalClients ?? 150}
-                            onChange={(e) => setTestimonialStatistics({
-                              ...(testimonialStatistics || { totalClients: 150, satisfactionRate: 99, averageRating: 4.9, successStoryCount: 12 }),
-                              totalClients: parseInt(e.target.value) || 150
-                            })}
+                            min={0}
+                            value={testimonialStatistics?.totalClients ?? ''}
+                            onChange={(e) => setTestimonialStatistics((previous) => ({
+                              ...previous,
+                              totalClients: e.target.value === '' ? undefined : Number(e.target.value),
+                            }))}
                             className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-1.5 text-gray-800 dark:text-neutral-100 focus:outline-none"
                           />
                         </div>
                         <div className="space-y-1">
                           <label className="font-bold text-gray-500 dark:text-neutral-400">Satisfaction Rate (%)</label>
                           <input
-                            type="number" required min={1} max={100}
-                            value={testimonialStatistics?.satisfactionRate ?? 99}
-                            onChange={(e) => setTestimonialStatistics({
-                              ...(testimonialStatistics || { totalClients: 150, satisfactionRate: 99, averageRating: 4.9, successStoryCount: 12 }),
-                              satisfactionRate: parseInt(e.target.value) || 99
-                            })}
+                            type="number" required min={0} max={100}
+                            value={testimonialStatistics?.satisfactionRate ?? ''}
+                            onChange={(e) => setTestimonialStatistics((previous) => ({
+                              ...previous,
+                              satisfactionRate: e.target.value === '' ? undefined : Number(e.target.value),
+                            }))}
                             className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-1.5 text-gray-800 dark:text-neutral-100 focus:outline-none"
                           />
                         </div>
@@ -3728,11 +3618,11 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                           <label className="font-bold text-gray-500 dark:text-neutral-400">Average Rating (Stars 1-5)</label>
                           <input
                             type="number" step="0.1" required min={1} max={5}
-                            value={testimonialStatistics?.averageRating ?? 4.9}
-                            onChange={(e) => setTestimonialStatistics({
-                              ...(testimonialStatistics || { totalClients: 150, satisfactionRate: 99, averageRating: 4.9, successStoryCount: 12 }),
-                              averageRating: parseFloat(e.target.value) || 4.9
-                            })}
+                            value={testimonialStatistics?.averageRating ?? ''}
+                            onChange={(e) => setTestimonialStatistics((previous) => ({
+                              ...previous,
+                              averageRating: e.target.value === '' ? undefined : Number(e.target.value),
+                            }))}
                             className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-1.5 text-gray-800 dark:text-neutral-100 focus:outline-none"
                           />
                         </div>
@@ -3740,11 +3630,12 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                           <label className="font-bold text-gray-500 dark:text-neutral-400">Success Case Studies Count</label>
                           <input
                             type="number" required
-                            value={testimonialStatistics?.successStoryCount ?? 12}
-                            onChange={(e) => setTestimonialStatistics({
-                              ...(testimonialStatistics || { totalClients: 150, satisfactionRate: 99, averageRating: 4.9, successStoryCount: 12 }),
-                              successStoryCount: parseInt(e.target.value) || 12
-                            })}
+                            min={0}
+                            value={testimonialStatistics?.successStoryCount ?? ''}
+                            onChange={(e) => setTestimonialStatistics((previous) => ({
+                              ...previous,
+                              successStoryCount: e.target.value === '' ? undefined : Number(e.target.value),
+                            }))}
                             className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2.5 py-1.5 text-gray-800 dark:text-neutral-100 focus:outline-none"
                           />
                         </div>
@@ -3863,7 +3754,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                       setEditingTeamMember(null);
                       setTeamMemberForm({
                         name: '', roleEn: '', roleBn: '', departmentEn: 'Management', departmentBn: 'ব্যবস্থাপনা',
-                        avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=400',
+                        avatar: '',
                         email: '', linkedin: '', bioEn: '', bioBn: ''
                       });
                     }}
@@ -4105,133 +3996,27 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
 
             {/* T12: USER & ROLE MANAGEMENT */}
             {activeSubTab === 'users' && (
-              <div id="panel-users-desk" className="space-y-6 text-xs">
-                <div className="flex items-center justify-between border-b border-gray-200 dark:border-neutral-700/80 pb-3">
-                  <h3 className="text-sm font-bold text-gray-900 dark:text-white">
-                    {currentLang === 'en' ? 'Administrative Accounts & Role Access' : 'প্রশাসনিক অ্যাকাউন্ট ও ভূমিকা নিয়ন্ত্রণ'}
+              <div id="panel-users-desk" className="space-y-4">
+                <div className="border-b border-gray-200 pb-3 dark:border-neutral-700">
+                  <h3 className="text-base font-semibold text-gray-900 dark:text-white">
+                    {currentLang === 'en' ? 'Admin account access' : 'অ্যাডমিন অ্যাকাউন্ট অ্যাক্সেস'}
                   </h3>
-                  <button
-                    onClick={() => {
-                      setIsCreatingUser(true);
-                      setEditingUser(null);
-                      setUserForm({
-                        username: '', password: '', role: 'Editor', status: 'active', email: ''
-                      });
-                    }}
-                    className="flex items-center space-x-1.5 rounded-lg bg-blue-600 dark:bg-orange-500 hover:bg-blue-700 dark:hover:bg-orange-400 text-white px-3 py-2 font-bold transition"
-                  >
-                    <PlusIcon className="h-4 w-4" />
-                    <span>{currentLang === 'en' ? 'New Admin' : 'নতুন অ্যাকাউন্ট'}</span>
-                  </button>
+                  <p className="mt-1 text-sm text-gray-500 dark:text-neutral-400">
+                    {currentLang === 'en'
+                      ? 'Admin identities and roles are managed by Supabase Auth and the profiles table. This panel does not store or manage passwords.'
+                      : 'অ্যাডমিন পরিচয় ও ভূমিকা Supabase Auth এবং profiles টেবিলে পরিচালিত হয়। এই প্যানেল পাসওয়ার্ড সংরক্ষণ বা পরিচালনা করে না।'}
+                  </p>
                 </div>
-
-                {isCreatingUser ? (
-                  <form onSubmit={handleSaveUser} className="space-y-4 bg-gray-50/50 dark:bg-neutral-800/40 rounded-xl p-4 md:p-5 border border-gray-200 dark:border-neutral-700">
-                    <div className="grid grid-cols-2 gap-4">
-                      <div className="space-y-1.5">
-                        <label className="font-semibold text-gray-500 dark:text-neutral-400">Username Identifier</label>
-                        <input
-                          type="text" required
-                          value={userForm.username || ''}
-                          onChange={(e) => setUserForm({ ...userForm, username: e.target.value })}
-                          className="w-full rounded border border-gray-200 dark:border-neutral-600 bg-white dark:bg-neutral-900 px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:ring-2 focus:ring-orange-500/30 dark:border-neutral-600"
-                        />
-                      </div>
-                      <div className="space-y-1.5">
-                        <label className="font-semibold text-gray-500 dark:text-neutral-400">Corporate Email</label>
-                        <input
-                          type="email" required
-                          value={userForm.email || ''}
-                          onChange={(e) => setUserForm({ ...userForm, email: e.target.value })}
-                          className="w-full rounded border border-gray-200 dark:border-neutral-600 bg-white dark:bg-neutral-900 px-2.5 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none focus:ring-2 focus:ring-orange-500/30 dark:border-neutral-600"
-                        />
-                      </div>
-                    </div>
-
-                    <div className="grid grid-cols-3 gap-3">
-                      <div className="space-y-1.5">
-                        <label className="font-semibold text-gray-500 dark:text-neutral-400">Role Permissions</label>
-                        <select
-                          value={userForm.role || 'Editor'}
-                          onChange={(e) => setUserForm({ ...userForm, role: e.target.value })}
-                          className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none"
-                        >
-                          <option>SuperAdmin</option>
-                          <option>Editor</option>
-                          <option>Moderator</option>
-                        </select>
-                      </div>
-                      <div className="space-y-1.5">
-                        <label className="font-semibold text-gray-500 dark:text-neutral-400">Account Status</label>
-                        <select
-                          value={userForm.status || 'active'}
-                          onChange={(e) => setUserForm({ ...userForm, status: e.target.value })}
-                          className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none"
-                        >
-                          <option>active</option>
-                          <option>locked</option>
-                        </select>
-                      </div>
-                      <div className="space-y-1.5">
-                        <label className="font-semibold text-gray-500 dark:text-neutral-400">Access Key Passcode</label>
-                        <input
-                          type="password" required
-                          value={userForm.password || ''}
-                          onChange={(e) => setUserForm({ ...userForm, password: e.target.value })}
-                          className="w-full rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-2 py-2 text-gray-800 dark:text-neutral-100 focus:outline-none"
-                        />
-                      </div>
-                    </div>
-
-                    <div className="flex justify-end space-x-2 pt-4">
-                      <button
-                        type="button"
-                        onClick={() => setIsCreatingUser(false)}
-                        className="rounded border border-gray-200 dark:border-neutral-700 bg-white dark:bg-[#141414] px-4 py-2 font-bold text-gray-600 dark:text-neutral-300 hover:bg-gray-50 dark:hover:bg-neutral-800/70 dark:bg-[#141414]"
-                      >
-                        Cancel
-                      </button>
-                      <button
-                        type="submit"
-                        className="rounded bg-blue-600 dark:bg-orange-500 hover:bg-blue-700 dark:hover:bg-orange-400 text-white px-5 py-2 font-bold"
-                      >
-                        Save Administrator
-                      </button>
-                    </div>
-                  </form>
-                ) : (
-                  <div className="grid grid-cols-1 gap-4">
-                    {adminUsers.map((u) => (
-                      <div key={u.id} className="rounded-xl border border-gray-100 dark:border-neutral-800 p-4 flex items-center justify-between gap-4 shadow-sm bg-white dark:bg-[#141414] hover:border-blue-500 dark:border-orange-500 transition">
-                        <div className="flex items-center space-x-3">
-                          <div className={`h-8 w-8 rounded-full flex items-center justify-center font-bold font-mono ${
-                            u.role === 'SuperAdmin' ? 'bg-purple-100 text-purple-700 dark:bg-purple-500/15 dark:text-purple-300' : 'bg-blue-100 dark:bg-orange-500/15 text-blue-700 dark:text-orange-400'
-                          }`}>
-                            {u.username.slice(0, 2).toUpperCase()}
-                          </div>
-                          <div>
-                            <span className="font-bold text-sm text-gray-900 dark:text-white block">{u.username} • <span className="text-[10px] bg-gray-100 dark:bg-neutral-800 px-2 py-0.5 rounded text-gray-600 dark:text-neutral-300 font-extrabold uppercase">{u.role}</span></span>
-                            <span className="text-gray-400 dark:text-neutral-500 font-mono text-[10px] block mt-0.5">{u.email} • Status: <span className={`font-bold uppercase ${u.status === 'active' ? 'text-emerald-500 dark:text-emerald-400' : 'text-red-500 dark:text-red-400'}`}>{u.status}</span></span>
-                          </div>
-                        </div>
-                        <div className="flex items-center space-x-2">
-                          <button
-                            onClick={() => handleEditUserTrigger(u)}
-                            className="rounded bg-gray-50 dark:bg-[#141414] hover:bg-gray-100 dark:hover:bg-neutral-800 dark:bg-neutral-800 px-3 py-1.5 font-semibold text-gray-700 dark:text-neutral-200 border border-gray-100 dark:border-neutral-800 transition"
-                          >
-                            Edit
-                          </button>
-                          <button
-                            onClick={() => handleDeleteUser(u.id)}
-                            className="rounded bg-red-50 dark:bg-red-500/10 hover:bg-red-100 dark:hover:bg-red-500/20 px-3 py-1.5 font-semibold text-red-600 dark:text-red-400 border border-red-100 dark:border-red-500/20 transition"
-                          >
-                            Delete
-                          </button>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                )}
+                <div className="rounded-lg border border-gray-200 bg-gray-50 p-4 text-sm text-gray-700 dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-200">
+                  <p className="font-semibold">
+                    {currentLang === 'en' ? 'Manage staff securely in Supabase' : 'Supabase-এ নিরাপদে স্টাফ অ্যাকাউন্ট পরিচালনা করুন'}
+                  </p>
+                  <p className="mt-2">
+                    {currentLang === 'en'
+                      ? 'Create or invite an Auth user, then assign an active super_admin, admin, or editor role to that user’s profiles row. Never use the former browser-only passcode list.'
+                      : 'Auth user তৈরি বা আমন্ত্রণ করে profiles রো-তে সক্রিয় super_admin, admin অথবা editor ভূমিকা দিন। আগের browser-only passcode তালিকা ব্যবহার করবেন না।'}
+                  </p>
+                </div>
               </div>
             )}
 
@@ -4921,6 +4706,195 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                         className="rounded bg-blue-600 dark:bg-orange-500 hover:bg-blue-700 dark:hover:bg-orange-400 text-white px-6 py-2.5 text-xs font-bold transition shadow-sm"
                       >
                         {currentLang === 'en' ? 'Save CTA Changes' : 'কল-টু-অ্যাকশন সেভ করুন'}
+                      </button>
+                    </div>
+                  </form>
+                )}
+              </div>
+            )}
+
+            {activeSubTab === 'process' && (
+              <div id="panel-process-desk" className="space-y-6">
+                <div>
+                  <h3 className="text-base font-bold text-gray-900 dark:text-white">
+                    {currentLang === 'en' ? 'Process workflow' : 'কাজের প্রক্রিয়া'}
+                  </h3>
+                  <p className="mt-1 text-sm text-gray-500 dark:text-neutral-400">
+                    {currentLang === 'en' ? 'Manage public project steps and their call-to-action content.' : 'সাইটে দেখানো কাজের ধাপ ও কল-টু-অ্যাকশন পরিচালনা করুন।'}
+                  </p>
+                </div>
+
+                <div className="flex gap-2 border-b border-gray-200 dark:border-neutral-700">
+                  {(['steps', 'cta'] as const).map((tab) => (
+                    <button
+                      key={tab}
+                      type="button"
+                      onClick={() => setProcessSubTab(tab)}
+                      className={`border-b-2 px-4 py-2 text-sm font-medium ${
+                        processSubTab === tab
+                          ? 'border-blue-600 text-blue-700 dark:border-orange-400 dark:text-orange-300'
+                          : 'border-transparent text-gray-500 hover:text-gray-900 dark:text-neutral-400 dark:hover:text-white'
+                      }`}
+                    >
+                      {tab === 'steps' ? (currentLang === 'en' ? 'Process steps' : 'কাজের ধাপ') : 'CTA'}
+                    </button>
+                  ))}
+                </div>
+
+                {processSubTab === 'steps' && (
+                  <div className="space-y-4">
+                    {!isCreatingProcessStep && !editingProcessStep && (
+                      <div className="flex justify-end">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setProcessStepForm({
+                              stepNumber: String(processSteps.length + 1),
+                              titleEn: '', titleBn: '', descriptionEn: '', descriptionBn: '',
+                              icon: '', estimatedDurationEn: '', estimatedDurationBn: '',
+                              deliverablesEn: [], deliverablesBn: [], toolsUsed: [],
+                              servicesIncludedEn: [], servicesIncludedBn: [],
+                              displayOrder: processSteps.length + 1, visible: true,
+                            });
+                            setIsCreatingProcessStep(true);
+                          }}
+                          className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 dark:bg-orange-500 dark:hover:bg-orange-400"
+                        >
+                          {currentLang === 'en' ? 'Add process step' : 'ধাপ যোগ করুন'}
+                        </button>
+                      </div>
+                    )}
+
+                    {(isCreatingProcessStep || editingProcessStep) && (
+                      <form onSubmit={handleSaveProcessStep} className="space-y-4 rounded-xl border border-gray-200 bg-gray-50 p-4 dark:border-neutral-700 dark:bg-neutral-900">
+                        <div className="grid gap-4 sm:grid-cols-2">
+                          {([
+                            ['stepNumber', 'Step number'],
+                            ['titleEn', 'Title (English)'],
+                            ['titleBn', 'Title (Bengali)'],
+                            ['descriptionEn', 'Description (English)'],
+                            ['descriptionBn', 'Description (Bengali)'],
+                            ['estimatedDurationEn', 'Estimated duration (English)'],
+                            ['estimatedDurationBn', 'Estimated duration (Bengali)'],
+                            ['icon', 'Icon'],
+                          ] as const).map(([key, label]) => (
+                            <label key={key} className="space-y-1 text-sm font-medium text-gray-700 dark:text-neutral-300">
+                              <span>{label}</span>
+                              {key.startsWith('description') ? (
+                                <textarea
+                                  required={key === 'descriptionEn'}
+                                  rows={3}
+                                  value={processStepForm[key] ?? ''}
+                                  onChange={(event) => setProcessStepForm((previous) => ({ ...previous, [key]: event.target.value }))}
+                                  className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 dark:border-neutral-700 dark:bg-neutral-950 dark:text-white"
+                                />
+                              ) : (
+                                <input
+                                  required={key === 'stepNumber' || key === 'titleEn'}
+                                  value={processStepForm[key] ?? ''}
+                                  onChange={(event) => setProcessStepForm((previous) => ({ ...previous, [key]: event.target.value }))}
+                                  className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 dark:border-neutral-700 dark:bg-neutral-950 dark:text-white"
+                                />
+                              )}
+                            </label>
+                          ))}
+                          {([
+                            ['deliverablesEn', 'Deliverables (English)'],
+                            ['deliverablesBn', 'Deliverables (Bengali)'],
+                            ['toolsUsed', 'Tools used'],
+                            ['servicesIncludedEn', 'Included services (English)'],
+                            ['servicesIncludedBn', 'Included services (Bengali)'],
+                          ] as const).map(([key, label]) => (
+                            <label key={key} className="space-y-1 text-sm font-medium text-gray-700 dark:text-neutral-300">
+                              <span>{label}</span>
+                              <textarea
+                                rows={3}
+                                value={Array.isArray(processStepForm[key]) ? processStepForm[key].join('\n') : ''}
+                                onChange={(event) => setProcessStepForm((previous) => ({
+                                  ...previous,
+                                  [key]: event.target.value.split('\n').map((item) => item.trim()).filter(Boolean),
+                                }))}
+                                className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 dark:border-neutral-700 dark:bg-neutral-950 dark:text-white"
+                              />
+                            </label>
+                          ))}
+                        </div>
+                        <label className="flex items-center gap-2 text-sm text-gray-700 dark:text-neutral-300">
+                          <input
+                            type="checkbox"
+                            checked={processStepForm.visible !== false}
+                            onChange={(event) => setProcessStepForm((previous) => ({ ...previous, visible: event.target.checked }))}
+                          />
+                          {currentLang === 'en' ? 'Visible on the website' : 'ওয়েবসাইটে দৃশ্যমান'}
+                        </label>
+                        <div className="flex justify-end gap-2">
+                          <button type="button" onClick={() => { setIsCreatingProcessStep(false); setEditingProcessStep(null); }} className="rounded-lg border border-gray-300 px-4 py-2 text-sm dark:border-neutral-700">
+                            {currentLang === 'en' ? 'Cancel' : 'বাতিল'}
+                          </button>
+                          <button type="submit" className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white dark:bg-orange-500">
+                            {currentLang === 'en' ? 'Save step' : 'ধাপ সংরক্ষণ'}
+                          </button>
+                        </div>
+                      </form>
+                    )}
+
+                    {processSteps.length === 0 ? (
+                      <p className="rounded-lg border border-dashed border-gray-300 p-6 text-center text-sm text-gray-500 dark:border-neutral-700 dark:text-neutral-400">
+                        {currentLang === 'en' ? 'No process steps have been added.' : 'কোনো কাজের ধাপ যোগ করা হয়নি।'}
+                      </p>
+                    ) : (
+                      <div className="space-y-3">
+                        {processSteps.map((step) => (
+                          <article key={step.id} className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-gray-200 p-4 dark:border-neutral-700">
+                            <div>
+                              <p className="font-semibold text-gray-900 dark:text-white">{step.stepNumber}. {step.titleEn}</p>
+                              <p className="mt-1 text-sm text-gray-500 dark:text-neutral-400">{step.descriptionEn}</p>
+                              <p className="mt-1 text-xs text-gray-400">{step.visible ? 'Visible' : 'Hidden'}</p>
+                            </div>
+                            <div className="flex gap-2">
+                              <button type="button" onClick={() => { setEditingProcessStep(step); setProcessStepForm(step); setIsCreatingProcessStep(false); }} className="rounded-lg border border-gray-300 px-3 py-1.5 text-sm dark:border-neutral-700">Edit</button>
+                              <button type="button" onClick={() => handleDeleteProcessStep(step.id)} className="rounded-lg border border-red-200 px-3 py-1.5 text-sm text-red-600 dark:border-red-900 dark:text-red-400">Delete</button>
+                            </div>
+                          </article>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {processSubTab === 'cta' && (
+                  <form onSubmit={handleSaveProcessCTA} className="space-y-4">
+                    <div className="grid gap-4 sm:grid-cols-2">
+                      {([
+                        ['titleEn', 'Section title (English)'],
+                        ['titleBn', 'Section title (Bengali)'],
+                        ['highlightEn', 'Highlighted text (English)'],
+                        ['highlightBn', 'Highlighted text (Bengali)'],
+                        ['subtitleEn', 'Section subtitle (English)'],
+                        ['subtitleBn', 'Section subtitle (Bengali)'],
+                        ['ctaHeadlineEn', 'CTA headline (English)'],
+                        ['ctaHeadlineBn', 'CTA headline (Bengali)'],
+                        ['ctaSubtitleEn', 'CTA subtitle (English)'],
+                        ['ctaSubtitleBn', 'CTA subtitle (Bengali)'],
+                        ['ctaPrimaryTextEn', 'Primary button (English)'],
+                        ['ctaPrimaryTextBn', 'Primary button (Bengali)'],
+                        ['ctaSecondaryTextEn', 'Secondary button (English)'],
+                        ['ctaSecondaryTextBn', 'Secondary button (Bengali)'],
+                      ] as const).map(([key, label]) => (
+                        <label key={key} className="space-y-1 text-sm font-medium text-gray-700 dark:text-neutral-300">
+                          <span>{label}</span>
+                          <input
+                            required={key === 'titleEn' || key === 'ctaHeadlineEn' || key === 'ctaPrimaryTextEn'}
+                            value={processCTAForm[key] ?? ''}
+                            onChange={(event) => setProcessCTAForm((previous) => ({ ...previous, [key]: event.target.value }))}
+                            className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 dark:border-neutral-700 dark:bg-neutral-950 dark:text-white"
+                          />
+                        </label>
+                      ))}
+                    </div>
+                    <div className="flex justify-end">
+                      <button type="submit" className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white dark:bg-orange-500">
+                        {currentLang === 'en' ? 'Save call-to-action' : 'কল-টু-অ্যাকশন সংরক্ষণ'}
                       </button>
                     </div>
                   </form>

@@ -5,7 +5,6 @@ import { useRouter } from 'next/navigation';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import WhyChooseNextSection from '@/components/WhyChooseNextSection';
-import CookieConsent from '@/components/CookieConsent';
 import FloatingContact from '@/components/FloatingContact';
 import ErrorBoundary from '@/components/ErrorBoundary';
 import { useLang } from '@/providers/LangProvider';
@@ -30,17 +29,22 @@ export default function ShellLayout({ children }: ShellLayoutProps) {
 
   // Prefetch all public routes on mount for instant client-side navigation
   useEffect(() => {
+    if (pathname.startsWith('/admin')) return;
     publicNavPaths.forEach((path) => router.prefetch(path));
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [pathname]);
+
+  if (pathname.startsWith('/admin')) {
+    return (
+      <main className="min-h-screen bg-gray-50 dark:bg-neutral-950">
+        <ErrorBoundary>{children}</ErrorBoundary>
+      </main>
+    );
+  }
 
   const setTab = (tab: string) => {
     const path = getPathForTab(tab as NavTabId);
     if (path) router.push(path);
-  };
-
-  const handleOpenPrivacyPolicy = () => {
-    router.push('/legal/privacy-policy');
   };
 
   return (
@@ -64,10 +68,6 @@ export default function ShellLayout({ children }: ShellLayoutProps) {
       <Footer
         currentLang={currentLang}
         setTab={setTab}
-      />
-      <CookieConsent
-        currentLang={currentLang}
-        onOpenPrivacyPolicy={handleOpenPrivacyPolicy}
       />
       <FloatingContact currentLang={currentLang} />
     </>

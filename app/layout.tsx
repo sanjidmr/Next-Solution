@@ -3,6 +3,7 @@ import { DM_Serif_Display, JetBrains_Mono, Plus_Jakarta_Sans, Space_Grotesk } fr
 import { siteConfig } from "@/config/site";
 import { Providers } from "@/providers";
 import ShellLayout from "@/components/ShellLayout";
+import PageViewTracker from "@/components/PageViewTracker";
 import { organizationSchema, localBusinessSchema, websiteSchema } from "@/lib/schema";
 import "./globals.css";
 
@@ -129,6 +130,7 @@ export default function RootLayout({
       </head>
       <body className="min-h-screen bg-white text-gray-900 antialiased dark:bg-[#0A0A0A] dark:text-neutral-50">
         <Providers>
+          <PageViewTracker />
           <ShellLayout>
             {children}
           </ShellLayout>

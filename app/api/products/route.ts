@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getServerClient, getAdminClient, isSupabaseConfigured } from "@/services/database";
 import { productRepository } from "@/repositories/productRepository";
+import { requireStaff } from "@/lib/require-admin";
 
 export async function GET() {
   try {
@@ -23,6 +24,11 @@ export async function GET() {
 
 export async function POST(req: NextRequest) {
   try {
+    const denied = await requireStaff();
+    if (denied) {
+      return NextResponse.json({ error: denied.error }, { status: denied.status });
+    }
+
     if (!isSupabaseConfigured()) {
       return NextResponse.json(
         { error: "Supabase environment variables not configured." },

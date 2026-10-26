@@ -1,16 +1,10 @@
 "use server";
 
 import { redirect } from "next/navigation";
-import { cookies } from "next/headers";
 import { revalidatePath } from "next/cache";
-import { headers } from "next/headers";
 import { createClient } from "@/lib/supabase/server";
-import { getServerEnv } from "@/lib/env";
-import { ADMIN_SESSION_COOKIE } from "@/lib/admin-auth";
-
-// HttpOnly=false so the AdminPanel client can detect the session and skip the
-// redundant in-panel passcode gate. The /admin route itself is still guarded
-// server-side in middleware by checking this cookie.
+import { createAdminClient } from "@/lib/supabase/admin";
+import { getPublicEnv } from "@/lib/env";
 
 export async function signUp(formData: FormData) {
   const supabase = await createClient();
@@ -30,44 +24,46 @@ export async function signUp(formData: FormData) {
   revalidatePath("/", "layout");
 }
 
-export async function signIn(formData: FormData) {
-  const env = getServerEnv();
-  const adminEmail = env.ADMIN_BOOTSTRAP_EMAIL;
-  const adminPassword = env.ADMIN_BOOTSTRAP_PASSWORD;
+export async function signIn(formData: FormData): Promise<{ success: true } | { error: string }> {
+  const email = String(formData.get("email") || "").trim().toLowerCase();
+  const password = String(formData.get("password") || "");
+  if (!email || !password) return { error: "Email and password are required." };
 
-  if (!adminEmail || !adminPassword) {
-    throw new Error("Admin credentials are not configured on this server.");
+  const supabase = await createClient();
+  const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+  if (error || !data.user) return { error: "Invalid email or password." };
+
+  const admin = createAdminClient();
+  const { data: profile, error: profileError } = await admin
+    .from("profiles")
+    .select("role, is_active, deleted_at")
+    .eq("id", data.user.id)
+    .maybeSingle();
+
+  const isStaff =
+    !profileError &&
+    profile &&
+    ["super_admin", "admin", "editor"].includes(profile.role) &&
+    profile.is_active !== false &&
+    !profile.deleted_at;
+
+  if (!isStaff) {
+    await supabase.auth.signOut();
+    return { error: "This account is not authorized to access the admin panel." };
   }
-
-  const inputEmail = ((formData.get("email") as string) || "").trim().toLowerCase();
-  const inputPassword = (formData.get("password") as string) || "";
-
-  if (inputEmail !== adminEmail.trim().toLowerCase() || inputPassword !== adminPassword) {
-    throw new Error("Invalid login credentials.");
-  }
-
-  const cookieStore = await cookies();
-  cookieStore.set(ADMIN_SESSION_COOKIE, "1", {
-    path: "/",
-    sameSite: "lax",
-    httpOnly: false,
-    secure: process.env.NODE_ENV === "production",
-    maxAge: 60 * 60 * 24 * 7,
-  });
 
   revalidatePath("/", "layout");
-  redirect("/admin");
+  return { success: true };
 }
 
 export async function signInWithGoogle() {
   const supabase = await createClient();
-  const origin =
-    (await headers()).get("origin") || process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+  const { NEXT_PUBLIC_SITE_URL } = getPublicEnv();
 
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: "google",
     options: {
-      redirectTo: `${origin}/auth/callback`,
+      redirectTo: new URL("/auth/callback", NEXT_PUBLIC_SITE_URL).toString(),
     },
   });
 
@@ -76,20 +72,20 @@ export async function signInWithGoogle() {
 }
 
 export async function signOut() {
-  const cookieStore = await cookies();
-  cookieStore.delete(ADMIN_SESSION_COOKIE);
+  const supabase = await createClient();
+  const { error } = await supabase.auth.signOut();
+  if (error) throw new Error(error.message);
   revalidatePath("/", "layout");
-  redirect("/");
+  redirect("/admin/login");
 }
 
 export async function resetPassword(formData: FormData) {
   const supabase = await createClient();
   const email = formData.get("email") as string;
-  const origin =
-    (await headers()).get("origin") || process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+  const { NEXT_PUBLIC_SITE_URL } = getPublicEnv();
 
   const { error } = await supabase.auth.resetPasswordForEmail(email, {
-    redirectTo: `${origin}/auth/reset-password`,
+    redirectTo: new URL("/auth/reset-password", NEXT_PUBLIC_SITE_URL).toString(),
   });
 
   if (error) throw new Error(error.message);

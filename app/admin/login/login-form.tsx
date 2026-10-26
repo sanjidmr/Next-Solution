@@ -15,9 +15,15 @@ export default function LoginForm() {
     setError(null);
 
     try {
-      await signIn(new FormData(e.currentTarget));
-    } catch (err: any) {
-      setError(err.message || "Authentication failed");
+      const result = await signIn(new FormData(e.currentTarget));
+      if ("error" in result) {
+        setError(result.error);
+        setIsLoading(false);
+        return;
+      }
+      window.location.replace("/admin");
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : "Authentication failed");
       setIsLoading(false);
     }
   };
@@ -90,7 +96,7 @@ export default function LoginForm() {
         </form>
 
         <p className="text-center text-xs text-gray-400 dark:text-neutral-500">
-          Use the admin credentials stored on the server (ADMIN_BOOTSTRAP_EMAIL / ADMIN_BOOTSTRAP_PASSWORD).
+          Sign in with an active staff account managed in Supabase.
         </p>
       </div>
     </div>

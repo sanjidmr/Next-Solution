@@ -4,13 +4,13 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { 
   Mail, Phone, MapPin, Clock, Send, CheckCircle, Smartphone, 
   ExternalLink, AlertCircle, MessageSquare, HelpCircle, Shield
 } from 'lucide-react';
 import { translations } from '@/data/translations';
-import { addMessage, getServices } from '@/lib/db';
+import { getServices } from '@/lib/db';
 import { useContentSync } from '@/hooks/useContentSync';
 import Reveal from '@/components/motion/Reveal';
 
@@ -46,13 +46,13 @@ export default function ContactSection({ currentLang, isFullPage = false }: Cont
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
   const [service, setService] = useState('');
-  const [budget, setBudget] = useState('');
   const [message, setMessage] = useState('');
   
   // UX states
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
+  const submissionId = useRef<string | null>(null);
 
   // Prepopulate if CTA sent parameters in SessionStorage
   useEffect(() => {
@@ -71,28 +71,35 @@ export default function ContactSection({ currentLang, isFullPage = false }: Cont
 
     const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setErrorMsg('');
+      if (isSubmitting) return;
+      setErrorMsg('');
 
-    if (!name.trim() || !email.trim() || !phone.trim() || !message.trim()) {
+      if (!name.trim() || !email.trim() || !phone.trim() || !message.trim()) {
       setErrorMsg(currentLang === 'en' ? 'All fields with * are required.' : 'চিহ্নিত ঘরগুলো পূরণ করা আবশ্যক।');
       return;
     }
 
-    if (!email.includes('@')) {
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
       setErrorMsg(currentLang === 'en' ? 'Please enter a valid email address.' : 'অনুগ্রহ করে সঠিক ইমেইল ঠিকানা দিন।');
       return;
     }
 
+    if (message.trim().length < 10 || message.trim().length > 5000) {
+      setErrorMsg(currentLang === 'en' ? 'Please enter a message between 10 and 5,000 characters.' : 'অনুগ্রহ করে ১০ থেকে ৫,০০০ অক্ষরের বার্তা লিখুন।');
+      return;
+    }
+
     setIsSubmitting(true);
+    if (!submissionId.current) submissionId.current = crypto.randomUUID();
 
     const payload = {
+      submissionId: submissionId.current,
       name: name.trim(),
       email: email.trim(),
       phone: phone.trim(),
       subject: `Service Request: ${service || 'General Inquiry'}`,
       message: message.trim(),
-      service: service || 'Not Specified',
-      budget: budget || 'Not Specified'
+      service: service || 'Not Specified'
     };
 
     try {
@@ -107,13 +114,13 @@ export default function ContactSection({ currentLang, isFullPage = false }: Cont
         // will appear in the Admin Panel's Messages tab.
         setIsSubmitting(false);
         setIsSuccess(true);
+        submissionId.current = null;
 
         // Clear fields
         setName('');
         setEmail('');
         setPhone('');
         setService('');
-        setBudget('');
         setMessage('');
         return;
       }
@@ -136,15 +143,13 @@ export default function ContactSection({ currentLang, isFullPage = false }: Cont
           : `বার্তাটি সার্ভারে সংরক্ষণ করা যায়নি${serverError ? ` — সার্ভারের উত্তর: ${serverError}` : '। অনুগ্রহ করে পরে আবার চেষ্টা করুন।'}`
       );
     } catch {
-      // No response at all (offline / server unreachable). Keep the local
-      // fallback, but tell the user honestly that the message only saved on
-      // this device and will NOT reach the Admin Panel.
-      addMessage(payload);
+      // Keep the form contents and submission ID so a retry cannot duplicate a
+      // message that was saved just before the connection dropped.
       setIsSubmitting(false);
       setErrorMsg(
         currentLang === 'en'
-          ? 'Could not reach the server. Your message was saved only on this device and will NOT appear in the Admin Panel — please try again when the connection is back.'
-          : 'সার্ভারে সংযোগ করা যায়নি। আপনার বার্তাটি শুধু এই ডিভাইসে সংরক্ষণ হয়েছে এবং অ্যাডমিন প্যানেলে যাবে না — সংযোগ ঠিক হলে আবার পাঠান।'
+          ? 'Could not reach the server. Your message has not been confirmed as saved — please try again when the connection is available.'
+          : 'সার্ভারে সংযোগ করা যায়নি। আপনার বার্তাটি সংরক্ষণ নিশ্চিত হয়নি — সংযোগ ফিরে এলে আবার চেষ্টা করুন।'
       );
     }
   };
@@ -272,7 +277,7 @@ export default function ContactSection({ currentLang, isFullPage = false }: Cont
                 </button>
               </div>
             ) : (
-              <form onSubmit={handleSubmit} className="space-y-6">
+              <form onSubmit={handleSubmit} className="contact-form space-y-6">
                 
                 {/* Form Inputs Grid */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
@@ -288,7 +293,7 @@ export default function ContactSection({ currentLang, isFullPage = false }: Cont
                       value={name}
                       onChange={(e) => setName(e.target.value)}
                       placeholder={currentLang === 'en' ? 'e.g. John Doe' : 'à¦¯à§‡à¦®à¦¨: à¦œà¦¨ à¦¡à§‹'}
-                      className="w-full border-0 border-b border-transparent bg-transparent px-1 py-3 text-sm text-gray-800 dark:text-neutral-100 placeholder-gray-400/60 outline-none focus:outline-none focus:ring-0 focus:border-transparent transition"
+                      className="w-full border-0 border-b border-gray-300 dark:border-white/70 bg-transparent px-1 py-3 text-sm text-gray-800 dark:text-neutral-50 placeholder-gray-400/60 dark:placeholder:text-neutral-200 outline-none focus:outline-none focus:ring-0 focus:border-orange-500 dark:focus:border-white transition"
                     />
                   </div>
 
@@ -304,12 +309,12 @@ export default function ContactSection({ currentLang, isFullPage = false }: Cont
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       placeholder={currentLang === 'en' ? 'e.g. john@example.com' : 'à¦¯à§‡à¦®à¦¨: john@example.com'}
-                      className="w-full border-0 border-b border-transparent bg-transparent px-1 py-3 text-sm text-gray-800 dark:text-neutral-100 placeholder-gray-400/60 outline-none focus:outline-none focus:ring-0 focus:border-transparent transition"
+                      className="w-full border-0 border-b border-gray-300 dark:border-white/70 bg-transparent px-1 py-3 text-sm text-gray-800 dark:text-neutral-50 placeholder-gray-400/60 dark:placeholder:text-neutral-200 outline-none focus:outline-none focus:ring-0 focus:border-orange-500 dark:focus:border-white transition"
                     />
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 gap-6">
                   {/* Phone field */}
                   <div className="space-y-1.5">
                     <label htmlFor="contact-phone" className="block text-xs font-bold text-gray-700 dark:text-neutral-200 uppercase tracking-wider">
@@ -322,28 +327,10 @@ export default function ContactSection({ currentLang, isFullPage = false }: Cont
                       value={phone}
                       onChange={(e) => setPhone(e.target.value)}
                       placeholder={currentLang === 'en' ? 'e.g. +880 1700-000000' : 'à¦¯à§‡à¦®à¦¨: +à§®à§®à§¦ à§§à§­à§¦à§¦-à§¦à§¦à§¦à§¦à§¦à§¦'}
-                      className="w-full border-0 border-b border-transparent bg-transparent px-1 py-3 text-sm text-gray-800 dark:text-neutral-100 placeholder-gray-400/60 outline-none focus:outline-none focus:ring-0 focus:border-transparent transition"
+                      className="w-full border-0 border-b border-gray-300 dark:border-white/70 bg-transparent px-1 py-3 text-sm text-gray-800 dark:text-neutral-50 placeholder-gray-400/60 dark:placeholder:text-neutral-200 outline-none focus:outline-none focus:ring-0 focus:border-orange-500 dark:focus:border-white transition"
                     />
                   </div>
 
-                  {/* Budget Selector */}
-                  <div className="space-y-1.5">
-                    <label htmlFor="contact-budget" className="block text-xs font-bold text-gray-700 dark:text-neutral-200 uppercase tracking-wider">
-                      {t.contactBudgetLabel}
-                    </label>
-                    <select
-                      id="contact-budget"
-                      value={budget}
-                      onChange={(e) => setBudget(e.target.value)}
-                      className="w-full appearance-none border-0 border-b border-transparent bg-transparent px-1 py-3 text-sm text-gray-800 dark:text-neutral-100 focus:outline-none focus:ring-0 focus:border-transparent transition"
-                    >
-                      <option value="">{currentLang === 'en' ? 'Select estimated budget' : 'à¦†à¦¨à§à¦®à¦¾à¦¨à¦¿à¦• à¦¬à¦¾à¦œà§‡à¦Ÿ à¦¨à¦¿à¦°à§à¦¬à¦¾à¦šà¦¨ à¦•à¦°à§à¦¨'}</option>
-                      <option value="Under $5,000">Under $5,000</option>
-                      <option value="$5,000 - $10,000">$5,000 - $10,000</option>
-                      <option value="$10,000 - $25,000">$10,000 - $25,000</option>
-                      <option value="Over $25,000">Over $25,000</option>
-                    </select>
-                  </div>
                 </div>
 
                 {/* Service Dropdown */}
@@ -355,7 +342,7 @@ export default function ContactSection({ currentLang, isFullPage = false }: Cont
                       id="contact-service"
                       value={service}
                       onChange={(e) => setService(e.target.value)}
-                      className="w-full appearance-none border-0 border-b border-transparent bg-transparent px-1 py-3 text-sm text-gray-800 dark:text-neutral-100 focus:outline-none focus:ring-0 focus:border-transparent transition"
+                      className="w-full appearance-none border-0 border-b border-gray-300 dark:border-white/70 bg-transparent px-1 py-3 text-sm text-gray-800 dark:text-neutral-50 focus:outline-none focus:ring-0 focus:border-orange-500 dark:focus:border-white transition"
                     >
                       <option value="">{currentLang === 'en' ? 'Select a capability' : 'সার্ভিস নির্বাচন করুন'}</option>
                       {(services || defaultServices).map((srv) => (
@@ -379,7 +366,7 @@ export default function ContactSection({ currentLang, isFullPage = false }: Cont
                     value={message}
                     onChange={(e) => setMessage(e.target.value)}
                     placeholder={currentLang === 'en' ? 'Describe your project goals, milestones, and design requirements...' : 'à¦†à¦ªà¦¨à¦¾à¦° à¦ªà§à¦°à¦œà§‡à¦•à§à¦Ÿà§‡à¦° à¦²à¦•à§à¦·à§à¦¯ à¦à¦¬à¦‚ à¦ªà§à¦°à§Ÿà§‹à¦œà¦¨à§€à§Ÿà¦¤à¦¾ à¦‰à¦²à§à¦²à§‡à¦– à¦•à¦°à§à¦¨...'}
-                    className="w-full border-0 border-b border-transparent bg-transparent px-1 py-3 text-sm text-gray-800 dark:text-neutral-100 placeholder-gray-400/60 outline-none focus:outline-none focus:ring-0 focus:border-transparent transition resize-none"
+                    className="w-full border-0 border-b border-gray-300 dark:border-white/70 bg-transparent px-1 py-3 text-sm text-gray-800 dark:text-neutral-50 placeholder-gray-400/60 dark:placeholder:text-neutral-200 outline-none focus:outline-none focus:ring-0 focus:border-orange-500 dark:focus:border-white transition resize-none"
                   />
                 </div>
 

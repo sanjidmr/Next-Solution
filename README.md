@@ -50,7 +50,7 @@ ADMIN_BOOTSTRAP_EMAIL=admin@nextsolution.co
 ADMIN_BOOTSTRAP_PASSWORD=your-strong-password
 ```
 
-The app works **without Supabase** in development mode using localStorage fallback. All data persists in the browser.
+Public content has a local development fallback, but admin authentication, CMS writes, contact persistence, project uploads, and analytics require the configured Supabase project.
 
 ## Supabase Setup
 
@@ -66,6 +66,15 @@ The migration files are in `supabase/migrations/`. Run them in order:
 2. `20260715000002_core_profiles_and_audit.sql` — Profiles and audit tables
 3. `20260715000003_cms_content_tables.sql` — All CMS content tables
 4. `20260715000004_rls_and_policies.sql` — Row Level Security policies
+5. `20260715000005_products_and_images.sql` — Products and image relationships
+6. `20260715000007_add_portfolio_enhanced_fields.sql` — Portfolio fields
+7. `20260729000001_portfolio_storage_bucket.sql` — Portfolio image storage
+8. `20260731000001_pricing_system.sql` — Pricing tables
+9. `20260901000001_portfolio_project_data.sql` — Portfolio project details
+10. `20260901000002_lead_status_workflow.sql` — Contact workflow statuses
+11. `20260901000003_realtime_tables.sql` — Realtime publication
+12. `20260911090000_next_solution_admin.sql` — Admin projects and storage
+13. `20261026000001_website_analytics.sql` — First-party page analytics and storage write policies
 
 You can run these via the Supabase SQL editor or the CLI:
 
@@ -78,25 +87,25 @@ supabase db push
 1. Go to **Authentication → Providers** in Supabase dashboard
 2. Enable **Email** auth (default)
 3. (Optional) Enable **Google** auth and configure OAuth credentials
-4. Set Site URL: `http://localhost:3000`
-5. Add redirect URLs: `http://localhost:3000/auth/callback`
+4. Set Site URL to the local URL during development and to the canonical HTTPS domain in production
+5. Add redirect URLs for local and deployed `/auth/callback` paths (plus `/auth/reset-password` for password recovery)
 
 ### 4. Bootstrap Admin User
 
-After migrations are applied, make a GET request to:
+After migrations are applied, make a POST request to:
 
 ```
-GET /api/bootstrap
+POST /api/bootstrap
 ```
 
-This creates the first super admin user using the `ADMIN_BOOTSTRAP_EMAIL` and `ADMIN_BOOTSTRAP_PASSWORD` env vars.
+For initial provisioning only, configure `ADMIN_BOOTSTRAP_EMAIL` and `ADMIN_BOOTSTRAP_PASSWORD`, then call `POST /api/bootstrap` with `Authorization: Bearer <ADMIN_BOOTSTRAP_PASSWORD>`. The endpoint is one-time: it refuses to create an account if an administrator already exists. Do not place the password in a URL or commit it.
 
 ### 5. Storage Buckets
 
 Create the following storage buckets in the Supabase dashboard:
 
 - `team` — Team member photos
-- `portfolio` — Portfolio project images
+- `portfolio-images` — Portfolio project images (created by migration)
 - `blogs` — Blog post images
 - `services` — Service icons/images
 - `reviews` — Testimonial avatars
@@ -168,7 +177,18 @@ npm install -g vercel
 vercel
 ```
 
-Set all environment variables in the Vercel dashboard. The `vercel.json` is pre-configured with security headers.
+In Vercel → Project Settings → Environment Variables, configure:
+
+- `NEXT_PUBLIC_SUPABASE_URL`
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+- `SUPABASE_SERVICE_ROLE_KEY` (server-only; never prefix it with `NEXT_PUBLIC_`)
+- `NEXT_PUBLIC_SITE_URL` (canonical HTTPS production URL)
+
+`ADMIN_BOOTSTRAP_EMAIL` and `ADMIN_BOOTSTRAP_PASSWORD` are optional and should only be configured temporarily when provisioning the first admin account; remove them after provisioning. The `vercel.json` is pre-configured with security headers.
+
+In Supabase **Authentication → URL Configuration**, set the Site URL to the same canonical URL and add the production `https://<your-domain>/auth/callback` and `https://<your-domain>/auth/reset-password` paths to the redirect allowlist. Add the corresponding exact preview callback URLs if preview deployments need authentication. Admin sign-in uses Supabase Auth and requires an active, non-deleted `super_admin`, `admin`, or `editor` row in `profiles`; the former client-side passcode is not an authentication method.
+
+Apply only outstanding migrations; for a linked Supabase project, use `supabase db push`, or apply the pending migration in the SQL editor. The analytics migration is `supabase/migrations/20261026000001_website_analytics.sql`. Website analytics begin collecting page views after it is applied; historical traffic before that point is unavailable.
 
 ## License
 

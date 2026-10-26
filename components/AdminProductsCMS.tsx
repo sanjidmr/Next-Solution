@@ -26,6 +26,7 @@ interface AdminProductsCMSProps {
 export default function AdminProductsCMS({ currentLang }: AdminProductsCMSProps) {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState("");
   const [saving, setSaving] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
@@ -63,52 +64,17 @@ export default function AdminProductsCMS({ currentLang }: AdminProductsCMSProps)
 
   const fetchProducts = React.useCallback(async () => {
     setLoading(true);
+    setLoadError("");
     try {
       const res = await fetch("/api/products");
-      if (res.ok) {
-        const json = await res.json();
-        setProducts(json.data || []);
-      } else {
-        setProducts([
-          {
-            id: "prod-1",
-            titleEn: "Next Solution Enterprise Kit",
-            slug: "next-solution-enterprise-kit",
-            descriptionEn: "Full-stack Next.js boilerplate with Supabase and Tailwind CSS.",
-            price: 299,
-            cost: 120,
-            category: "Templates",
-            subcategory: "Next.js SaaS",
-            stock: 45,
-            sold: 128,
-            image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=800",
-            images: [
-              "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=800",
-              "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=800"
-            ],
-            status: "published"
-          },
-          {
-            id: "prod-2",
-            titleEn: "AI Chatbot System Portal",
-            slug: "ai-chatbot-system-portal",
-            descriptionEn: "Intelligent customer service platform powered by LLM integration.",
-            price: 499,
-            cost: 210,
-            category: "AI Solutions",
-            subcategory: "Conversational AI",
-            stock: 30,
-            sold: 94,
-            image: "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&q=80&w=800",
-            images: [
-              "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&q=80&w=800"
-            ],
-            status: "published"
-          }
-        ]);
-      }
+      const json = await res.json();
+      if (!res.ok) throw new Error(json.error || "Failed to load products.");
+      setProducts(json.data || []);
     } catch (err: any) {
-      showNotice("error", err.message || "Failed to load products.");
+      const message = err.message || "Failed to load products.";
+      setProducts([]);
+      setLoadError(message);
+      showNotice("error", message);
     } finally {
       setLoading(false);
     }
@@ -404,6 +370,17 @@ export default function AdminProductsCMS({ currentLang }: AdminProductsCMSProps)
           <span className="ml-3 text-xs text-gray-500 dark:text-neutral-400 dark:text-neutral-500 font-bold">
             {currentLang === "en" ? "Loading products..." : "প্রোডাক্ট লোড হচ্ছে..."}
           </span>
+        </div>
+      ) : loadError ? (
+        <div role="alert" className="rounded-xl border border-red-200 bg-red-50 p-5 text-sm text-red-700 dark:border-red-900 dark:bg-red-950/30 dark:text-red-300">
+          <p>{loadError}</p>
+          <button
+            type="button"
+            onClick={fetchProducts}
+            className="mt-3 rounded-lg border border-red-300 px-3 py-1.5 font-semibold hover:bg-red-100 dark:border-red-800 dark:hover:bg-red-950"
+          >
+            {currentLang === "en" ? "Retry" : "আবার চেষ্টা করুন"}
+          </button>
         </div>
       ) : filteredProducts.length === 0 ? (
         <div className="text-center p-12 bg-white dark:bg-[#141414] dark:bg-[#141414] rounded-2xl border border-gray-100 dark:border-neutral-800">

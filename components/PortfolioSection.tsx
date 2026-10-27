@@ -20,7 +20,7 @@ interface PortfolioSectionProps {
   portfolioData?: PortfolioItem[];
 }
 
-const HERO_IMAGES = ['/travel.png', '/laziz.png', '/stranger.png'];
+const HERO_IMAGES: string[] = [];
 
 const CATEGORIES = [
   { id: 'all', labelEn: 'All Works', labelBn: 'সব কাজ' },
@@ -217,45 +217,15 @@ export default function PortfolioSection({ currentLang, setTab, isFullPage = fal
                 <div className="w-[180px] h-[180px] lg:w-[320px] lg:h-[320px] rounded-full border border-orange-200/20 dark:border-orange-500/6 animate-[spin_45s_linear_infinite_reverse]" />
               </div>
 
-              {/* 3 Floating images — bigger, side-by-side tilted layout */}
-              <div className="relative w-full max-w-[560px] h-[300px] sm:h-[480px] lg:h-[540px]">
-
-                {/* Image 1 — Large, top-left, tilted right */}
-                <div className="absolute top-[2%] left-[2%] w-[55%] h-[55%] rounded-2xl lg:rounded-3xl overflow-hidden border border-gray-200/60 dark:border-white/10 shadow-2xl shadow-gray-400/20 dark:shadow-black/40 rotate-[3deg] hover:rotate-[1deg] transition-transform duration-500 z-10 group/img">
-                  <img src={HERO_IMAGES[0]} alt="Travel project" className="w-full h-full object-cover" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/20 dark:from-black/40 to-transparent" />
-                  <div className="absolute bottom-3 left-3 right-3 opacity-0 group-hover/img:opacity-100 transition-opacity duration-300">
-                    <span className="text-[9px] font-bold text-white bg-black/30 backdrop-blur-sm rounded-full px-2.5 py-1">Web Development</span>
-                  </div>
+              {/* Floating visuals removed (no demo images) */}
+              <div className="relative w-full max-w-[560px] h-[300px] sm:h-[480px] lg:h-[540px] flex items-center justify-center">
+                <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                  <div className="w-[240px] h-[240px] lg:w-[420px] lg:h-[420px] rounded-full border border-dashed border-orange-300/30 dark:border-orange-500/10 animate-[spin_60s_linear_infinite]" />
                 </div>
-
-                {/* Image 2 — Medium, top-right, tilted left */}
-                <div className="absolute top-[0%] right-[0%] w-[48%] h-[48%] rounded-2xl lg:rounded-3xl overflow-hidden border border-orange-200/40 dark:border-orange-500/20 shadow-xl shadow-gray-300/20 dark:shadow-black/50 rotate-[-4deg] hover:rotate-[-2deg] transition-transform duration-500 z-20 group/img">
-                  <img src={HERO_IMAGES[1]} alt="Restaurant project" className="w-full h-full object-cover" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/20 dark:from-black/30 to-transparent" />
-                  <div className="absolute bottom-3 left-3 right-3 opacity-0 group-hover/img:opacity-100 transition-opacity duration-300">
-                    <span className="text-[9px] font-bold text-white bg-orange-500/40 backdrop-blur-sm rounded-full px-2.5 py-1">Web App</span>
-                  </div>
+                <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                  <div className="w-[180px] h-[180px] lg:w-[320px] lg:h-[320px] rounded-full border border-orange-200/20 dark:border-orange-500/6 animate-[spin_45s_linear_infinite_reverse]" />
                 </div>
-
-                {/* Image 3 — Large, bottom-center-right, tilted right */}
-                <div className="absolute bottom-[0%] right-[8%] w-[58%] h-[52%] rounded-2xl lg:rounded-3xl overflow-hidden border border-gray-200/60 dark:border-white/10 shadow-2xl shadow-gray-400/20 dark:shadow-black/40 rotate-[2deg] hover:rotate-[0deg] transition-transform duration-500 z-10 group/img">
-                  <img src={HERO_IMAGES[2]} alt="Stranger Vibe project" className="w-full h-full object-cover" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/20 dark:from-black/40 to-transparent" />
-                  <div className="absolute bottom-3 left-3 right-3 opacity-0 group-hover/img:opacity-100 transition-opacity duration-300">
-                    <span className="text-[9px] font-bold text-white bg-black/30 backdrop-blur-sm rounded-full px-2.5 py-1">UI/UX Design</span>
-                  </div>
-                </div>
-
-                {/* Floating info card */}
-                <div className="absolute bottom-[28%] left-[0%] z-30 bg-white/80 dark:bg-white/[0.06] backdrop-blur-xl border border-gray-200/60 dark:border-white/10 rounded-2xl p-4 shadow-xl shadow-gray-200/40 dark:shadow-2xl max-w-[190px] hidden sm:block">
-                  <p className="text-[10px] font-bold text-orange-600 dark:text-orange-400 uppercase tracking-wider mb-1">Stranger Vibe</p>
-                  <p className="text-[9px] text-gray-500 dark:text-gray-400 mb-2">Creative Brand Experience</p>
-                  <p className="text-[8px] text-gray-400 dark:text-gray-500 leading-relaxed mb-2">Bold branding with immersive digital presence.</p>
-                  <span className="text-[9px] font-bold text-orange-500 dark:text-orange-400 inline-flex items-center gap-1 cursor-pointer hover:text-orange-600 dark:hover:text-orange-300 transition">
-                    {isEn ? 'View Project' : 'দেখুন'} <ArrowRight className="h-2.5 w-2.5" />
-                  </span>
-                </div>
+              </div>
 
                 {/* Glow dots */}
                 <span className="absolute top-[8%] left-[48%] w-2 h-2 rounded-full bg-orange-400/50 dark:bg-orange-500/60 animate-pulse z-30" />
@@ -319,8 +289,8 @@ export default function PortfolioSection({ currentLang, setTab, isFullPage = fal
               <div className="inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-gray-100 dark:bg-white/5 border border-gray-200 dark:border-white/10 mb-2">
                 <Code2 className="h-7 w-7 text-gray-300 dark:text-gray-600" />
               </div>
-              <p className="text-gray-500 dark:text-gray-400 text-sm font-medium">{isEn ? 'No projects found in this category.' : 'এই ক্যাটাগরিতে কোনো প্রজেক্ট নেই।'}</p>
-              <p className="text-gray-400 dark:text-gray-600 text-xs">{isEn ? 'Try selecting a different filter or check back soon for new projects.' : 'অন্য ফিল্টার বেছে নিন অথবা শীঘ্রই নতুন প্রজেক্ট দেখুন।'}</p>
+              <p className="text-gray-500 dark:text-gray-400 text-sm font-medium">{isEn ? 'No projects available.' : 'কোনো প্রজেক্ট পাওয়া যায়নি।'}</p>
+              <p className="text-gray-400 dark:text-gray-600 text-xs">{isEn ? 'Projects will appear here once added from the admin panel.' : 'অ্যাডমিন প্যানেল থেকে প্রজেক্ট যোগ করা হলে এখানে দেখানো হবে।'}</p>
             </div>
           ) : (
             <div ref={gridRef} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6 lg:gap-8">

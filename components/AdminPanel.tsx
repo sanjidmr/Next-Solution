@@ -113,7 +113,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
   const [openStatusMenu, setOpenStatusMenu] = useState<string | null>(null);
 
   // Tab State
-  const [activeSubTab, setActiveSubTab] = useState<'overview' | 'messages' | 'subscribers' | 'blogs' | 'services' | 'portfolio' | 'testimonials' | 'team' | 'media' | 'settings' | 'users' | 'legal' | 'whychooseus' | 'process' | 'techstack' | 'products'>('overview');
+  const [activeSubTab, setActiveSubTab] = useState<'overview' | 'messages' | 'services' | 'portfolio' | 'testimonials' | 'team' | 'settings' | 'users'>('overview');
 
   // PROCESS WORKFLOW CMS STATE
   const [processSteps, setProcessStepsState] = useState<ProcessStep[]>([]);
@@ -1512,20 +1512,12 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
 {[
               { id: 'overview', label: currentLang === 'en' ? 'Dashboard Overview' : 'ড্যাশবোর্ড ওভারভিউ', icon: BarChart3Icon },
               { id: 'messages', label: currentLang === 'en' ? 'Inbound Leads' : 'প্রাপ্ত বার্তা সমূহ', icon: MailIcon },
-              { id: 'subscribers', label: currentLang === 'en' ? 'Subscribers' : 'সাবস্ক্রাইবার', icon: UsersIcon },
-              { id: 'blogs', label: currentLang === 'en' ? 'Blog Posts' : 'ব্লগ পোস্ট', icon: BookOpenIcon },
               { id: 'services', label: currentLang === 'en' ? 'Manage Services' : 'সার্ভিস পরিবর্তন', icon: SettingsIcon },
               { id: 'portfolio', label: currentLang === 'en' ? 'Manage Portfolio' : 'পোর্টফোলিও পরিচালনা', icon: FolderKanbanIcon },
               { id: 'testimonials', label: currentLang === 'en' ? 'Testimonials & Stories' : 'মতামত ও সাফল্যের গল্প', icon: MessageSquareIcon },
               { id: 'team', label: currentLang === 'en' ? 'Team Members' : 'টিম মেম্বার্স', icon: UserCheckIcon },
-              { id: 'media', label: currentLang === 'en' ? 'Media Library' : 'মিডিয়া লাইব্রেরি', icon: ImageIcon },
               { id: 'settings', label: currentLang === 'en' ? 'Site Config & SEO' : 'সাইটের তথ্য ও এসইও', icon: SettingsIcon },
-              { id: 'users', label: currentLang === 'en' ? 'Admin Access' : 'অ্যাডমিন অ্যাক্সেস', icon: ShieldIcon },
-              { id: 'legal', label: currentLang === 'en' ? 'Legal Content' : 'আইনি তথ্য', icon: FileTextIcon },
-              { id: 'whychooseus', label: currentLang === 'en' ? 'Why Choose Us' : 'কেন আমাদের বেছে নেবেন', icon: SparklesIcon },
-              { id: 'process', label: currentLang === 'en' ? 'Process Workflow' : 'কাজের প্রক্রিয়া', icon: SettingsIcon },
-              { id: 'techstack', label: currentLang === 'en' ? 'Technology Stack' : 'টেক স্ট্যাক', icon: CpuIcon },
-              { id: 'products', label: currentLang === 'en' ? 'Manage Products' : 'প্রোডাক্টস পরিচালনা', icon: ShoppingBagIcon }
+              { id: 'users', label: currentLang === 'en' ? 'Admin Access' : 'অ্যাডমিন অ্যাক্সেস', icon: ShieldIcon }
             ].map((tab) => (
               <button
                 id={`admin-tab-trigger-${tab.id}`}
@@ -1862,53 +1854,9 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
             )}
           </div>
         </div>
-      )}            {/* T2: NEWSLETTER SUBSCRIBERS LIST */}
-            {activeSubTab === 'subscribers' && (
-              <div id="panel-subs-desk" className="space-y-6">
-                <h3 className="text-sm font-bold text-gray-900 dark:text-white border-b border-gray-50 dark:border-neutral-800 pb-3">
-                  {currentLang === 'en' ? 'Intel Subscribers Directory' : 'নিউজলেটার সাবস্ক্রাইবার তালিকা'}
-                </h3>
+      )}
 
-                <div className="overflow-x-auto border border-gray-100 dark:border-neutral-800 rounded-xl">
-                  <table className="w-full text-left text-xs border-collapse">
-                     <thead>
-                       <tr className="bg-gray-50 dark:bg-[#141414] border-b border-gray-100 dark:border-neutral-800 font-bold uppercase tracking-wider text-gray-400 dark:text-neutral-500">
-                        <th className="p-4">Email Address</th>
-                        <th className="p-4">Subscribed Date</th>
-                        <th className="p-4 text-right">Actions</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-gray-100 dark:divide-neutral-800 text-gray-600 dark:text-neutral-300">
-                      {subscribers.map((sub) => (
-                        <tr key={sub.id} className="hover:bg-gray-50 dark:hover:bg-neutral-800/70 dark:bg-[#141414]">
-                          <td className="p-4 font-semibold text-gray-900 dark:text-white">{sub.email}</td>
-                          <td className="p-4">{new Date(sub.createdAt).toLocaleDateString()}</td>
-                          <td className="p-4 text-right">
-                            <button
-                              id={`delete-sub-${sub.id}`}
-                              onClick={() => handleDeleteSub(sub.id)}
-                              className="text-gray-400 dark:text-neutral-500 hover:text-red-500 dark:text-red-400 rounded p-1"
-                            >
-                              <Trash2Icon className="h-4 w-4" />
-                            </button>
-                          </td>
-                        </tr>
-                      ))}
-                      {subscribers.length === 0 && (
-                        <tr>
-                          <td colSpan={3} className="p-4 text-center text-gray-400 dark:text-neutral-500 italic">
-                            No active subscribers listed. Use the footer newsletter form to add subscribers instantly!
-                          </td>
-                        </tr>
-                      )}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            )}
-
-            {/* T3: MANAGE BLOG ARTICLES CRUD */}
-            {activeSubTab === 'blogs' && (
+            {/* Blog management removed */}
               <div id="panel-blogs-desk" className="space-y-6">
                 <div className="flex items-center justify-between border-b border-gray-50 dark:border-neutral-800 pb-3">
                   <h3 className="text-sm font-bold text-gray-900 dark:text-white">
@@ -3889,7 +3837,7 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
             )}
 
             {/* T11: MEDIA LIBRARY */}
-            {activeSubTab === 'media' && (
+            {/* {activeSubTab === 'media' && ( */}
               <div id="panel-media-desk" className="space-y-6 text-xs">
                 <div className="flex items-center justify-between border-b border-gray-200 dark:border-neutral-700/80 pb-3">
                   <h3 className="text-sm font-bold text-gray-900 dark:text-white">
@@ -4022,9 +3970,9 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
 
             {activeSubTab === 'legal' && (
               <AdminLegalCMS currentLang={currentLang} triggerNotice={triggerNotice} />
-            )}
+            {/* } */}
 
-            {activeSubTab === 'whychooseus' && (
+            {/* {activeSubTab === 'whychooseus' && ( */}
               <div id="panel-whychooseus-desk" className="space-y-6">
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-gray-100 dark:border-neutral-800 pb-4">
                   <div>
@@ -4711,9 +4659,9 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                   </form>
                 )}
               </div>
-            )}
+            {/* } */}
 
-            {activeSubTab === 'process' && (
+            {/* {activeSubTab === 'process' && ( */}
               <div id="panel-process-desk" className="space-y-6">
                 <div>
                   <h3 className="text-base font-bold text-gray-900 dark:text-white">
@@ -4900,9 +4848,9 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                   </form>
                 )}
               </div>
-            )}
+            {/* } */}
 
-            {activeSubTab === 'techstack' && (
+            {/* {activeSubTab === 'techstack' && ( */}
               <div id="panel-techstack-desk" className="space-y-6">
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-gray-100 dark:border-neutral-800 pb-4">
                   <div>
@@ -5144,9 +5092,9 @@ export default function AdminPanel({ currentLang }: AdminPanelProps) {
                   </div>
                 )}
               </div>
-            )}
+            {/* } */}
 
-            {activeSubTab === 'products' && (
+            {/* {activeSubTab === 'products' && ( */}
               <AdminProductsCMS currentLang={currentLang} />
             )}
           </div>

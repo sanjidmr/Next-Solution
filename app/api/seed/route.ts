@@ -138,11 +138,11 @@ export async function GET() {
       await supabase.from("services").upsert(servicesToInsert);
     }
 
-    // 3. Seed Portfolio Items
-    if (initialPortfolio && initialPortfolio.length > 0) {
-      const itemsToInsert = initialPortfolio.map(item => mapPortfolioItem.toDb(item));
-      await supabase.from("portfolio_items").upsert(itemsToInsert);
-    }
+    // 3. Seed Portfolio Items (disabled - no demo data)
+    // if (initialPortfolio && initialPortfolio.length > 0) {
+    //   const itemsToInsert = initialPortfolio.map(item => mapPortfolioItem.toDb(item));
+    //   await supabase.from("portfolio_items").upsert(itemsToInsert);
+    // }
 
     // 4. Seed Blog Posts
     if (initialBlogs && initialBlogs.length > 0) {
